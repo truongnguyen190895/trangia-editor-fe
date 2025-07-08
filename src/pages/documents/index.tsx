@@ -33,7 +33,6 @@ export const Documents = () => {
       {selectedDocument ? (
         <Editor
           documentName={selectedDocument}
-          initialContent={selectedDocument}
           open={!!selectedDocument}
           onClose={() => setSelectedDocument(null)}
         />
