@@ -1,0 +1,70 @@
+.agreement-object-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.agreement-object-container .MuiTableContainer-root {
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.agreement-object-container .MuiCard-root {
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.agreement-object-container .MuiDialog-paper {
+  max-height: 90vh;
+}
+
+.agreement-object-container .MuiTextField-root {
+  margin-bottom: 8px;
+}
+
+.agreement-object-container .MuiIconButton-root {
+  margin: 0 4px;
+}
+
+.agreement-object-container .MuiButton-root {
+  text-transform: none;
+  font-weight: 500;
+}
+
+.agreement-object-container .MuiTypography-h4 {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.agreement-object-container .MuiTypography-h6 {
+  font-weight: 600;
+  color: #333;
+}
+
+.agreement-object-container .MuiDivider-root {
+  margin: 16px 0;
+}
+
+.agreement-object-container .MuiSnackbar-root {
+  z-index: 1400;
+}
+
+.agreement-object-container .MuiAlert-root {
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .agreement-object-container {
+    padding: 16px;
+  }
+  
+  .agreement-object-container .MuiTableContainer-root {
+    overflow-x: auto;
+  }
+  
+  .agreement-object-container .MuiDialog-paper {
+    margin: 16px;
+    max-width: calc(100vw - 32px);
+  }
+} 

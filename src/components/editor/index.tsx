@@ -9,7 +9,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { AgreementEntity } from "../agreement-entity";
+import { AgreementObject } from "../agreement-object";
 import type { AgreementEntity as AgreementEntityModel } from "../../models/agreement-entity";
+import type { AgreementObject as AgreementObjectModel } from "../../models/agreement-object";
 
 interface EditorProps {
   open: boolean;
@@ -43,6 +45,25 @@ const BUYER_AGREEMENT_ENTITIES: AgreementEntityModel[] = [
   },
 ];
 
+const AGREEMENT_OBJECT: AgreementObjectModel = {
+  address: "123 Đường ABC, Quận XYZ, TP. HCM",
+  objectNumber: "1234567890",
+  objectMapNumber: "1234567890",
+  certificateName: "Bằng chứng nhận",
+  certificateNumber: "1234567890",
+  certificateIssueNumber: "1234567890",
+  certificateIssueBy: "Công an quận XYZ",
+  certificateIssueDate: "01/07/2025",
+  detail: {
+    square: 100,
+    purpose: "Sử dụng",
+    validityPeriod: "10 năm",
+    usageSource: "Sử dụng",
+    note: "Note",
+  },
+  price: 1000000000,
+};
+
 export const Editor = ({ documentName, open, onClose }: EditorProps) => {
   const [sellers, setSellers] = useState<AgreementEntityModel[]>(
     SELLER_AGREEMENT_ENTITIES
@@ -50,7 +71,9 @@ export const Editor = ({ documentName, open, onClose }: EditorProps) => {
   const [buyers, setBuyers] = useState<AgreementEntityModel[]>(
     BUYER_AGREEMENT_ENTITIES
   );
-
+  const [agreementObject, setAgreementObject] = useState<AgreementObjectModel>(
+    AGREEMENT_OBJECT
+  );
   const handleSave = () => {
     // Handle save logic here
     onClose();
@@ -76,6 +99,9 @@ export const Editor = ({ documentName, open, onClose }: EditorProps) => {
               agreementEntities={buyers}
               onEntitiesChange={setBuyers}
             />
+          </Box>
+          <Box className="object-container" mt={4}>
+            <AgreementObject />
           </Box>
         </Box>
       </DialogContent>
