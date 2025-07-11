@@ -1,20 +1,6 @@
 import { useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Box } from "@mui/material";
 import type { AgreementEntity } from "@/models/agreement-entity";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { AddPartyDialog } from "./dialogs/add-party-dialog";
 import { PartyEntity } from "./components/party-entity";
 
@@ -25,7 +11,6 @@ export const FullLandTransfer = () => {
     null
   );
   const [open, setOpen] = useState(false);
-  
 
   const handleOpen = () => {
     setOpen(true);
