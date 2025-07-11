@@ -19,6 +19,7 @@ import * as Yup from "yup";
 interface AddPartyDialogProps {
   open: boolean;
   initialEntity: AgreementEntity | null;
+  destination: "partyA" | "partyB";
   handleClose: () => void;
   onCreate: (values: AgreementEntity) => void;
 }
@@ -26,6 +27,7 @@ interface AddPartyDialogProps {
 export const AddPartyDialog = ({
   open,
   initialEntity,
+  destination,
   handleClose,
   onCreate,
 }: AddPartyDialogProps) => {
@@ -40,21 +42,22 @@ export const AddPartyDialog = ({
     address: "",
   };
 
-  const { values, errors, touched, handleChange, handleSubmit, resetForm } = useFormik({
-    initialValues,
-    validationSchema: Yup.object({
-      name: Yup.string().required("Họ và tên là bắt buộc"),
-      dateOfBirth: Yup.string().required("Ngày sinh là bắt buộc"),
-      documentType: Yup.string().required("Loại giấy tờ là bắt buộc"),
-      documentNumber: Yup.string().required("Số giấy tờ là bắt buộc"),
-      documentIssuedDate: Yup.string().required("Ngày cấp là bắt buộc"),
-      documentIssuedBy: Yup.string().required("Nơi cấp là bắt buộc"),
-      address: Yup.string().required("Địa chỉ thường trú là bắt buộc"),
-    }),
-    onSubmit: (values) => {
-      onCreate(values);
-    },
-  });
+  const { values, errors, touched, handleChange, handleSubmit, resetForm } =
+    useFormik({
+      initialValues,
+      validationSchema: Yup.object({
+        name: Yup.string().required("Họ và tên là bắt buộc"),
+        dateOfBirth: Yup.string().required("Ngày sinh là bắt buộc"),
+        documentType: Yup.string().required("Loại giấy tờ là bắt buộc"),
+        documentNumber: Yup.string().required("Số giấy tờ là bắt buộc"),
+        documentIssuedDate: Yup.string().required("Ngày cấp là bắt buộc"),
+        documentIssuedBy: Yup.string().required("Nơi cấp là bắt buộc"),
+        address: Yup.string().required("Địa chỉ thường trú là bắt buộc"),
+      }),
+      onSubmit: (values) => {
+        onCreate(values);
+      },
+    });
 
   const handleCloseDialog = () => {
     handleClose();
@@ -70,7 +73,7 @@ export const AddPartyDialog = ({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>Thêm bên chuyển nhượng</DialogTitle>
+      <DialogTitle>Thêm bên {destination === "partyA" ? "chuyển nhượng" : "nhận chuyển nhượng"}</DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2 }}>
           <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
@@ -105,6 +108,9 @@ export const AddPartyDialog = ({
               value={values.dateOfBirth}
               onChange={handleChange}
               InputLabelProps={{ shrink: true }}
+              slotProps={{
+                htmlInput: { max: new Date().toISOString().split("T")[0] },
+              }}
             />
             <FormControl fullWidth>
               <InputLabel>Loại giấy tờ *</InputLabel>
@@ -136,6 +142,9 @@ export const AddPartyDialog = ({
               value={values.documentIssuedDate}
               onChange={handleChange}
               InputLabelProps={{ shrink: true }}
+              slotProps={{
+                htmlInput: { max: new Date().toISOString().split("T")[0] },
+              }}
             />
           </Box>
           <Box sx={{ display: "flex", gap: 2, mb: 2 }}>

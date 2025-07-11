@@ -10,11 +10,8 @@ export const FullLandTransfer = () => {
   const [selectedEntity, setSelectedEntity] = useState<AgreementEntity | null>(
     null
   );
+  const [destination, setDestination] = useState<"partyA" | "partyB">("partyA");
   const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -32,7 +29,9 @@ export const FullLandTransfer = () => {
       documentIssuedBy: values.documentIssuedBy || "",
       address: values.address || "",
     };
-    setPartyAEntities((prev) => [...prev, newEntity]);
+    destination === "partyA"
+      ? setPartyAEntities((prev) => [...prev, newEntity])
+      : setPartyBEntities((prev) => [...prev, newEntity]);
     handleClose();
   };
 
@@ -45,30 +44,44 @@ export const FullLandTransfer = () => {
     setPartyAEntities((prev) => prev.filter((e) => e.name !== entity.name));
   };
 
+  const handleOpenPartyA = () => {
+    setDestination("partyA");
+    handleOpen();
+  };
+  const handleOpenPartyB = () => {
+    setDestination("partyB");
+    handleOpen();
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <Box
       className="full-land-transfer"
       display="flex"
-      gap="8rem"
+      gap="5rem"
       flexDirection="column"
     >
       <PartyEntity
         title="Bên chuyển nhượng"
         partyEntities={partyAEntities}
-        handleOpen={handleOpen}
+        handleOpen={handleOpenPartyA}
         handleEditEntity={handleEditEntity}
         handleDeleteEntity={handleDeleteEntity}
       />
       <PartyEntity
         title="Bên nhận chuyển nhượng"
         partyEntities={partyBEntities}
-        handleOpen={handleOpen}
+        handleOpen={handleOpenPartyB}
         handleEditEntity={handleEditEntity}
         handleDeleteEntity={handleDeleteEntity}
       />
       {open ? (
         <AddPartyDialog
           open={open}
+          destination={destination}
           initialEntity={selectedEntity}
           handleClose={handleClose}
           onCreate={handleSubmit}
