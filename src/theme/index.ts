@@ -9,4 +9,14 @@ export const theme = createTheme({
   typography: {
     fontFamily: "Montserrat, sans-serif",
   },
+//   components: {
+//     MuiButton: {
+//       styleOverrides: {
+//         root: {
+//           textTransform: "none",
+//           backgroundColor: "#3D90D7",
+//         },
+//       },
+//     },
+//   },
 });

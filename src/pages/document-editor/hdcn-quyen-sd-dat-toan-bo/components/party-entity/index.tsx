@@ -10,26 +10,47 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import type { AgreementEntity } from "@/models/agreement-entity";
+import dayjs from "dayjs";
+import { AddPartyDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-party-dialog";
+import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 
 interface PartyEntityProps {
   title: string;
-  partyEntities: AgreementEntity[];
-  handleOpen: () => void;
-  handleEditEntity: (entity: AgreementEntity) => void;
-  handleDeleteEntity: (entity: AgreementEntity) => void;
+  side: "partyA" | "partyB";
 }
 
-export const PartyEntity = ({
-  partyEntities,
-  title,
-  handleOpen,
-  handleEditEntity,
-  handleDeleteEntity,
-}: PartyEntityProps) => {
+export const PartyEntity = ({ title, side }: PartyEntityProps) => {
+  const {
+    partyAEntities,
+    partyBEntities,
+    deletePartyAEntity,
+    deletePartyBEntity,
+    setEditEntityIndex,
+  } = useHdcnQuyenSdDatContext();
+  const [open, setOpen] = useState(false);
+  const partyEntities = side === "partyA" ? partyAEntities : partyBEntities;
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenDialog = () => {
+    setOpen(true);
+  };
+
+  const handleDeleteEntity = (arrayIndex: number) => {
+    side === "partyA" ? deletePartyAEntity(arrayIndex) : deletePartyBEntity(arrayIndex);
+  };
+
+  const handleEditEntity = (arrayIndex: number) => {
+    setEditEntityIndex(arrayIndex);
+    handleOpenDialog();
+  };
+
   return (
     <Box border="1px solid #BCCCDC" borderRadius="5px">
       <Box
@@ -45,7 +66,7 @@ export const PartyEntity = ({
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={handleOpen}
+          onClick={handleOpenDialog}
         >
           Thêm
         </Button>
@@ -67,10 +88,12 @@ export const PartyEntity = ({
               </TableHead>
               <TableBody>
                 {partyEntities.map((entity, index) => (
-                  <TableRow key={index}>
+                  <TableRow key={entity.documentNumber}>
                     <TableCell>{entity.gender}</TableCell>
                     <TableCell>{entity.name}</TableCell>
-                    <TableCell>{entity.dateOfBirth}</TableCell>
+                    <TableCell>
+                      {dayjs(entity.dateOfBirth).format("DD/MM/YYYY")}
+                    </TableCell>
                     <TableCell>{entity.documentType}</TableCell>
                     <TableCell>{entity.documentNumber}</TableCell>
                     <TableCell>{entity.documentIssuedDate}</TableCell>
@@ -79,11 +102,11 @@ export const PartyEntity = ({
                     <TableCell>
                       <EditIcon
                         sx={{ cursor: "pointer" }}
-                        onClick={() => handleEditEntity(entity)}
+                        onClick={() => handleEditEntity(index)}
                       />
                       <DeleteIcon
                         sx={{ cursor: "pointer" }}
-                        onClick={() => handleDeleteEntity(entity)}
+                        onClick={() => handleDeleteEntity(index)}
                       />
                     </TableCell>
                   </TableRow>
@@ -93,6 +116,13 @@ export const PartyEntity = ({
           </TableContainer>
         )}
       </Box>
+      {open ? (
+        <AddPartyDialog
+          open={open}
+          side={side}
+          handleClose={handleClose}
+        />
+      ) : null}
     </Box>
   );
 };

@@ -4,14 +4,10 @@ import {
   Container,
   Toolbar,
   Typography,
-  Button,
 } from "@mui/material";
-import { Outlet, useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Outlet } from "react-router-dom";
 
 const Layout = () => {
-  const navigate = useNavigate();
-
   return (
     <Box
       position="relative"

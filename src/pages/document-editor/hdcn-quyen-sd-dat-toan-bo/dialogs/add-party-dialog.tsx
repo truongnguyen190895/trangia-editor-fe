@@ -11,6 +11,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
+import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import type { AgreementEntity } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
 import { useFormik } from "formik";
@@ -18,28 +19,53 @@ import * as Yup from "yup";
 
 interface AddPartyDialogProps {
   open: boolean;
-  initialEntity: AgreementEntity | null;
-  destination: "partyA" | "partyB";
+  side: "partyA" | "partyB";
   handleClose: () => void;
-  onCreate: (values: AgreementEntity) => void;
 }
 
 export const AddPartyDialog = ({
   open,
-  initialEntity,
-  destination,
+  side,
   handleClose,
-  onCreate,
 }: AddPartyDialogProps) => {
-  const initialValues: AgreementEntity = initialEntity || {
-    gender: GENDER.MALE,
-    name: "",
-    dateOfBirth: "",
-    documentType: "",
-    documentNumber: "",
-    documentIssuedDate: "",
-    documentIssuedBy: "",
-    address: "",
+  const {
+    editEntityIndex,
+    partyAEntities,
+    partyBEntities,
+    addPartyAEntity,
+    addPartyBEntity,
+    setEditEntityIndex,
+  } = useHdcnQuyenSdDatContext();
+  const isEdit = editEntityIndex !== null;
+
+  const getInitialValue = (): AgreementEntity => {
+    if (isEdit) {
+      return side === "partyA"
+        ? partyAEntities[editEntityIndex]
+        : partyBEntities[editEntityIndex];
+    }
+    return {
+      gender: GENDER.MALE,
+      name: "",
+      dateOfBirth: "",
+      documentType: "",
+      documentNumber: "",
+      documentIssuedDate: "",
+      documentIssuedBy: "",
+      address: "",
+    };
+  };
+
+  const initialValues = getInitialValue();
+
+  const submitForm = (values: AgreementEntity) => {
+    if (isEdit) {
+      side === "partyA"
+        ? addPartyAEntity(values, editEntityIndex)
+        : addPartyBEntity(values, editEntityIndex);
+    } else {
+      side === "partyA" ? addPartyAEntity(values) : addPartyBEntity(values);
+    }
   };
 
   const { values, errors, touched, handleChange, handleSubmit, resetForm } =
@@ -55,25 +81,28 @@ export const AddPartyDialog = ({
         address: Yup.string().required("Địa chỉ thường trú là bắt buộc"),
       }),
       onSubmit: (values) => {
-        onCreate(values);
+        submitForm(values);
       },
     });
 
+  const reset = () => {
+    setEditEntityIndex(null);
+    resetForm();
+  };
+
   const handleCloseDialog = () => {
     handleClose();
-    resetForm();
+    reset();
   };
 
   const handleSubmitForm = () => {
     handleSubmit();
-    // handleCloseDialog();
+    handleCloseDialog();
   };
-
-  console.log("rendering... ", errors);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>Thêm bên {destination === "partyA" ? "chuyển nhượng" : "nhận chuyển nhượng"}</DialogTitle>
+      <DialogTitle>{isEdit ? "Cập nhật" : "Thêm"}</DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2 }}>
           <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
@@ -168,7 +197,7 @@ export const AddPartyDialog = ({
       <DialogActions>
         <Button onClick={handleCloseDialog}>Hủy</Button>
         <Button variant="contained" onClick={handleSubmitForm}>
-          Thêm
+          {isEdit ? "Cập nhật" : "Thêm"}
         </Button>
       </DialogActions>
     </Dialog>

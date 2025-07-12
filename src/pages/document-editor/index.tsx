@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
-import { FullLandTransfer } from "@/pages/document-editor/full-land-transfer/full-land-transfer";
+import { ChuyenNhuongDatToanBo } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo";
 
 export const DocumentEditor = () => {
   const [searchParams] = useSearchParams();
@@ -11,7 +11,7 @@ export const DocumentEditor = () => {
   const renderContent = () => {
     switch (type) {
       case "agreement":
-        return <FullLandTransfer />;
+        return <ChuyenNhuongDatToanBo />;
     }
   };
 

@@ -1,6 +1,5 @@
 import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { DocumentThumbnail } from "../../components/document-thumbnail";
 
 const mockDocuments = [
@@ -19,7 +18,6 @@ const mockDocuments = [
 ];
 
 export const Documents = () => {
-  const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const navigate = useNavigate();
   return (
     <Box>
