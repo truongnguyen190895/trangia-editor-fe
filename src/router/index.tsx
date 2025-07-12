@@ -3,6 +3,7 @@ import ChooseDocument from "../pages/choose-document";
 import ChooseSubDocument from "../pages/choose-sub-document";
 import Layout from "../components/layout";
 import { Documents } from "../pages/documents";
+import { DocumentEditor } from "../pages/document-editor";
 
 export const router = createBrowserRouter([
   {
@@ -22,5 +23,9 @@ export const router = createBrowserRouter([
         element: <Documents />,
       },
     ],
+  },
+  {
+    path: "/editor",
+    element: <DocumentEditor />,
   },
 ]);

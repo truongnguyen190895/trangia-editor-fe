@@ -1,23 +1,24 @@
 import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DocumentThumbnail } from "../../components/document-thumbnail";
-import { Editor } from "../../components/editor";
 
 const mockDocuments = [
   {
     id: 1,
     name: "1. HĐCN Quyền sử dụng đất toàn bộ.docz",
     thumbnail: "https://via.placeholder.com/150",
+    type: "agreement",
   },
   {
     id: 2,
     name: "2. HĐMB Nhà đất toàn bộ.docz",
     thumbnail: "https://via.placeholder.com/150",
+    type: "agreement",
   },
 ];
 
 export const Documents = () => {
-  const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
+  const navigate = useNavigate();
   return (
     <Box>
       <Typography variant="h3">Chọn văn bản cần chỉnh sửa</Typography>
@@ -26,17 +27,12 @@ export const Documents = () => {
           <DocumentThumbnail
             key={document.id}
             title={document.name}
-            onClick={() => setSelectedDocument(document.name)}
+            onClick={() =>
+              navigate(`/editor?type=${document.type}&id=${document.id}`)
+            }
           />
         ))}
       </Box>
-      {selectedDocument ? (
-        <Editor
-          documentName={selectedDocument}
-          open={!!selectedDocument}
-          onClose={() => setSelectedDocument(null)}
-        />
-      ) : null}
     </Box>
   );
 };
