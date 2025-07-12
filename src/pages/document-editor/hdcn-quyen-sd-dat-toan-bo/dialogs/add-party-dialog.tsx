@@ -170,8 +170,8 @@ export const AddPartyDialog = ({
               name="documentIssuedDate"
               value={values.documentIssuedDate}
               onChange={handleChange}
-              InputLabelProps={{ shrink: true }}
               slotProps={{
+                inputLabel: { shrink: true },
                 htmlInput: { max: new Date().toISOString().split("T")[0] },
               }}
             />

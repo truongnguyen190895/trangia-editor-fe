@@ -9,11 +9,13 @@ interface HdcnQuyenSdDatContextType {
   editEntityIndex: number | null;
   editObjectIndex: number | null;
   setEditEntityIndex: (index: number | null) => void;
+  setEditObjectIndex: (index: number | null) => void;
   addPartyAEntity: (entity: AgreementEntity, index?: number) => void;
   addPartyBEntity: (entity: AgreementEntity, index?: number) => void;
   addAgreementObject: (object: ThongTinThuaDat, index?: number) => void;
   deletePartyAEntity: (arrayIndex: number) => void;
   deletePartyBEntity: (arrayIndex: number) => void;
+  deleteAgreementObject: (arrayIndex: number) => void;
 }
 
 export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
@@ -23,11 +25,13 @@ export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
   editEntityIndex: null,
   editObjectIndex: null,
   setEditEntityIndex: () => {},
+  setEditObjectIndex: () => {},
   addPartyAEntity: () => {},
   addPartyBEntity: () => {},
   addAgreementObject: () => {},
   deletePartyAEntity: () => {},
   deletePartyBEntity: () => {},
+  deleteAgreementObject: () => {},
 });
 
 export const useHdcnQuyenSdDatContext = () => useContext(HdcnQuyenSdDatContext);
@@ -110,6 +114,12 @@ export const HdcnQuyenSdDatProvider = ({
     );
   };
 
+  const deleteAgreementObject = (arrayIndex: number) => {
+    setAgreementObjects(
+      agreementObjects.filter((_e, index) => index !== arrayIndex)
+    );
+  };
+
   return (
     <HdcnQuyenSdDatContext.Provider
       value={{
@@ -119,11 +129,13 @@ export const HdcnQuyenSdDatProvider = ({
         editEntityIndex,
         editObjectIndex,
         setEditEntityIndex,
+        setEditObjectIndex,
         addPartyAEntity,
         addPartyBEntity,
         deletePartyAEntity,
         addAgreementObject,
         deletePartyBEntity,
+        deleteAgreementObject,
       }}
     >
       {children}

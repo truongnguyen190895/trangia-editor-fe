@@ -19,11 +19,23 @@ export const DocumentEditor = () => {
 
   return (
     <Box>
-      <Box className="header" height="5rem" bgcolor="grey" paddingX="1.5rem">
-        <Typography variant="h6">Chỉnh sửa văn bản</Typography>
+      <Box
+        className="header"
+        height="5rem"
+        bgcolor="#E0E0E0"
+        paddingX="1.5rem"
+        display="flex"
+        alignItems="center"
+      >
+        <Typography variant="h4">Chỉnh sửa văn bản</Typography>
       </Box>
       <Box className="content" paddingX="1.5rem" paddingY="1rem">
-        <Button variant="contained" onClick={() => navigate("/")} sx={{ mb: 2 }} startIcon={<BackIcon />}>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/")}
+          sx={{ mb: 2 }}
+          startIcon={<BackIcon />}
+        >
           Quay lại trang chủ
         </Button>
         {renderContent()}

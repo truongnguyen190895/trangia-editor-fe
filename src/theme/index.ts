@@ -5,6 +5,7 @@ export const theme = createTheme({
     primary: {
       main: "#000000",
     },
+    softTeal: "#00CED1",
   },
   typography: {
     fontFamily: "Montserrat, sans-serif",
@@ -20,16 +21,6 @@ export const theme = createTheme({
       fontSize: "0.875rem",
       fontWeight: 500,
       textTransform: "none",
-    }
+    },
   },
-//   components: {
-//     MuiButton: {
-//       styleOverrides: {
-//         root: {
-//           textTransform: "none",
-//           backgroundColor: "#3D90D7",
-//         },
-//       },
-//     },
-//   },
 });
