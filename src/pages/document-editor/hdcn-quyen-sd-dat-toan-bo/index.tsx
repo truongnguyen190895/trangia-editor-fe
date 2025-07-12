@@ -28,7 +28,7 @@ export const ChuyenNhuongDatToanBo = () => {
           border="1px solid #BCCCDC"
           borderRadius="5px"
           padding="1rem"
-          flex={3}
+          flex={4}
         >
           <PartyEntity title="Bên chuyển nhượng" side="partyA" />
           <PartyEntity title="Bên nhận chuyển nhượng" side="partyB" />

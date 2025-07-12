@@ -8,6 +8,19 @@ export const theme = createTheme({
   },
   typography: {
     fontFamily: "Montserrat, sans-serif",
+    h6: {
+      fontSize: "1.25rem",
+      fontWeight: 600,
+    },
+    body1: {
+      fontSize: "1rem",
+      fontWeight: 500,
+    },
+    button: {
+      fontSize: "0.875rem",
+      fontWeight: 500,
+      textTransform: "none",
+    }
   },
 //   components: {
 //     MuiButton: {

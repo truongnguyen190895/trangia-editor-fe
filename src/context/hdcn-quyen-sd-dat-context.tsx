@@ -1,13 +1,17 @@
 import type { AgreementEntity } from "@/models/agreement-entity";
+import type { ThongTinThuaDat } from "@/models/agreement-object";
 import { createContext, useContext, useState } from "react";
 
 interface HdcnQuyenSdDatContextType {
   partyAEntities: AgreementEntity[];
   partyBEntities: AgreementEntity[];
+  agreementObjects: ThongTinThuaDat[];
   editEntityIndex: number | null;
+  editObjectIndex: number | null;
   setEditEntityIndex: (index: number | null) => void;
   addPartyAEntity: (entity: AgreementEntity, index?: number) => void;
   addPartyBEntity: (entity: AgreementEntity, index?: number) => void;
+  addAgreementObject: (object: ThongTinThuaDat, index?: number) => void;
   deletePartyAEntity: (arrayIndex: number) => void;
   deletePartyBEntity: (arrayIndex: number) => void;
 }
@@ -15,10 +19,13 @@ interface HdcnQuyenSdDatContextType {
 export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
   partyAEntities: [],
   partyBEntities: [],
+  agreementObjects: [],
   editEntityIndex: null,
+  editObjectIndex: null,
   setEditEntityIndex: () => {},
   addPartyAEntity: () => {},
   addPartyBEntity: () => {},
+  addAgreementObject: () => {},
   deletePartyAEntity: () => {},
   deletePartyBEntity: () => {},
 });
@@ -32,7 +39,40 @@ export const HdcnQuyenSdDatProvider = ({
 }) => {
   const [partyAEntities, setPartyAEntities] = useState<AgreementEntity[]>([]);
   const [partyBEntities, setPartyBEntities] = useState<AgreementEntity[]>([]);
+  const [agreementObjects, setAgreementObjects] = useState<ThongTinThuaDat[]>([
+    {
+      so_thua_dat: "326",
+      to_ban_do_so: "8",
+      dia_chi:
+        "Thôn Quyết Tiến, xã Tiên Phương, huyện Chương Mỹ, tỉnh Hà Tây (nay là Thôn Quyết Tiến, phường Chương Mỹ, thành phố Hà Nội)",
+      loai_giay_to: "Giấy chứng nhận quyền sử dụng đất",
+      so_giay_to: "U 425562",
+      so_vao_so_cap_gcn: "00129 QSDĐ/456/QĐ-UB",
+      noi_cap_giay_chung_nhan: "UBND huyện Chương Mỹ",
+      ngay_cap_giay_chung_nhan: "12/06/2010",
+      dien_tich: 123,
+      hinh_thuc_su_dung: "Sử dụng đất",
+      muc_dich_su_dung: "T",
+      thoi_han_su_dung: "Lâu dài",
+      nguon_goc_su_dung: "Lấy đất từ UBND huyện Chương Mỹ",
+      ghi_chu:
+        "Đổi lại giấy chứng nhận mới khi đã có bản đồ Địa chính có toạ độ",
+    },
+  ]);
   const [editEntityIndex, setEditEntityIndex] = useState<number | null>(null);
+  const [editObjectIndex, setEditObjectIndex] = useState<number | null>(null);
+
+  const addAgreementObject = (object: ThongTinThuaDat, index?: number) => {
+    if (index !== undefined) {
+      setAgreementObjects([
+        ...agreementObjects.slice(0, index),
+        object,
+        ...agreementObjects.slice(index + 1),
+      ]);
+    } else {
+      setAgreementObjects([...agreementObjects, object]);
+    }
+  };
 
   const addPartyAEntity = (entity: AgreementEntity, index?: number) => {
     if (index !== undefined) {
@@ -75,11 +115,14 @@ export const HdcnQuyenSdDatProvider = ({
       value={{
         partyAEntities,
         partyBEntities,
+        agreementObjects,
         editEntityIndex,
+        editObjectIndex,
         setEditEntityIndex,
         addPartyAEntity,
         addPartyBEntity,
         deletePartyAEntity,
+        addAgreementObject,
         deletePartyBEntity,
       }}
     >

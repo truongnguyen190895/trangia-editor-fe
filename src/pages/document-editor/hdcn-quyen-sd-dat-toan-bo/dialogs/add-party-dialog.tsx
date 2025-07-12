@@ -104,7 +104,7 @@ export const AddPartyDialog = ({
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>{isEdit ? "Cập nhật" : "Thêm"}</DialogTitle>
       <DialogContent>
-        <Box sx={{ pt: 2 }}>
+        <Box sx={{ pt: 2 }} component="form" onSubmit={handleSubmitForm}>
           <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
             <FormControl fullWidth>
               <InputLabel>Ông/Bà *</InputLabel>
@@ -136,9 +136,9 @@ export const AddPartyDialog = ({
               name="dateOfBirth"
               value={values.dateOfBirth}
               onChange={handleChange}
-              InputLabelProps={{ shrink: true }}
               slotProps={{
                 htmlInput: { max: new Date().toISOString().split("T")[0] },
+                inputLabel: { shrink: true },
               }}
             />
             <FormControl fullWidth>
