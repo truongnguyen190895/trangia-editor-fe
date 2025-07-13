@@ -35,7 +35,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
     deletePartyBEntity,
     setEditEntityIndex,
   } = useHdcnQuyenSdDatContext();
-  const [open, setOpen] = useState(false);
+  const [openSingleDialog, setOpenSingleDialog] = useState(false);
   const partyEntities = side === "partyA" ? partyA : partyB;
   const individualParty = partyEntities["cá nhân"];
   const coupleParty = partyEntities["vợ chồng"];
@@ -134,6 +134,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                       transition: "scale 0.1s ease",
                     },
                   }}
+                  onClick={() => setOpenSingleDialog(true)}
                 />
               </Box>
             </Box>
@@ -144,6 +145,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                 color="secondary"
                 startIcon={<AddIcon />}
                 sx={{ flex: 1 }}
+                onClick={() => setOpenSingleDialog(true)}
               >
                 <Typography variant="body1">Thêm thông tin cá nhân</Typography>
               </Button>
@@ -171,6 +173,12 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
           )}
         </Box>
       </Box>
+      {openSingleDialog && (
+        <AddSingleDialog
+          open={openSingleDialog}
+          onClose={() => setOpenSingleDialog(false)}
+        />
+      )}
     </Box>
   );
 };
