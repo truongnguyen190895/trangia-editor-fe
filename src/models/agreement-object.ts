@@ -13,4 +13,5 @@ export interface ThongTinThuaDat {
   thoi_han_su_dung: string;
   nguon_goc_su_dung: string;
   ghi_chu: string;
+  "tờ bản đồ"?: string;
 }

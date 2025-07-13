@@ -2,6 +2,7 @@ import {
   Box,
   Typography,
   Button,
+  Divider,
   Table,
   TableBody,
   TableCell,
@@ -10,6 +11,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -25,14 +27,16 @@ interface PartyEntityProps {
 
 export const PartyEntity = ({ title, side }: PartyEntityProps) => {
   const {
-    partyAEntities,
-    partyBEntities,
+    partyA,
+    partyB,
     deletePartyAEntity,
     deletePartyBEntity,
     setEditEntityIndex,
   } = useHdcnQuyenSdDatContext();
   const [open, setOpen] = useState(false);
-  const partyEntities = side === "partyA" ? partyAEntities : partyBEntities;
+  const partyEntities = side === "partyA" ? partyA : partyB;
+  const individualParty = partyEntities["cá nhân"];
+  const coupleParty = partyEntities["vợ chồng"];
 
   const handleClose = () => {
     setOpen(false);
@@ -43,7 +47,9 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
   };
 
   const handleDeleteEntity = (arrayIndex: number) => {
-    side === "partyA" ? deletePartyAEntity(arrayIndex) : deletePartyBEntity(arrayIndex);
+    side === "partyA"
+      ? deletePartyAEntity(arrayIndex)
+      : deletePartyBEntity(arrayIndex);
   };
 
   const handleEditEntity = (arrayIndex: number) => {
@@ -62,67 +68,119 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
       >
         <Typography variant="h6">{title}</Typography>
       </Box>
-      <Box padding="10px">
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleOpenDialog}
-        >
-          Thêm
-        </Button>
-        {partyEntities.length > 0 && (
-          <TableContainer component={Paper} sx={{ marginTop: "10px" }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Ông/Bà</TableCell>
-                  <TableCell>Họ và tên</TableCell>
-                  <TableCell>Ngày sinh</TableCell>
-                  <TableCell>Loại giấy tờ</TableCell>
-                  <TableCell>Số giấy tờ</TableCell>
-                  <TableCell>Ngày cấp</TableCell>
-                  <TableCell>Nơi cấp</TableCell>
-                  <TableCell>Địa chỉ thường trú</TableCell>
-                  <TableCell>Xem/Sửa</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {partyEntities.map((entity, index) => (
-                  <TableRow key={entity.documentNumber}>
-                    <TableCell>{entity.gender}</TableCell>
-                    <TableCell>{entity.name}</TableCell>
+      <Box
+        paddingX="10px"
+        paddingY="20px"
+        display="flex"
+        gap="1rem"
+        flexDirection="column"
+      >
+        <Box>
+          <Typography variant="h6">Chủ thể là cá nhân</Typography>
+          {individualParty.length > 0 ? (
+            <Box>
+              <Table>
+                <TableHead>
+                  <TableRow>
                     <TableCell>
-                      {dayjs(entity.dateOfBirth).format("DD/MM/YYYY")}
+                      <Typography variant="body1">Giới tính</Typography>
                     </TableCell>
-                    <TableCell>{entity.documentType}</TableCell>
-                    <TableCell>{entity.documentNumber}</TableCell>
-                    <TableCell>{entity.documentIssuedDate}</TableCell>
-                    <TableCell>{entity.documentIssuedBy}</TableCell>
-                    <TableCell>{entity.address}</TableCell>
                     <TableCell>
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleEditEntity(index)}
-                      />
-                      <DeleteIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleDeleteEntity(index)}
-                      />
+                      <Typography variant="body1">Tên</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Ngày sinh</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Loại giấy tờ</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Số giấy tờ</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Ngày cấp</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Nơi cấp</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">
+                        Địa chỉ thường trú cũ
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">
+                        Địa chỉ thường trú mới
+                      </Typography>
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+                </TableHead>
+                <TableBody>
+                  {individualParty.map((entity) => (
+                    <TableRow key={entity.tên}>
+                      <TableCell>{entity["giới tính"]}</TableCell>
+                      <TableCell>{entity.tên}</TableCell>
+                      <TableCell>{entity["ngày sinh"]}</TableCell>
+                      <TableCell>{entity["loại giấy tờ"]}</TableCell>
+                      <TableCell>{entity["số giấy tờ"]}</TableCell>
+                      <TableCell>{entity["ngày cấp"]}</TableCell>
+                      <TableCell>{entity["nơi cấp"]}</TableCell>
+                      <TableCell>{entity["địa chỉ thường trú cũ"]}</TableCell>
+                      <TableCell>{entity["địa chỉ thường trú mới"]}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <Box
+                display="flex"
+                alignItems="center"
+                marginTop="10px"
+
+              >
+                <AddCircleRoundedIcon
+                  sx={{ fontSize: "4rem", color: "#3D90D7", cursor: "pointer", 
+                    '&:active': {
+                        scale: 0.9,
+                        transition: 'scale 0.1s ease'
+                    }
+                   }}
+                />
+              </Box>
+            </Box>
+          ) : (
+            <Box display="flex" marginTop="10px" height="50px">
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<AddIcon />}
+                sx={{ flex: 1 }}
+              >
+                <Typography variant="body1">Thêm thông tin cá nhân</Typography>
+              </Button>
+            </Box>
+          )}
+        </Box>
+        <Divider />
+        <Box>
+          <Typography variant="h6">Chủ thể là vợ chồng</Typography>
+          {coupleParty.length > 0 ? (
+            <Box>
+              <Typography variant="body1">{coupleParty[0].tên}</Typography>
+            </Box>
+          ) : (
+            <Box display="flex" marginTop="10px" height="50px">
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<AddIcon />}
+                sx={{ flex: 1 }}
+              >
+                <Typography variant="body1">Thêm thông tin vợ chồng</Typography>
+              </Button>
+            </Box>
+          )}
+        </Box>
       </Box>
-      {open ? (
-        <AddPartyDialog
-          open={open}
-          side={side}
-          handleClose={handleClose}
-        />
-      ) : null}
     </Box>
   );
 };

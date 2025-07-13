@@ -1,10 +1,15 @@
-import type { AgreementEntity } from "@/models/agreement-entity";
+import type {
+  AgreementEntity,
+  AgreementParty,
+} from "@/models/agreement-entity";
 import type { ThongTinThuaDat } from "@/models/agreement-object";
 import { createContext, useContext, useState } from "react";
 
 interface HdcnQuyenSdDatContextType {
   partyAEntities: AgreementEntity[];
   partyBEntities: AgreementEntity[];
+  partyA: AgreementParty;
+  partyB: AgreementParty;
   agreementObjects: ThongTinThuaDat[];
   editEntityIndex: number | null;
   editObjectIndex: number | null;
@@ -24,6 +29,14 @@ export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
   agreementObjects: [],
   editEntityIndex: null,
   editObjectIndex: null,
+  partyA: {
+    "cá nhân": [],
+    "vợ chồng": [],
+  },
+  partyB: {
+    "cá nhân": [],
+    "vợ chồng": [],
+  },
   setEditEntityIndex: () => {},
   setEditObjectIndex: () => {},
   addPartyAEntity: () => {},
@@ -41,7 +54,42 @@ export const HdcnQuyenSdDatProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [partyAEntities, setPartyAEntities] = useState<AgreementEntity[]>([]);
+  const [partyA, setPartyA] = useState<AgreementParty>({
+    "cá nhân": [
+      {
+        "giới tính": "Ông",
+        "tên": "Đỗ Viết Chiến",
+        "ngày sinh": "03/06/1976",
+        "loại giấy tờ": "CCCD",
+        "số giấy tờ": "0123456789",
+        "ngày cấp": "01/01/2020",
+        "nơi cấp": "Cục cảnh sát quản lý hành chính về trật tự xã hội",
+        "địa chỉ thường trú cũ":
+          "Thôn Lương Xá, xã Lam Điền, huyện Hoài Đức, thành phố Hà Nội",
+        "địa chỉ thường trú mới": "xã Quản Bị, thành phố Hà Nội",
+        "tình trạng hôn nhân": "Đã kết hôn với bà Nguyễn Thị Bé",
+      },
+    ],
+    "vợ chồng": [],
+  });
+  const [partyB, setPartyB] = useState<AgreementParty>({
+    "cá nhân": [],
+    "vợ chồng": [],
+  });
+  const [partyAEntities, setPartyAEntities] = useState<AgreementEntity[]>([
+    {
+      "giới tính": "Ông",
+      tên: "Đỗ Viết Chiến",
+      "ngày sinh": "03/06/1976",
+      "loại giấy tờ": "CCCD",
+      "số giấy tờ": "0123456789",
+      "ngày cấp": "01/01/2020",
+      "nơi cấp": "Cục cảnh sát quản lý hành chính về trật tự xã hội",
+      "địa chỉ thường trú cũ":
+        "Thôn Lương Xá, xã Lam Điền, huyện Hoài Đức, thành phố Hà Nội",
+      "địa chỉ thường trú mới": "xã Quản Bị, thành phố Hà Nội",
+    },
+  ]);
   const [partyBEntities, setPartyBEntities] = useState<AgreementEntity[]>([]);
   const [agreementObjects, setAgreementObjects] = useState<ThongTinThuaDat[]>([
     {
@@ -128,6 +176,8 @@ export const HdcnQuyenSdDatProvider = ({
         agreementObjects,
         editEntityIndex,
         editObjectIndex,
+        partyA,
+        partyB,
         setEditEntityIndex,
         setEditObjectIndex,
         addPartyAEntity,

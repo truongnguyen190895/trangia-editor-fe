@@ -44,6 +44,7 @@ export const ThemThongTinDat = ({
   const isEdit = editObjectIndex !== null;
 
   const submitForm = (values: ThongTinThuaDat) => {
+    console.log(values["tờ bản đồ"]);
     addAgreementObject(values, editObjectIndex ?? undefined);
     handleClose();
   };
