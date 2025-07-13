@@ -28,11 +28,11 @@ interface BaseAgreementParty {
   "địa chỉ thường trú mới": string;
 }
 
-interface SingleAgreementParty extends BaseAgreementParty {
+export interface SingleAgreementParty extends BaseAgreementParty {
   "tình trạng hôn nhân"?: string;
 }
 
-interface CoupleAgreementParty extends BaseAgreementParty {
+export interface CoupleAgreementParty extends BaseAgreementParty {
   "quan hệ"?: string;
   "giấy chứng nhận kết hôn"?: {
     "số giấy chứng nhận": string;

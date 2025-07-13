@@ -1,6 +1,8 @@
 import type {
   AgreementEntity,
   AgreementParty,
+  SingleAgreementParty,
+  CoupleAgreementParty,
 } from "@/models/agreement-entity";
 import type { ThongTinThuaDat } from "@/models/agreement-object";
 import { createContext, useContext, useState } from "react";
@@ -13,6 +15,8 @@ interface HdcnQuyenSdDatContextType {
   agreementObjects: ThongTinThuaDat[];
   editEntityIndex: number | null;
   editObjectIndex: number | null;
+  addSinglePartyAEntity: (entity: SingleAgreementParty, index?: number) => void;
+  addCouplePartyAEntity: (entity: CoupleAgreementParty, index?: number) => void;
   setEditEntityIndex: (index: number | null) => void;
   setEditObjectIndex: (index: number | null) => void;
   addPartyAEntity: (entity: AgreementEntity, index?: number) => void;
@@ -39,6 +43,8 @@ export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
   },
   setEditEntityIndex: () => {},
   setEditObjectIndex: () => {},
+  addSinglePartyAEntity: () => {},
+  addCouplePartyAEntity: () => {},
   addPartyAEntity: () => {},
   addPartyBEntity: () => {},
   addAgreementObject: () => {},
@@ -58,7 +64,7 @@ export const HdcnQuyenSdDatProvider = ({
     "cá nhân": [
       {
         "giới tính": "Ông",
-        "tên": "Đỗ Viết Chiến",
+        tên: "Đỗ Viết Chiến",
         "ngày sinh": "03/06/1976",
         "loại giấy tờ": "CCCD",
         "số giấy tờ": "0123456789",
@@ -168,6 +174,44 @@ export const HdcnQuyenSdDatProvider = ({
     );
   };
 
+  const addSinglePartyAEntity = (
+    entity: SingleAgreementParty,
+    index?: number
+  ) => {
+    if (index !== undefined) {
+      setPartyA({
+        ...partyA,
+        "cá nhân": [
+          ...partyA["cá nhân"].slice(0, index),
+          entity,
+          ...partyA["cá nhân"].slice(index + 1),
+        ],
+      });
+    } else {
+      setPartyA({
+        ...partyA,
+        "cá nhân": [...partyA["cá nhân"], entity],
+      });
+    }
+  };
+
+  const addCouplePartyAEntity = (
+    entity: CoupleAgreementParty,
+    index?: number
+  ) => {
+    if (index !== undefined) {
+      setPartyA({
+        ...partyA,
+        "vợ chồng": [...partyA["vợ chồng"], entity],
+      });
+    } else {
+      setPartyA({
+        ...partyA,
+        "vợ chồng": [...partyA["vợ chồng"], entity],
+      });
+    }
+  };
+
   return (
     <HdcnQuyenSdDatContext.Provider
       value={{
@@ -178,6 +222,8 @@ export const HdcnQuyenSdDatProvider = ({
         editObjectIndex,
         partyA,
         partyB,
+        addSinglePartyAEntity,
+        addCouplePartyAEntity,
         setEditEntityIndex,
         setEditObjectIndex,
         addPartyAEntity,

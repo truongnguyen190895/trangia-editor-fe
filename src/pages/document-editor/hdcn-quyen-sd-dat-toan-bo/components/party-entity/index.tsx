@@ -16,9 +16,11 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import dayjs from "dayjs";
 import { AddPartyDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-party-dialog";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import { AddSingleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-single";
 
 interface PartyEntityProps {
   title: string;
@@ -37,25 +39,6 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
   const partyEntities = side === "partyA" ? partyA : partyB;
   const individualParty = partyEntities["cá nhân"];
   const coupleParty = partyEntities["vợ chồng"];
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpenDialog = () => {
-    setOpen(true);
-  };
-
-  const handleDeleteEntity = (arrayIndex: number) => {
-    side === "partyA"
-      ? deletePartyAEntity(arrayIndex)
-      : deletePartyBEntity(arrayIndex);
-  };
-
-  const handleEditEntity = (arrayIndex: number) => {
-    setEditEntityIndex(arrayIndex);
-    handleOpenDialog();
-  };
 
   return (
     <Box border="1px solid #BCCCDC" borderRadius="5px">
@@ -98,52 +81,59 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                       <Typography variant="body1">Số giấy tờ</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">Ngày cấp</Typography>
+                      <Typography variant="body1">Xem chi tiết</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">Nơi cấp</Typography>
+                      <Typography variant="body1">Sửa</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">
-                        Địa chỉ thường trú cũ
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">
-                        Địa chỉ thường trú mới
-                      </Typography>
+                      <Typography variant="body1">Xóa</Typography>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {individualParty.map((entity) => (
-                    <TableRow key={entity.tên}>
+                    <TableRow
+                      key={entity.tên}
+                      sx={{
+                        "& .icon-action": {
+                          cursor: "pointer",
+                          "&:active": {
+                            scale: 0.9,
+                            transition: "scale 0.1s ease",
+                          },
+                        },
+                      }}
+                    >
                       <TableCell>{entity["giới tính"]}</TableCell>
                       <TableCell>{entity.tên}</TableCell>
                       <TableCell>{entity["ngày sinh"]}</TableCell>
                       <TableCell>{entity["loại giấy tờ"]}</TableCell>
                       <TableCell>{entity["số giấy tờ"]}</TableCell>
-                      <TableCell>{entity["ngày cấp"]}</TableCell>
-                      <TableCell>{entity["nơi cấp"]}</TableCell>
-                      <TableCell>{entity["địa chỉ thường trú cũ"]}</TableCell>
-                      <TableCell>{entity["địa chỉ thường trú mới"]}</TableCell>
+                      <TableCell>
+                        <VisibilityIcon className="icon-action" color="info" />
+                      </TableCell>
+                      <TableCell>
+                        <EditIcon className="icon-action" color="info" />
+                      </TableCell>
+                      <TableCell>
+                        <DeleteIcon className="icon-action" color="error" />
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-              <Box
-                display="flex"
-                alignItems="center"
-                marginTop="10px"
-
-              >
+              <Box display="flex" alignItems="center" marginTop="10px">
                 <AddCircleRoundedIcon
-                  sx={{ fontSize: "4rem", color: "#3D90D7", cursor: "pointer", 
-                    '&:active': {
-                        scale: 0.9,
-                        transition: 'scale 0.1s ease'
-                    }
-                   }}
+                  sx={{
+                    fontSize: "3rem",
+                    color: "#3D90D7",
+                    cursor: "pointer",
+                    "&:active": {
+                      scale: 0.9,
+                      transition: "scale 0.1s ease",
+                    },
+                  }}
                 />
               </Box>
             </Box>
