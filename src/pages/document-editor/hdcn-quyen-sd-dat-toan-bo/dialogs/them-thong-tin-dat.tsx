@@ -18,21 +18,28 @@ interface ThemThongTinDatProps {
 }
 
 const validationSchema = Yup.object({
-  so_thua_dat: Yup.string().required("Số thửa đất là bắt buộc"),
-  to_ban_do_so: Yup.string().required("Tờ bản đồ số là bắt buộc"),
-  dia_chi: Yup.string().required("Địa chỉ là bắt buộc"),
-  loai_giay_to: Yup.string().required("Loại giấy tờ là bắt buộc"),
-  so_giay_to: Yup.string().required("Số giấy tờ là bắt buộc"),
-  so_vao_so_cap_gcn: Yup.string().required("Số vào sổ cấp GCN là bắt buộc"),
-  noi_cap_giay_chung_nhan: Yup.string().required(
+  "số thửa đất": Yup.string().required("Số thửa đất là bắt buộc"),
+  "tờ bản đồ": Yup.string().required("Tờ bản đồ số là bắt buộc"),
+  "địa chỉ cũ": Yup.string().required("Địa chỉ là bắt buộc"),
+  "loại giấy chứng nhận": Yup.string().required("Loại giấy tờ là bắt buộc"),
+  "số giấy chứng nhận": Yup.string().required("Số giấy tờ là bắt buộc"),
+  "số vào sổ cấp giấy chứng nhận": Yup.string().required(
+    "Số vào sổ cấp GCN là bắt buộc"
+  ),
+  "nơi cấp giấy chứng nhận": Yup.string().required(
     "Nơi cấp giấy chứng nhận là bắt buộc"
   ),
-  ngay_cap_giay_chung_nhan: Yup.string().required(
+  "ngày cấp giấy chứng nhận": Yup.string().required(
     "Ngày cấp giấy chứng nhận là bắt buộc"
   ),
-  dien_tich: Yup.number().required("Diện tích là bắt buộc"),
-  hinh_thuc_su_dung: Yup.string().required("Hình thức sử dụng là bắt buộc"),
-  muc_dich_su_dung: Yup.string().required("Mục đích sử dụng là bắt buộc"),
+  "diện tích": Yup.string().required("Diện tích là bắt buộc"),
+  "hình thức sử dụng": Yup.string().required("Hình thức sử dụng là bắt buộc"),
+  "mục đích sử dụng": Yup.string().required("Mục đích sử dụng là bắt buộc"),
+  "thời hạn sử dụng": Yup.string().required("Thời hạn sử dụng là bắt buộc"),
+  "nguồn gốc sử dụng": Yup.string().required("Nguồn gốc sử dụng là bắt buộc"),
+  "giá tiền": Yup.string().required("Giá tiền là bắt buộc"),
+  "giá tiền bằng chữ": Yup.string().required("Giá tiền bằng chữ là bắt buộc"),
+  "ghi chú": Yup.string().optional(),
 });
 
 export const ThemThongTinDat = ({
@@ -82,7 +89,8 @@ export const ThemThongTinDat = ({
       validationSchema,
       onSubmit: submitForm,
     });
-
+  console.log("errors", errors);
+  console.log("values", values);
   return (
     <Dialog maxWidth="lg" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
