@@ -53,20 +53,24 @@ export const ThemThongTinDat = ({
       return agreementObjects[editObjectIndex];
     }
     return {
-      so_thua_dat: "",
-      to_ban_do_so: "",
-      dia_chi: "",
-      loai_giay_to: "",
-      so_giay_to: "",
-      so_vao_so_cap_gcn: "",
-      noi_cap_giay_chung_nhan: "",
-      ngay_cap_giay_chung_nhan: "",
-      dien_tich: "",
-      hinh_thuc_su_dung: "",
-      muc_dich_su_dung: "",
-      thoi_han_su_dung: "",
-      nguon_goc_su_dung: "",
-      ghi_chu: "",
+      "số thửa đất": "",
+      "tờ bản đồ": "",
+      "địa chỉ cũ": "",
+      "địa chỉ mới": "",
+      "loại giấy chứng nhận": "",
+      "số giấy chứng nhận": "",
+      "số vào sổ cấp giấy chứng nhận": "",
+      "nơi cấp giấy chứng nhận": "",
+      "ngày cấp giấy chứng nhận": "",
+      "diện tích": "",
+      "diện tích bằng chữ": "",
+      "hình thức sử dụng": "",
+      "mục đích sử dụng": "",
+      "thời hạn sử dụng": "",
+      "nguồn gốc sử dụng": "",
+      "giá tiền": "",
+      "giá tiền bằng chữ": "",
+      "ghi chú": "",
     };
   };
 
@@ -88,200 +92,263 @@ export const ThemThongTinDat = ({
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
                 fullWidth
-                id="so_thua_dat"
-                name="so_thua_dat"
+                id="số thửa đất"
+                name="số thửa đất"
                 label="Số thửa đất *"
-                value={values.so_thua_dat}
+                value={values["số thửa đất"]}
                 onChange={handleChange}
-                error={!!errors.so_thua_dat && touched.so_thua_dat}
+                error={!!errors["số thửa đất"] && touched["số thửa đất"]}
                 helperText={
-                  errors.so_thua_dat &&
-                  touched.so_thua_dat &&
-                  errors.so_thua_dat
+                  errors["số thửa đất"] &&
+                  touched["số thửa đất"] &&
+                  errors["số thửa đất"]
                 }
               />
               <TextField
                 fullWidth
-                id="to_ban_do_so"
-                name="to_ban_do_so"
+                id="tờ bản đồ"
+                name="tờ bản đồ"
                 label="Tờ bản đồ số *"
-                value={values.to_ban_do_so}
+                value={values["tờ bản đồ"]}
                 onChange={handleChange}
-                error={!!errors.to_ban_do_so && touched.to_ban_do_so}
+                error={!!errors["tờ bản đồ"] && touched["tờ bản đồ"]}
                 helperText={
-                  errors.to_ban_do_so &&
-                  touched.to_ban_do_so &&
-                  errors.to_ban_do_so
+                  errors["tờ bản đồ"] &&
+                  touched["tờ bản đồ"] &&
+                  errors["tờ bản đồ"]
                 }
               />
               <TextField
                 fullWidth
-                id="dia_chi"
-                name="dia_chi"
+                id="địa chỉ cũ"
+                name="địa chỉ cũ"
                 label="Địa chỉ *"
-                value={values.dia_chi}
+                value={values["địa chỉ cũ"]}
                 onChange={handleChange}
-                error={!!errors.dia_chi && touched.dia_chi}
-                helperText={errors.dia_chi && touched.dia_chi && errors.dia_chi}
+                error={!!errors["địa chỉ cũ"] && touched["địa chỉ cũ"]}
+                helperText={
+                  errors["địa chỉ cũ"] &&
+                  touched["địa chỉ cũ"] &&
+                  errors["địa chỉ cũ"]
+                }
               />
               <TextField
                 fullWidth
-                id="loai_giay_to"
-                name="loai_giay_to"
+                id="loại giấy chứng nhận"
+                name="loại giấy chứng nhận"
                 label="Loại giấy tờ *"
-                value={values.loai_giay_to}
-                onChange={handleChange}
-                error={!!errors.loai_giay_to && touched.loai_giay_to}
-                helperText={
-                  errors.loai_giay_to &&
-                  touched.loai_giay_to &&
-                  errors.loai_giay_to
-                }
-              />
-              <TextField
-                fullWidth
-                id="so_giay_to"
-                name="so_giay_to"
-                label="Số giấy tờ *"
-                value={values.so_giay_to}
-                onChange={handleChange}
-                error={!!errors.so_giay_to && touched.so_giay_to}
-                helperText={
-                  errors.so_giay_to && touched.so_giay_to && errors.so_giay_to
-                }
-              />
-              <TextField
-                fullWidth
-                id="so_vao_so_cap_gcn"
-                name="so_vao_so_cap_gcn"
-                label="Số vào sổ cấp GCN *"
-                value={values.so_vao_so_cap_gcn}
-                onChange={handleChange}
-                error={!!errors.so_vao_so_cap_gcn && touched.so_vao_so_cap_gcn}
-                helperText={
-                  errors.so_vao_so_cap_gcn &&
-                  touched.so_vao_so_cap_gcn &&
-                  errors.so_vao_so_cap_gcn
-                }
-              />
-              <TextField
-                fullWidth
-                id="noi_cap_giay_chung_nhan"
-                name="noi_cap_giay_chung_nhan"
-                label="Nơi cấp giấy chứng nhận *"
-                value={values.noi_cap_giay_chung_nhan}
+                value={values["loại giấy chứng nhận"]}
                 onChange={handleChange}
                 error={
-                  !!errors.noi_cap_giay_chung_nhan &&
-                  touched.noi_cap_giay_chung_nhan
+                  !!errors["loại giấy chứng nhận"] &&
+                  touched["loại giấy chứng nhận"]
                 }
                 helperText={
-                  errors.noi_cap_giay_chung_nhan &&
-                  touched.noi_cap_giay_chung_nhan &&
-                  errors.noi_cap_giay_chung_nhan
+                  errors["loại giấy chứng nhận"] &&
+                  touched["loại giấy chứng nhận"] &&
+                  errors["loại giấy chứng nhận"]
                 }
               />
               <TextField
                 fullWidth
-                id="ngay_cap_giay_chung_nhan"
-                name="ngay_cap_giay_chung_nhan"
+                id="số giấy chứng nhận"
+                name="số giấy chứng nhận"
+                label="Số giấy tờ *"
+                value={values["số giấy chứng nhận"]}
+                onChange={handleChange}
+                error={
+                  !!errors["số giấy chứng nhận"] &&
+                  touched["số giấy chứng nhận"]
+                }
+                helperText={
+                  errors["số giấy chứng nhận"] &&
+                  touched["số giấy chứng nhận"] &&
+                  errors["số giấy chứng nhận"]
+                }
+              />
+              <TextField
+                fullWidth
+                id="số vào sổ cấp giấy chứng nhận"
+                name="số vào sổ cấp giấy chứng nhận"
+                label="Số vào sổ cấp GCN *"
+                value={values["số vào sổ cấp giấy chứng nhận"]}
+                onChange={handleChange}
+                error={
+                  !!errors["số vào sổ cấp giấy chứng nhận"] &&
+                  touched["số vào sổ cấp giấy chứng nhận"]
+                }
+                helperText={
+                  errors["số vào sổ cấp giấy chứng nhận"] &&
+                  touched["số vào sổ cấp giấy chứng nhận"] &&
+                  errors["số vào sổ cấp giấy chứng nhận"]
+                }
+              />
+              <TextField
+                fullWidth
+                id="nơi cấp giấy chứng nhận"
+                name="nơi cấp giấy chứng nhận"
+                label="Nơi cấp giấy chứng nhận *"
+                value={values["nơi cấp giấy chứng nhận"]}
+                onChange={handleChange}
+                error={
+                  !!errors["nơi cấp giấy chứng nhận"] &&
+                  touched["nơi cấp giấy chứng nhận"]
+                }
+                helperText={
+                  errors["nơi cấp giấy chứng nhận"] &&
+                  touched["nơi cấp giấy chứng nhận"] &&
+                  errors["nơi cấp giấy chứng nhận"]
+                }
+              />
+              <TextField
+                fullWidth
+                id="ngày cấp giấy chứng nhận"
+                name="ngày cấp giấy chứng nhận"
                 label="Ngày cấp giấy chứng nhận *"
                 type="date"
+                inputProps={{
+                  max: new Date().toISOString().split("T")[0],
+                }}
                 slotProps={{
-                  htmlInput: { max: new Date().toISOString().split("T")[0] },
                   inputLabel: { shrink: true },
                 }}
-                value={values.ngay_cap_giay_chung_nhan}
+                value={values["ngày cấp giấy chứng nhận"]}
                 onChange={handleChange}
                 error={
-                  !!errors.ngay_cap_giay_chung_nhan &&
-                  touched.ngay_cap_giay_chung_nhan
+                  !!errors["ngày cấp giấy chứng nhận"] &&
+                  touched["ngày cấp giấy chứng nhận"]
                 }
                 helperText={
-                  errors.ngay_cap_giay_chung_nhan &&
-                  touched.ngay_cap_giay_chung_nhan &&
-                  errors.ngay_cap_giay_chung_nhan
+                  errors["ngày cấp giấy chứng nhận"] &&
+                  touched["ngày cấp giấy chứng nhận"] &&
+                  errors["ngày cấp giấy chứng nhận"]
                 }
               />
               <TextField
                 fullWidth
                 type="number"
-                id="dien_tich"
-                name="dien_tich"
+                id="diện tích"
+                name="diện tích"
                 label="Diện tích (m2) *"
-                value={values.dien_tich}
+                value={values["diện tích"]}
                 onChange={handleChange}
-                error={!!errors.dien_tich && touched.dien_tich}
+                error={!!errors["diện tích"] && touched["diện tích"]}
                 helperText={
-                  errors.dien_tich && touched.dien_tich && errors.dien_tich
+                  errors["diện tích"] &&
+                  touched["diện tích"] &&
+                  errors["diện tích"]
                 }
               />
               <TextField
                 fullWidth
-                id="hinh_thuc_su_dung"
-                name="hinh_thuc_su_dung"
+                id="hình thức sử dụng"
+                name="hình thức sử dụng"
                 label="Hình thức sử dụng *"
-                value={values.hinh_thuc_su_dung}
+                value={values["hình thức sử dụng"]}
                 onChange={handleChange}
-                error={!!errors.hinh_thuc_su_dung && touched.hinh_thuc_su_dung}
+                error={
+                  !!errors["hình thức sử dụng"] && touched["hình thức sử dụng"]
+                }
                 helperText={
-                  errors.hinh_thuc_su_dung &&
-                  touched.hinh_thuc_su_dung &&
-                  errors.hinh_thuc_su_dung
+                  errors["hình thức sử dụng"] &&
+                  touched["hình thức sử dụng"] &&
+                  errors["hình thức sử dụng"]
                 }
               />
               <TextField
                 fullWidth
-                id="muc_dich_su_dung"
-                name="muc_dich_su_dung"
+                id="mục đích sử dụng"
+                name="mục đích sử dụng"
                 label="Mục đích sử dụng *"
-                value={values.muc_dich_su_dung}
+                value={values["mục đích sử dụng"]}
                 onChange={handleChange}
-                error={!!errors.muc_dich_su_dung && touched.muc_dich_su_dung}
+                error={
+                  !!errors["mục đích sử dụng"] && touched["mục đích sử dụng"]
+                }
                 helperText={
-                  errors.muc_dich_su_dung &&
-                  touched.muc_dich_su_dung &&
-                  errors.muc_dich_su_dung
+                  errors["mục đích sử dụng"] &&
+                  touched["mục đích sử dụng"] &&
+                  errors["mục đích sử dụng"]
                 }
               />
               <TextField
                 fullWidth
-                id="thoi_han_su_dung"
-                name="thoi_han_su_dung"
+                id="thời hạn sử dụng"
+                name="thời hạn sử dụng"
                 label="Thời hạn sử dụng *"
-                value={values.thoi_han_su_dung}
+                value={values["thời hạn sử dụng"]}
                 onChange={handleChange}
-                error={!!errors.thoi_han_su_dung && touched.thoi_han_su_dung}
+                error={
+                  !!errors["thời hạn sử dụng"] && touched["thời hạn sử dụng"]
+                }
                 helperText={
-                  errors.thoi_han_su_dung &&
-                  touched.thoi_han_su_dung &&
-                  errors.thoi_han_su_dung
+                  errors["thời hạn sử dụng"] &&
+                  touched["thời hạn sử dụng"] &&
+                  errors["thời hạn sử dụng"]
                 }
               />
               <TextField
                 fullWidth
-                id="nguon_goc_su_dung"
-                name="nguon_goc_su_dung"
+                id="nguồn gốc sử dụng"
+                name="nguồn gốc sử dụng"
                 label="Nguồn gốc sử dụng *"
-                value={values.nguon_goc_su_dung}
+                value={values["nguồn gốc sử dụng"]}
                 onChange={handleChange}
-                error={!!errors.nguon_goc_su_dung && touched.nguon_goc_su_dung}
+                error={
+                  !!errors["nguồn gốc sử dụng"] && touched["nguồn gốc sử dụng"]
+                }
                 helperText={
-                  errors.nguon_goc_su_dung &&
-                  touched.nguon_goc_su_dung &&
-                  errors.nguon_goc_su_dung
+                  errors["nguồn gốc sử dụng"] &&
+                  touched["nguồn gốc sử dụng"] &&
+                  errors["nguồn gốc sử dụng"]
                 }
               />
               <TextField
                 fullWidth
-                id="ghi_chu"
-                name="ghi_chu"
-                label="Ghi chú"
-                value={values.ghi_chu}
+                id="giá tiền"
+                name="giá tiền"
+                label="Giá tiền *"
+                value={values["giá tiền"]}
                 onChange={handleChange}
-                error={!!errors.ghi_chu && touched.ghi_chu}
-                helperText={errors.ghi_chu && touched.ghi_chu && errors.ghi_chu}
+                error={!!errors["giá tiền"] && touched["giá tiền"]}
+                helperText={
+                  errors["giá tiền"] &&
+                  touched["giá tiền"] &&
+                  errors["giá tiền"]
+                }
               />
+              <TextField
+                fullWidth
+                id="giá tiền bằng chữ"
+                name="giá tiền bằng chữ"
+                label="Giá tiền bằng chữ *"
+                value={values["giá tiền bằng chữ"]}
+                onChange={handleChange}
+                error={
+                  !!errors["giá tiền bằng chữ"] && touched["giá tiền bằng chữ"]
+                }
+                helperText={
+                  errors["giá tiền bằng chữ"] &&
+                  touched["giá tiền bằng chữ"] &&
+                  errors["giá tiền bằng chữ"]
+                }
+              />
+              <Box sx={{ gridColumn: "span 3" }}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  id="ghi chú"
+                  name="ghi chú"
+                  label="Ghi chú"
+                  value={values["ghi chú"]}
+                  onChange={handleChange}
+                  error={!!errors["ghi chú"] && touched["ghi chú"]}
+                  helperText={
+                    errors["ghi chú"] && touched["ghi chú"] && errors["ghi chú"]
+                  }
+                />
+              </Box>
             </Box>
           </Box>
         </DialogContent>

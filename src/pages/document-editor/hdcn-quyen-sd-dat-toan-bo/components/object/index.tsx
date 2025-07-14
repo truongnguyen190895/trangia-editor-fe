@@ -64,31 +64,31 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       <TableCell component="th">
                         <Typography variant="body1">Số thửa đất</Typography>
                       </TableCell>
-                      <TableCell>{object.so_thua_dat}</TableCell>
+                      <TableCell>{object["số thửa đất"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
                         <Typography variant="body1">Tờ bản đồ số</Typography>
                       </TableCell>
-                      <TableCell>{object.to_ban_do_so}</TableCell>
+                      <TableCell>{object["tờ bản đồ"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
                         <Typography variant="body1">Địa chỉ</Typography>
                       </TableCell>
-                      <TableCell>{object.dia_chi}</TableCell>
+                      <TableCell>{object["địa chỉ cũ"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
                         <Typography variant="body1">Loại giấy tờ</Typography>
                       </TableCell>
-                      <TableCell>{object.loai_giay_to}</TableCell>
+                      <TableCell>{object["loại giấy chứng nhận"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
                         <Typography variant="body1">Số giấy tờ</Typography>
                       </TableCell>
-                      <TableCell>{object.so_giay_to}</TableCell>
+                      <TableCell>{object["số giấy chứng nhận"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
@@ -96,7 +96,9 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                           Số vào sổ cấp GCN
                         </Typography>
                       </TableCell>
-                      <TableCell>{object.so_vao_so_cap_gcn}</TableCell>
+                      <TableCell>
+                        {object["số vào sổ cấp giấy chứng nhận"]}
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
@@ -104,7 +106,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                           Nơi cấp giấy chứng nhận
                         </Typography>
                       </TableCell>
-                      <TableCell>{object.noi_cap_giay_chung_nhan}</TableCell>
+                      <TableCell>{object["nơi cấp giấy chứng nhận"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
@@ -113,7 +115,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        {dayjs(object.ngay_cap_giay_chung_nhan).format(
+                        {dayjs(object["ngày cấp giấy chứng nhận"]).format(
                           "DD/MM/YYYY"
                         )}
                       </TableCell>
@@ -122,7 +124,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       <TableCell component="th">
                         <Typography variant="body1">Diện tích (m2)</Typography>
                       </TableCell>
-                      <TableCell>{object.dien_tich}</TableCell>
+                      <TableCell>{object["diện tích"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
@@ -130,7 +132,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                           Hình thức sử dụng
                         </Typography>
                       </TableCell>
-                      <TableCell>{object.hinh_thuc_su_dung}</TableCell>
+                      <TableCell>{object["hình thức sử dụng"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
@@ -138,7 +140,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                           Mục đích sử dụng
                         </Typography>
                       </TableCell>
-                      <TableCell>{object.muc_dich_su_dung}</TableCell>
+                      <TableCell>{object["mục đích sử dụng"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
@@ -146,7 +148,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                           Thời hạn sử dụng
                         </Typography>
                       </TableCell>
-                      <TableCell>{object.thoi_han_su_dung}</TableCell>
+                      <TableCell>{object["thời hạn sử dụng"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
@@ -154,13 +156,13 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                           Nguồn gốc sử dụng
                         </Typography>
                       </TableCell>
-                      <TableCell>{object.nguon_goc_su_dung}</TableCell>
+                      <TableCell>{object["nguồn gốc sử dụng"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">
                         <Typography variant="body1">Ghi chú</Typography>
                       </TableCell>
-                      <TableCell>{object.ghi_chu}</TableCell>
+                      <TableCell>{object["ghi chú"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">

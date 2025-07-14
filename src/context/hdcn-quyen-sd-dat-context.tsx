@@ -93,11 +93,11 @@ export const HdcnQuyenSdDatProvider = ({
     "cá nhân": [
       {
         "giới tính": "Ông",
-        tên: "Đỗ Viết Chiến",
-        "ngày sinh": "03/06/1976",
+        tên: "Đỗ Viết A",
+        "ngày sinh": "1976-06-03",
         "loại giấy tờ": "CCCD",
         "số giấy tờ": "0123456789",
-        "ngày cấp": "01/01/2020",
+        "ngày cấp": "2020-01-01",
         "nơi cấp": "Cục cảnh sát quản lý hành chính về trật tự xã hội",
         "địa chỉ thường trú cũ":
           "Thôn Lương Xá, xã Lam Điền, huyện Hoài Đức, thành phố Hà Nội",
@@ -114,21 +114,26 @@ export const HdcnQuyenSdDatProvider = ({
 
   const [agreementObjects, setAgreementObjects] = useState<ThongTinThuaDat[]>([
     {
-      so_thua_dat: "326",
-      to_ban_do_so: "8",
-      dia_chi:
+      "số thửa đất": "326",
+      "tờ bản đồ": "8",
+      "địa chỉ cũ":
         "Thôn Quyết Tiến, xã Tiên Phương, huyện Chương Mỹ, tỉnh Hà Tây (nay là Thôn Quyết Tiến, phường Chương Mỹ, thành phố Hà Nội)",
-      loai_giay_to: "Giấy chứng nhận quyền sử dụng đất",
-      so_giay_to: "U 425562",
-      so_vao_so_cap_gcn: "00129 QSDĐ/456/QĐ-UB",
-      noi_cap_giay_chung_nhan: "UBND huyện Chương Mỹ",
-      ngay_cap_giay_chung_nhan: "12/06/2010",
-      dien_tich: "123",
-      hinh_thuc_su_dung: "Sử dụng đất",
-      muc_dich_su_dung: "T",
-      thoi_han_su_dung: "Lâu dài",
-      nguon_goc_su_dung: "Lấy đất từ UBND huyện Chương Mỹ",
-      ghi_chu:
+      "địa chỉ mới":
+        "Thôn Quyết Tiến, xã Tiên Phương, huyện Chương Mỹ, tỉnh Hà Tây (nay là Thôn Quyết Tiến, phường Chương Mỹ, thành phố Hà Nội)",
+      "loại giấy chứng nhận": "Giấy chứng nhận quyền sử dụng đất",
+      "số giấy chứng nhận": "U 425562",
+      "số vào sổ cấp giấy chứng nhận": "00129 QSDĐ/456/QĐ-UB",
+      "nơi cấp giấy chứng nhận": "UBND huyện Chương Mỹ",
+      "ngày cấp giấy chứng nhận": "2010-06-12",
+      "diện tích": "123",
+      "diện tích bằng chữ": "một trăm hai mươi ba mét vuông",
+      "hình thức sử dụng": "Sử dụng riêng",
+      "mục đích sử dụng": "Đất ở: 50; đất trồng cây: 73",
+      "thời hạn sử dụng": "Đất ở: lâu dài; đất trồng cây: 60 năm",
+      "nguồn gốc sử dụng": "Lấy đất từ UBND huyện Chương Mỹ",
+      "giá tiền": "1,000,000,000",
+      "giá tiền bằng chữ": "một tỷ đồng",
+      "ghi chú":
         "Đổi lại giấy chứng nhận mới khi đã có bản đồ Địa chính có toạ độ",
     },
   ]);
