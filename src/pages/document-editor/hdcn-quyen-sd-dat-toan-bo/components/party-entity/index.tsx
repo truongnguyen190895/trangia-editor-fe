@@ -2,21 +2,22 @@ import {
   Box,
   Typography,
   Button,
+  Divider,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
-  Paper,
 } from "@mui/material";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import dayjs from "dayjs";
-import { AddPartyDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-party-dialog";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import { AddSingleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-single";
+import { AddCoupleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-couple";
 
 interface PartyEntityProps {
   title: string;
@@ -25,30 +26,55 @@ interface PartyEntityProps {
 
 export const PartyEntity = ({ title, side }: PartyEntityProps) => {
   const {
-    partyAEntities,
-    partyBEntities,
-    deletePartyAEntity,
-    deletePartyBEntity,
-    setEditEntityIndex,
+    partyA,
+    partyB,
+    deleteSinglePartyAEntity,
+    deleteSinglePartyBEntity,
+    deleteCouplePartyAEntity,
+    deleteCouplePartyBEntity,
+    setSinglePartyAEntityIndex,
+    setSinglePartyBEntityIndex,
+    setCouplePartyAEntityIndex,
+    setCouplePartyBEntityIndex,
   } = useHdcnQuyenSdDatContext();
-  const [open, setOpen] = useState(false);
-  const partyEntities = side === "partyA" ? partyAEntities : partyBEntities;
+  const [openSingleDialog, setOpenSingleDialog] = useState(false);
+  const [openCoupleDialog, setOpenCoupleDialog] = useState(false);
+  const partyEntities = side === "partyA" ? partyA : partyB;
+  const individualParty = partyEntities["cá nhân"];
+  const coupleParty = partyEntities["vợ chồng"];
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleDeleteSingleParty = (arrayIndex: number) => {
+    if (side === "partyA") {
+      deleteSinglePartyAEntity(arrayIndex);
+    } else {
+      deleteSinglePartyBEntity(arrayIndex);
+    }
   };
 
-  const handleOpenDialog = () => {
-    setOpen(true);
+  const handleDeleteCoupleParty = (arrayIndex: number) => {
+    if (side === "partyA") {
+      deleteCouplePartyAEntity(arrayIndex);
+    } else {
+      deleteCouplePartyBEntity(arrayIndex);
+    }
   };
 
-  const handleDeleteEntity = (arrayIndex: number) => {
-    side === "partyA" ? deletePartyAEntity(arrayIndex) : deletePartyBEntity(arrayIndex);
+  const handleEditSingleParty = (arrayIndex: number) => {
+    if (side === "partyA") {
+      setSinglePartyAEntityIndex(arrayIndex);
+    } else {
+      setSinglePartyBEntityIndex(arrayIndex);
+    }
+    setOpenSingleDialog(true);
   };
 
-  const handleEditEntity = (arrayIndex: number) => {
-    setEditEntityIndex(arrayIndex);
-    handleOpenDialog();
+  const handleEditCoupleParty = (arrayIndex: number) => {
+    if (side === "partyA") {
+      setCouplePartyAEntityIndex(arrayIndex);
+    } else {
+      setCouplePartyBEntityIndex(arrayIndex);
+    }
+    setOpenCoupleDialog(true);
   };
 
   return (
@@ -62,67 +88,268 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
       >
         <Typography variant="h6">{title}</Typography>
       </Box>
-      <Box padding="10px">
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleOpenDialog}
-        >
-          Thêm
-        </Button>
-        {partyEntities.length > 0 && (
-          <TableContainer component={Paper} sx={{ marginTop: "10px" }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Ông/Bà</TableCell>
-                  <TableCell>Họ và tên</TableCell>
-                  <TableCell>Ngày sinh</TableCell>
-                  <TableCell>Loại giấy tờ</TableCell>
-                  <TableCell>Số giấy tờ</TableCell>
-                  <TableCell>Ngày cấp</TableCell>
-                  <TableCell>Nơi cấp</TableCell>
-                  <TableCell>Địa chỉ thường trú</TableCell>
-                  <TableCell>Xem/Sửa</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {partyEntities.map((entity, index) => (
-                  <TableRow key={entity.documentNumber}>
-                    <TableCell>{entity.gender}</TableCell>
-                    <TableCell>{entity.name}</TableCell>
+      <Box
+        paddingX="10px"
+        paddingY="20px"
+        display="flex"
+        gap="1rem"
+        flexDirection="column"
+      >
+        <Box>
+          <Typography variant="h6">Chủ thể là cá nhân</Typography>
+          {individualParty.length > 0 ? (
+            <Box>
+              <Table>
+                <TableHead>
+                  <TableRow>
                     <TableCell>
-                      {dayjs(entity.dateOfBirth).format("DD/MM/YYYY")}
+                      <Typography variant="body1">Giới tính</Typography>
                     </TableCell>
-                    <TableCell>{entity.documentType}</TableCell>
-                    <TableCell>{entity.documentNumber}</TableCell>
-                    <TableCell>{entity.documentIssuedDate}</TableCell>
-                    <TableCell>{entity.documentIssuedBy}</TableCell>
-                    <TableCell>{entity.address}</TableCell>
                     <TableCell>
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleEditEntity(index)}
-                      />
-                      <DeleteIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleDeleteEntity(index)}
-                      />
+                      <Typography variant="body1">Tên</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Ngày sinh</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Loại giấy tờ</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Số giấy tờ</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Xem chi tiết</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Sửa</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Xóa</Typography>
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+                </TableHead>
+                <TableBody>
+                  {individualParty.map((entity, index) => (
+                    <TableRow
+                      key={entity["số giấy tờ"]}
+                      sx={{
+                        "& .icon-action": {
+                          cursor: "pointer",
+                          "&:active": {
+                            scale: 0.9,
+                            transition: "scale 0.1s ease",
+                          },
+                        },
+                      }}
+                    >
+                      <TableCell>{entity["giới tính"]}</TableCell>
+                      <TableCell>{entity.tên}</TableCell>
+                      <TableCell>{entity["ngày sinh"]}</TableCell>
+                      <TableCell>{entity["loại giấy tờ"]}</TableCell>
+                      <TableCell>{entity["số giấy tờ"]}</TableCell>
+                      <TableCell>
+                        <VisibilityIcon
+                          className="icon-action"
+                          color="info"
+                          onClick={() => handleEditSingleParty(index)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <EditIcon
+                          className="icon-action"
+                          color="info"
+                          onClick={() => handleEditSingleParty(index)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <DeleteIcon
+                          className="icon-action"
+                          color="error"
+                          onClick={() => handleDeleteSingleParty(index)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <Box display="flex" alignItems="center" marginTop="10px">
+                <AddCircleRoundedIcon
+                  sx={{
+                    fontSize: "3rem",
+                    color: "#3D90D7",
+                    cursor: "pointer",
+                    "&:active": {
+                      scale: 0.9,
+                      transition: "scale 0.1s ease",
+                    },
+                  }}
+                  onClick={() => setOpenSingleDialog(true)}
+                />
+              </Box>
+            </Box>
+          ) : (
+            <Box display="flex" marginTop="10px" height="50px">
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<AddIcon />}
+                sx={{ flex: 1 }}
+                onClick={() => setOpenSingleDialog(true)}
+              >
+                <Typography variant="body1">Thêm thông tin cá nhân</Typography>
+              </Button>
+            </Box>
+          )}
+        </Box>
+        <Divider />
+        <Box>
+          <Typography variant="h6">Chủ thể là vợ chồng</Typography>
+          {coupleParty.length > 0 ? (
+            <Box>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <Typography variant="body1">Giới tính</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Tên</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Ngày sinh</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Loại giấy tờ</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Số giấy tờ</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Xem chi tiết</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Sửa</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">Xóa</Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {coupleParty.map((entity, index) => (
+                    <>
+                      <TableRow
+                        key={entity.chồng["số giấy tờ"]}
+                        sx={{
+                          "& .icon-action": {
+                            cursor: "pointer",
+                            "&:active": {
+                              scale: 0.9,
+                              transition: "scale 0.1s ease",
+                            },
+                          },
+                        }}
+                      >
+                        <TableCell>{entity.chồng["giới tính"]}</TableCell>
+                        <TableCell>{entity.chồng.tên}</TableCell>
+                        <TableCell>{entity.chồng["ngày sinh"]}</TableCell>
+                        <TableCell>{entity.chồng["loại giấy tờ"]}</TableCell>
+                        <TableCell>{entity.chồng["số giấy tờ"]}</TableCell>
+                        <TableCell>
+                          <VisibilityIcon
+                            className="icon-action"
+                            color="info"
+                            onClick={() => handleEditCoupleParty(index)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <EditIcon
+                            className="icon-action"
+                            color="info"
+                            onClick={() => handleEditCoupleParty(index)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <DeleteIcon
+                            className="icon-action"
+                            color="error"
+                            onClick={() => handleDeleteCoupleParty(index)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow
+                        key={entity.vợ["số giấy tờ"]}
+                        sx={{
+                          "& .icon-action": {
+                            cursor: "pointer",
+                            "&:active": {
+                              scale: 0.9,
+                              transition: "scale 0.1s ease",
+                            },
+                          },
+                        }}
+                      >
+                        <TableCell>{entity.vợ["giới tính"]}</TableCell>
+                        <TableCell>{entity.vợ.tên}</TableCell>
+                        <TableCell>{entity.vợ["ngày sinh"]}</TableCell>
+                        <TableCell>{entity.vợ["loại giấy tờ"]}</TableCell>
+                        <TableCell>{entity.vợ["số giấy tờ"]}</TableCell>
+                        <TableCell>
+                          <VisibilityIcon
+                            className="icon-action"
+                            color="info"
+                            onClick={() => handleEditCoupleParty(index)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <EditIcon
+                            className="icon-action"
+                            color="info"
+                            onClick={() => handleEditCoupleParty(index)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <DeleteIcon
+                            className="icon-action"
+                            color="error"
+                            onClick={() => handleDeleteCoupleParty(index)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          ) : (
+            <Box display="flex" marginTop="10px" height="50px">
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<AddIcon />}
+                sx={{ flex: 1 }}
+                onClick={() => setOpenCoupleDialog(true)}
+              >
+                <Typography variant="body1">Thêm thông tin vợ chồng</Typography>
+              </Button>
+            </Box>
+          )}
+        </Box>
       </Box>
-      {open ? (
-        <AddPartyDialog
-          open={open}
+      {openSingleDialog && (
+        <AddSingleDialog
+          open={openSingleDialog}
           side={side}
-          handleClose={handleClose}
+          onClose={() => setOpenSingleDialog(false)}
         />
-      ) : null}
+      )}
+      {openCoupleDialog && (
+        <AddCoupleDialog
+          open={openCoupleDialog}
+          side={side}
+          onClose={() => setOpenCoupleDialog(false)}
+        />
+      )}
     </Box>
   );
 };

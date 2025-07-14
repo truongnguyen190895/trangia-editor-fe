@@ -7,10 +7,11 @@ export interface ThongTinThuaDat {
   so_vao_so_cap_gcn: string;
   noi_cap_giay_chung_nhan: string;
   ngay_cap_giay_chung_nhan: string;
-  dien_tich: number;
+  dien_tich: string;
   hinh_thuc_su_dung: string;
   muc_dich_su_dung: string;
   thoi_han_su_dung: string;
   nguon_goc_su_dung: string;
   ghi_chu: string;
+  "tờ bản đồ"?: string;
 }

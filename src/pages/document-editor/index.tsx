@@ -2,6 +2,7 @@ import { Box, Typography, Button } from "@mui/material";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ChuyenNhuongDatToanBo } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo";
 import BackIcon from "@mui/icons-material/ArrowBack";
+import { HdcnQuyenSdDatProvider } from "@/context/hdcn-quyen-sd-dat-context";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
@@ -13,7 +14,12 @@ export const DocumentEditor = () => {
   const renderContent = () => {
     switch (type) {
       case "agreement":
-        return <ChuyenNhuongDatToanBo />;
+        return (
+          <HdcnQuyenSdDatProvider>
+            {" "}
+            <ChuyenNhuongDatToanBo />
+          </HdcnQuyenSdDatProvider>
+        );
     }
   };
 
