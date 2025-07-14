@@ -9,7 +9,6 @@ import {
   Typography,
   Select,
   MenuItem,
-  InputLabel,
   FormControl,
   FormLabel,
 } from "@mui/material";
@@ -17,26 +16,63 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import type { SingleAgreementParty } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
+import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 
 interface AddSingleDialogProps {
   open: boolean;
+  side: "partyA" | "partyB";
   onClose: () => void;
 }
 
-export const AddSingleDialog = ({ open, onClose }: AddSingleDialogProps) => {
+export const AddSingleDialog = ({
+  open,
+  side,
+  onClose,
+}: AddSingleDialogProps) => {
+  const {
+    partyA,
+    partyB,
+    singlePartyAEntityIndex,
+    singlePartyBEntityIndex,
+    addSinglePartyAEntity,
+    addSinglePartyBEntity,
+    editSinglePartyAEntity,
+    editSinglePartyBEntity,
+    setSinglePartyAEntityIndex,
+    setSinglePartyBEntityIndex,
+  } = useHdcnQuyenSdDatContext();
+  const singleParty = side === "partyA" ? partyA : partyB;
+  const singlePartyEntities = singleParty["cá nhân"];
+  const addPartyEntity =
+    side === "partyA" ? addSinglePartyAEntity : addSinglePartyBEntity;
+  const editPartyEntity =
+    side === "partyA" ? editSinglePartyAEntity : editSinglePartyBEntity;
+  const partyEntityIndex =
+    side === "partyA" ? singlePartyAEntityIndex : singlePartyBEntityIndex;
+
+  const getInitialValues = () => {
+    if (partyEntityIndex !== null) {
+      return singlePartyEntities[partyEntityIndex];
+    }
+    return {
+      "giới tính": GENDER.MALE,
+      tên: "",
+      "ngày sinh": "",
+      "loại giấy tờ": "",
+      "số giấy tờ": "",
+      "ngày cấp": "",
+      "nơi cấp": "",
+      "địa chỉ thường trú cũ": "",
+      "địa chỉ thường trú mới": "",
+      "tình trạng hôn nhân": "",
+    };
+  };
+
+  const isEdit = partyEntityIndex !== null;
+
   const { values, handleChange, handleSubmit } =
     useFormik<SingleAgreementParty>({
-      initialValues: {
-        "giới tính": GENDER.MALE,
-        tên: "",
-        "ngày sinh": "",
-        "loại giấy tờ": "",
-        "số giấy tờ": "",
-        "ngày cấp": "",
-        "nơi cấp": "",
-        "địa chỉ thường trú cũ": "",
-        "địa chỉ thường trú mới": "",
-      },
+      initialValues: getInitialValues(),
       validationSchema: Yup.object({
         "giới tính": Yup.string().required("Giới tính là bắt buộc"),
         tên: Yup.string().required("Tên là bắt buộc"),
@@ -44,16 +80,25 @@ export const AddSingleDialog = ({ open, onClose }: AddSingleDialogProps) => {
         "loại giấy tờ": Yup.string().required("Loại giấy tờ là bắt buộc"),
       }),
       onSubmit: (values) => {
-        console.log(values);
+        if (isEdit) {
+          editPartyEntity(values, partyEntityIndex as number);
+        } else {
+          addPartyEntity(values);
+        }
+        handleClose();
       },
     });
 
-  console.log("values", values);
+  const handleClose = () => {
+    setSinglePartyAEntityIndex(null);
+    setSinglePartyBEntityIndex(null);
+    onClose();
+  };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>
-        <Typography variant="h6">Thêm thông tin cá nhân</Typography>
+        <Typography variant="body1">Thêm thông tin cá nhân</Typography>
       </DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
         <form onSubmit={handleSubmit}>
@@ -81,6 +126,7 @@ export const AddSingleDialog = ({ open, onClose }: AddSingleDialogProps) => {
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Ngày sinh *</FormLabel>
               <TextField
+                type="date"
                 value={values["ngày sinh"]}
                 name="ngày sinh"
                 onChange={handleChange}
@@ -112,6 +158,7 @@ export const AddSingleDialog = ({ open, onClose }: AddSingleDialogProps) => {
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Ngày cấp *</FormLabel>
               <TextField
+                type="date"
                 value={values["ngày cấp"]}
                 name="ngày cấp"
                 onChange={handleChange}
@@ -157,13 +204,14 @@ export const AddSingleDialog = ({ open, onClose }: AddSingleDialogProps) => {
               />
             </FormControl>
           </Box>
+          <input type="submit" hidden />
         </form>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} variant="outlined">
+        <Button onClick={() => handleClose()} variant="outlined">
           Hủy
         </Button>
-        <Button type="submit" variant="contained">
+        <Button variant="contained" onClick={() => handleSubmit()}>
           Thêm
         </Button>
       </DialogActions>

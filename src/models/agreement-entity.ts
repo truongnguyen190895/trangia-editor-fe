@@ -42,7 +42,12 @@ export interface CoupleAgreementParty extends BaseAgreementParty {
   };
 }
 
+export interface Couple {
+  "chồng": CoupleAgreementParty;
+  "vợ": CoupleAgreementParty;
+}
+
 export interface AgreementParty {
   "cá nhân": SingleAgreementParty[];
-  "vợ chồng": CoupleAgreementParty[];
+  "vợ chồng": Couple[];
 }
