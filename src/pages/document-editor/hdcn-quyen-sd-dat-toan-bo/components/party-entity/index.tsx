@@ -329,6 +329,20 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                   ))}
                 </TableBody>
               </Table>
+              <Box display="flex" alignItems="center" marginTop="10px">
+                <AddCircleRoundedIcon
+                  sx={{
+                    fontSize: "3rem",
+                    color: "#3D90D7",
+                    cursor: "pointer",
+                    "&:active": {
+                      scale: 0.9,
+                      transition: "scale 0.1s ease",
+                    },
+                  }}
+                  onClick={() => setOpenCoupleDialog(true)}
+                />
+              </Box>
             </Box>
           ) : (
             <Box display="flex" marginTop="10px" height="50px">
