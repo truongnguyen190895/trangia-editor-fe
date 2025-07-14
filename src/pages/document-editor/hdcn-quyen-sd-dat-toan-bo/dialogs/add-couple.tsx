@@ -16,7 +16,6 @@ import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import type { Couple } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
 import { useFormik } from "formik";
-import dayjs from "dayjs";
 
 interface AddCoupleDialogProps {
   open: boolean;
@@ -137,7 +136,7 @@ export const AddCoupleDialog = ({
                     <FormLabel>Ngày sinh *</FormLabel>
                     <TextField
                       type="date"
-                      value={dayjs(values["chồng"]["ngày sinh"]).format("DD/MM/YYYY")}
+                      value={values["chồng"]["ngày sinh"]}
                       name="chồng.ngày sinh"
                       onChange={handleChange}
                       fullWidth
@@ -169,7 +168,7 @@ export const AddCoupleDialog = ({
                     <FormLabel>Ngày cấp *</FormLabel>
                     <TextField
                       type="date"
-                      value={dayjs(values["chồng"]["ngày cấp"]).format("DD/MM/YYYY")}
+                      value={values["chồng"]["ngày cấp"]}
                       name="chồng.ngày cấp"
                       onChange={handleChange}
                       fullWidth
@@ -237,7 +236,7 @@ export const AddCoupleDialog = ({
                     <FormLabel>Ngày sinh *</FormLabel>
                     <TextField
                       type="date"
-                      value={dayjs(values["vợ"]["ngày sinh"]).format("DD/MM/YYYY")}
+                      value={values["vợ"]["ngày sinh"]}
                       name="vợ.ngày sinh"
                       onChange={handleChange}
                       fullWidth
@@ -269,7 +268,7 @@ export const AddCoupleDialog = ({
                     <FormLabel>Ngày cấp *</FormLabel>
                     <TextField
                       type="date"
-                      value={dayjs(values["vợ"]["ngày cấp"]).format("DD/MM/YYYY")}
+                      value={values["vợ"]["ngày cấp"]}
                       name="vợ.ngày cấp"
                       onChange={handleChange}
                       fullWidth

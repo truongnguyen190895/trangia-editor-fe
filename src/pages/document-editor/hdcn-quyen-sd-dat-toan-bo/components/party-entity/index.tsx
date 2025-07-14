@@ -18,6 +18,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import { AddSingleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-single";
 import { AddCoupleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-couple";
+import dayjs from "dayjs";
 
 interface PartyEntityProps {
   title: string;
@@ -144,7 +145,9 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                     >
                       <TableCell>{entity["giới tính"]}</TableCell>
                       <TableCell>{entity.tên}</TableCell>
-                      <TableCell>{entity["ngày sinh"]}</TableCell>
+                      <TableCell>
+                        {dayjs(entity["ngày sinh"]).format("DD/MM/YYYY")}
+                      </TableCell>
                       <TableCell>{entity["loại giấy tờ"]}</TableCell>
                       <TableCell>{entity["số giấy tờ"]}</TableCell>
                       <TableCell>
@@ -252,7 +255,11 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                       >
                         <TableCell>{entity.chồng["giới tính"]}</TableCell>
                         <TableCell>{entity.chồng.tên}</TableCell>
-                        <TableCell>{entity.chồng["ngày sinh"]}</TableCell>
+                        <TableCell>
+                          {dayjs(entity.chồng["ngày sinh"]).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </TableCell>
                         <TableCell>{entity.chồng["loại giấy tờ"]}</TableCell>
                         <TableCell>{entity.chồng["số giấy tờ"]}</TableCell>
                         <TableCell>
@@ -291,7 +298,9 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                       >
                         <TableCell>{entity.vợ["giới tính"]}</TableCell>
                         <TableCell>{entity.vợ.tên}</TableCell>
-                        <TableCell>{entity.vợ["ngày sinh"]}</TableCell>
+                        <TableCell>
+                          {dayjs(entity.vợ["ngày sinh"]).format("DD/MM/YYYY")}
+                        </TableCell>
                         <TableCell>{entity.vợ["loại giấy tờ"]}</TableCell>
                         <TableCell>{entity.vợ["số giấy tờ"]}</TableCell>
                         <TableCell>

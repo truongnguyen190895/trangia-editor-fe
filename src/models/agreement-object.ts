@@ -1,17 +1,20 @@
 export interface ThongTinThuaDat {
-  so_thua_dat: string;
-  to_ban_do_so: string;
-  dia_chi: string;
-  loai_giay_to: string;
-  so_giay_to: string;
-  so_vao_so_cap_gcn: string;
-  noi_cap_giay_chung_nhan: string;
-  ngay_cap_giay_chung_nhan: string;
-  dien_tich: string;
-  hinh_thuc_su_dung: string;
-  muc_dich_su_dung: string;
-  thoi_han_su_dung: string;
-  nguon_goc_su_dung: string;
-  ghi_chu: string;
-  "tờ bản đồ"?: string;
+  "số thửa đất": string;
+  "tờ bản đồ": string;
+  "địa chỉ cũ": string;
+  "địa chỉ mới": string;
+  "loại giấy chứng nhận": string;
+  "số giấy chứng nhận": string;
+  "số vào sổ cấp giấy chứng nhận": string;
+  "nơi cấp giấy chứng nhận": string;
+  "ngày cấp giấy chứng nhận": string;
+  "diện tích": string;
+  "diện tích bằng chữ": string;
+  "hình thức sử dụng": string;
+  "mục đích sử dụng": string;
+  "thời hạn sử dụng": string;
+  "nguồn gốc sử dụng": string;
+  "giá tiền": string;
+  "giá tiền bằng chữ": string;
+  "ghi chú": string;
 }

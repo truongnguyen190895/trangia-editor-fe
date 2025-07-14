@@ -6,83 +6,130 @@ import {
   InputAdornment,
   useTheme,
 } from "@mui/material";
-// import { HdcnQuyenSdDatProvider } from "@/context/hdcn-quyen-sd-dat-context";
 import { PartyEntity } from "./components/party-entity";
 import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import axios from "axios";
 import type { HDCNQuyenSDDatPayload } from "@/models/agreement-entity";
+import dayjs from "dayjs";
 
 export const ChuyenNhuongDatToanBo = () => {
   const { partyA, partyB, agreementObjects } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const handleGenerateDocument = () => {
-    const couplesA = partyA["vợ chồng"].map((couple) => couple.chồng).concat(partyA["vợ chồng"].map((couple) => couple.vợ));
-    const couplesB = partyB["vợ chồng"].map((couple) => couple.chồng).concat(partyB["vợ chồng"].map((couple) => couple.vợ));
+    const couplesA = partyA["vợ chồng"]
+      .map((couple) => ({
+        ...couple.chồng,
+        "ngày sinh": dayjs(couple.chồng["ngày sinh"]).format("DD/MM/YYYY"),
+        "ngày cấp": dayjs(couple.chồng["ngày cấp"]).format("DD/MM/YYYY"),
+      }))
+      .concat(
+        partyA["vợ chồng"].map((couple) => ({
+          ...couple.vợ,
+          "quan hệ": "vợ",
+          "ngày sinh": dayjs(couple.vợ["ngày sinh"]).format("DD/MM/YYYY"),
+          "ngày cấp": dayjs(couple.vợ["ngày cấp"]).format("DD/MM/YYYY"),
+        }))
+      );
+    const couplesB = partyB["vợ chồng"]
+      .map((couple) => ({
+        ...couple.chồng,
+        "ngày sinh": dayjs(couple.chồng["ngày sinh"]).format("DD/MM/YYYY"),
+        "ngày cấp": dayjs(couple.chồng["ngày cấp"]).format("DD/MM/YYYY"),
+      }))
+      .concat(
+        partyB["vợ chồng"].map((couple) => ({
+          ...couple.vợ,
+          "quan hệ": "vợ",
+          "ngày sinh": dayjs(couple.vợ["ngày sinh"]).format("DD/MM/YYYY"),
+          "ngày cấp": dayjs(couple.vợ["ngày cấp"]).format("DD/MM/YYYY"),
+        }))
+      );
+    const object = agreementObjects[0];
+
+    const purposes = object["mục đích sử dụng"].split(";"); // eg: đất ở: 123m2; đất trồng cây: 200m2
+    const expires = object["thời hạn sử dụng"].split(";"); // eg: đất ở: lâu dài; đất trồng cây: 60 năm
+    // need to convert purposes and expires to array of objects
+    const purposesArray = purposes.map((purpose, index) => {
+      const [purposeName, purposeArea] = purpose.split(":");
+      return {
+        "phân loại": purposeName,
+        "diện tích": purposeArea?.trim(),
+        "thời hạn sử dụng": expires[index]?.split(":")[1]?.trim(),
+      };
+    });
+
     const payload: HDCNQuyenSDDatPayload = {
       "bên A": {
-        "cá thể": [...partyA["cá nhân"], ...couplesA],
+        "cá thể": [
+          ...partyA["cá nhân"].map((person) => ({
+            ...person,
+            "ngày sinh": dayjs(person["ngày sinh"]).format("DD/MM/YYYY"),
+            "ngày cấp": dayjs(person["ngày cấp"]).format("DD/MM/YYYY"),
+          })),
+          ...couplesA,
+        ],
       },
       "bên B": {
-        "cá thể": [...partyB["cá nhân"], ...couplesB],
-      },
-      "số thửa đất": agreementObjects[0].so_thua_dat,
-      "tờ bản đồ": agreementObjects[0].to_ban_do_so,
-      "địa chỉ cũ": agreementObjects[0].dia_chi,
-      "địa chỉ mới": agreementObjects[0].dia_chi,
-      "loại giấy chứng nhận": agreementObjects[0].loai_giay_to,
-      "số giấy chứng nhận": agreementObjects[0].so_giay_to,
-      "số vào sổ cấp giấy chứng nhận": agreementObjects[0].so_vao_so_cap_gcn,
-      "ngày cấp giấy chứng nhận": agreementObjects[0].ngay_cap_giay_chung_nhan,
-      "nơi cấp giấy chứng nhận": agreementObjects[0].noi_cap_giay_chung_nhan,
-      "đặc điểm thửa đất": {
-        "diện tích": agreementObjects[0].dien_tich,
-        "diện tích bằng chữ": "mot tram met muong",
-        "hình thức sử dụng": agreementObjects[0].hinh_thuc_su_dung,
-        "mục đích và thời hạn sử dụng": [
-          {
-            "phân loại": "đất ở",
-            "diện tích": agreementObjects[0].dien_tich,
-            "thời hạn sử dụng": "vĩnh viễn",
-          },
+        "cá thể": [
+          ...partyB["cá nhân"].map((person) => ({
+            ...person,
+            "ngày sinh": dayjs(person["ngày sinh"]).format("DD/MM/YYYY"),
+            "ngày cấp": dayjs(person["ngày cấp"]).format("DD/MM/YYYY"),
+          })),
+          ...couplesB,
         ],
-        "nguồn gốc sử dụng": agreementObjects[0].nguon_goc_su_dung,
-        "ghi chú": agreementObjects[0].ghi_chu,
       },
-      "số tiền": "1000000000",
-      "số tiền bằng chữ": "một tỷ đồng",
+      "số thửa đất": object["số thửa đất"],
+      "tờ bản đồ": object["tờ bản đồ"],
+      "địa chỉ cũ": object["địa chỉ cũ"],
+      "địa chỉ mới": object["địa chỉ mới"],
+      "loại giấy chứng nhận": object["loại giấy chứng nhận"],
+      "số giấy chứng nhận": object["số giấy chứng nhận"],
+      "số vào sổ cấp giấy chứng nhận": object["số vào sổ cấp giấy chứng nhận"],
+      "ngày cấp giấy chứng nhận": dayjs(object["ngày cấp giấy chứng nhận"]).format("DD/MM/YYYY"),
+      "nơi cấp giấy chứng nhận": object["nơi cấp giấy chứng nhận"],
+      "đặc điểm thửa đất": {
+        "diện tích": object["diện tích"],
+        "diện tích bằng chữ": object["diện tích bằng chữ"],
+        "hình thức sử dụng": object["hình thức sử dụng"],
+        "mục đích và thời hạn sử dụng": purposesArray,
+        "nguồn gốc sử dụng": object["nguồn gốc sử dụng"],
+        "ghi chú": object["ghi chú"],
+      },
+      "số tiền": object["giá tiền"],
+      "số tiền bằng chữ": object["giá tiền bằng chữ"],
     };
     axios
       .post(
-        "https://0cc46ea5ff8b.ngrok-free.app/templates/hdcn-quyen-su-dung-dat/render",
+        "https://b821000aeffc.ngrok-free.app/templates/hdcn-quyen-su-dung-dat/render",
         payload,
         {
-          responseType: 'blob', // Important: tells axios to handle binary data
+          responseType: "blob", // Important: tells axios to handle binary data
         }
       )
       .then((res) => {
-        console.log(res);
-        
         // Create a blob from the response data
-        const blob = new Blob([res.data], { 
-          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
-        
+
         // Create a download link
         const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = url;
-        link.download = 'hop-dong-chuyen-nhuong-dat.docx'; // Set the filename
+        link.download = "hop-dong-chuyen-nhuong-dat.docx"; // Set the filename
         document.body.appendChild(link);
         link.click();
-        
+
         // Clean up
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
       })
       .catch((error) => {
-        console.error('Error generating document:', error);
+        console.error("Error generating document:", error);
+        window.alert("Lỗi khi tạo hợp đồng");
       });
   };
 
