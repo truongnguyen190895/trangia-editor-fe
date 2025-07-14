@@ -35,6 +35,14 @@ interface HdcnQuyenSdDatContextType {
     entity: SingleAgreementParty,
     arrayIndex: number
   ) => void;
+  editCouplePartyAEntity: (
+    entity: Couple,
+    arrayIndex: number
+  ) => void;
+  editCouplePartyBEntity: (
+    entity: Couple,
+    arrayIndex: number
+  ) => void;
   //   Couple section
   addCouplePartyAEntity: (entity: Couple, index?: number) => void;
   addCouplePartyBEntity: (entity: Couple, index?: number) => void;
@@ -78,6 +86,8 @@ export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
   setCouplePartyAEntityIndex: () => {},
   setCouplePartyBEntityIndex: () => {},
   editSinglePartyBEntity: () => {},
+  editCouplePartyAEntity: () => {},
+  editCouplePartyBEntity: () => {},
   addPartyAEntity: () => {},
   addPartyBEntity: () => {},
   addAgreementObject: () => {},
@@ -352,6 +362,24 @@ export const HdcnQuyenSdDatProvider = ({
     });
   };
 
+  const editCouplePartyAEntity = (entity: Couple, arrayIndex: number) => {
+    setPartyA({
+      ...partyA,
+      "vợ chồng": partyA["vợ chồng"].map((e, index) =>
+        index === arrayIndex ? entity : e
+      ),
+    });
+  };
+
+  const editCouplePartyBEntity = (entity: Couple, arrayIndex: number) => {
+    setPartyB({
+      ...partyB,
+      "vợ chồng": partyB["vợ chồng"].map((e, index) =>
+        index === arrayIndex ? entity : e
+      ),
+    });
+  };
+
   const deleteCouplePartyAEntity = (arrayIndex: number) => {
     setPartyA({
       ...partyA,
@@ -391,6 +419,8 @@ export const HdcnQuyenSdDatProvider = ({
         deleteCouplePartyBEntity,
         editSinglePartyAEntity,
         editSinglePartyBEntity,
+        editCouplePartyAEntity,
+        editCouplePartyBEntity,
         setSinglePartyAEntityIndex,
         setSinglePartyBEntityIndex,
         setCouplePartyAEntityIndex,

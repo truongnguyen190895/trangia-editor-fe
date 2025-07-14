@@ -13,10 +13,9 @@ import {
   DialogActions,
 } from "@mui/material";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
-import type { Couple, CoupleAgreementParty } from "@/models/agreement-entity";
+import type { Couple } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 
 interface AddCoupleDialogProps {
   open: boolean;
@@ -32,11 +31,21 @@ export const AddCoupleDialog = ({
   const {
     partyA,
     partyB,
-    addCouplePartyAEntity,
-    addCouplePartyBEntity,
     couplePartyAEntityIndex,
     couplePartyBEntityIndex,
+    addCouplePartyAEntity,
+    addCouplePartyBEntity,
+    editCouplePartyAEntity,
+    editCouplePartyBEntity,
   } = useHdcnQuyenSdDatContext();
+
+  const addPartyEntity =
+    side === "partyA" ? addCouplePartyAEntity : addCouplePartyBEntity;
+  const editPartyEntity =
+    side === "partyA" ? editCouplePartyAEntity : editCouplePartyBEntity;
+  const partyEntityIndex =
+    side === "partyA" ? couplePartyAEntityIndex : couplePartyBEntityIndex;
+  const isEdit = partyEntityIndex !== null;
 
   const getInitialValues = () => {
     if (side === "partyA" && couplePartyAEntityIndex !== null) {
@@ -74,23 +83,17 @@ export const AddCoupleDialog = ({
   const { values, handleChange, handleSubmit } = useFormik<Couple>({
     initialValues: getInitialValues(),
     onSubmit: (values) => {
-      console.log(values);
       handleSubmitCouple(values);
     },
   });
 
   const handleSubmitCouple = (values: Couple) => {
-    if (side === "partyA") {
-      addCouplePartyAEntity({
-        chồng: values.chồng,
-        vợ: values.vợ,
-      });
+    if (isEdit) {
+      editPartyEntity(values, partyEntityIndex as number);
     } else {
-      addCouplePartyBEntity({
-        chồng: values.chồng,
-        vợ: values.vợ,
-      });
+      addPartyEntity(values);
     }
+    onClose();
   };
   console.log(values);
   return (
