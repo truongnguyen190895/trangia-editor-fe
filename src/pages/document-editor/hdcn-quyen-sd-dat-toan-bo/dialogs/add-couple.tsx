@@ -99,7 +99,7 @@ export const AddCoupleDialog = ({
     }
     onClose();
   };
-  console.log(values);
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>

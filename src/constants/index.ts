@@ -1,4 +1,9 @@
-export const CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH: { value: string; label: string }[] = [
+interface Option {
+  value: string;
+  label: string;
+}
+
+export const CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH: Option[] = [
   {
     value: "CCCD",
     label: "CCCD",
@@ -17,7 +22,7 @@ export const CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH: { value: string; label: strin
   },
 ];
 
-export const NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH: { value: string; label: string }[] = [
+export const NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH: Option[] = [
   {
     value: "Công an Hà Nội",
     label: "Công an Hà Nội",
@@ -37,5 +42,155 @@ export const NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH: { value: string; label: string
   {
     value: "Bộ Công an",
     label: "Bộ Công an",
+  },
+];
+
+export const CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT: Option[] = [
+  {
+    value:
+      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất",
+    label:
+      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất",
+  },
+  {
+    value: "Giấy chứng nhận quyền sử dụng đất",
+    label: "Giấy chứng nhận quyền sử dụng đất",
+  },
+  {
+    value:
+      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất",
+    label:
+      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất",
+  },
+  {
+    value: "Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở",
+    label: "Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở",
+  },
+  {
+    value:
+      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất",
+    label:
+      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất",
+  },
+  {
+    value:
+      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất - Sổ mới",
+    label:
+      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất - Sổ mới",
+  },
+];
+
+export const NGUỒN_GỐC_SỬ_DỤNG_ĐẤT: Option[] = [
+  {
+    value: "Công nhận quyền sử dụng đất như giao đất có thu tiền sử dụng đất",
+    label: "Công nhận quyền sử dụng đất như giao đất có thu tiền sử dụng đất",
+  },
+  {
+    value:
+      "Công nhận quyền sử dụng đất như giao đất không thu tiền sử dụng đất",
+    label:
+      "Công nhận quyền sử dụng đất như giao đất không thu tiền sử dụng đất",
+  },
+  {
+    value:
+      "Công nhận QSDĐ như giao đất có thu tiền sử dụng đất: m2; Công nhận QSDĐ như giao đất không thu tiền sử dụng đất: m2",
+    label:
+      "Công nhận QSDĐ như giao đất có thu tiền sử dụng đất: m2; Công nhận QSDĐ như giao đất không thu tiền sử dụng đất: m2",
+  },
+  {
+    value: "Nhận chuyển nhượng quyền sử dụng đất",
+    label: "Nhận chuyển nhượng quyền sử dụng đất",
+  },
+  {
+    value:
+      "Nhận chuyển nhượng đất được Nhà nước giao đất có thu tiền sử dụng đất",
+    label:
+      "Nhận chuyển nhượng đất được Nhà nước giao đất có thu tiền sử dụng đất",
+  },
+  {
+    value:
+      "Nhận chuyển nhượng đất được Nhà nước giao đất có thu tiền SDĐ: m2 và công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+    label:
+      "Nhận chuyển nhượng đất được Nhà nước giao đất có thu tiền SDĐ: m2 và công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+  },
+  {
+    value:
+      "Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất có thu tiền sử dụng đất",
+    label:
+      "Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất có thu tiền sử dụng đất",
+  },
+  {
+    value:
+      "Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất không thu tiền sử dụng đất",
+    label:
+      "Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất không thu tiền sử dụng đất",
+  },
+  {
+    value:
+      "Nhận chuyển nhượng đất được Nhà nước giao đất có thu tiền SDĐ: m2; Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+    label:
+      "Nhận chuyển nhượng đất được Nhà nước giao đất có thu tiền SDĐ: m2; Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+  },
+  {
+    value:
+      "Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất có thu tiền SDĐ: m2; Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+    label:
+      "Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất có thu tiền SDĐ: m2; Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+  },
+  {
+    value:
+      "Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất có thu tiền SDĐ: m2; Công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+    label:
+      "Nhận chuyển nhượng đất được Công nhận QSDĐ như giao đất có thu tiền SDĐ: m2; Công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+  },
+  {
+    value: "Nhà nước công nhận quyền sử dụng đất",
+    label: "Nhà nước công nhận quyền sử dụng đất",
+  },
+  {
+    value:
+      "Nhà nước công nhận quyền sử dụng đất. Nhận chuyển nhượng đất của ông (bà):",
+    label:
+      "Nhà nước công nhận quyền sử dụng đất. Nhận chuyển nhượng đất của ông (bà):",
+  },
+  {
+    value:
+      "Nhà nước giao đất có thu tiền sử dụng đất: m2. Công nhận QSDĐ như giao đất không thu tiền sử dụng đất: m2",
+    label:
+      "Nhà nước giao đất có thu tiền sử dụng đất: m2. Công nhận QSDĐ như giao đất không thu tiền sử dụng đất: m2",
+  },
+  {
+    value: "Nhận tặng cho quyền sử dụng đất",
+    label: "Nhận tặng cho quyền sử dụng đất",
+  },
+  {
+    value: "Nhận thừa kế được Nhà nước giao đất có thu tiền sử dụng đất",
+    label: "Nhận thừa kế được Nhà nước giao đất có thu tiền sử dụng đất",
+  },
+  {
+    value:
+      "Nhận thừa kế đất được công nhận quyền sử dụng đất như giao đất có thu tiền sử dụng đất",
+    label:
+      "Nhận thừa kế đất được công nhận quyền sử dụng đất như giao đất có thu tiền sử dụng đất",
+  },
+  {
+    value:
+      "Được tặng cho đất được Công nhận QSDĐ như giao đất có thu tiền SDĐ: m2; Được tặng cho đất được Công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+    label:
+      "Được tặng cho đất được Công nhận QSDĐ như giao đất có thu tiền SDĐ: m2; Được tặng cho đất được Công nhận QSDĐ như giao đất không thu tiền SDĐ: m2",
+  },
+  {
+    value: "Được tặng cho đất được Nhà nước giao đất có thu tiền sử dụng đất",
+    label: "Được tặng cho đất được Nhà nước giao đất có thu tiền sử dụng đất",
+  },
+  {
+    value:
+      "Nhận chuyển nhượng đất được nhà nước công nhận QSDĐ như giao đất có thu tiền sử dụng đất",
+    label:
+      "Nhận chuyển nhượng đất được nhà nước công nhận QSDĐ như giao đất có thu tiền sử dụng đất",
+  },
+  {
+    value: "Nhà nước giao đất không thu tiền sử dụng đất",
+    label: "Nhà nước giao đất không thu tiền sử dụng đất",
   },
 ];

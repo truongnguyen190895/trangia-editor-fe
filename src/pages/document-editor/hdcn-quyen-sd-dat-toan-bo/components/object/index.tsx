@@ -57,7 +57,11 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
         {agreementObjects.length > 0 ? (
           <Box>
             {agreementObjects.map((object, index) => (
-              <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
+              <TableContainer
+                component={Paper}
+                sx={{ marginTop: "1rem" }}
+                key={index}
+              >
                 <Table sx={{ border: "1px solid #BCCCDC" }}>
                   <TableBody>
                     <TableRow>
@@ -125,6 +129,28 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                         <Typography variant="body1">Diện tích (m2)</Typography>
                       </TableCell>
                       <TableCell>{object["diện tích"]}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">
+                          Diện tích bằng chữ (mét vuông)
+                        </Typography>
+                      </TableCell>
+                      <TableCell>{object["diện tích bằng chữ"]}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">Giá tiền</Typography>
+                      </TableCell>
+                      <TableCell>{object["giá tiền"]}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">
+                          Giá tiền bằng chữ
+                        </Typography>
+                      </TableCell>
+                      <TableCell>{object["giá tiền bằng chữ"]}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th">

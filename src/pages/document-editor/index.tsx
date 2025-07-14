@@ -9,7 +9,7 @@ export const DocumentEditor = () => {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
   const id = searchParams.get("id");
-  console.log(type, id);
+  console.info(type, id);
 
   const renderContent = () => {
     switch (type) {

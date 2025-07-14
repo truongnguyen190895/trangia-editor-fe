@@ -6,11 +6,17 @@ import {
   TextField,
   DialogActions,
   Button,
+  Autocomplete,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import type { ThongTinThuaDat } from "@/models/agreement-object";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import {
+  CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT,
+  NGUỒN_GỐC_SỬ_DỤNG_ĐẤT,
+} from "@/constants";
+import { numberToVietnamese } from "@/utils/number-to-words";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -83,14 +89,13 @@ export const ThemThongTinDat = ({
 
   const initialValues = getInitialValue();
 
-  const { values, errors, touched, handleChange, handleSubmit } =
+  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
     useFormik<ThongTinThuaDat>({
       initialValues,
       validationSchema,
       onSubmit: submitForm,
     });
-  console.log("errors", errors);
-  console.log("values", values);
+
   return (
     <Dialog maxWidth="lg" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
@@ -140,22 +145,30 @@ export const ThemThongTinDat = ({
                   errors["địa chỉ cũ"]
                 }
               />
-              <TextField
-                fullWidth
-                id="loại giấy chứng nhận"
-                name="loại giấy chứng nhận"
-                label="Loại giấy tờ *"
-                value={values["loại giấy chứng nhận"]}
-                onChange={handleChange}
-                error={
-                  !!errors["loại giấy chứng nhận"] &&
-                  touched["loại giấy chứng nhận"]
+              <Autocomplete
+                sx={{ gridColumn: "span 3" }}
+                options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
+                value={
+                  CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
+                    (item) => item.value === values["loại giấy chứng nhận"]
+                  ) ?? null
                 }
-                helperText={
-                  errors["loại giấy chứng nhận"] &&
-                  touched["loại giấy chứng nhận"] &&
-                  errors["loại giấy chứng nhận"]
-                }
+                getOptionLabel={(option) => option.label}
+                onChange={(_event, value) => {
+                  handleChange({
+                    target: {
+                      name: "loại giấy chứng nhận",
+                      value: value?.value,
+                    },
+                  });
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Loại giấy chứng nhận *"
+                    name="loại giấy chứng nhận"
+                  />
+                )}
               />
               <TextField
                 fullWidth
@@ -234,17 +247,35 @@ export const ThemThongTinDat = ({
               />
               <TextField
                 fullWidth
-                type="number"
+                type="text"
                 id="diện tích"
                 name="diện tích"
                 label="Diện tích (m2) *"
                 value={values["diện tích"]}
-                onChange={handleChange}
+                onChange={(event) => {
+                  handleChange(event);
+                  setFieldValue("diện tích bằng chữ", numberToVietnamese(event.target.value?.replace(/\./g, '').replace(/\,/g, '.')));
+                }}
                 error={!!errors["diện tích"] && touched["diện tích"]}
                 helperText={
                   errors["diện tích"] &&
                   touched["diện tích"] &&
                   errors["diện tích"]
+                }
+              />
+              <TextField
+                fullWidth
+                type="text"
+                id="diện tích bằng chữ"
+                name="diện tích bằng chữ"
+                label="Diện tích bằng chữ *"
+                value={values["diện tích bằng chữ"]}
+                onChange={handleChange}
+                error={!!errors["diện tích bằng chữ"] && touched["diện tích bằng chữ"]}
+                helperText={
+                  errors["diện tích bằng chữ"] &&
+                  touched["diện tích bằng chữ"] &&
+                  errors["diện tích bằng chữ"]
                 }
               />
               <TextField
@@ -280,6 +311,7 @@ export const ThemThongTinDat = ({
                 }
               />
               <TextField
+                // sx={{ gridColumn: "span 2" }}
                 fullWidth
                 id="thời hạn sử dụng"
                 name="thời hạn sử dụng"
@@ -295,21 +327,26 @@ export const ThemThongTinDat = ({
                   errors["thời hạn sử dụng"]
                 }
               />
-              <TextField
-                fullWidth
-                id="nguồn gốc sử dụng"
-                name="nguồn gốc sử dụng"
-                label="Nguồn gốc sử dụng *"
-                value={values["nguồn gốc sử dụng"]}
-                onChange={handleChange}
-                error={
-                  !!errors["nguồn gốc sử dụng"] && touched["nguồn gốc sử dụng"]
+              <Autocomplete
+                sx={{ gridColumn: "span 3" }}
+                options={NGUỒN_GỐC_SỬ_DỤNG_ĐẤT}
+                value={
+                  NGUỒN_GỐC_SỬ_DỤNG_ĐẤT.find(
+                    (item) => item.value === values["nguồn gốc sử dụng"]
+                  ) ?? null
                 }
-                helperText={
-                  errors["nguồn gốc sử dụng"] &&
-                  touched["nguồn gốc sử dụng"] &&
-                  errors["nguồn gốc sử dụng"]
-                }
+                onChange={(_event, value) => {
+                  handleChange({
+                    target: {
+                      name: "nguồn gốc sử dụng",
+                      value: value?.value,
+                    },
+                  });
+                }}
+                getOptionLabel={(option) => option.label}
+                renderInput={(params) => (
+                  <TextField {...params} label="Nguồn gốc sử dụng *" />
+                )}
               />
               <TextField
                 fullWidth
@@ -317,7 +354,10 @@ export const ThemThongTinDat = ({
                 name="giá tiền"
                 label="Giá tiền *"
                 value={values["giá tiền"]}
-                onChange={handleChange}
+                onChange={(event) => {
+                  handleChange(event);
+                  setFieldValue("giá tiền bằng chữ", numberToVietnamese(event.target.value?.replace(/\./g, '').replace(/\,/g, '.')));
+                }}
                 error={!!errors["giá tiền"] && touched["giá tiền"]}
                 helperText={
                   errors["giá tiền"] &&
@@ -326,6 +366,7 @@ export const ThemThongTinDat = ({
                 }
               />
               <TextField
+                sx={{ gridColumn: "span 2" }}
                 fullWidth
                 id="giá tiền bằng chữ"
                 name="giá tiền bằng chữ"

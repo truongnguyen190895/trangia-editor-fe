@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -13,11 +12,9 @@ import "./index.css";
 import { router } from "./router";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <RouterProvider router={router} />
-      </LocalizationProvider>
-    </ThemeProvider>
-  </StrictMode>
+  <ThemeProvider theme={theme}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <RouterProvider router={router} />
+    </LocalizationProvider>
+  </ThemeProvider>
 );

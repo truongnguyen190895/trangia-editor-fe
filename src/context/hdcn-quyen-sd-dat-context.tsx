@@ -90,21 +90,7 @@ export const HdcnQuyenSdDatProvider = ({
   children: React.ReactNode;
 }) => {
   const [partyA, setPartyA] = useState<AgreementParty>({
-    "cá nhân": [
-      {
-        "giới tính": "Ông",
-        tên: "Đỗ Viết A",
-        "ngày sinh": "1976-06-03",
-        "loại giấy tờ": "CCCD",
-        "số giấy tờ": "0123456789",
-        "ngày cấp": "2020-01-01",
-        "nơi cấp": "Cục cảnh sát quản lý hành chính về trật tự xã hội",
-        "địa chỉ thường trú cũ":
-          "Thôn Lương Xá, xã Lam Điền, huyện Hoài Đức, thành phố Hà Nội",
-        "địa chỉ thường trú mới": "xã Quản Bị, thành phố Hà Nội",
-        "tình trạng hôn nhân": "Đã kết hôn với bà Nguyễn Thị Bé",
-      },
-    ],
+    "cá nhân": [],
     "vợ chồng": [],
   });
   const [partyB, setPartyB] = useState<AgreementParty>({
@@ -112,33 +98,9 @@ export const HdcnQuyenSdDatProvider = ({
     "vợ chồng": [],
   });
 
-  const [agreementObjects, setAgreementObjects] = useState<ThongTinThuaDat[]>([
-    {
-      "số thửa đất": "326",
-      "tờ bản đồ": "8",
-      "địa chỉ cũ":
-        "Thôn Quyết Tiến, xã Tiên Phương, huyện Chương Mỹ, tỉnh Hà Tây (nay là Thôn Quyết Tiến, phường Chương Mỹ, thành phố Hà Nội)",
-      "địa chỉ mới":
-        "Thôn Quyết Tiến, xã Tiên Phương, huyện Chương Mỹ, tỉnh Hà Tây (nay là Thôn Quyết Tiến, phường Chương Mỹ, thành phố Hà Nội)",
-      "loại giấy chứng nhận": "Giấy chứng nhận quyền sử dụng đất",
-      "số giấy chứng nhận": "U 425562",
-      "số vào sổ cấp giấy chứng nhận": "00129 QSDĐ/456/QĐ-UB",
-      "nơi cấp giấy chứng nhận": "UBND huyện Chương Mỹ",
-      "ngày cấp giấy chứng nhận": "2010-06-12",
-      "diện tích": "123",
-      "diện tích bằng chữ": "một trăm hai mươi ba mét vuông",
-      "hình thức sử dụng": "Sử dụng riêng",
-      "mục đích sử dụng": "Đất ở: 50; đất trồng cây: 73",
-      "thời hạn sử dụng": "Đất ở: lâu dài; đất trồng cây: 60 năm",
-      "nguồn gốc sử dụng": "Lấy đất từ UBND huyện Chương Mỹ",
-      "giá tiền": "1,000,000,000",
-      "giá tiền bằng chữ": "một tỷ đồng",
-      "ghi chú":
-        "Đổi lại giấy chứng nhận mới khi đã có bản đồ Địa chính có toạ độ",
-    },
-  ]);
-
-  console.log("agreementObjects from context", agreementObjects);
+  const [agreementObjects, setAgreementObjects] = useState<ThongTinThuaDat[]>(
+    []
+  );
 
   const [editObjectIndex, setEditObjectIndex] = useState<number | null>(null);
   const [singlePartyAEntityIndex, setSinglePartyAEntityIndex] = useState<
