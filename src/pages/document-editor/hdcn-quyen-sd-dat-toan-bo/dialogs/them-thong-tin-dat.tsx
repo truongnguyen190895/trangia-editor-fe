@@ -44,7 +44,6 @@ export const ThemThongTinDat = ({
   const isEdit = editObjectIndex !== null;
 
   const submitForm = (values: ThongTinThuaDat) => {
-    console.log(values["tờ bản đồ"]);
     addAgreementObject(values, editObjectIndex ?? undefined);
     handleClose();
   };
@@ -62,7 +61,7 @@ export const ThemThongTinDat = ({
       so_vao_so_cap_gcn: "",
       noi_cap_giay_chung_nhan: "",
       ngay_cap_giay_chung_nhan: "",
-      dien_tich: 0,
+      dien_tich: "",
       hinh_thuc_su_dung: "",
       muc_dich_su_dung: "",
       thoi_han_su_dung: "",

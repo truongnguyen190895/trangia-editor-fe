@@ -1,5 +1,4 @@
 import type {
-  AgreementEntity,
   AgreementParty,
   SingleAgreementParty,
   Couple,
@@ -35,24 +34,14 @@ interface HdcnQuyenSdDatContextType {
     entity: SingleAgreementParty,
     arrayIndex: number
   ) => void;
-  editCouplePartyAEntity: (
-    entity: Couple,
-    arrayIndex: number
-  ) => void;
-  editCouplePartyBEntity: (
-    entity: Couple,
-    arrayIndex: number
-  ) => void;
+  editCouplePartyAEntity: (entity: Couple, arrayIndex: number) => void;
+  editCouplePartyBEntity: (entity: Couple, arrayIndex: number) => void;
   //   Couple section
   addCouplePartyAEntity: (entity: Couple, index?: number) => void;
   addCouplePartyBEntity: (entity: Couple, index?: number) => void;
   //   Common section
   setEditObjectIndex: (index: number | null) => void;
-  addPartyAEntity: (entity: AgreementEntity, index?: number) => void;
-  addPartyBEntity: (entity: AgreementEntity, index?: number) => void;
   addAgreementObject: (object: ThongTinThuaDat, index?: number) => void;
-  deletePartyAEntity: (arrayIndex: number) => void;
-  deletePartyBEntity: (arrayIndex: number) => void;
   deleteAgreementObject: (arrayIndex: number) => void;
 }
 
@@ -88,12 +77,8 @@ export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
   editSinglePartyBEntity: () => {},
   editCouplePartyAEntity: () => {},
   editCouplePartyBEntity: () => {},
-  addPartyAEntity: () => {},
-  addPartyBEntity: () => {},
   addAgreementObject: () => {},
   //delete
-  deletePartyAEntity: () => {},
-  deletePartyBEntity: () => {},
   deleteAgreementObject: () => {},
 });
 
@@ -120,55 +105,13 @@ export const HdcnQuyenSdDatProvider = ({
         "tình trạng hôn nhân": "Đã kết hôn với bà Nguyễn Thị Bé",
       },
     ],
-    "vợ chồng": [
-      {
-        chồng: {
-          "giới tính": "Ông",
-          tên: "Nguyễn Văn A",
-          "ngày sinh": "01/01/1990",
-          "loại giấy tờ": "CCCD",
-          "số giấy tờ": "0123456789",
-          "ngày cấp": "01/01/2020",
-          "nơi cấp": "Cục cảnh sát quản lý hành chính về trật tự xã hội",
-          "địa chỉ thường trú cũ":
-            "Thôn Lương Xá, xã Lam Điền, huyện Hoài Đức, thành phố Hà Nội",
-          "địa chỉ thường trú mới": "xã Quản Bị, thành phố Hà Nội",
-        },
-        vợ: {
-          "giới tính": "Bà",
-          tên: "Nguyễn Thị Bé",
-          "ngày sinh": "01/01/1990",
-          "loại giấy tờ": "CCCD",
-          "số giấy tờ": "0123456789",
-          "ngày cấp": "01/01/2020",
-          "nơi cấp": "Cục cảnh sát quản lý hành chính về trật tự xã hội",
-          "địa chỉ thường trú cũ":
-            "Thôn Lương Xá, xã Lam Điền, huyện Hoài Đức, thành phố Hà Nội",
-          "địa chỉ thường trú mới": "xã Quản Bị, thành phố Hà Nội",
-          "quan hệ": "vợ",
-        },
-      },
-    ],
+    "vợ chồng": [],
   });
   const [partyB, setPartyB] = useState<AgreementParty>({
     "cá nhân": [],
     "vợ chồng": [],
   });
-  const [partyAEntities, setPartyAEntities] = useState<AgreementEntity[]>([
-    {
-      "giới tính": "Ông",
-      tên: "Đỗ Viết Chiến",
-      "ngày sinh": "03/06/1976",
-      "loại giấy tờ": "CCCD",
-      "số giấy tờ": "0123456789",
-      "ngày cấp": "01/01/2020",
-      "nơi cấp": "Cục cảnh sát quản lý hành chính về trật tự xã hội",
-      "địa chỉ thường trú cũ":
-        "Thôn Lương Xá, xã Lam Điền, huyện Hoài Đức, thành phố Hà Nội",
-      "địa chỉ thường trú mới": "xã Quản Bị, thành phố Hà Nội",
-    },
-  ]);
-  const [partyBEntities, setPartyBEntities] = useState<AgreementEntity[]>([]);
+
   const [agreementObjects, setAgreementObjects] = useState<ThongTinThuaDat[]>([
     {
       so_thua_dat: "326",
@@ -180,7 +123,7 @@ export const HdcnQuyenSdDatProvider = ({
       so_vao_so_cap_gcn: "00129 QSDĐ/456/QĐ-UB",
       noi_cap_giay_chung_nhan: "UBND huyện Chương Mỹ",
       ngay_cap_giay_chung_nhan: "12/06/2010",
-      dien_tich: 123,
+      dien_tich: "123",
       hinh_thuc_su_dung: "Sử dụng đất",
       muc_dich_su_dung: "T",
       thoi_han_su_dung: "Lâu dài",
@@ -189,6 +132,8 @@ export const HdcnQuyenSdDatProvider = ({
         "Đổi lại giấy chứng nhận mới khi đã có bản đồ Địa chính có toạ độ",
     },
   ]);
+
+  console.log("agreementObjects from context", agreementObjects);
 
   const [editObjectIndex, setEditObjectIndex] = useState<number | null>(null);
   const [singlePartyAEntityIndex, setSinglePartyAEntityIndex] = useState<
@@ -214,42 +159,6 @@ export const HdcnQuyenSdDatProvider = ({
     } else {
       setAgreementObjects([...agreementObjects, object]);
     }
-  };
-
-  const addPartyAEntity = (entity: AgreementEntity, index?: number) => {
-    if (index !== undefined) {
-      setPartyAEntities([
-        ...partyAEntities.slice(0, index),
-        entity,
-        ...partyAEntities.slice(index + 1),
-      ]);
-    } else {
-      setPartyAEntities([...partyAEntities, entity]);
-    }
-  };
-
-  const deletePartyAEntity = (arrayIndex: number) => {
-    setPartyAEntities(
-      partyAEntities.filter((_e, index) => index !== arrayIndex)
-    );
-  };
-
-  const addPartyBEntity = (entity: AgreementEntity, index?: number) => {
-    if (index !== undefined) {
-      setPartyBEntities([
-        ...partyBEntities.slice(0, index),
-        entity,
-        ...partyBEntities.slice(index + 1),
-      ]);
-    } else {
-      setPartyBEntities([...partyBEntities, entity]);
-    }
-  };
-
-  const deletePartyBEntity = (arrayIndex: number) => {
-    setPartyBEntities(
-      partyBEntities.filter((_e, index) => index !== arrayIndex)
-    );
   };
 
   const deleteAgreementObject = (arrayIndex: number) => {
@@ -426,11 +335,7 @@ export const HdcnQuyenSdDatProvider = ({
         setCouplePartyAEntityIndex,
         setCouplePartyBEntityIndex,
         setEditObjectIndex,
-        addPartyAEntity,
-        addPartyBEntity,
-        deletePartyAEntity,
         addAgreementObject,
-        deletePartyBEntity,
         deleteAgreementObject,
       }}
     >
