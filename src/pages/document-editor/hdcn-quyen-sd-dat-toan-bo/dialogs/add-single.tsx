@@ -17,6 +17,10 @@ import * as Yup from "yup";
 import type { SingleAgreementParty } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import {
+  CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH,
+  NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
+} from "@/constants";
 
 interface AddSingleDialogProps {
   open: boolean;
@@ -141,9 +145,11 @@ export const AddSingleDialog = ({
                 onChange={handleChange}
                 fullWidth
               >
-                <MenuItem value="CCCD">CCCD</MenuItem>
-                <MenuItem value="CMND">CMND</MenuItem>
-                <MenuItem value="Hộ chiếu">Hộ chiếu</MenuItem>
+                {CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
+                  <MenuItem key={item.value} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
@@ -167,12 +173,17 @@ export const AddSingleDialog = ({
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Nơi cấp *</FormLabel>
-              <TextField
+              <Select
                 value={values["nơi cấp"]}
                 name="nơi cấp"
                 onChange={handleChange}
-                fullWidth
-              />
+              >
+                {NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
+                  <MenuItem key={item.value} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Địa chỉ thường trú cũ *</FormLabel>
