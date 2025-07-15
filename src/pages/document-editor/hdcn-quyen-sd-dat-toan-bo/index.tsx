@@ -88,7 +88,9 @@ export const ChuyenNhuongDatToanBo = () => {
       "loại giấy chứng nhận": object["loại giấy chứng nhận"],
       "số giấy chứng nhận": object["số giấy chứng nhận"],
       "số vào sổ cấp giấy chứng nhận": object["số vào sổ cấp giấy chứng nhận"],
-      "ngày cấp giấy chứng nhận": dayjs(object["ngày cấp giấy chứng nhận"]).format("DD/MM/YYYY"),
+      "ngày cấp giấy chứng nhận": dayjs(
+        object["ngày cấp giấy chứng nhận"]
+      ).format("DD/MM/YYYY"),
       "nơi cấp giấy chứng nhận": object["nơi cấp giấy chứng nhận"],
       "đặc điểm thửa đất": {
         "diện tích": object["diện tích"],
@@ -103,10 +105,13 @@ export const ChuyenNhuongDatToanBo = () => {
     };
     axios
       .post(
-        "https://b821000aeffc.ngrok-free.app/templates/hdcn-quyen-su-dung-dat/render",
+        "https://tran-gia-be-0e12f8edbb33.herokuapp.com/templates/hdcn-quyen-su-dung-dat/render",
         payload,
         {
-          responseType: "blob", // Important: tells axios to handle binary data
+          responseType: "blob",
+          headers: {
+            "x-api-key": "d5be9ee46778dcaca57b709ba7bdb6ea",
+          },
         }
       )
       .then((res) => {
