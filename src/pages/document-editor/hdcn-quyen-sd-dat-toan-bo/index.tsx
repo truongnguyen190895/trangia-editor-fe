@@ -17,11 +17,20 @@ import dayjs from "dayjs";
 import { render_hdcn_quyen_sd_dat_toan_bo } from "@/api";
 
 export const ChuyenNhuongDatToanBo = () => {
-  const { partyA, partyB, agreementObjects } = useHdcnQuyenSdDatContext();
+  const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const isFormValid =
+    (partyA["cá nhân"].length > 0 || partyA["vợ chồng"].length > 0) &&
+    (partyB["cá nhân"].length > 0 || partyB["vợ chồng"].length > 0) &&
+    agreementObject !== null;
+
   const getPayload = (): HDCNQuyenSDDatPayload => {
+    if (!agreementObject) {
+      throw new Error("Agreement object is null");
+    }
+
     const couplesA = partyA["vợ chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -50,19 +59,6 @@ export const ChuyenNhuongDatToanBo = () => {
           "ngày cấp": dayjs(couple.vợ["ngày cấp"]).format("DD/MM/YYYY"),
         }))
       );
-    const object = agreementObjects[0];
-
-    const purposes = object["mục đích sử dụng"].split(";"); // eg: đất ở: 123m2; đất trồng cây: 200m2
-    const expires = object["thời hạn sử dụng"].split(";"); // eg: đất ở: lâu dài; đất trồng cây: 60 năm
-
-    const purposesArray = purposes.map((purpose, index) => {
-      const [purposeName, purposeArea] = purpose.split(":");
-      return {
-        "phân loại": purposeName,
-        "diện tích": purposeArea?.trim(),
-        "thời hạn sử dụng": expires[index]?.split(":")[1]?.trim(),
-      };
-    });
 
     const payload: HDCNQuyenSDDatPayload = {
       "bên A": {
@@ -85,27 +81,27 @@ export const ChuyenNhuongDatToanBo = () => {
           ...couplesB,
         ],
       },
-      "số thửa đất": object["số thửa đất"],
-      "tờ bản đồ": object["tờ bản đồ"],
-      "địa chỉ cũ": object["địa chỉ cũ"],
-      "địa chỉ mới": object["địa chỉ mới"],
-      "loại giấy chứng nhận": object["loại giấy chứng nhận"],
-      "số giấy chứng nhận": object["số giấy chứng nhận"],
-      "số vào sổ cấp giấy chứng nhận": object["số vào sổ cấp giấy chứng nhận"],
+      "số thửa đất": agreementObject["số thửa đất"],
+      "tờ bản đồ": agreementObject["tờ bản đồ"],
+      "địa chỉ cũ": agreementObject["địa chỉ cũ"],
+      "địa chỉ mới": agreementObject["địa chỉ mới"],
+      "loại giấy chứng nhận": agreementObject["loại giấy chứng nhận"],
+      "số giấy chứng nhận": agreementObject["số giấy chứng nhận"],
+      "số vào sổ cấp giấy chứng nhận": agreementObject["số vào sổ cấp giấy chứng nhận"],
       "ngày cấp giấy chứng nhận": dayjs(
-        object["ngày cấp giấy chứng nhận"]
+        agreementObject["ngày cấp giấy chứng nhận"]
       ).format("DD/MM/YYYY"),
-      "nơi cấp giấy chứng nhận": object["nơi cấp giấy chứng nhận"],
+      "nơi cấp giấy chứng nhận": agreementObject["nơi cấp giấy chứng nhận"],
       "đặc điểm thửa đất": {
-        "diện tích": object["diện tích"],
-        "diện tích bằng chữ": object["diện tích bằng chữ"],
-        "hình thức sử dụng": object["hình thức sử dụng"],
-        "mục đích và thời hạn sử dụng": purposesArray,
-        "nguồn gốc sử dụng": object["nguồn gốc sử dụng"],
-        "ghi chú": object["ghi chú"],
+        "diện tích": agreementObject["diện tích"],
+        "diện tích bằng chữ": agreementObject["diện tích bằng chữ"],
+        "hình thức sử dụng": agreementObject["hình thức sử dụng"],
+        "mục đích và thời hạn sử dụng": agreementObject["mục đích và thời hạn sử dụng"],
+        "nguồn gốc sử dụng": agreementObject["nguồn gốc sử dụng"],
+        "ghi chú": agreementObject["ghi chú"],
       },
-      "số tiền": object["giá tiền"],
-      "số tiền bằng chữ": object["giá tiền bằng chữ"],
+      "số tiền": agreementObject["giá tiền"],
+      "số tiền bằng chữ": agreementObject["giá tiền bằng chữ"],
     };
 
     return payload;
@@ -144,6 +140,7 @@ export const ChuyenNhuongDatToanBo = () => {
         border="1px solid #BCCCDC"
         borderRadius="5px"
         padding="1rem"
+        display="none" // TODO: temporary hide search
         flex={1}
       >
         <Typography variant="h6">Tìm kiếm</Typography>
@@ -184,13 +181,10 @@ export const ChuyenNhuongDatToanBo = () => {
             fontWeight: "600",
             textTransform: "uppercase",
           }}
+          disabled={!isFormValid}
           onClick={handleGenerateDocument}
         >
-          {isGenerating ? (
-            <CircularProgress size={20} />
-          ) : (
-            "Tạo hợp đồng"
-          )}
+          {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
         </Button>
       </Box>
     </Box>

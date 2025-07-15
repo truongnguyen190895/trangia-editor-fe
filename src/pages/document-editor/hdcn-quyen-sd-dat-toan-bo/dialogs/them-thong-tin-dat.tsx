@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -7,6 +8,13 @@ import {
   DialogActions,
   Button,
   Autocomplete,
+  Typography,
+  TableCell,
+  TableRow,
+  TableHead,
+  Table,
+  TableContainer,
+  TableBody,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -17,6 +25,10 @@ import {
   NGUỒN_GỐC_SỬ_DỤNG_ĐẤT,
 } from "@/constants";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import AddIcon from "@mui/icons-material/Add";
+import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -27,6 +39,7 @@ const validationSchema = Yup.object({
   "số thửa đất": Yup.string().required("Số thửa đất là bắt buộc"),
   "tờ bản đồ": Yup.string().required("Tờ bản đồ số là bắt buộc"),
   "địa chỉ cũ": Yup.string().required("Địa chỉ là bắt buộc"),
+  "địa chỉ mới": Yup.string().required("Địa chỉ là bắt buộc"),
   "loại giấy chứng nhận": Yup.string().required("Loại giấy tờ là bắt buộc"),
   "số giấy chứng nhận": Yup.string().required("Số giấy tờ là bắt buộc"),
   "số vào sổ cấp giấy chứng nhận": Yup.string().required(
@@ -40,8 +53,6 @@ const validationSchema = Yup.object({
   ),
   "diện tích": Yup.string().required("Diện tích là bắt buộc"),
   "hình thức sử dụng": Yup.string().required("Hình thức sử dụng là bắt buộc"),
-  "mục đích sử dụng": Yup.string().required("Mục đích sử dụng là bắt buộc"),
-  "thời hạn sử dụng": Yup.string().required("Thời hạn sử dụng là bắt buộc"),
   "nguồn gốc sử dụng": Yup.string().required("Nguồn gốc sử dụng là bắt buộc"),
   "giá tiền": Yup.string().required("Giá tiền là bắt buộc"),
   "giá tiền bằng chữ": Yup.string().required("Giá tiền bằng chữ là bắt buộc"),
@@ -52,52 +63,87 @@ export const ThemThongTinDat = ({
   open,
   handleClose,
 }: ThemThongTinDatProps) => {
-  const { editObjectIndex, agreementObjects, addAgreementObject } =
-    useHdcnQuyenSdDatContext();
-  const isEdit = editObjectIndex !== null;
+  const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
+  const [mụcđíchVàThờiHạnSửDụng, setMụcĐíchVàThờiHạnSửDụng] = useState<
+    {
+      "phân loại": string;
+      "diện tích": string;
+      "thời hạn sử dụng": string;
+    }[]
+  >(agreementObject?.["mục đích và thời hạn sử dụng"] ?? []);
+  const [mụcđíchVàThờiHạnSửDụngEdit, setMụcĐíchVàThờiHạnSửDụngEdit] = useState<{
+    "phân loại": string;
+    "diện tích": string;
+    "thời hạn sử dụng": string;
+  }>({
+    "phân loại": "",
+    "diện tích": "",
+    "thời hạn sử dụng": "",
+  });
+  const [indexEdit, setIndexEdit] = useState<number | null>(null);
 
   const submitForm = (values: ThongTinThuaDat) => {
-    addAgreementObject(values, editObjectIndex ?? undefined);
+    addAgreementObject({
+      ...values,
+      "mục đích và thời hạn sử dụng": mụcđíchVàThờiHạnSửDụng,
+    });
     handleClose();
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
-    if (isEdit) {
-      return agreementObjects[editObjectIndex];
-    }
-    return {
-      "số thửa đất": "",
-      "tờ bản đồ": "",
-      "địa chỉ cũ": "",
-      "địa chỉ mới": "",
-      "loại giấy chứng nhận": "",
-      "số giấy chứng nhận": "",
-      "số vào sổ cấp giấy chứng nhận": "",
-      "nơi cấp giấy chứng nhận": "",
-      "ngày cấp giấy chứng nhận": "",
-      "diện tích": "",
-      "diện tích bằng chữ": "",
-      "hình thức sử dụng": "",
-      "mục đích sử dụng": "",
-      "thời hạn sử dụng": "",
-      "nguồn gốc sử dụng": "",
-      "giá tiền": "",
-      "giá tiền bằng chữ": "",
-      "ghi chú": "",
-    };
+    return (
+      agreementObject ?? {
+        "số thửa đất": "",
+        "tờ bản đồ": "",
+        "địa chỉ cũ": "",
+        "địa chỉ mới": "",
+        "loại giấy chứng nhận": "",
+        "số giấy chứng nhận": "",
+        "số vào sổ cấp giấy chứng nhận": "",
+        "nơi cấp giấy chứng nhận": "",
+        "ngày cấp giấy chứng nhận": "",
+        "diện tích": "",
+        "diện tích bằng chữ": "",
+        "hình thức sử dụng": "",
+        "nguồn gốc sử dụng": "",
+        "giá tiền": "",
+        "giá tiền bằng chữ": "",
+        "ghi chú": "",
+        "mục đích và thời hạn sử dụng": [],
+      }
+    );
   };
-
-  const initialValues = getInitialValue();
 
   const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
     useFormik<ThongTinThuaDat>({
-      initialValues,
+      initialValues: getInitialValue(),
       validationSchema,
       onSubmit: submitForm,
     });
 
+  const handleAddMụcĐíchVàThờiHạnSửDụng = (indexEdit: number | null) => {
+    if (indexEdit !== null) {
+      setMụcĐíchVàThờiHạnSửDụng(
+        mụcđíchVàThờiHạnSửDụng.map((item, index) =>
+          index === indexEdit ? mụcđíchVàThờiHạnSửDụngEdit : item
+        )
+      );
+    } else {
+      setMụcĐíchVàThờiHạnSửDụng([
+        ...mụcđíchVàThờiHạnSửDụng,
+        mụcđíchVàThờiHạnSửDụngEdit,
+      ]);
+    }
+    setIndexEdit(null);
+    setMụcĐíchVàThờiHạnSửDụngEdit({
+      "phân loại": "",
+      "diện tích": "",
+      "thời hạn sử dụng": "",
+    });
+  };
+
   return (
-    <Dialog maxWidth="lg" fullWidth open={open} onClose={handleClose}>
+    <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
@@ -135,7 +181,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="địa chỉ cũ"
                 name="địa chỉ cũ"
-                label="Địa chỉ *"
+                label="Địa chỉ cũ *"
                 value={values["địa chỉ cũ"]}
                 onChange={handleChange}
                 error={!!errors["địa chỉ cũ"] && touched["địa chỉ cũ"]}
@@ -145,8 +191,22 @@ export const ThemThongTinDat = ({
                   errors["địa chỉ cũ"]
                 }
               />
+              <TextField
+                fullWidth
+                id="địa chỉ mới"
+                name="địa chỉ mới"
+                label="Địa chỉ mới *"
+                value={values["địa chỉ mới"]}
+                onChange={handleChange}
+                error={!!errors["địa chỉ mới"] && touched["địa chỉ mới"]}
+                helperText={
+                  errors["địa chỉ mới"] &&
+                  touched["địa chỉ mới"] &&
+                  errors["địa chỉ mới"]
+                }
+              />
               <Autocomplete
-                sx={{ gridColumn: "span 3" }}
+                sx={{ gridColumn: "span 2" }}
                 options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
                 value={
                   CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
@@ -311,38 +371,156 @@ export const ThemThongTinDat = ({
                   errors["hình thức sử dụng"]
                 }
               />
-              <TextField
-                fullWidth
-                id="mục đích sử dụng"
-                name="mục đích sử dụng"
-                label="Mục đích sử dụng *"
-                value={values["mục đích sử dụng"]}
-                onChange={handleChange}
-                error={
-                  !!errors["mục đích sử dụng"] && touched["mục đích sử dụng"]
-                }
-                helperText={
-                  errors["mục đích sử dụng"] &&
-                  touched["mục đích sử dụng"] &&
-                  errors["mục đích sử dụng"]
-                }
-              />
-              <TextField
-                fullWidth
-                id="thời hạn sử dụng"
-                name="thời hạn sử dụng"
-                label="Thời hạn sử dụng *"
-                value={values["thời hạn sử dụng"]}
-                onChange={handleChange}
-                error={
-                  !!errors["thời hạn sử dụng"] && touched["thời hạn sử dụng"]
-                }
-                helperText={
-                  errors["thời hạn sử dụng"] &&
-                  touched["thời hạn sử dụng"] &&
-                  errors["thời hạn sử dụng"]
-                }
-              />
+              <Box
+                sx={{ gridColumn: "span 3" }}
+                border="1px solid #ccc"
+                borderRadius="10px"
+                padding="20px"
+              >
+                <Typography
+                  variant="body1"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                  sx={{ marginBottom: "20px" }}
+                >
+                  Mục đích và thời hạn sử dụng (nhập các giá trị sau đó bấm nút
+                  để thêm vào)
+                </Typography>
+                <Box
+                  display="grid"
+                  gridTemplateColumns="repeat(3, 1fr)"
+                  gap="20px"
+                >
+                  <Autocomplete
+                    fullWidth
+                    id="mục đích sử dụng"
+                    options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
+                    getOptionLabel={(option) => option.label}
+                    value={
+                      MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
+                        (item) =>
+                          item.value === mụcđíchVàThờiHạnSửDụngEdit["phân loại"]
+                      ) ?? null
+                    }
+                    onChange={(_event, value) => {
+                      setMụcĐíchVàThờiHạnSửDụngEdit({
+                        ...mụcđíchVàThờiHạnSửDụngEdit,
+                        "phân loại": value?.value ?? "",
+                      });
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Mục đích sử dụng *" />
+                    )}
+                  />
+                  <TextField
+                    fullWidth
+                    id="diện tích"
+                    name="diện tích"
+                    label="Diện tích (m2)"
+                    value={mụcđíchVàThờiHạnSửDụngEdit["diện tích"]}
+                    onChange={(event) => {
+                      setMụcĐíchVàThờiHạnSửDụngEdit({
+                        ...mụcđíchVàThờiHạnSửDụngEdit,
+                        "diện tích": event.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    id="thời hạn sử dụng"
+                    name="thời hạn sử dụng"
+                    label="Thời hạn sử dụng *"
+                    value={mụcđíchVàThờiHạnSửDụngEdit["thời hạn sử dụng"]}
+                    onChange={(event) => {
+                      setMụcĐíchVàThờiHạnSửDụngEdit({
+                        ...mụcđíchVàThờiHạnSửDụngEdit,
+                        "thời hạn sử dụng": event.target.value,
+                      });
+                    }}
+                  />
+                </Box>
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{ marginTop: "20px" }}
+                  startIcon={<AddIcon />}
+                  onClick={() => handleAddMụcĐíchVàThờiHạnSửDụng(indexEdit)}
+                >
+                  Thêm mục đích và thời hạn sử dụng
+                </Button>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            fontSize="1rem"
+                            fontWeight="600"
+                          >
+                            Phân loại
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            fontSize="1rem"
+                            fontWeight="600"
+                          >
+                            Diện tích (m2)
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            fontSize="1rem"
+                            fontWeight="600"
+                          >
+                            Thời hạn sử dụng
+                          </Typography>
+                        </TableCell>
+                        <TableCell>Thao tác</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {mụcđíchVàThờiHạnSửDụng.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item["phân loại"]}</TableCell>
+                          <TableCell>{item["diện tích"]}</TableCell>
+                          <TableCell>{item["thời hạn sử dụng"]}</TableCell>
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              startIcon={<EditIcon />}
+                              onClick={() => {
+                                setMụcĐíchVàThờiHạnSửDụngEdit(item);
+                                setIndexEdit(index);
+                              }}
+                            >
+                              Sửa
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              startIcon={<DeleteIcon />}
+                              onClick={() => {
+                                setMụcĐíchVàThờiHạnSửDụng(
+                                  mụcđíchVàThờiHạnSửDụng.filter(
+                                    (_item, i) => i !== index
+                                  )
+                                );
+                              }}
+                            >
+                              Xóa
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
               <Autocomplete
                 sx={{ gridColumn: "span 3" }}
                 options={NGUỒN_GỐC_SỬ_DỤNG_ĐẤT}

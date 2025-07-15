@@ -194,3 +194,58 @@ export const NGUỒN_GỐC_SỬ_DỤNG_ĐẤT: Option[] = [
     label: "Nhà nước giao đất không thu tiền sử dụng đất",
   },
 ];
+
+export const MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT: Option[] = [
+  {
+    value: "Đất ở tại đô thị",
+    label: "Đất ở tại đô thị",
+  },
+  {
+    value: "Đất ở tại nông thôn", 
+    label: "Đất ở tại nông thôn",
+  },
+  {
+    value: "Đất trồng cây công nghiệp lâu năm",
+    label: "Đất trồng cây công nghiệp lâu năm",
+  },
+  {
+    value: "Đất trồng cây ăn quả lâu năm",
+    label: "Đất trồng cây ăn quả lâu năm", 
+  },
+  {
+    value: "Đất trồng cây lâu năm",
+    label: "Đất trồng cây lâu năm",
+  },
+  {
+    value: "Đất trồng cây lâu năm khác",
+    label: "Đất trồng cây lâu năm khác",
+  },
+  {
+    value: "Đất trồng cây hàng năm khác",
+    label: "Đất trồng cây hàng năm khác",
+  },
+  {
+    value: "Đất ở",
+    label: "Đất ở",
+  },
+  {
+    value: "Đất chuyên trồng lúa nước",
+    label: "Đất chuyên trồng lúa nước",
+  },
+  {
+    value: "Đất trồng lúa",
+    label: "Đất trồng lúa",
+  },
+  {
+    value: "Đất làm muối",
+    label: "Đất làm muối",
+  },
+  {
+    value: "Đất rừng sản xuất",
+    label: "Đất rừng sản xuất",
+  },
+  {
+    value: "Đất nuôi trồng thủy sản",
+    label: "Đất nuôi trồng thủy sản",
+  }
+];

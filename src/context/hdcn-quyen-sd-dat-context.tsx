@@ -9,8 +9,7 @@ import { createContext, useContext, useState } from "react";
 interface HdcnQuyenSdDatContextType {
   partyA: AgreementParty;
   partyB: AgreementParty;
-  agreementObjects: ThongTinThuaDat[];
-  editObjectIndex: number | null;
+  agreementObject: ThongTinThuaDat | null;
   singlePartyAEntityIndex: number | null;
   singlePartyBEntityIndex: number | null;
   couplePartyAEntityIndex: number | null;
@@ -40,14 +39,12 @@ interface HdcnQuyenSdDatContextType {
   addCouplePartyAEntity: (entity: Couple, index?: number) => void;
   addCouplePartyBEntity: (entity: Couple, index?: number) => void;
   //   Common section
-  setEditObjectIndex: (index: number | null) => void;
-  addAgreementObject: (object: ThongTinThuaDat, index?: number) => void;
-  deleteAgreementObject: (arrayIndex: number) => void;
+  addAgreementObject: (object: ThongTinThuaDat) => void;
+  deleteAgreementObject: () => void;
 }
 
 export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
-  agreementObjects: [],
-  editObjectIndex: null,
+  agreementObject: null,
   singlePartyAEntityIndex: null,
   singlePartyBEntityIndex: null,
   couplePartyAEntityIndex: null,
@@ -60,7 +57,6 @@ export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
     "cá nhân": [],
     "vợ chồng": [],
   },
-  setEditObjectIndex: () => {},
   addSinglePartyAEntity: () => {},
   addCouplePartyAEntity: () => {},
   addSinglePartyBEntity: () => {},
@@ -98,11 +94,8 @@ export const HdcnQuyenSdDatProvider = ({
     "vợ chồng": [],
   });
 
-  const [agreementObjects, setAgreementObjects] = useState<ThongTinThuaDat[]>(
-    []
-  );
-
-  const [editObjectIndex, setEditObjectIndex] = useState<number | null>(null);
+  const [agreementObject, setAgreementObject] =
+    useState<ThongTinThuaDat | null>(null);
   const [singlePartyAEntityIndex, setSinglePartyAEntityIndex] = useState<
     number | null
   >(null);
@@ -116,22 +109,12 @@ export const HdcnQuyenSdDatProvider = ({
     number | null
   >(null);
 
-  const addAgreementObject = (object: ThongTinThuaDat, index?: number) => {
-    if (index !== undefined) {
-      setAgreementObjects([
-        ...agreementObjects.slice(0, index),
-        object,
-        ...agreementObjects.slice(index + 1),
-      ]);
-    } else {
-      setAgreementObjects([...agreementObjects, object]);
-    }
+  const addAgreementObject = (object: ThongTinThuaDat) => {
+    setAgreementObject(object);
   };
 
-  const deleteAgreementObject = (arrayIndex: number) => {
-    setAgreementObjects(
-      agreementObjects.filter((_e, index) => index !== arrayIndex)
-    );
+  const deleteAgreementObject = () => {
+    setAgreementObject(null);
   };
 
   const addSinglePartyAEntity = (
@@ -277,8 +260,7 @@ export const HdcnQuyenSdDatProvider = ({
   return (
     <HdcnQuyenSdDatContext.Provider
       value={{
-        agreementObjects,
-        editObjectIndex,
+        agreementObject,
         singlePartyAEntityIndex,
         singlePartyBEntityIndex,
         couplePartyAEntityIndex,
@@ -301,7 +283,6 @@ export const HdcnQuyenSdDatProvider = ({
         setSinglePartyBEntityIndex,
         setCouplePartyAEntityIndex,
         setCouplePartyBEntityIndex,
-        setEditObjectIndex,
         addAgreementObject,
         deleteAgreementObject,
       }}

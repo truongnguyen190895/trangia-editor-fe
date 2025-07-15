@@ -11,10 +11,15 @@ export interface ThongTinThuaDat {
   "diện tích": string;
   "diện tích bằng chữ": string;
   "hình thức sử dụng": string;
-  "mục đích sử dụng": string;
-  "thời hạn sử dụng": string;
+//   "mục đích sử dụng": string;
+//   "thời hạn sử dụng": string;
   "nguồn gốc sử dụng": string;
   "giá tiền": string;
   "giá tiền bằng chữ": string;
   "ghi chú": string;
+  "mục đích và thời hạn sử dụng": {
+    "phân loại": string;
+    "diện tích": string;
+    "thời hạn sử dụng": string;
+  }[];
 }

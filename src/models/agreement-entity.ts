@@ -96,7 +96,7 @@ export interface HDCNQuyenSDDatPayload {
     "hình thức sử dụng": string;
     "mục đích và thời hạn sử dụng": Array<{
       "phân loại": string;
-      "diện tích": string;
+      "diện tích"?: string;
       "thời hạn sử dụng": string;
     }>;
     "nguồn gốc sử dụng": string;
