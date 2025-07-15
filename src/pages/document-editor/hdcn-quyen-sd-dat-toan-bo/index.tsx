@@ -6,6 +6,12 @@ import {
   TextField,
   InputAdornment,
   useTheme,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  InputLabel,
+  Checkbox,
 } from "@mui/material";
 import { PartyEntity } from "./components/party-entity";
 import { ObjectEntity } from "./components/object";
@@ -15,11 +21,16 @@ import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import type { HDCNQuyenSDDatPayload } from "@/models/agreement-entity";
 import dayjs from "dayjs";
 import { render_hdcn_quyen_sd_dat_toan_bo } from "@/api";
+import { translateDateToVietnamese } from "@/utils/date-to-words";
+import { numberToVietnamese } from "@/utils/number-to-words";
 
 export const ChuyenNhuongDatToanBo = () => {
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [sốBảnGốc, setSốBảnGốc] = useState<number>(1);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isOutSide, setIsOutSide] = useState(false);
 
   const isFormValid =
     (partyA["cá nhân"].length > 0 || partyA["vợ chồng"].length > 0) &&
@@ -67,6 +78,7 @@ export const ChuyenNhuongDatToanBo = () => {
             ...person,
             "ngày sinh": dayjs(person["ngày sinh"]).format("DD/MM/YYYY"),
             "ngày cấp": dayjs(person["ngày cấp"]).format("DD/MM/YYYY"),
+            "tình trạng hôn nhân": person["tình trạng hôn nhân"] || undefined,
           })),
           ...couplesA,
         ],
@@ -77,6 +89,7 @@ export const ChuyenNhuongDatToanBo = () => {
             ...person,
             "ngày sinh": dayjs(person["ngày sinh"]).format("DD/MM/YYYY"),
             "ngày cấp": dayjs(person["ngày cấp"]).format("DD/MM/YYYY"),
+            "tình trạng hôn nhân": person["tình trạng hôn nhân"] || undefined,
           })),
           ...couplesB,
         ],
@@ -87,7 +100,8 @@ export const ChuyenNhuongDatToanBo = () => {
       "địa chỉ mới": agreementObject["địa chỉ mới"],
       "loại giấy chứng nhận": agreementObject["loại giấy chứng nhận"],
       "số giấy chứng nhận": agreementObject["số giấy chứng nhận"],
-      "số vào sổ cấp giấy chứng nhận": agreementObject["số vào sổ cấp giấy chứng nhận"],
+      "số vào sổ cấp giấy chứng nhận":
+        agreementObject["số vào sổ cấp giấy chứng nhận"],
       "ngày cấp giấy chứng nhận": dayjs(
         agreementObject["ngày cấp giấy chứng nhận"]
       ).format("DD/MM/YYYY"),
@@ -96,12 +110,27 @@ export const ChuyenNhuongDatToanBo = () => {
         "diện tích": agreementObject["diện tích"],
         "diện tích bằng chữ": agreementObject["diện tích bằng chữ"],
         "hình thức sử dụng": agreementObject["hình thức sử dụng"],
-        "mục đích và thời hạn sử dụng": agreementObject["mục đích và thời hạn sử dụng"],
+        "mục đích và thời hạn sử dụng": agreementObject[
+          "mục đích và thời hạn sử dụng"
+        ]?.map((item) => ({
+          "phân loại": item["phân loại"],
+          "diện tích": item["diện tích"] || undefined,
+          "thời hạn sử dụng": item["thời hạn sử dụng"],
+        })),
         "nguồn gốc sử dụng": agreementObject["nguồn gốc sử dụng"],
         "ghi chú": agreementObject["ghi chú"],
       },
       "số tiền": agreementObject["giá tiền"],
       "số tiền bằng chữ": agreementObject["giá tiền bằng chữ"],
+      ngày: dayjs().format("DD/MM/YYYY").toString(),
+      "ngày bằng chữ": translateDateToVietnamese(
+        dayjs().format("DD/MM/YYYY").toString()
+      ),
+      "số bản gốc": sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
+      "số bản gốc bằng chữ": numberToVietnamese(
+        String(sốBảnGốc)
+      )?.toLocaleLowerCase(),
+      "ký bên ngoài": isOutSide,
     };
 
     return payload;
@@ -109,6 +138,7 @@ export const ChuyenNhuongDatToanBo = () => {
 
   const handleGenerateDocument = () => {
     const payload = getPayload();
+    setOpenDialog(false);
     setIsGenerating(true);
     render_hdcn_quyen_sd_dat_toan_bo(payload)
       .then((res) => {
@@ -131,6 +161,8 @@ export const ChuyenNhuongDatToanBo = () => {
       })
       .finally(() => {
         setIsGenerating(false);
+        setSốBảnGốc(1);
+        setIsOutSide(false);
       });
   };
 
@@ -182,11 +214,71 @@ export const ChuyenNhuongDatToanBo = () => {
             textTransform: "uppercase",
           }}
           disabled={!isFormValid}
-          onClick={handleGenerateDocument}
+          onClick={() => setOpenDialog(true)}
         >
           {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
         </Button>
       </Box>
+      <Dialog
+        open={openDialog}
+        fullWidth
+        maxWidth="md"
+        onClose={() => setOpenDialog(false)}
+      >
+        <DialogTitle>Thông tin hợp đồng</DialogTitle>
+        <DialogContent>
+          <Box>
+            <Box display="flex" gap="0.5rem" alignItems="center">
+              <InputLabel
+                htmlFor="sốBảnGốc"
+                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
+              >
+                Số bản gốc
+              </InputLabel>
+              <TextField
+                type="number"
+                name="sốBảnGốc"
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                  },
+                }}
+                value={sốBảnGốc}
+                onChange={(e) => setSốBảnGốc(Number(e.target.value))}
+              />
+            </Box>
+
+            <Box display="flex" alignItems="center" gap="0.5rem">
+              <InputLabel
+                htmlFor="isOutSide"
+                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
+              >
+                Hợp đồng được ký bên ngoài văn phòng?
+              </InputLabel>
+              <Checkbox
+                id="isOutSide"
+                size="large"
+                color="info"
+                checked={isOutSide}
+                onChange={() => setIsOutSide(!isOutSide)}
+              />
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={() => setOpenDialog(false)}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={sốBảnGốc <= 0}
+            onClick={handleGenerateDocument}
+          >
+            Tạo hợp đồng
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

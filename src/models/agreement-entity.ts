@@ -104,4 +104,9 @@ export interface HDCNQuyenSDDatPayload {
   };
   "số tiền": string;
   "số tiền bằng chữ": string;
+  "ngày": string;
+  "ngày bằng chữ": string;
+  "số bản gốc": string;
+  "số bản gốc bằng chữ": string;
+  "ký bên ngoài": boolean;
 }

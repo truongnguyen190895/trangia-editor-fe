@@ -99,5 +99,3 @@ function convertDecimalPart(decimalStr: string) {
     
     return words.join(' ');
 }
-
-console.log(numberToVietnamese('1.200.000.000'.replace(/\./g, '')));
