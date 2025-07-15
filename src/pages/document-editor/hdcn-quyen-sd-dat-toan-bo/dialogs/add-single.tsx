@@ -11,6 +11,7 @@ import {
   MenuItem,
   FormControl,
   FormLabel,
+  FormHelperText
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -74,7 +75,7 @@ export const AddSingleDialog = ({
 
   const isEdit = partyEntityIndex !== null;
 
-  const { values, handleChange, handleSubmit } =
+  const { values, errors, touched, handleChange, handleSubmit } =
     useFormik<SingleAgreementParty>({
       initialValues: getInitialValues(),
       validationSchema: Yup.object({
@@ -82,6 +83,11 @@ export const AddSingleDialog = ({
         tên: Yup.string().required("Tên là bắt buộc"),
         "ngày sinh": Yup.string().required("Ngày sinh là bắt buộc"),
         "loại giấy tờ": Yup.string().required("Loại giấy tờ là bắt buộc"),
+        "số giấy tờ": Yup.string().required("Số giấy tờ là bắt buộc"),
+        "ngày cấp": Yup.string().required("Ngày cấp là bắt buộc"),
+        "nơi cấp": Yup.string().required("Nơi cấp là bắt buộc"),
+        "địa chỉ thường trú cũ": Yup.string().required("Địa chỉ thường trú cũ là bắt buộc"),
+        "địa chỉ thường trú mới": Yup.string().required("Địa chỉ thường trú mới là bắt buộc"),
       }),
       onSubmit: (values) => {
         if (isEdit) {
@@ -102,7 +108,9 @@ export const AddSingleDialog = ({
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>
-        <Typography variant="body1">Thêm thông tin cá nhân</Typography>
+        <Typography variant="body1" fontSize="2rem" fontWeight="600">
+          Thêm thông tin cá nhân
+        </Typography>
       </DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
         <form onSubmit={handleSubmit}>
@@ -123,8 +131,10 @@ export const AddSingleDialog = ({
               <TextField
                 value={values.tên}
                 name="tên"
-                onChange={handleChange}
                 fullWidth
+                error={!!errors.tên && touched.tên}
+                helperText={errors.tên}
+                onChange={handleChange}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
@@ -133,8 +143,10 @@ export const AddSingleDialog = ({
                 type="date"
                 value={values["ngày sinh"]}
                 name="ngày sinh"
-                onChange={handleChange}
                 fullWidth
+                error={!!errors["ngày sinh"] && touched["ngày sinh"]}
+                helperText={errors["ngày sinh"]}
+                onChange={handleChange}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
@@ -144,6 +156,7 @@ export const AddSingleDialog = ({
                 name="loại giấy tờ"
                 onChange={handleChange}
                 fullWidth
+                error={!!errors["loại giấy tờ"] && touched["loại giấy tờ"]}
               >
                 {CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
@@ -151,6 +164,9 @@ export const AddSingleDialog = ({
                   </MenuItem>
                 ))}
               </Select>
+              {errors["loại giấy tờ"] && touched["loại giấy tờ"] && (
+                <FormHelperText error>{errors["loại giấy tờ"]}</FormHelperText>
+              )}
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Số giấy tờ *</FormLabel>
@@ -159,6 +175,8 @@ export const AddSingleDialog = ({
                 name="số giấy tờ"
                 onChange={handleChange}
                 fullWidth
+                error={!!errors["số giấy tờ"] && touched["số giấy tờ"]}
+                helperText={errors["số giấy tờ"]}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
@@ -169,6 +187,8 @@ export const AddSingleDialog = ({
                 name="ngày cấp"
                 onChange={handleChange}
                 fullWidth
+                error={!!errors["ngày cấp"] && touched["ngày cấp"]}
+                helperText={errors["ngày cấp"]}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
@@ -177,6 +197,8 @@ export const AddSingleDialog = ({
                 value={values["nơi cấp"]}
                 name="nơi cấp"
                 onChange={handleChange}
+                fullWidth
+                error={!!errors["nơi cấp"] && touched["nơi cấp"]}
               >
                 {NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
@@ -184,6 +206,9 @@ export const AddSingleDialog = ({
                   </MenuItem>
                 ))}
               </Select>
+              {errors["nơi cấp"] && touched["nơi cấp"] && (
+                <FormHelperText error>{errors["nơi cấp"]}</FormHelperText>
+              )}
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Địa chỉ thường trú cũ *</FormLabel>
@@ -192,6 +217,8 @@ export const AddSingleDialog = ({
                 name="địa chỉ thường trú cũ"
                 onChange={handleChange}
                 fullWidth
+                error={!!errors["địa chỉ thường trú cũ"] && touched["địa chỉ thường trú cũ"]}
+                helperText={errors["địa chỉ thường trú cũ"]}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
@@ -201,6 +228,8 @@ export const AddSingleDialog = ({
                 name="địa chỉ thường trú mới"
                 onChange={handleChange}
                 fullWidth
+                error={!!errors["địa chỉ thường trú mới"] && touched["địa chỉ thường trú mới"]}
+                helperText={errors["địa chỉ thường trú mới"]}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px", gridColumn: "span 3" }}>

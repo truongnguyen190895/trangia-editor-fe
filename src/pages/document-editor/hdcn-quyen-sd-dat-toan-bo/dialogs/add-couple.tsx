@@ -11,6 +11,7 @@ import {
   MenuItem,
   Button,
   DialogActions,
+  FormHelperText,
 } from "@mui/material";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import type { Couple } from "@/models/agreement-entity";
@@ -20,12 +21,38 @@ import {
   CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH,
   NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
 } from "@/constants";
+import * as Yup from "yup";
 
 interface AddCoupleDialogProps {
   open: boolean;
   side: "partyA" | "partyB";
   onClose: () => void;
 }
+
+const validationSchema = Yup.object({
+  "chồng": Yup.object({
+    "giới tính": Yup.string().required("Giới tính là bắt buộc"),
+    tên: Yup.string().required("Tên là bắt buộc"),
+    "ngày sinh": Yup.string().required("Ngày sinh là bắt buộc"),
+    "loại giấy tờ": Yup.string().required("Loại giấy tờ là bắt buộc"),
+    "số giấy tờ": Yup.string().required("Số giấy tờ là bắt buộc"),
+    "ngày cấp": Yup.string().required("Ngày cấp là bắt buộc"),
+    "nơi cấp": Yup.string().required("Nơi cấp là bắt buộc"),
+    "địa chỉ thường trú cũ": Yup.string().required("Địa chỉ thường trú cũ là bắt buộc"),
+    "địa chỉ thường trú mới": Yup.string().required("Địa chỉ thường trú mới là bắt buộc"),
+  }),
+  "vợ": Yup.object({
+    "giới tính": Yup.string().required("Giới tính là bắt buộc"),
+    tên: Yup.string().required("Tên là bắt buộc"),
+    "ngày sinh": Yup.string().required("Ngày sinh là bắt buộc"),
+    "loại giấy tờ": Yup.string().required("Loại giấy tờ là bắt buộc"),
+    "số giấy tờ": Yup.string().required("Số giấy tờ là bắt buộc"),
+    "ngày cấp": Yup.string().required("Ngày cấp là bắt buộc"),
+    "nơi cấp": Yup.string().required("Nơi cấp là bắt buộc"),
+    "địa chỉ thường trú cũ": Yup.string().required("Địa chỉ thường trú cũ là bắt buộc"),
+    "địa chỉ thường trú mới": Yup.string().required("Địa chỉ thường trú mới là bắt buộc"),
+  }),
+});
 
 export const AddCoupleDialog = ({
   open,
@@ -84,8 +111,9 @@ export const AddCoupleDialog = ({
     }
   };
 
-  const { values, handleChange, handleSubmit } = useFormik<Couple>({
+  const { values, errors, handleChange, handleSubmit } = useFormik<Couple>({
     initialValues: getInitialValues(),
+    validationSchema,
     onSubmit: (values) => {
       handleSubmitCouple(values);
     },
@@ -103,14 +131,14 @@ export const AddCoupleDialog = ({
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>
-        <Typography variant="body1">Thêm thông tin vợ chồng</Typography>
+        <Typography variant="body1" fontSize="2rem" fontWeight="600">Thêm thông tin vợ chồng</Typography>
       </DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
         <form>
           <Box display="grid" gridTemplateColumns="1fr 1fr" gap="4rem">
             <Box>
-              <Typography variant="body1">Thông tin chồng</Typography>
-              <Box>
+              <Typography variant="body1" sx={{ marginBottom: "20px" }}>Thông tin chồng</Typography>
+              <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
                 <Box
                   display="grid"
                   gridTemplateColumns="1fr 1fr 1fr"
@@ -132,6 +160,8 @@ export const AddCoupleDialog = ({
                     <TextField
                       value={values["chồng"].tên}
                       name="chồng.tên"
+                      error={!!errors["chồng"]?.["tên"]}
+                      helperText={errors["chồng"]?.["tên"]}
                       onChange={handleChange}
                       fullWidth
                     />
@@ -144,6 +174,8 @@ export const AddCoupleDialog = ({
                       name="chồng.ngày sinh"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["chồng"]?.["ngày sinh"]}
+                      helperText={errors["chồng"]?.["ngày sinh"]}
                     />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
@@ -153,6 +185,7 @@ export const AddCoupleDialog = ({
                       name="chồng.loại giấy tờ"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["chồng"]?.["loại giấy tờ"]}
                     >
                       {CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
                         <MenuItem key={item.value} value={item.value}>
@@ -160,12 +193,17 @@ export const AddCoupleDialog = ({
                         </MenuItem>
                       ))}
                     </Select>
+                    {errors["chồng"]?.["loại giấy tờ"] && (
+                      <FormHelperText error>{errors["chồng"]?.["loại giấy tờ"]}</FormHelperText>
+                    )}
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Số giấy tờ *</FormLabel>
                     <TextField
                       value={values["chồng"]["số giấy tờ"]}
                       name="chồng.số giấy tờ"
+                      error={!!errors["chồng"]?.["số giấy tờ"]}
+                      helperText={errors["chồng"]?.["số giấy tờ"]}
                       onChange={handleChange}
                       fullWidth
                     />
@@ -178,6 +216,8 @@ export const AddCoupleDialog = ({
                       name="chồng.ngày cấp"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["chồng"]?.["ngày cấp"]}
+                      helperText={errors["chồng"]?.["ngày cấp"]}
                     />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
@@ -187,6 +227,7 @@ export const AddCoupleDialog = ({
                       name="chồng.nơi cấp"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["chồng"]?.["nơi cấp"]}
                     >
                       {NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
                         <MenuItem key={item.value} value={item.value}>
@@ -194,6 +235,9 @@ export const AddCoupleDialog = ({
                         </MenuItem>
                       ))}
                     </Select>
+                    {errors["chồng"]?.["nơi cấp"] && (
+                      <FormHelperText error>{errors["chồng"]?.["nơi cấp"]}</FormHelperText>
+                    )}
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Địa chỉ thường trú cũ *</FormLabel>
@@ -202,6 +246,8 @@ export const AddCoupleDialog = ({
                       name="chồng.địa chỉ thường trú cũ"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["chồng"]?.["địa chỉ thường trú cũ"]}
+                      helperText={errors["chồng"]?.["địa chỉ thường trú cũ"]}
                     />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
@@ -211,14 +257,16 @@ export const AddCoupleDialog = ({
                       name="chồng.địa chỉ thường trú mới"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["chồng"]?.["địa chỉ thường trú mới"]}
+                      helperText={errors["chồng"]?.["địa chỉ thường trú mới"]}
                     />
                   </FormControl>
                 </Box>
               </Box>
             </Box>
             <Box>
-              <Typography variant="body1">Thông tin vợ</Typography>
-              <Box>
+              <Typography variant="body1" sx={{ marginBottom: "20px" }}>Thông tin vợ</Typography>
+              <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
                 <Box
                   display="grid"
                   gridTemplateColumns="1fr 1fr 1fr"
@@ -240,6 +288,8 @@ export const AddCoupleDialog = ({
                     <TextField
                       value={values["vợ"].tên}
                       name="vợ.tên"
+                      error={!!errors["vợ"]?.["tên"]}
+                      helperText={errors["vợ"]?.["tên"]}
                       onChange={handleChange}
                       fullWidth
                     />
@@ -252,6 +302,8 @@ export const AddCoupleDialog = ({
                       name="vợ.ngày sinh"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["vợ"]?.["ngày sinh"]}
+                      helperText={errors["vợ"]?.["ngày sinh"]}
                     />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
@@ -261,6 +313,7 @@ export const AddCoupleDialog = ({
                       name="vợ.loại giấy tờ"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["vợ"]?.["loại giấy tờ"]}
                     >
                       {CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
                         <MenuItem key={item.value} value={item.value}>
@@ -268,6 +321,9 @@ export const AddCoupleDialog = ({
                         </MenuItem>
                       ))}
                     </Select>
+                    {errors["vợ"]?.["loại giấy tờ"] && (
+                      <FormHelperText error>{errors["vợ"]?.["loại giấy tờ"]}</FormHelperText>
+                    )}
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Số giấy tờ *</FormLabel>
@@ -276,6 +332,8 @@ export const AddCoupleDialog = ({
                       name="vợ.số giấy tờ"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["vợ"]?.["số giấy tờ"]}
+                      helperText={errors["vợ"]?.["số giấy tờ"]}
                     />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
@@ -286,6 +344,8 @@ export const AddCoupleDialog = ({
                       name="vợ.ngày cấp"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["vợ"]?.["ngày cấp"]}
+                      helperText={errors["vợ"]?.["ngày cấp"]}
                     />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
@@ -295,6 +355,7 @@ export const AddCoupleDialog = ({
                       name="vợ.nơi cấp"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["vợ"]?.["nơi cấp"]}
                     >
                       {NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
                         <MenuItem key={item.value} value={item.value}>
@@ -302,6 +363,9 @@ export const AddCoupleDialog = ({
                         </MenuItem>
                       ))}
                     </Select>
+                    {errors["vợ"]?.["nơi cấp"] && (
+                      <FormHelperText error>{errors["vợ"]?.["nơi cấp"]}</FormHelperText>
+                    )}
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Địa chỉ thường trú cũ *</FormLabel>
@@ -310,6 +374,8 @@ export const AddCoupleDialog = ({
                       name="vợ.địa chỉ thường trú cũ"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["vợ"]?.["địa chỉ thường trú cũ"]}
+                      helperText={errors["vợ"]?.["địa chỉ thường trú cũ"]}
                     />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
@@ -319,6 +385,8 @@ export const AddCoupleDialog = ({
                       name="vợ.địa chỉ thường trú mới"
                       onChange={handleChange}
                       fullWidth
+                      error={!!errors["vợ"]?.["địa chỉ thường trú mới"]}
+                      helperText={errors["vợ"]?.["địa chỉ thường trú mới"]}
                     />
                   </FormControl>
                 </Box>

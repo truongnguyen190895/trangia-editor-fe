@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -9,15 +10,18 @@ import {
 import { PartyEntity } from "./components/party-entity";
 import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
+import { CircularProgress } from "@mui/material";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
-import axios from "axios";
 import type { HDCNQuyenSDDatPayload } from "@/models/agreement-entity";
 import dayjs from "dayjs";
+import { render_hdcn_quyen_sd_dat_toan_bo } from "@/api";
 
 export const ChuyenNhuongDatToanBo = () => {
   const { partyA, partyB, agreementObjects } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
-  const handleGenerateDocument = () => {
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const getPayload = (): HDCNQuyenSDDatPayload => {
     const couplesA = partyA["vợ chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -50,7 +54,7 @@ export const ChuyenNhuongDatToanBo = () => {
 
     const purposes = object["mục đích sử dụng"].split(";"); // eg: đất ở: 123m2; đất trồng cây: 200m2
     const expires = object["thời hạn sử dụng"].split(";"); // eg: đất ở: lâu dài; đất trồng cây: 60 năm
-    // need to convert purposes and expires to array of objects
+
     const purposesArray = purposes.map((purpose, index) => {
       const [purposeName, purposeArea] = purpose.split(":");
       return {
@@ -103,38 +107,34 @@ export const ChuyenNhuongDatToanBo = () => {
       "số tiền": object["giá tiền"],
       "số tiền bằng chữ": object["giá tiền bằng chữ"],
     };
-    axios
-      .post(
-        "https://tran-gia-be-0e12f8edbb33.herokuapp.com/templates/hdcn-quyen-su-dung-dat/render",
-        payload,
-        {
-          responseType: "blob",
-          headers: {
-            "x-api-key": "d5be9ee46778dcaca57b709ba7bdb6ea",
-          },
-        }
-      )
+
+    return payload;
+  };
+
+  const handleGenerateDocument = () => {
+    const payload = getPayload();
+    setIsGenerating(true);
+    render_hdcn_quyen_sd_dat_toan_bo(payload)
       .then((res) => {
-        // Create a blob from the response data
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
 
-        // Create a download link
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "hop-dong-chuyen-nhuong-dat.docx"; // Set the filename
+        link.download = "hop-dong-chuyen-nhuong-dat.docx";
         document.body.appendChild(link);
         link.click();
-
-        // Clean up
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
       })
       .catch((error) => {
         console.error("Error generating document:", error);
         window.alert("Lỗi khi tạo hợp đồng");
+      })
+      .finally(() => {
+        setIsGenerating(false);
       });
   };
 
@@ -177,10 +177,20 @@ export const ChuyenNhuongDatToanBo = () => {
         <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
         <Button
           variant="contained"
-          sx={{ backgroundColor: palette.softTeal }}
+          sx={{
+            backgroundColor: palette.softTeal,
+            height: "50px",
+            fontSize: "1.2rem",
+            fontWeight: "600",
+            textTransform: "uppercase",
+          }}
           onClick={handleGenerateDocument}
         >
-          Lưu
+          {isGenerating ? (
+            <CircularProgress size={20} />
+          ) : (
+            "Tạo hợp đồng"
+          )}
         </Button>
       </Box>
     </Box>

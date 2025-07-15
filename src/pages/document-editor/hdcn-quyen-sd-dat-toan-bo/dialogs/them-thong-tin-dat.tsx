@@ -165,6 +165,15 @@ export const ThemThongTinDat = ({
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    error={
+                      !!errors["loại giấy chứng nhận"] &&
+                      touched["loại giấy chứng nhận"]
+                    }
+                    helperText={
+                      errors["loại giấy chứng nhận"] &&
+                      touched["loại giấy chứng nhận"] &&
+                      errors["loại giấy chứng nhận"]
+                    }
                     label="Loại giấy chứng nhận *"
                     name="loại giấy chứng nhận"
                   />
@@ -254,7 +263,12 @@ export const ThemThongTinDat = ({
                 value={values["diện tích"]}
                 onChange={(event) => {
                   handleChange(event);
-                  setFieldValue("diện tích bằng chữ", numberToVietnamese(event.target.value?.replace(/\./g, '').replace(/\,/g, '.')));
+                  setFieldValue(
+                    "diện tích bằng chữ",
+                    numberToVietnamese(
+                      event.target.value?.replace(/\./g, "").replace(/\,/g, ".")
+                    )
+                  );
                 }}
                 error={!!errors["diện tích"] && touched["diện tích"]}
                 helperText={
@@ -271,7 +285,10 @@ export const ThemThongTinDat = ({
                 label="Diện tích bằng chữ *"
                 value={values["diện tích bằng chữ"]}
                 onChange={handleChange}
-                error={!!errors["diện tích bằng chữ"] && touched["diện tích bằng chữ"]}
+                error={
+                  !!errors["diện tích bằng chữ"] &&
+                  touched["diện tích bằng chữ"]
+                }
                 helperText={
                   errors["diện tích bằng chữ"] &&
                   touched["diện tích bằng chữ"] &&
@@ -311,7 +328,6 @@ export const ThemThongTinDat = ({
                 }
               />
               <TextField
-                // sx={{ gridColumn: "span 2" }}
                 fullWidth
                 id="thời hạn sử dụng"
                 name="thời hạn sử dụng"
@@ -345,7 +361,19 @@ export const ThemThongTinDat = ({
                 }}
                 getOptionLabel={(option) => option.label}
                 renderInput={(params) => (
-                  <TextField {...params} label="Nguồn gốc sử dụng *" />
+                  <TextField
+                    {...params}
+                    label="Nguồn gốc sử dụng *"
+                    error={
+                      !!errors["nguồn gốc sử dụng"] &&
+                      touched["nguồn gốc sử dụng"]
+                    }
+                    helperText={
+                      errors["nguồn gốc sử dụng"] &&
+                      touched["nguồn gốc sử dụng"] &&
+                      errors["nguồn gốc sử dụng"]
+                    }
+                  />
                 )}
               />
               <TextField
@@ -356,7 +384,12 @@ export const ThemThongTinDat = ({
                 value={values["giá tiền"]}
                 onChange={(event) => {
                   handleChange(event);
-                  setFieldValue("giá tiền bằng chữ", numberToVietnamese(event.target.value?.replace(/\./g, '').replace(/\,/g, '.')));
+                  setFieldValue(
+                    "giá tiền bằng chữ",
+                    numberToVietnamese(
+                      event.target.value?.replace(/\./g, "").replace(/\,/g, ".")
+                    )
+                  );
                 }}
                 error={!!errors["giá tiền"] && touched["giá tiền"]}
                 helperText={
