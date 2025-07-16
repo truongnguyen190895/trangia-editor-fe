@@ -33,8 +33,8 @@ export const ChuyenNhuongDatToanBo = () => {
   const [isOutSide, setIsOutSide] = useState(false);
 
   const isFormValid =
-    (partyA["cá nhân"].length > 0 || partyA["vợ chồng"].length > 0) &&
-    (partyB["cá nhân"].length > 0 || partyB["vợ chồng"].length > 0) &&
+    (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
+    (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
     agreementObject !== null;
 
   const getPayload = (): HDCNQuyenSDDatPayload => {
@@ -42,97 +42,97 @@ export const ChuyenNhuongDatToanBo = () => {
       throw new Error("Agreement object is null");
     }
 
-    const couplesA = partyA["vợ chồng"]
+    const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        "ngày sinh": dayjs(couple.chồng["ngày sinh"]).format("DD/MM/YYYY"),
-        "ngày cấp": dayjs(couple.chồng["ngày cấp"]).format("DD/MM/YYYY"),
+        "ngày_sinh": dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
+        "ngày_cấp": dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
       }))
       .concat(
-        partyA["vợ chồng"].map((couple) => ({
+        partyA["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
-          "quan hệ": "vợ",
-          "ngày sinh": dayjs(couple.vợ["ngày sinh"]).format("DD/MM/YYYY"),
-          "ngày cấp": dayjs(couple.vợ["ngày cấp"]).format("DD/MM/YYYY"),
+          "quan_hệ": "vợ",
+          "ngày_sinh": dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
+          "ngày_cấp": dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
         }))
       );
-    const couplesB = partyB["vợ chồng"]
+    const couplesB = partyB["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        "ngày sinh": dayjs(couple.chồng["ngày sinh"]).format("DD/MM/YYYY"),
-        "ngày cấp": dayjs(couple.chồng["ngày cấp"]).format("DD/MM/YYYY"),
+        "ngày_sinh": dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
+        "ngày_cấp": dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
       }))
       .concat(
-        partyB["vợ chồng"].map((couple) => ({
+        partyB["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
-          "quan hệ": "vợ",
-          "ngày sinh": dayjs(couple.vợ["ngày sinh"]).format("DD/MM/YYYY"),
-          "ngày cấp": dayjs(couple.vợ["ngày cấp"]).format("DD/MM/YYYY"),
+          "quan_hệ": "vợ",
+          "ngày_sinh": dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
+          "ngày_cấp": dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
         }))
       );
 
     const payload: HDCNQuyenSDDatPayload = {
-      "bên A": {
-        "cá thể": [
-          ...partyA["cá nhân"].map((person) => ({
+      "bên_A": {
+        "cá_thể": [
+          ...partyA["cá_nhân"].map((person) => ({
             ...person,
-            "ngày sinh": dayjs(person["ngày sinh"]).format("DD/MM/YYYY"),
-            "ngày cấp": dayjs(person["ngày cấp"]).format("DD/MM/YYYY"),
-            "tình trạng hôn nhân": person["tình trạng hôn nhân"] || undefined,
+            "ngày_sinh": dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
+            "ngày_cấp": dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            "tình_trạng_hôn_nhân": person["tình_trạng_hôn_nhân"] || undefined,
           })),
           ...couplesA,
         ],
       },
-      "bên B": {
-        "cá thể": [
-          ...partyB["cá nhân"].map((person) => ({
+      "bên_B": {
+        "cá_thể": [
+          ...partyB["cá_nhân"].map((person) => ({
             ...person,
-            "ngày sinh": dayjs(person["ngày sinh"]).format("DD/MM/YYYY"),
-            "ngày cấp": dayjs(person["ngày cấp"]).format("DD/MM/YYYY"),
-            "tình trạng hôn nhân": person["tình trạng hôn nhân"] || undefined,
+            "ngày_sinh": dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
+            "ngày_cấp": dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            "tình_trạng_hôn_nhân": person["tình_trạng_hôn_nhân"] || undefined,
           })),
           ...couplesB,
         ],
       },
-      "số thửa đất": agreementObject["số thửa đất"],
-      "tờ bản đồ": agreementObject["tờ bản đồ"],
-      "địa chỉ cũ": agreementObject["địa chỉ cũ"],
-      "địa chỉ mới": agreementObject["địa chỉ mới"],
-      "loại giấy chứng nhận": agreementObject["loại giấy chứng nhận"],
-      "số giấy chứng nhận": agreementObject["số giấy chứng nhận"],
-      "số vào sổ cấp giấy chứng nhận":
-        agreementObject["số vào sổ cấp giấy chứng nhận"],
-      "ngày cấp giấy chứng nhận": dayjs(
-        agreementObject["ngày cấp giấy chứng nhận"]
+      "số_thửa_đất": agreementObject["số_thửa_đất"],
+      "tờ_bản_đồ": agreementObject["tờ_bản_đồ"],
+      "địa_chỉ_cũ": agreementObject["địa_chỉ_cũ"],
+      "địa_chỉ_mới": agreementObject["địa_chỉ_mới"],
+      "loại_giấy_chứng_nhận": agreementObject["loại_giấy_chứng_nhận"],
+      "số_giấy_chứng_nhận": agreementObject["số_giấy_chứng_nhận"],
+      "số_vào_sổ_cấp_giấy_chứng_nhận":
+        agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"],
+      "ngày_cấp_giấy_chứng_nhận": dayjs(
+        agreementObject["ngày_cấp_giấy_chứng_nhận"]
       ).format("DD/MM/YYYY"),
-      "nơi cấp giấy chứng nhận": agreementObject["nơi cấp giấy chứng nhận"],
-      "đặc điểm thửa đất": {
-        "diện tích": {
-          số: agreementObject["diện tích"],
-          chữ: agreementObject["diện tích bằng chữ"],
+      "nơi_cấp_giấy_chứng_nhận": agreementObject["nơi_cấp_giấy_chứng_nhận"],
+      "đặc_điểm_thửa_đất": {
+        "diện_tích": {
+          số: agreementObject["diện_tích"],
+          chữ: agreementObject["diện_tích_bằng_chữ"],
         },
-        "hình thức sử dụng": agreementObject["hình thức sử dụng"],
-        "mục đích và thời hạn sử dụng": agreementObject[
-          "mục đích và thời hạn sử dụng"
+        "hình_thức_sử_dụng": agreementObject["hình_thức_sử_dụng"],
+        "mục_đích_và_thời_hạn_sử_dụng": agreementObject[
+          "mục_đích_và_thời_hạn_sử_dụng"
         ]?.map((item) => ({
-          "phân loại": item["phân loại"],
-          "diện tích": item["diện tích"] || undefined,
-          "thời hạn sử dụng": item["thời hạn sử dụng"],
+          "phân_loại": item["phân_loại"],
+          "diện_tích": item["diện_tích"] || undefined,
+          "thời_hạn_sử_dụng": item["thời_hạn_sử_dụng"],
         })),
-        "nguồn gốc sử dụng": agreementObject["nguồn gốc sử dụng"],
-        "ghi chú": agreementObject["ghi chú"],
+        "nguồn_gốc_sử_dụng": agreementObject["nguồn_gốc_sử_dụng"],
+        "ghi_chú": agreementObject["ghi_chú"],
       },
-      "số tiền": agreementObject["giá tiền"],
-      "số tiền bằng chữ": agreementObject["giá tiền bằng chữ"],
-      ngày: dayjs().format("DD/MM/YYYY").toString(),
-      "ngày bằng chữ": translateDateToVietnamese(
+      "số_tiền": agreementObject["giá_tiền"],
+      "số_tiền_bằng_chữ": agreementObject["giá_tiền_bằng_chữ"],
+      "ngày": dayjs().format("DD/MM/YYYY").toString(),
+      "ngày_bằng_chữ": translateDateToVietnamese(
         dayjs().format("DD/MM/YYYY").toString()
       ),
-      "số bản gốc": sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
-      "số bản gốc bằng chữ": numberToVietnamese(
+      "số_bản_gốc": sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
+      "số_bản_gốc_bằng_chữ": numberToVietnamese(
         String(sốBảnGốc)
       )?.toLocaleLowerCase(),
-      "ký bên ngoài": isOutSide,
+      "ký_bên_ngoài": isOutSide,
     };
 
     return payload;

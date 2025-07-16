@@ -61,32 +61,32 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                     <TableCell component="th">
                       <Typography variant="body1">Số thửa đất</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["số thửa đất"]}</TableCell>
+                    <TableCell>{agreementObject["số_thửa_đất"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Tờ bản đồ số</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["tờ bản đồ"]}</TableCell>
+                    <TableCell>{agreementObject["tờ_bản_đồ"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Địa chỉ cũ</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["địa chỉ cũ"]}</TableCell>
+                    <TableCell>{agreementObject["địa_chỉ_cũ"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Địa chỉ mới</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["địa chỉ mới"]}</TableCell>
+                    <TableCell>{agreementObject["địa_chỉ_mới"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Loại giấy tờ</Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["loại giấy chứng nhận"]}
+                      {agreementObject["loại_giấy_chứng_nhận"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -94,7 +94,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       <Typography variant="body1">Số giấy tờ</Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["số giấy chứng nhận"]}
+                      {agreementObject["số_giấy_chứng_nhận"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -102,7 +102,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       <Typography variant="body1">Số vào sổ cấp GCN</Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["số vào sổ cấp giấy chứng nhận"]}
+                      {agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -112,7 +112,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["nơi cấp giấy chứng nhận"]}
+                      {agreementObject["nơi_cấp_giấy_chứng_nhận"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -123,7 +123,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                     </TableCell>
                     <TableCell>
                       {dayjs(
-                        agreementObject["ngày cấp giấy chứng nhận"]
+                        agreementObject["ngày_cấp_giấy_chứng_nhận"]
                       ).format("DD/MM/YYYY")}
                     </TableCell>
                   </TableRow>
@@ -131,7 +131,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                     <TableCell component="th">
                       <Typography variant="body1">Diện tích (m2)</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["diện tích"]}</TableCell>
+                    <TableCell>{agreementObject["diện_tích"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
@@ -140,21 +140,21 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["diện tích bằng chữ"]}
+                      {agreementObject["diện_tích_bằng_chữ"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Giá tiền</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["giá tiền"]}</TableCell>
+                    <TableCell>{agreementObject["giá_tiền"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Giá tiền bằng chữ</Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["giá tiền bằng chữ"]}
+                      {agreementObject["giá_tiền_bằng_chữ"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -162,7 +162,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       <Typography variant="body1">Hình thức sử dụng</Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["hình thức sử dụng"]}
+                      {agreementObject["hình_thức_sử_dụng"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -173,11 +173,11 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                     </TableCell>
                     <TableCell>
                       <ul>
-                        {agreementObject["mục đích và thời hạn sử dụng"].map(
+                        {agreementObject["mục_đích_và_thời_hạn_sử_dụng"].map(
                           (item) => (
-                            <li key={item["phân loại"]}>
-                              {item["phân loại"]} - {item["diện tích"]} (m2) -{" "}
-                              {item["thời hạn sử dụng"]}
+                            <li key={item["phân_loại"]}>
+                              {item["phân_loại"]} - {item["diện_tích"]} (m2) -{" "}
+                              {item["thời_hạn_sử_dụng"]}
                             </li>
                           )
                         )}
@@ -189,14 +189,14 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       <Typography variant="body1">Nguồn gốc sử dụng</Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["nguồn gốc sử dụng"]}
+                      {agreementObject["nguồn_gốc_sử_dụng"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Ghi chú</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["ghi chú"]}</TableCell>
+                    <TableCell>{agreementObject["ghi_chú"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">

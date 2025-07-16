@@ -6,39 +6,39 @@ export const GENDER = {
 export type Gender = (typeof GENDER)[keyof typeof GENDER];
 
 export interface AgreementEntity extends BaseAgreementParty {
-  "tình trạng hôn nhân"?: string;
-  "quan hệ"?: string;
-  "giấy chứng nhận kết hôn"?: {
-    "số giấy chứng nhận": string;
-    "quyển số": string;
-    "nơi cấp": string;
-    "ngày cấp": string;
+  "tình_trạng_hôn_nhân"?: string;
+  "quan_hệ"?: string;
+  "giấy_chứng_nhận_kết_hôn"?: {
+    "số_giấy_chứng_nhận": string;
+    "quyển_số": string;
+    "nơi_cấp": string;
+    "ngày_cấp": string;
   };
 }
 
 interface BaseAgreementParty {
-  "giới tính": Gender;
+  "giới_tính": Gender;
   tên: string;
-  "ngày sinh": string;
-  "loại giấy tờ": string;
-  "số giấy tờ": string;
-  "ngày cấp": string;
-  "nơi cấp": string;
-  "địa chỉ thường trú cũ": string;
-  "địa chỉ thường trú mới": string;
+  "ngày_sinh": string;
+  "loại_giấy_tờ": string;
+  "số_giấy_tờ": string;
+  "ngày_cấp": string;
+  "nơi_cấp": string;
+  "địa_chỉ_thường_trú_cũ": string;
+  "địa_chỉ_thường_trú_mới": string;
 }
 
 export interface SingleAgreementParty extends BaseAgreementParty {
-  "tình trạng hôn nhân"?: string;
+  "tình_trạng_hôn_nhân"?: string;
 }
 
 export interface CoupleAgreementParty extends BaseAgreementParty {
-  "quan hệ"?: string;
-  "giấy chứng nhận kết hôn"?: {
-    "số giấy chứng nhận": string;
-    "quyển số": string;
-    "nơi cấp": string;
-    "ngày cấp": string;
+  "quan_hệ"?: string;
+  "giấy_chứng_nhận_kết_hôn"?: {
+    "số_giấy_chứng_nhận": string;
+    "quyển_số": string;
+    "nơi_cấp": string;
+    "ngày_cấp": string;
   };
 }
 
@@ -48,67 +48,67 @@ export interface Couple {
 }
 
 export interface AgreementParty {
-  "cá nhân": SingleAgreementParty[];
-  "vợ chồng": Couple[];
+  "cá_nhân": SingleAgreementParty[];
+  "vợ_chồng": Couple[];
 }
 
 export interface HDCNQuyenSDDatPayload {
-  "bên A": {
-    "cá thể": Array<{
-      "giới tính": Gender;
+  "bên_A": {
+    "cá_thể": Array<{
+      "giới_tính": Gender;
       tên: string;
-      "ngày sinh": string;
-      "loại giấy tờ": string;
-      "số giấy tờ": string;
-      "nơi cấp": string;
-      "ngày cấp": string;
-      "địa chỉ thường trú cũ": string;
-      "địa chỉ thường trú mới": string;
-      "quan hệ"?: string;
+      "ngày_sinh": string;
+      "loại_giấy_tờ": string;
+      "số_giấy_tờ": string;
+      "nơi_cấp": string;
+      "ngày_cấp": string;
+      "địa_chỉ_thường_trú_cũ": string;
+      "địa_chỉ_thường_trú_mới": string;
+      "quan_hệ"?: string;
     }>;
   };
-  "bên B": {
-    "cá thể": Array<{
-      "giới tính": Gender;
+  "bên_B": {
+    "cá_thể": Array<{
+      "giới_tính": Gender;
       tên: string;
-      "ngày sinh": string;
-      "loại giấy tờ": string;
-      "số giấy tờ": string;
-      "nơi cấp": string;
-      "ngày cấp": string;
-      "địa chỉ thường trú cũ": string;
-      "địa chỉ thường trú mới": string;
-      "tình trạng hôn nhân"?: string;
+      "ngày_sinh": string;
+      "loại_giấy_tờ": string;
+      "số_giấy_tờ": string;
+      "nơi_cấp": string;
+      "ngày_cấp": string;
+      "địa_chỉ_thường_trú_cũ": string;
+      "địa_chỉ_thường_trú_mới": string;
+      "tình_trạng_hôn_nhân"?: string;
     }>;
   };
-  "số thửa đất": string;
-  "tờ bản đồ": string;
-  "địa chỉ cũ": string;
-  "địa chỉ mới": string;
-  "loại giấy chứng nhận": string;
-  "số giấy chứng nhận": string;
-  "số vào sổ cấp giấy chứng nhận": string;
-  "nơi cấp giấy chứng nhận": string;
-  "ngày cấp giấy chứng nhận": string;
-  "đặc điểm thửa đất": {
-    "diện tích": {
+  "số_thửa_đất": string;
+  "tờ_bản_đồ": string;
+  "địa_chỉ_cũ": string;
+  "địa_chỉ_mới": string;
+  "loại_giấy_chứng_nhận": string;
+  "số_giấy_chứng_nhận": string;
+  "số_vào_sổ_cấp_giấy_chứng_nhận": string;
+  "nơi_cấp_giấy_chứng_nhận": string;
+  "ngày_cấp_giấy_chứng_nhận": string;
+  "đặc_điểm_thửa_đất": {
+    "diện_tích": {
       số: string;
       chữ: string;
     };
-    "hình thức sử dụng": string;
-    "mục đích và thời hạn sử dụng": Array<{
-      "phân loại": string;
-      "diện tích"?: string;
-      "thời hạn sử dụng": string;
+    "hình_thức_sử_dụng": string;
+    "mục_đích_và_thời_hạn_sử_dụng": Array<{
+      "phân_loại": string;
+      "diện_tích"?: string;
+      "thời_hạn_sử_dụng": string;
     }>;
-    "nguồn gốc sử dụng": string;
-    "ghi chú": string;
+    "nguồn_gốc_sử_dụng": string;
+    "ghi_chú": string;
   };
-  "số tiền": string;
-  "số tiền bằng chữ": string;
-  ngày: string;
-  "ngày bằng chữ": string;
-  "số bản gốc": string;
-  "số bản gốc bằng chữ": string;
-  "ký bên ngoài": boolean;
+  "số_tiền": string;
+  "số_tiền_bằng_chữ": string;
+  "ngày": string;
+  "ngày_bằng_chữ": string;
+  "số_bản_gốc": string;
+  "số_bản_gốc_bằng_chữ": string;
+  "ký_bên_ngoài": boolean;
 }

@@ -50,12 +50,12 @@ export const HdcnQuyenSdDatContext = createContext<HdcnQuyenSdDatContextType>({
   couplePartyAEntityIndex: null,
   couplePartyBEntityIndex: null,
   partyA: {
-    "cá nhân": [],
-    "vợ chồng": [],
+    "cá_nhân": [],
+    "vợ_chồng": [],
   },
   partyB: {
-    "cá nhân": [],
-    "vợ chồng": [],
+    "cá_nhân": [],
+    "vợ_chồng": [],
   },
   addSinglePartyAEntity: () => {},
   addCouplePartyAEntity: () => {},
@@ -86,12 +86,12 @@ export const HdcnQuyenSdDatProvider = ({
   children: React.ReactNode;
 }) => {
   const [partyA, setPartyA] = useState<AgreementParty>({
-    "cá nhân": [],
-    "vợ chồng": [],
+    "cá_nhân": [],
+    "vợ_chồng": [],
   });
   const [partyB, setPartyB] = useState<AgreementParty>({
-    "cá nhân": [],
-    "vợ chồng": [],
+    "cá_nhân": [],
+    "vợ_chồng": [],
   });
 
   const [agreementObject, setAgreementObject] =
@@ -124,16 +124,16 @@ export const HdcnQuyenSdDatProvider = ({
     if (index !== undefined) {
       setPartyA({
         ...partyA,
-        "cá nhân": [
-          ...partyA["cá nhân"].slice(0, index),
+        "cá_nhân": [
+          ...partyA["cá_nhân"].slice(0, index),
           entity,
-          ...partyA["cá nhân"].slice(index + 1),
+          ...partyA["cá_nhân"].slice(index + 1),
         ],
       });
     } else {
       setPartyA({
         ...partyA,
-        "cá nhân": [...partyA["cá nhân"], entity],
+        "cá_nhân": [...partyA["cá_nhân"], entity],
       });
     }
   };
@@ -142,12 +142,12 @@ export const HdcnQuyenSdDatProvider = ({
     if (index !== undefined) {
       setPartyA({
         ...partyA,
-        "vợ chồng": [...partyA["vợ chồng"], entity],
+        "vợ_chồng": [...partyA["vợ_chồng"], entity],
       });
     } else {
       setPartyA({
         ...partyA,
-        "vợ chồng": [...partyA["vợ chồng"], entity],
+        "vợ_chồng": [...partyA["vợ_chồng"], entity],
       });
     }
   };
@@ -159,12 +159,12 @@ export const HdcnQuyenSdDatProvider = ({
     if (index !== undefined) {
       setPartyB({
         ...partyB,
-        "cá nhân": [...partyB["cá nhân"], entity],
+        "cá_nhân": [...partyB["cá_nhân"], entity],
       });
     } else {
       setPartyB({
         ...partyB,
-        "cá nhân": [...partyB["cá nhân"], entity],
+        "cá_nhân": [...partyB["cá_nhân"], entity],
       });
     }
   };
@@ -173,12 +173,12 @@ export const HdcnQuyenSdDatProvider = ({
     if (index !== undefined) {
       setPartyB({
         ...partyB,
-        "vợ chồng": [...partyB["vợ chồng"], entity],
+        "vợ_chồng": [...partyB["vợ_chồng"], entity],
       });
     } else {
       setPartyB({
         ...partyB,
-        "vợ chồng": [...partyB["vợ chồng"], entity],
+        "vợ_chồng": [...partyB["vợ_chồng"], entity],
       });
     }
   };
@@ -186,14 +186,14 @@ export const HdcnQuyenSdDatProvider = ({
   const deleteSinglePartyAEntity = (arrayIndex: number) => {
     setPartyA({
       ...partyA,
-      "cá nhân": partyA["cá nhân"].filter((_e, index) => index !== arrayIndex),
+      "cá_nhân": partyA["cá_nhân"].filter((_e, index) => index !== arrayIndex),
     });
   };
 
   const deleteSinglePartyBEntity = (arrayIndex: number) => {
     setPartyB({
       ...partyB,
-      "cá nhân": partyB["cá nhân"].filter((_e, index) => index !== arrayIndex),
+      "cá_nhân": partyB["cá_nhân"].filter((_e, index) => index !== arrayIndex),
     });
   };
 
@@ -203,7 +203,7 @@ export const HdcnQuyenSdDatProvider = ({
   ) => {
     setPartyA({
       ...partyA,
-      "cá nhân": partyA["cá nhân"].map((e, index) =>
+      "cá_nhân": partyA["cá_nhân"].map((e, index) =>
         index === arrayIndex ? entity : e
       ),
     });
@@ -215,7 +215,7 @@ export const HdcnQuyenSdDatProvider = ({
   ) => {
     setPartyB({
       ...partyB,
-      "cá nhân": partyB["cá nhân"].map((e, index) =>
+      "cá_nhân": partyB["cá_nhân"].map((e, index) =>
         index === arrayIndex ? entity : e
       ),
     });
@@ -224,7 +224,7 @@ export const HdcnQuyenSdDatProvider = ({
   const editCouplePartyAEntity = (entity: Couple, arrayIndex: number) => {
     setPartyA({
       ...partyA,
-      "vợ chồng": partyA["vợ chồng"].map((e, index) =>
+      "vợ_chồng": partyA["vợ_chồng"].map((e, index) =>
         index === arrayIndex ? entity : e
       ),
     });
@@ -233,7 +233,7 @@ export const HdcnQuyenSdDatProvider = ({
   const editCouplePartyBEntity = (entity: Couple, arrayIndex: number) => {
     setPartyB({
       ...partyB,
-      "vợ chồng": partyB["vợ chồng"].map((e, index) =>
+      "vợ_chồng": partyB["vợ_chồng"].map((e, index) =>
         index === arrayIndex ? entity : e
       ),
     });
@@ -242,7 +242,7 @@ export const HdcnQuyenSdDatProvider = ({
   const deleteCouplePartyAEntity = (arrayIndex: number) => {
     setPartyA({
       ...partyA,
-      "vợ chồng": partyA["vợ chồng"].filter(
+      "vợ_chồng": partyA["vợ_chồng"].filter(
         (_e, index) => index !== arrayIndex
       ),
     });
@@ -251,7 +251,7 @@ export const HdcnQuyenSdDatProvider = ({
   const deleteCouplePartyBEntity = (arrayIndex: number) => {
     setPartyB({
       ...partyB,
-      "vợ chồng": partyB["vợ chồng"].filter(
+      "vợ_chồng": partyB["vợ_chồng"].filter(
         (_e, index) => index !== arrayIndex
       ),
     });
