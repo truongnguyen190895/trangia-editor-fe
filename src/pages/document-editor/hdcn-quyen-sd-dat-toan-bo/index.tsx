@@ -107,8 +107,10 @@ export const ChuyenNhuongDatToanBo = () => {
       ).format("DD/MM/YYYY"),
       "nơi cấp giấy chứng nhận": agreementObject["nơi cấp giấy chứng nhận"],
       "đặc điểm thửa đất": {
-        "diện tích": agreementObject["diện tích"],
-        "diện tích bằng chữ": agreementObject["diện tích bằng chữ"],
+        "diện tích": {
+          số: agreementObject["diện tích"],
+          chữ: agreementObject["diện tích bằng chữ"],
+        },
         "hình thức sử dụng": agreementObject["hình thức sử dụng"],
         "mục đích và thời hạn sử dụng": agreementObject[
           "mục đích và thời hạn sử dụng"

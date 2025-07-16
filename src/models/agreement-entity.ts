@@ -91,8 +91,10 @@ export interface HDCNQuyenSDDatPayload {
   "nơi cấp giấy chứng nhận": string;
   "ngày cấp giấy chứng nhận": string;
   "đặc điểm thửa đất": {
-    "diện tích": string | number;
-    "diện tích bằng chữ": string;
+    "diện tích": {
+      số: string;
+      chữ: string;
+    };
     "hình thức sử dụng": string;
     "mục đích và thời hạn sử dụng": Array<{
       "phân loại": string;
@@ -104,7 +106,7 @@ export interface HDCNQuyenSDDatPayload {
   };
   "số tiền": string;
   "số tiền bằng chữ": string;
-  "ngày": string;
+  ngày: string;
   "ngày bằng chữ": string;
   "số bản gốc": string;
   "số bản gốc bằng chữ": string;
