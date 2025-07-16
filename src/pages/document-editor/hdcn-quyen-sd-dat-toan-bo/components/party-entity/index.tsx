@@ -41,8 +41,8 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
   const [openSingleDialog, setOpenSingleDialog] = useState(false);
   const [openCoupleDialog, setOpenCoupleDialog] = useState(false);
   const partyEntities = side === "partyA" ? partyA : partyB;
-  const individualParty = partyEntities["cá nhân"];
-  const coupleParty = partyEntities["vợ chồng"];
+  const individualParty = partyEntities["cá_nhân"];
+  const coupleParty = partyEntities["vợ_chồng"];
 
   const handleDeleteSingleParty = (arrayIndex: number) => {
     if (side === "partyA") {
@@ -132,7 +132,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                 <TableBody>
                   {individualParty.map((entity, index) => (
                     <TableRow
-                      key={entity["số giấy tờ"]}
+                      key={entity["số_giấy_tờ"]}
                       sx={{
                         "& .icon-action": {
                           cursor: "pointer",
@@ -143,13 +143,13 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                         },
                       }}
                     >
-                      <TableCell>{entity["giới tính"]}</TableCell>
+                      <TableCell>{entity["giới_tính"]}</TableCell>
                       <TableCell>{entity.tên}</TableCell>
                       <TableCell>
-                        {dayjs(entity["ngày sinh"]).format("DD/MM/YYYY")}
+                        {dayjs(entity["ngày_sinh"]).format("DD/MM/YYYY")}
                       </TableCell>
-                      <TableCell>{entity["loại giấy tờ"]}</TableCell>
-                      <TableCell>{entity["số giấy tờ"]}</TableCell>
+                      <TableCell>{entity["loại_giấy_tờ"]}</TableCell>
+                      <TableCell>{entity["số_giấy_tờ"]}</TableCell>
                       <TableCell>
                         <VisibilityIcon
                           className="icon-action"
@@ -242,7 +242,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                   {coupleParty.map((entity, index) => (
                     <>
                       <TableRow
-                        key={entity.chồng["số giấy tờ"]}
+                        key={entity.chồng["số_giấy_tờ"]}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",
@@ -253,15 +253,15 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                           },
                         }}
                       >
-                        <TableCell>{entity.chồng["giới tính"]}</TableCell>
+                        <TableCell>{entity.chồng["giới_tính"]}</TableCell>
                         <TableCell>{entity.chồng.tên}</TableCell>
                         <TableCell>
-                          {dayjs(entity.chồng["ngày sinh"]).format(
+                          {dayjs(entity.chồng["ngày_sinh"]).format(
                             "DD/MM/YYYY"
                           )}
                         </TableCell>
-                        <TableCell>{entity.chồng["loại giấy tờ"]}</TableCell>
-                        <TableCell>{entity.chồng["số giấy tờ"]}</TableCell>
+                        <TableCell>{entity.chồng["loại_giấy_tờ"]}</TableCell>
+                        <TableCell>{entity.chồng["số_giấy_tờ"]}</TableCell>
                         <TableCell>
                           <VisibilityIcon
                             className="icon-action"
@@ -285,7 +285,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                         </TableCell>
                       </TableRow>
                       <TableRow
-                        key={entity.vợ["số giấy tờ"]}
+                        key={entity.vợ["số_giấy_tờ"]}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",
@@ -296,13 +296,13 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                           },
                         }}
                       >
-                        <TableCell>{entity.vợ["giới tính"]}</TableCell>
+                        <TableCell>{entity.vợ["giới_tính"]}</TableCell>
                         <TableCell>{entity.vợ.tên}</TableCell>
                         <TableCell>
-                          {dayjs(entity.vợ["ngày sinh"]).format("DD/MM/YYYY")}
+                          {dayjs(entity.vợ["ngày_sinh"]).format("DD/MM/YYYY")}
                         </TableCell>
-                        <TableCell>{entity.vợ["loại giấy tờ"]}</TableCell>
-                        <TableCell>{entity.vợ["số giấy tờ"]}</TableCell>
+                        <TableCell>{entity.vợ["loại_giấy_tờ"]}</TableCell>
+                        <TableCell>{entity.vợ["số_giấy_tờ"]}</TableCell>
                         <TableCell>
                           <VisibilityIcon
                             className="icon-action"

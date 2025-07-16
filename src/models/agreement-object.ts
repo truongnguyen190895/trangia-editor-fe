@@ -1,25 +1,23 @@
 export interface ThongTinThuaDat {
-  "số thửa đất": string;
-  "tờ bản đồ": string;
-  "địa chỉ cũ": string;
-  "địa chỉ mới": string;
-  "loại giấy chứng nhận": string;
-  "số giấy chứng nhận": string;
-  "số vào sổ cấp giấy chứng nhận": string;
-  "nơi cấp giấy chứng nhận": string;
-  "ngày cấp giấy chứng nhận": string;
-  "diện tích": string;
-  "diện tích bằng chữ": string;
-  "hình thức sử dụng": string;
-//   "mục đích sử dụng": string;
-//   "thời hạn sử dụng": string;
-  "nguồn gốc sử dụng": string;
-  "giá tiền": string;
-  "giá tiền bằng chữ": string;
-  "ghi chú": string;
-  "mục đích và thời hạn sử dụng": {
-    "phân loại": string;
-    "diện tích": string;
-    "thời hạn sử dụng": string;
+  "số_thửa_đất": string;
+  "tờ_bản_đồ": string;
+  "địa_chỉ_cũ": string;
+  "địa_chỉ_mới": string;
+  "loại_giấy_chứng_nhận": string;
+  "số_giấy_chứng_nhận": string;
+  "số_vào_sổ_cấp_giấy_chứng_nhận": string;
+  "nơi_cấp_giấy_chứng_nhận": string;
+  "ngày_cấp_giấy_chứng_nhận": string;
+  "diện_tích": string;
+  "diện_tích_bằng_chữ": string;
+  "hình_thức_sử_dụng": string;
+  "nguồn_gốc_sử_dụng": string;
+  "giá_tiền": string;
+  "giá_tiền_bằng_chữ": string;
+  "ghi_chú": string;
+  "mục_đích_và_thời_hạn_sử_dụng": {
+    "phân_loại": string;
+    "diện_tích": string;
+    "thời_hạn_sử_dụng": string;
   }[];
 }
