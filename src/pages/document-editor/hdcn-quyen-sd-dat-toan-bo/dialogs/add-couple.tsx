@@ -95,6 +95,7 @@ export const AddCoupleDialog = ({
           "nơi_cấp": "",
           "địa_chỉ_thường_trú_cũ": "",
           "địa_chỉ_thường_trú_mới": "",
+          "quan_hệ": null,
         },
         vợ: {
           "giới_tính": GENDER.FEMALE,
@@ -106,6 +107,7 @@ export const AddCoupleDialog = ({
           "nơi_cấp": "",
           "địa_chỉ_thường_trú_cũ": "",
           "địa_chỉ_thường_trú_mới": "",
+          "quan_hệ": null,
         },
       };
     }

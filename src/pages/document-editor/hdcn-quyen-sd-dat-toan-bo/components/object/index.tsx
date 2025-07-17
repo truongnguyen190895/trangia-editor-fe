@@ -67,7 +67,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                     <TableCell component="th">
                       <Typography variant="body1">Tờ bản đồ số</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["tờ_bản_đồ"]}</TableCell>
+                    <TableCell>{agreementObject["số_tờ_bản_đồ"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">

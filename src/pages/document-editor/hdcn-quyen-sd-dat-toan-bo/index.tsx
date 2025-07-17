@@ -31,7 +31,7 @@ export const ChuyenNhuongDatToanBo = () => {
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sốBảnGốc, setSốBảnGốc] = useState<number>(1);
+  const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
   const [openDialog, setOpenDialog] = useState(false);
   const [isOutSide, setIsOutSide] = useState(false);
 
@@ -82,6 +82,7 @@ export const ChuyenNhuongDatToanBo = () => {
             ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
             ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || undefined,
+            quan_hệ: person["quan_hệ"] || null,
           })),
           ...couplesA,
         ],
@@ -93,12 +94,13 @@ export const ChuyenNhuongDatToanBo = () => {
             ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
             ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || undefined,
+            quan_hệ: person["quan_hệ"] || null,
           })),
           ...couplesB,
         ],
       },
       số_thửa_đất: agreementObject["số_thửa_đất"],
-      tờ_bản_đồ: agreementObject["tờ_bản_đồ"],
+      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
       địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"],
       địa_chỉ_mới: agreementObject["địa_chỉ_mới"],
       loại_giấy_chứng_nhận: agreementObject["loại_giấy_chứng_nhận"],
@@ -119,7 +121,7 @@ export const ChuyenNhuongDatToanBo = () => {
           "mục_đích_và_thời_hạn_sử_dụng"
         ]?.map((item) => ({
           phân_loại: item["phân_loại"],
-          diện_tích: item["diện_tích"] || undefined,
+          diện_tích: item["diện_tích"] || null,
           thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
         })),
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
@@ -135,6 +137,12 @@ export const ChuyenNhuongDatToanBo = () => {
       số_bản_gốc_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc)
       )?.toLocaleLowerCase(),
+      số_bản_công_chứng:
+        sốBảnGốc - 1 < 10 ? "0" + String(sốBảnGốc - 1) : String(sốBảnGốc - 1),
+      số_bản_công_chứng_bằng_chữ: numberToVietnamese(
+        String(sốBảnGốc - 1)
+      )?.toLocaleLowerCase(),
+
       ký_bên_ngoài: isOutSide,
     };
 
@@ -241,7 +249,7 @@ export const ChuyenNhuongDatToanBo = () => {
       })),
       tables: ["bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
       số_thửa_đất: agreementObject["số_thửa_đất"],
-      tờ_bản_đồ: agreementObject["tờ_bản_đồ"],
+      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
       địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"],
       địa_chỉ_mới: agreementObject["địa_chỉ_mới"],
       loại_giấy_chứng_nhận: agreementObject["loại_giấy_chứng_nhận"],
@@ -262,7 +270,7 @@ export const ChuyenNhuongDatToanBo = () => {
           "mục_đích_và_thời_hạn_sử_dụng"
         ]?.map((item) => ({
           phân_loại: item["phân_loại"],
-          diện_tích: item["diện_tích"] || undefined,
+          diện_tích: item["diện_tích"] || null,
           thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
         })),
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
@@ -350,6 +358,7 @@ export const ChuyenNhuongDatToanBo = () => {
               fontSize: "1.2rem",
               fontWeight: "600",
               textTransform: "uppercase",
+              width: "200px",
             }}
             disabled={!isFormValid}
             onClick={() => setOpenDialog(true)}
@@ -364,8 +373,9 @@ export const ChuyenNhuongDatToanBo = () => {
               fontSize: "1.2rem",
               fontWeight: "600",
               textTransform: "uppercase",
+              width: "200px",
             }}
-            disabled={!isFormValid}
+            disabled={true} // TODO: temporary disable
             onClick={handleGenerateToKhaiChung}
           >
             Khai thuế
@@ -393,7 +403,7 @@ export const ChuyenNhuongDatToanBo = () => {
                 name="sốBảnGốc"
                 slotProps={{
                   htmlInput: {
-                    min: 0,
+                    min: 2,
                   },
                 }}
                 value={sốBảnGốc}

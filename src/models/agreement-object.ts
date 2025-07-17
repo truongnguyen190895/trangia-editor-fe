@@ -1,6 +1,6 @@
 export interface ThongTinThuaDat {
   "số_thửa_đất": string;
-  "tờ_bản_đồ": string;
+  "số_tờ_bản_đồ": string;
   "địa_chỉ_cũ": string;
   "địa_chỉ_mới": string;
   "loại_giấy_chứng_nhận": string;

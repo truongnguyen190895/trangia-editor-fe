@@ -30,10 +30,11 @@ interface BaseAgreementParty {
 
 export interface SingleAgreementParty extends BaseAgreementParty {
   tình_trạng_hôn_nhân?: string;
+  quan_hệ: string | null;
 }
 
 export interface CoupleAgreementParty extends BaseAgreementParty {
-  quan_hệ?: string;
+  quan_hệ: string | null;
   giấy_chứng_nhận_kết_hôn?: {
     số_giấy_chứng_nhận: string;
     quyển_số: string;
@@ -54,7 +55,7 @@ export interface AgreementParty {
 
 interface BaseThuaDat {
   số_thửa_đất: string;
-  tờ_bản_đồ: string;
+  số_tờ_bản_đồ: string;
   địa_chỉ_cũ: string;
   địa_chỉ_mới: string;
   loại_giấy_chứng_nhận: string;
@@ -70,7 +71,7 @@ interface BaseThuaDat {
     hình_thức_sử_dụng: string;
     mục_đích_và_thời_hạn_sử_dụng: Array<{
       phân_loại: string;
-      diện_tích?: string;
+      diện_tích: string | null;
       thời_hạn_sử_dụng: string;
     }>;
     nguồn_gốc_sử_dụng: string;
@@ -92,7 +93,7 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       ngày_cấp: string;
       địa_chỉ_thường_trú_cũ: string;
       địa_chỉ_thường_trú_mới: string;
-      quan_hệ?: string;
+      quan_hệ: string | null;
     }>;
   };
   bên_B: {
@@ -107,12 +108,15 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       địa_chỉ_thường_trú_cũ: string;
       địa_chỉ_thường_trú_mới: string;
       tình_trạng_hôn_nhân?: string;
+      quan_hệ: string | null;
     }>;
   };
   ngày: string;
   ngày_bằng_chữ: string;
   số_bản_gốc: string;
   số_bản_gốc_bằng_chữ: string;
+  số_bản_công_chứng: string;
+  số_bản_công_chứng_bằng_chữ: string;
   ký_bên_ngoài: boolean;
 }
 
@@ -129,7 +133,7 @@ export interface ToKhaiChungPayload extends BaseThuaDat {
       địa_chỉ_thường_trú_cũ: string;
       địa_chỉ_thường_trú_mới: string;
       tình_trạng_hôn_nhân?: string;
-      quan_hệ?: string;
+      quan_hệ: string | null;
       thôn?: string;
       phường?: string;
       tỉnh?: string;
@@ -147,6 +151,7 @@ export interface ToKhaiChungPayload extends BaseThuaDat {
       địa_chỉ_thường_trú_cũ: string;
       địa_chỉ_thường_trú_mới: string;
       tình_trạng_hôn_nhân?: string;
+      quan_hệ: string | null;
       thôn?: string;
       phường?: string;
       tỉnh?: string;

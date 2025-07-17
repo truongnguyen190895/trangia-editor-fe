@@ -37,7 +37,7 @@ interface ThemThongTinDatProps {
 
 const validationSchema = Yup.object({
   số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
-  tờ_bản_đồ: Yup.string().required("Tờ bản đồ số là bắt buộc"),
+  số_tờ_bản_đồ: Yup.string().required("Tờ bản đồ số là bắt buộc"),
   địa_chỉ_cũ: Yup.string().required("Địa chỉ là bắt buộc"),
   địa_chỉ_mới: Yup.string().required("Địa chỉ là bắt buộc"),
   loại_giấy_chứng_nhận: Yup.string().required("Loại giấy tờ là bắt buộc"),
@@ -94,7 +94,7 @@ export const ThemThongTinDat = ({
     return (
       agreementObject ?? {
         số_thửa_đất: "",
-        tờ_bản_đồ: "",
+        số_tờ_bản_đồ: "",
         địa_chỉ_cũ: "",
         địa_chỉ_mới: "",
         loại_giấy_chứng_nhận: "",
@@ -165,16 +165,16 @@ export const ThemThongTinDat = ({
               />
               <TextField
                 fullWidth
-                id="tờ_bản_đồ"
-                name="tờ_bản_đồ"
+                id="số_tờ_bản_đồ"
+                name="số_tờ_bản_đồ"
                 label="Tờ bản đồ số *"
-                value={values["tờ_bản_đồ"]}
+                value={values["số_tờ_bản_đồ"]}
                 onChange={handleChange}
-                error={!!errors["tờ_bản_đồ"] && touched["tờ_bản_đồ"]}
+                error={!!errors["số_tờ_bản_đồ"] && touched["số_tờ_bản_đồ"]}
                 helperText={
-                  errors["tờ_bản_đồ"] &&
-                  touched["tờ_bản_đồ"] &&
-                  errors["tờ_bản_đồ"]
+                  errors["số_tờ_bản_đồ"] &&
+                  touched["số_tờ_bản_đồ"] &&
+                  errors["số_tờ_bản_đồ"]
                 }
               />
               <TextField
