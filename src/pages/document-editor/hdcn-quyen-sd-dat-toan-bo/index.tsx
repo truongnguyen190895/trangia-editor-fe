@@ -18,9 +18,12 @@ import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
-import type { HDCNQuyenSDDatPayload } from "@/models/agreement-entity";
+import type {
+  HDCNQuyenSDDatPayload,
+  ToKhaiChungPayload,
+} from "@/models/agreement-entity";
 import dayjs from "dayjs";
-import { render_hdcn_quyen_sd_dat_toan_bo } from "@/api";
+import { render_hdcn_quyen_sd_dat_toan_bo, render_to_khai_chung } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 
@@ -28,7 +31,7 @@ export const ChuyenNhuongDatToanBo = () => {
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sốBảnGốc, setSốBảnGốc] = useState<number>(1);
+  const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
   const [openDialog, setOpenDialog] = useState(false);
   const [isOutSide, setIsOutSide] = useState(false);
 
@@ -45,94 +48,102 @@ export const ChuyenNhuongDatToanBo = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        "ngày_sinh": dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        "ngày_cấp": dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
-          "quan_hệ": "vợ",
-          "ngày_sinh": dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          "ngày_cấp": dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          quan_hệ: "vợ",
+          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
+          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
         }))
       );
     const couplesB = partyB["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        "ngày_sinh": dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        "ngày_cấp": dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
-          "quan_hệ": "vợ",
-          "ngày_sinh": dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          "ngày_cấp": dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          quan_hệ: "vợ",
+          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
+          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
         }))
       );
 
     const payload: HDCNQuyenSDDatPayload = {
-      "bên_A": {
-        "cá_thể": [
+      bên_A: {
+        cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
             ...person,
-            "ngày_sinh": dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            "ngày_cấp": dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
-            "tình_trạng_hôn_nhân": person["tình_trạng_hôn_nhân"] || undefined,
+            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
+            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || undefined,
+            quan_hệ: person["quan_hệ"] || null,
           })),
           ...couplesA,
         ],
       },
-      "bên_B": {
-        "cá_thể": [
+      bên_B: {
+        cá_thể: [
           ...partyB["cá_nhân"].map((person) => ({
             ...person,
-            "ngày_sinh": dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            "ngày_cấp": dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
-            "tình_trạng_hôn_nhân": person["tình_trạng_hôn_nhân"] || undefined,
+            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
+            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || undefined,
+            quan_hệ: person["quan_hệ"] || null,
           })),
           ...couplesB,
         ],
       },
-      "số_thửa_đất": agreementObject["số_thửa_đất"],
-      "tờ_bản_đồ": agreementObject["tờ_bản_đồ"],
-      "địa_chỉ_cũ": agreementObject["địa_chỉ_cũ"],
-      "địa_chỉ_mới": agreementObject["địa_chỉ_mới"],
-      "loại_giấy_chứng_nhận": agreementObject["loại_giấy_chứng_nhận"],
-      "số_giấy_chứng_nhận": agreementObject["số_giấy_chứng_nhận"],
-      "số_vào_sổ_cấp_giấy_chứng_nhận":
+      số_thửa_đất: agreementObject["số_thửa_đất"],
+      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
+      địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"],
+      địa_chỉ_mới: agreementObject["địa_chỉ_mới"],
+      loại_giấy_chứng_nhận: agreementObject["loại_giấy_chứng_nhận"],
+      số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
+      số_vào_sổ_cấp_giấy_chứng_nhận:
         agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"],
-      "ngày_cấp_giấy_chứng_nhận": dayjs(
+      ngày_cấp_giấy_chứng_nhận: dayjs(
         agreementObject["ngày_cấp_giấy_chứng_nhận"]
       ).format("DD/MM/YYYY"),
-      "nơi_cấp_giấy_chứng_nhận": agreementObject["nơi_cấp_giấy_chứng_nhận"],
-      "đặc_điểm_thửa_đất": {
-        "diện_tích": {
+      nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
+      đặc_điểm_thửa_đất: {
+        diện_tích: {
           số: agreementObject["diện_tích"],
           chữ: agreementObject["diện_tích_bằng_chữ"],
         },
-        "hình_thức_sử_dụng": agreementObject["hình_thức_sử_dụng"],
-        "mục_đích_và_thời_hạn_sử_dụng": agreementObject[
+        hình_thức_sử_dụng: agreementObject["hình_thức_sử_dụng"],
+        mục_đích_và_thời_hạn_sử_dụng: agreementObject[
           "mục_đích_và_thời_hạn_sử_dụng"
         ]?.map((item) => ({
-          "phân_loại": item["phân_loại"],
-          "diện_tích": item["diện_tích"] || undefined,
-          "thời_hạn_sử_dụng": item["thời_hạn_sử_dụng"],
+          phân_loại: item["phân_loại"],
+          diện_tích: item["diện_tích"] || null,
+          thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
         })),
-        "nguồn_gốc_sử_dụng": agreementObject["nguồn_gốc_sử_dụng"],
-        "ghi_chú": agreementObject["ghi_chú"],
+        nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
+        ghi_chú: agreementObject["ghi_chú"],
       },
-      "số_tiền": agreementObject["giá_tiền"],
-      "số_tiền_bằng_chữ": agreementObject["giá_tiền_bằng_chữ"],
-      "ngày": dayjs().format("DD/MM/YYYY").toString(),
-      "ngày_bằng_chữ": translateDateToVietnamese(
+      số_tiền: agreementObject["giá_tiền"],
+      số_tiền_bằng_chữ: agreementObject["giá_tiền_bằng_chữ"],
+      ngày: dayjs().format("DD/MM/YYYY").toString(),
+      ngày_bằng_chữ: translateDateToVietnamese(
         dayjs().format("DD/MM/YYYY").toString()
       ),
-      "số_bản_gốc": sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
-      "số_bản_gốc_bằng_chữ": numberToVietnamese(
+      số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
+      số_bản_gốc_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc)
       )?.toLocaleLowerCase(),
-      "ký_bên_ngoài": isOutSide,
+      số_bản_công_chứng:
+        sốBảnGốc - 1 < 10 ? "0" + String(sốBảnGốc - 1) : String(sốBảnGốc - 1),
+      số_bản_công_chứng_bằng_chữ: numberToVietnamese(
+        String(sốBảnGốc - 1)
+      )?.toLocaleLowerCase(),
+
+      ký_bên_ngoài: isOutSide,
     };
 
     return payload;
@@ -165,6 +176,138 @@ export const ChuyenNhuongDatToanBo = () => {
         setIsGenerating(false);
         setSốBảnGốc(1);
         setIsOutSide(false);
+      });
+  };
+
+  const getPayloadToKhaiChung = (): ToKhaiChungPayload => {
+    if (!agreementObject) {
+      throw new Error("Agreement object is null");
+    }
+
+    const couplesA = partyA["vợ_chồng"]
+      .map((couple) => ({
+        ...couple.chồng,
+        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+      }))
+      .concat(
+        partyA["vợ_chồng"].map((couple) => ({
+          ...couple.vợ,
+          quan_hệ: "vợ",
+          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
+          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+        }))
+      );
+    const couplesB = partyB["vợ_chồng"]
+      .map((couple) => ({
+        ...couple.chồng,
+        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+      }))
+      .concat(
+        partyB["vợ_chồng"].map((couple) => ({
+          ...couple.vợ,
+          quan_hệ: "vợ",
+          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
+          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+        }))
+      );
+
+    const các_cá_thể_bên_A = [
+      ...partyA["cá_nhân"].map((person) => ({
+        ...person,
+        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+      })),
+      ...couplesA,
+    ];
+    const các_cá_thể_bên_B = [
+      ...partyB["cá_nhân"].map((person) => ({
+        ...person,
+        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+      })),
+      ...couplesB,
+    ];
+
+    const payload: ToKhaiChungPayload = {
+      bên_A: {
+        cá_thể: các_cá_thể_bên_A,
+      },
+      bên_B: {
+        cá_thể: các_cá_thể_bên_B,
+      },
+      bảng_tncn_bên_A: các_cá_thể_bên_A.map((person, index) => ({
+        stt: index + 1,
+        tên: person["tên"],
+        số_giấy_tờ: person["số_giấy_tờ"],
+      })),
+      bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
+        stt: index + 1,
+        tên: person["tên"],
+        số_giấy_tờ: person["số_giấy_tờ"],
+      })),
+      tables: ["bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
+      số_thửa_đất: agreementObject["số_thửa_đất"],
+      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
+      địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"],
+      địa_chỉ_mới: agreementObject["địa_chỉ_mới"],
+      loại_giấy_chứng_nhận: agreementObject["loại_giấy_chứng_nhận"],
+      số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
+      số_vào_sổ_cấp_giấy_chứng_nhận:
+        agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"],
+      ngày_cấp_giấy_chứng_nhận: dayjs(
+        agreementObject["ngày_cấp_giấy_chứng_nhận"]
+      ).format("DD/MM/YYYY"),
+      nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
+      đặc_điểm_thửa_đất: {
+        diện_tích: {
+          số: agreementObject["diện_tích"],
+          chữ: agreementObject["diện_tích_bằng_chữ"],
+        },
+        hình_thức_sử_dụng: agreementObject["hình_thức_sử_dụng"],
+        mục_đích_và_thời_hạn_sử_dụng: agreementObject[
+          "mục_đích_và_thời_hạn_sử_dụng"
+        ]?.map((item) => ({
+          phân_loại: item["phân_loại"],
+          diện_tích: item["diện_tích"] || null,
+          thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
+        })),
+        nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
+        ghi_chú: agreementObject["ghi_chú"],
+      },
+      số_tiền: agreementObject["giá_tiền"],
+      số_tiền_bằng_chữ: agreementObject["giá_tiền_bằng_chữ"],
+    };
+
+    return payload;
+  };
+
+  const handleGenerateToKhaiChung = () => {
+    const payload = getPayloadToKhaiChung();
+    setOpenDialog(false);
+    setIsGenerating(true);
+    render_to_khai_chung(payload)
+      .then((res) => {
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "to-khai-chung.docx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error("Error generating document:", error);
+        window.alert("Lỗi khi tạo hợp đồng");
+      })
+      .finally(() => {
+        setIsGenerating(false);
       });
   };
 
@@ -206,20 +349,38 @@ export const ChuyenNhuongDatToanBo = () => {
         <PartyEntity title="Bên chuyển nhượng" side="partyA" />
         <PartyEntity title="Bên nhận chuyển nhượng" side="partyB" />
         <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: palette.softTeal,
-            height: "50px",
-            fontSize: "1.2rem",
-            fontWeight: "600",
-            textTransform: "uppercase",
-          }}
-          disabled={!isFormValid}
-          onClick={() => setOpenDialog(true)}
-        >
-          {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
-        </Button>
+        <Box display="flex" gap="1rem">
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: palette.softTeal,
+              height: "50px",
+              fontSize: "1.2rem",
+              fontWeight: "600",
+              textTransform: "uppercase",
+              width: "200px",
+            }}
+            disabled={!isFormValid}
+            onClick={() => setOpenDialog(true)}
+          >
+            {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: palette.softTeal,
+              height: "50px",
+              fontSize: "1.2rem",
+              fontWeight: "600",
+              textTransform: "uppercase",
+              width: "200px",
+            }}
+            disabled={true} // TODO: temporary disable
+            onClick={handleGenerateToKhaiChung}
+          >
+            Khai thuế
+          </Button>
+        </Box>
       </Box>
       <Dialog
         open={openDialog}
@@ -242,7 +403,7 @@ export const ChuyenNhuongDatToanBo = () => {
                 name="sốBảnGốc"
                 slotProps={{
                   htmlInput: {
-                    min: 0,
+                    min: 2,
                   },
                 }}
                 value={sốBảnGốc}

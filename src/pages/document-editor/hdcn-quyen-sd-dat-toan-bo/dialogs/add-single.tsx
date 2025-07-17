@@ -70,6 +70,7 @@ export const AddSingleDialog = ({
       "địa_chỉ_thường_trú_cũ": "",
       "địa_chỉ_thường_trú_mới": "",
       "tình_trạng_hôn_nhân": "",
+      "quan_hệ": null,
     };
   };
 
