@@ -50,6 +50,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ...couple.chồng,
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: null,
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
@@ -57,6 +58,7 @@ export const ChuyenNhuongDatToanBo = () => {
           quan_hệ: "vợ",
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          tình_trạng_hôn_nhân: null,
         }))
       );
     const couplesB = partyB["vợ_chồng"]
@@ -64,6 +66,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ...couple.chồng,
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: null,
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
@@ -71,6 +74,7 @@ export const ChuyenNhuongDatToanBo = () => {
           quan_hệ: "vợ",
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          tình_trạng_hôn_nhân: null,
         }))
       );
 
@@ -81,7 +85,7 @@ export const ChuyenNhuongDatToanBo = () => {
             ...person,
             ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
             ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
-            tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || undefined,
+            tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             quan_hệ: person["quan_hệ"] || null,
           })),
           ...couplesA,
@@ -93,7 +97,7 @@ export const ChuyenNhuongDatToanBo = () => {
             ...person,
             ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
             ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
-            tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || undefined,
+            tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             quan_hệ: person["quan_hệ"] || null,
           })),
           ...couplesB,
@@ -174,7 +178,7 @@ export const ChuyenNhuongDatToanBo = () => {
       })
       .finally(() => {
         setIsGenerating(false);
-        setSốBảnGốc(1);
+        setSốBảnGốc(2);
         setIsOutSide(false);
       });
   };
@@ -189,6 +193,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ...couple.chồng,
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: null,
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
@@ -196,6 +201,7 @@ export const ChuyenNhuongDatToanBo = () => {
           quan_hệ: "vợ",
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          tình_trạng_hôn_nhân: null,
         }))
       );
     const couplesB = partyB["vợ_chồng"]
@@ -203,6 +209,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ...couple.chồng,
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: null,
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
@@ -210,6 +217,7 @@ export const ChuyenNhuongDatToanBo = () => {
           quan_hệ: "vợ",
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          tình_trạng_hôn_nhân: null,
         }))
       );
 
@@ -218,6 +226,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ...person,
         ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
       })),
       ...couplesA,
     ];
@@ -226,6 +235,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ...person,
         ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
       })),
       ...couplesB,
     ];

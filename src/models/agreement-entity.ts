@@ -29,7 +29,7 @@ interface BaseAgreementParty {
 }
 
 export interface SingleAgreementParty extends BaseAgreementParty {
-  tình_trạng_hôn_nhân?: string;
+  tình_trạng_hôn_nhân: string | null;
   quan_hệ: string | null;
 }
 
@@ -94,6 +94,7 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       địa_chỉ_thường_trú_cũ: string;
       địa_chỉ_thường_trú_mới: string;
       quan_hệ: string | null;
+      tình_trạng_hôn_nhân: string | null;
     }>;
   };
   bên_B: {
@@ -107,7 +108,7 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       ngày_cấp: string;
       địa_chỉ_thường_trú_cũ: string;
       địa_chỉ_thường_trú_mới: string;
-      tình_trạng_hôn_nhân?: string;
+      tình_trạng_hôn_nhân: string | null;
       quan_hệ: string | null;
     }>;
   };
@@ -132,7 +133,7 @@ export interface ToKhaiChungPayload extends BaseThuaDat {
       ngày_cấp: string;
       địa_chỉ_thường_trú_cũ: string;
       địa_chỉ_thường_trú_mới: string;
-      tình_trạng_hôn_nhân?: string;
+      tình_trạng_hôn_nhân: string | null;
       quan_hệ: string | null;
       thôn?: string;
       phường?: string;
@@ -150,7 +151,7 @@ export interface ToKhaiChungPayload extends BaseThuaDat {
       ngày_cấp: string;
       địa_chỉ_thường_trú_cũ: string;
       địa_chỉ_thường_trú_mới: string;
-      tình_trạng_hôn_nhân?: string;
+      tình_trạng_hôn_nhân: string | null;
       quan_hệ: string | null;
       thôn?: string;
       phường?: string;
