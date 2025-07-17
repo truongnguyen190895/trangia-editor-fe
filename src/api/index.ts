@@ -1,7 +1,7 @@
 import axios from "axios";
 import type {
   HDCNQuyenSDDatPayload,
-  ToKhaiChungPayload,
+  SampleToKhaiChungPayload,
 } from "@/models/agreement-entity";
 
 export const api = axios.create({
@@ -21,7 +21,7 @@ export const render_hdcn_quyen_sd_dat_toan_bo = async (
   });
 };
 
-export const render_to_khai_chung = async (payload: ToKhaiChungPayload) => {
+export const render_to_khai_chung = async (payload: SampleToKhaiChungPayload) => {
   return api.post("/templates/to-khai-chung/render", payload, {
     responseType: "blob",
   });
