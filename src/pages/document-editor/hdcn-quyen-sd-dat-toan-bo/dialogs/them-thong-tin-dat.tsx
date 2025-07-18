@@ -38,7 +38,7 @@ interface ThemThongTinDatProps {
 const validationSchema = Yup.object({
   số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
   số_tờ_bản_đồ: Yup.string().required("Tờ bản đồ số là bắt buộc"),
-  địa_chỉ_cũ: Yup.string().required("Địa chỉ là bắt buộc"),
+  địa_chỉ_cũ: Yup.string().optional(),
   địa_chỉ_mới: Yup.string().required("Địa chỉ là bắt buộc"),
   loại_giấy_chứng_nhận: Yup.string().required("Loại giấy tờ là bắt buộc"),
   số_giấy_chứng_nhận: Yup.string().required("Số giấy tờ là bắt buộc"),
@@ -181,7 +181,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="địa_chỉ_cũ"
                 name="địa_chỉ_cũ"
-                label="Địa chỉ cũ *"
+                label="Địa chỉ cũ"
                 value={values["địa_chỉ_cũ"]}
                 onChange={handleChange}
                 error={!!errors["địa_chỉ_cũ"] && touched["địa_chỉ_cũ"]}
@@ -523,24 +523,18 @@ export const ThemThongTinDat = ({
               </Box>
               <Autocomplete
                 sx={{ gridColumn: "span 3" }}
-                options={NGUỒN_GỐC_SỬ_DỤNG_ĐẤT}
-                value={
-                  NGUỒN_GỐC_SỬ_DỤNG_ĐẤT.find(
-                    (item) => item.value === values["nguồn_gốc_sử_dụng"]
-                  ) ?? null
-                }
-                onChange={(_event, value) => {
-                  handleChange({
-                    target: {
-                      name: "nguồn_gốc_sử_dụng",
-                      value: value?.value,
-                    },
-                  });
-                }}
-                getOptionLabel={(option) => option.label}
+                freeSolo
+                options={NGUỒN_GỐC_SỬ_DỤNG_ĐẤT.map((item) => item.value)}
+                value={values["nguồn_gốc_sử_dụng"]}
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    onChange={(event) => {
+                      setFieldValue(
+                        "nguồn_gốc_sử_dụng",
+                        event.target.value ?? ""
+                      );
+                    }}
                     label="Nguồn gốc sử dụng *"
                     error={
                       !!errors["nguồn_gốc_sử_dụng"] &&

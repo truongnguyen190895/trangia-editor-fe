@@ -105,7 +105,7 @@ export const ChuyenNhuongDatToanBo = () => {
       },
       số_thửa_đất: agreementObject["số_thửa_đất"],
       số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-      địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"],
+      địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"] || null,
       địa_chỉ_mới: agreementObject["địa_chỉ_mới"],
       loại_giấy_chứng_nhận: agreementObject["loại_giấy_chứng_nhận"],
       số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
@@ -195,9 +195,9 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
         quan_hệ: null,
-        thành_phố: couple.chồng["địa_chỉ_thường_trú_mới"].split(",")[2].trim(),
-        phường: couple.chồng["địa_chỉ_thường_trú_mới"].split(",")[1].trim(),
-        thôn: couple.chồng["địa_chỉ_thường_trú_mới"].split(",")[0].trim(),
+        thành_phố: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2].trim(),
+        phường: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1].trim(),
+        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0].trim(),
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
@@ -206,9 +206,9 @@ export const ChuyenNhuongDatToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          thành_phố: couple.vợ["địa_chỉ_thường_trú_mới"].split(",")[2].trim(),
-          phường: couple.vợ["địa_chỉ_thường_trú_mới"].split(",")[1].trim(),
-          thôn: couple.vợ["địa_chỉ_thường_trú_mới"].split(",")[0].trim(),
+          thành_phố: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2].trim(),
+          phường: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1].trim(),
+          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0].trim(),
         }))
       );
     const couplesB = partyB["vợ_chồng"]
@@ -217,9 +217,9 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
-        thành_phố: couple.chồng["địa_chỉ_thường_trú_mới"].split(",")[2].trim(),
-        phường: couple.chồng["địa_chỉ_thường_trú_mới"].split(",")[1].trim(),
-        thôn: couple.chồng["địa_chỉ_thường_trú_mới"].split(",")[0].trim(),
+        thành_phố: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2].trim(),
+        phường: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1].trim(),
+        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0].trim(),
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
@@ -228,9 +228,9 @@ export const ChuyenNhuongDatToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          thành_phố: couple.vợ["địa_chỉ_thường_trú_mới"].split(",")[2].trim(),
-          phường: couple.vợ["địa_chỉ_thường_trú_mới"].split(",")[1].trim(),
-          thôn: couple.vợ["địa_chỉ_thường_trú_mới"].split(",")[0].trim(),
+          thành_phố: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2].trim(),
+          phường: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1].trim(),
+          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0].trim(),
         }))
       );
 
@@ -240,9 +240,9 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú_mới"].split(",")[2].trim(),
-        phường: person["địa_chỉ_thường_trú_mới"].split(",")[1].trim(),
-        thôn: person["địa_chỉ_thường_trú_mới"].split(",")[0].trim(),
+        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2].trim(),
+        phường: person["địa_chỉ_thường_trú"]?.split(",")[1].trim(),
+        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0].trim(),
       })),
       ...couplesA,
     ];
@@ -252,9 +252,9 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú_mới"].split(",")[2].trim(),
-        phường: person["địa_chỉ_thường_trú_mới"].split(",")[1].trim(),
-        thôn: person["địa_chỉ_thường_trú_mới"].split(",")[0].trim(),
+        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2].trim(),
+        phường: person["địa_chỉ_thường_trú"]?.split(",")[1].trim(),
+        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0].trim(),
       })),
       ...couplesB,
     ];

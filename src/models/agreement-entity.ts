@@ -5,17 +5,6 @@ export const GENDER = {
 
 export type Gender = (typeof GENDER)[keyof typeof GENDER];
 
-export interface AgreementEntity extends BaseAgreementParty {
-  tình_trạng_hôn_nhân?: string;
-  quan_hệ?: string;
-  giấy_chứng_nhận_kết_hôn?: {
-    số_giấy_chứng_nhận: string;
-    quyển_số: string;
-    nơi_cấp: string;
-    ngày_cấp: string;
-  };
-}
-
 interface BaseAgreementParty {
   giới_tính: Gender;
   tên: string;
@@ -24,8 +13,7 @@ interface BaseAgreementParty {
   số_giấy_tờ: string;
   ngày_cấp: string;
   nơi_cấp: string;
-  địa_chỉ_thường_trú_cũ: string; // TODO: should be optional
-  địa_chỉ_thường_trú_mới: string;
+  địa_chỉ_thường_trú: string
 }
 
 export interface SingleAgreementParty extends BaseAgreementParty {
@@ -35,12 +23,6 @@ export interface SingleAgreementParty extends BaseAgreementParty {
 
 export interface CoupleAgreementParty extends BaseAgreementParty {
   quan_hệ: string | null;
-  giấy_chứng_nhận_kết_hôn?: {
-    số_giấy_chứng_nhận: string;
-    quyển_số: string;
-    nơi_cấp: string;
-    ngày_cấp: string;
-  };
 }
 
 export interface Couple {
@@ -56,8 +38,8 @@ export interface AgreementParty {
 interface BaseThuaDat {
   số_thửa_đất: string;
   số_tờ_bản_đồ: string;
-  địa_chỉ_cũ: string;
-  địa_chỉ_mới: string; // TODO: should be optional
+  địa_chỉ_cũ: string | null;
+  địa_chỉ_mới: string;
   loại_giấy_chứng_nhận: string;
   số_giấy_chứng_nhận: string;
   số_vào_sổ_cấp_giấy_chứng_nhận: string;
@@ -91,8 +73,7 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       số_giấy_tờ: string;
       nơi_cấp: string;
       ngày_cấp: string;
-      địa_chỉ_thường_trú_cũ: string;
-      địa_chỉ_thường_trú_mới: string;
+      địa_chỉ_thường_trú: string;
       quan_hệ: string | null;
       tình_trạng_hôn_nhân: string | null;
     }>;
@@ -106,8 +87,7 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       số_giấy_tờ: string;
       nơi_cấp: string;
       ngày_cấp: string;
-      địa_chỉ_thường_trú_cũ: string;
-      địa_chỉ_thường_trú_mới: string;
+      địa_chỉ_thường_trú: string;
       tình_trạng_hôn_nhân: string | null;
       quan_hệ: string | null;
     }>;
@@ -121,48 +101,6 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
   ký_bên_ngoài: boolean;
 }
 
-export interface ToKhaiChungPayload extends BaseThuaDat {
-  bên_A: {
-    cá_thể: Array<{
-      giới_tính: Gender;
-      tên: string;
-      ngày_sinh: string;
-      loại_giấy_tờ: string;
-      số_giấy_tờ: string;
-      nơi_cấp: string;
-      ngày_cấp: string;
-      địa_chỉ_thường_trú_cũ: string;
-      địa_chỉ_thường_trú_mới: string;
-      tình_trạng_hôn_nhân: string | null;
-      quan_hệ: string | null;
-      thôn?: string;
-      phường?: string;
-      tỉnh?: string;
-    }>;
-  };
-  bên_B: {
-    cá_thể: Array<{
-      giới_tính: Gender;
-      tên: string;
-      ngày_sinh: string;
-      loại_giấy_tờ: string;
-      số_giấy_tờ: string;
-      nơi_cấp: string;
-      ngày_cấp: string;
-      địa_chỉ_thường_trú_cũ: string;
-      địa_chỉ_thường_trú_mới: string;
-      tình_trạng_hôn_nhân: string | null;
-      quan_hệ: string | null;
-      thôn?: string;
-      phường?: string;
-      tỉnh?: string;
-    }>;
-  };
-  bảng_tncn_bên_A: { stt: number; tên: string; số_giấy_tờ: string }[];
-  bảng_trước_bạ_bên_B: { stt: number; tên: string; số_giấy_tờ: string }[];
-  tables: ["bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"];
-}
-
 export type SampleToKhaiChungPayload = {
   bên_A: {
     cá_thể: Array<{
@@ -173,8 +111,7 @@ export type SampleToKhaiChungPayload = {
       số_giấy_tờ: string;
       ngày_cấp: string;
       nơi_cấp: string;
-      địa_chỉ_thường_trú_cũ: string;
-      địa_chỉ_thường_trú_mới: string;
+      địa_chỉ_thường_trú: string;
       tình_trạng_hôn_nhân: string | null;
       quan_hệ: string | null;
       thành_phố: string;
@@ -191,8 +128,7 @@ export type SampleToKhaiChungPayload = {
       số_giấy_tờ: string;
       ngày_cấp: string;
       nơi_cấp: string;
-      địa_chỉ_thường_trú_cũ: string;
-      địa_chỉ_thường_trú_mới: string;
+      địa_chỉ_thường_trú: string;
       tình_trạng_hôn_nhân: string | null;
       quan_hệ: string | null;
       thành_phố: string;

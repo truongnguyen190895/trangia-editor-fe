@@ -11,7 +11,7 @@ import {
   MenuItem,
   FormControl,
   FormLabel,
-  FormHelperText
+  FormHelperText,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -60,17 +60,16 @@ export const AddSingleDialog = ({
       return singlePartyEntities[partyEntityIndex];
     }
     return {
-      "giới_tính": GENDER.MALE,
+      giới_tính: GENDER.MALE,
       tên: "",
-      "ngày_sinh": "",
-      "loại_giấy_tờ": "",
-      "số_giấy_tờ": "",
-      "ngày_cấp": "",
-      "nơi_cấp": "",
-      "địa_chỉ_thường_trú_cũ": "",
-      "địa_chỉ_thường_trú_mới": "",
-      "tình_trạng_hôn_nhân": "",
-      "quan_hệ": null,
+      ngày_sinh: "",
+      loại_giấy_tờ: "",
+      số_giấy_tờ: "",
+      ngày_cấp: "",
+      nơi_cấp: "",
+      địa_chỉ_thường_trú: "",
+      tình_trạng_hôn_nhân: "",
+      quan_hệ: null,
     };
   };
 
@@ -80,15 +79,16 @@ export const AddSingleDialog = ({
     useFormik<SingleAgreementParty>({
       initialValues: getInitialValues(),
       validationSchema: Yup.object({
-        "giới_tính": Yup.string().required("Giới tính là bắt buộc"),
+        giới_tính: Yup.string().required("Giới tính là bắt buộc"),
         tên: Yup.string().required("Tên là bắt buộc"),
-        "ngày_sinh": Yup.string().required("Ngày sinh là bắt buộc"),
-        "loại_giấy_tờ": Yup.string().required("Loại giấy tờ là bắt buộc"),
-        "số_giấy_tờ": Yup.string().required("Số giấy tờ là bắt buộc"),
-        "ngày_cấp": Yup.string().required("Ngày cấp là bắt buộc"),
-        "nơi_cấp": Yup.string().required("Nơi cấp là bắt buộc"),
-        "địa_chỉ_thường_trú_cũ": Yup.string().required("Địa chỉ thường trú cũ là bắt buộc"),
-        "địa_chỉ_thường_trú_mới": Yup.string().required("Địa chỉ thường trú mới là bắt buộc"),
+        ngày_sinh: Yup.string().required("Ngày sinh là bắt buộc"),
+        loại_giấy_tờ: Yup.string().required("Loại giấy tờ là bắt buộc"),
+        số_giấy_tờ: Yup.string().required("Số giấy tờ là bắt buộc"),
+        ngày_cấp: Yup.string().required("Ngày cấp là bắt buộc"),
+        nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
+        địa_chỉ_thường_trú: Yup.string().required(
+          "Địa chỉ thường trú là bắt buộc"
+        ),
       }),
       onSubmit: (values) => {
         if (isEdit) {
@@ -212,25 +212,17 @@ export const AddSingleDialog = ({
               )}
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
-              <FormLabel>Địa chỉ thường trú cũ *</FormLabel>
+              <FormLabel>Địa chỉ thường trú *</FormLabel>
               <TextField
-                value={values["địa_chỉ_thường_trú_cũ"]}
-                name="địa_chỉ_thường_trú_cũ"
-                onChange={handleChange}
+                value={values["địa_chỉ_thường_trú"]}
+                name="địa_chỉ_thường_trú"
                 fullWidth
-                error={!!errors["địa_chỉ_thường_trú_cũ"] && touched["địa_chỉ_thường_trú_cũ"]}
-                helperText={errors["địa_chỉ_thường_trú_cũ"]}
-              />
-            </FormControl>
-            <FormControl sx={{ marginBottom: "10px" }}>
-              <FormLabel>Địa chỉ thường trú mới *</FormLabel>
-              <TextField
-                value={values["địa_chỉ_thường_trú_mới"]}
-                name="địa_chỉ_thường_trú_mới"
+                error={
+                  !!errors["địa_chỉ_thường_trú"] &&
+                  touched["địa_chỉ_thường_trú"]
+                }
+                helperText={errors["địa_chỉ_thường_trú"]}
                 onChange={handleChange}
-                fullWidth
-                error={!!errors["địa_chỉ_thường_trú_mới"] && touched["địa_chỉ_thường_trú_mới"]}
-                helperText={errors["địa_chỉ_thường_trú_mới"]}
               />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px", gridColumn: "span 3" }}>
