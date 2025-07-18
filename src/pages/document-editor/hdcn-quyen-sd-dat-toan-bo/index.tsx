@@ -166,7 +166,7 @@ export const ChuyenNhuongDatToanBo = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "hop-dong-chuyen-nhuong-dat.docx";
+        link.download = `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -404,7 +404,7 @@ export const ChuyenNhuongDatToanBo = () => {
               textTransform: "uppercase",
               width: "200px",
             }}
-            disabled={!isFormValid} // TODO: temporary disable
+            disabled={!isFormValid}
             onClick={handleGenerateToKhaiChung}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
