@@ -526,6 +526,12 @@ export const ThemThongTinDat = ({
                 freeSolo
                 options={NGUỒN_GỐC_SỬ_DỤNG_ĐẤT.map((item) => item.value)}
                 value={values["nguồn_gốc_sử_dụng"]}
+                onChange={(_event, value) => {
+                  setFieldValue(
+                    "nguồn_gốc_sử_dụng",
+                    value ?? ""
+                  );
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
