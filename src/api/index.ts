@@ -3,6 +3,7 @@ import type {
   HDCNQuyenSDDatPayload,
   SampleToKhaiChungPayload,
 } from "@/models/agreement-entity";
+import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
 
 export const api = axios.create({
   baseURL: "https://tran-gia-be-0e12f8edbb33.herokuapp.com",
@@ -26,7 +27,7 @@ export const render_hdcn_quyen_sd_dat_toan_bo = async (
   );
 };
 
-export const render_hdmb_can_ho = async (payload: HDCNQuyenSDDatPayload) => {
+export const render_hdmb_can_ho = async (payload: HDMBCanHoPayload) => {
   return api.post(
     "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-can-ho",
     payload,
