@@ -5,15 +5,17 @@ import { DocumentThumbnail } from "../../components/document-thumbnail";
 const mockDocuments = [
   {
     id: 1,
-    name: "1. HĐCN Quyền sử dụng đất toàn bộ.docz",
+    name: "HĐCN Quyền sử dụng đất toàn bộ.docz",
     thumbnail: "https://via.placeholder.com/150",
     type: "agreement",
+    path: "hdcn-quyen-su-dung-dat-toan-bo",
   },
   {
     id: 2,
-    name: "2. HĐMB Nhà đất toàn bộ.docz",
+    name: "HĐMB Căn hộ.docz",
     thumbnail: "https://via.placeholder.com/150",
     type: "agreement",
+    path: "hdmb-can-ho",
   },
 ];
 
@@ -28,7 +30,7 @@ export const Documents = () => {
             key={document.id}
             title={document.name}
             onClick={() =>
-              navigate(`/editor?type=${document.type}&id=${document.id}`)
+              navigate(`/editor?type=${document.type}&name=${document.path}`)
             }
           />
         ))}
