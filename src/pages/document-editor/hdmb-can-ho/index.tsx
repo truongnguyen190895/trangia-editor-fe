@@ -22,6 +22,8 @@ import dayjs from "dayjs";
 import { render_hdmb_can_ho } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
+import { translateDateToVietnamese } from "@/utils/date-to-words";
+import { numberToVietnamese } from "@/utils/number-to-words";
 
 export const HDMBCanHo = () => {
   const { partyA, partyB, agreementObject, canHo } = useHDMBCanHoContext();
@@ -133,6 +135,20 @@ export const HDMBCanHo = () => {
       mục_đích_sở_hữu_đất: agreementObject["mục_đích_sở_hữu_đất"],
       thời_hạn_sử_dụng_đất: agreementObject["thời_hạn_sử_dụng_đất"],
       nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
+      ngày: dayjs().format("DD/MM/YYYY").toString(),
+      ngày_bằng_chữ: translateDateToVietnamese(
+        dayjs().format("DD/MM/YYYY").toString()
+      ),
+      số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
+      số_bản_gốc_bằng_chữ: numberToVietnamese(
+        String(sốBảnGốc)
+      )?.toLocaleLowerCase(),
+      số_bản_công_chứng:
+        sốBảnGốc - 1 < 10 ? "0" + String(sốBảnGốc - 1) : String(sốBảnGốc - 1),
+      số_bản_công_chứng_bằng_chữ: numberToVietnamese(
+        String(sốBảnGốc - 1)
+      )?.toLocaleLowerCase(),
+      ký_bên_ngoài: isOutSide,
     };
 
     return payload;

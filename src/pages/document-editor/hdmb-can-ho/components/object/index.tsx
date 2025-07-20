@@ -14,7 +14,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import dayjs from "dayjs";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ThemThongTinDat } from "../../dialogs/them-thong-tin-dat";
@@ -272,9 +271,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       <ListItem>
                         <ListItemText
                           primary="Ngày cấp"
-                          secondary={dayjs(canHo?.["ngày_cấp_gcn"]).format(
-                            "DD/MM/YYYY"
-                          )}
+                          secondary={canHo?.["ngày_cấp_gcn"]}
                         />
                       </ListItem>
                     </List>

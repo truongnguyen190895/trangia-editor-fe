@@ -49,6 +49,13 @@ export interface HDMBCanHoPayload {
   nguồn_gốc_sử_dụng_đất: string;
   giá_căn_hộ_bằng_số: string;
   giá_căn_hộ_bằng_chữ: string;
+  ngày: string;
+  ngày_bằng_chữ: string;
+  số_bản_gốc: string;
+  số_bản_gốc_bằng_chữ: string;
+  số_bản_công_chứng: string;
+  số_bản_công_chứng_bằng_chữ: string;
+  ký_bên_ngoài: boolean;
 }
 
 export interface ThongTinThuaDat {

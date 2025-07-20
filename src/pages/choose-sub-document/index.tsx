@@ -9,6 +9,7 @@ const mockData = [
     description: "Chuyển nhượng, mua bán",
     category: "hop-dong",
     subCategory: "chuyen-nhuong-mua-ban",
+    active: true,
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ const mockData = [
     description: "Uỷ quyền",
     category: "hop-dong",
     subCategory: "uy-quyen",
+    active: false,
   },
 ];
 
@@ -37,6 +39,7 @@ const ChooseSubDocument = () => {
             <RoundedBox
               key={item.id}
               label={item.name}
+              active={item.active}
               description={item.description}
               onClick={() => handleChooseDocument(item.subCategory)}
             />
