@@ -13,7 +13,7 @@ import {
   DialogActions,
   FormHelperText,
 } from "@mui/material";
-import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 import type { Couple } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
 import { useFormik } from "formik";
@@ -66,7 +66,7 @@ export const AddCoupleDialog = ({
     addCouplePartyBEntity,
     editCouplePartyAEntity,
     editCouplePartyBEntity,
-  } = useHdcnQuyenSdDatContext();
+  } = useHDMBCanHoContext();
 
   const addPartyEntity =
     side === "partyA" ? addCouplePartyAEntity : addCouplePartyBEntity;

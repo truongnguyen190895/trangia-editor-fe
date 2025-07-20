@@ -17,7 +17,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import type { SingleAgreementParty } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
-import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 import {
   CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH,
   NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
@@ -45,7 +45,7 @@ export const AddSingleDialog = ({
     editSinglePartyBEntity,
     setSinglePartyAEntityIndex,
     setSinglePartyBEntityIndex,
-  } = useHdcnQuyenSdDatContext();
+  } = useHDMBCanHoContext();
   const singleParty = side === "partyA" ? partyA : partyB;
   const singlePartyEntities = singleParty["cá_nhân"];
   const addPartyEntity =

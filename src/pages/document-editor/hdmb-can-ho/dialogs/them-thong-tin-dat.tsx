@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -8,25 +7,12 @@ import {
   DialogActions,
   Button,
   Autocomplete,
-  Typography,
-  TableCell,
-  TableRow,
-  TableHead,
-  Table,
-  TableContainer,
-  TableBody,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT,
-  NGUỒN_GỐC_SỬ_DỤNG_ĐẤT,
-} from "@/constants";
+import { NGUỒN_GỐC_SỬ_DỤNG_ĐẤT } from "@/constants";
 import { numberToVietnamese } from "@/utils/number-to-words";
-import AddIcon from "@mui/icons-material/Add";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import type { ThongTinThuaDat } from "@/models/hdmb-can-ho";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 
@@ -37,7 +23,6 @@ interface ThemThongTinDatProps {
 
 const validationSchema = Yup.object({
   số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
-  số_tờ_bản_đồ: Yup.string().required("Tờ bản đồ số là bắt buộc"),
 });
 
 export const ThemThongTinDat = ({
@@ -52,16 +37,18 @@ export const ThemThongTinDat = ({
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
-    return agreementObject ? agreementObject : {
-      số_thửa_đất: "",
-      số_tờ_bản_đồ: "",
-      diện_tích_đất_bằng_số: "",
-      diện_tích_đất_bằng_chữ: "",
-      hình_thức_sở_hữu_đất: "",
-      mục_đích_sở_hữu_đất: "",
-      thời_hạn_sử_dụng_đất: "",
-      nguồn_gốc_sử_dụng_đất: "",
-    };
+    return agreementObject
+      ? agreementObject
+      : {
+          số_thửa_đất: "",
+          số_tờ_bản_đồ: "",
+          diện_tích_đất_bằng_số: "",
+          diện_tích_đất_bằng_chữ: "",
+          hình_thức_sở_hữu_đất: "",
+          mục_đích_sở_hữu_đất: "",
+          thời_hạn_sử_dụng_đất: "",
+          nguồn_gốc_sử_dụng_đất: "",
+        };
   };
 
   const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
@@ -96,15 +83,9 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="số_tờ_bản_đồ"
                 name="số_tờ_bản_đồ"
-                label="Tờ bản đồ số *"
+                label="Tờ bản đồ số"
                 value={values["số_tờ_bản_đồ"]}
                 onChange={handleChange}
-                error={!!errors["số_tờ_bản_đồ"] && touched["số_tờ_bản_đồ"]}
-                helperText={
-                  errors["số_tờ_bản_đồ"] &&
-                  touched["số_tờ_bản_đồ"] &&
-                  errors["số_tờ_bản_đồ"]
-                }
               />
               <TextField
                 fullWidth
@@ -166,8 +147,7 @@ export const ThemThongTinDat = ({
                 getOptionLabel={(option) => option.label}
                 value={
                   MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
-                    (item) =>
-                      item.value === values["mục_đích_sở_hữu_đất"]
+                    (item) => item.value === values["mục_đích_sở_hữu_đất"]
                   ) ?? null
                 }
                 onChange={(_event, value) => {

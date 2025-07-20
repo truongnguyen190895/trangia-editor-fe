@@ -11,9 +11,9 @@ interface BaseParty {
   địa_chỉ_thường_trú: string;
   tình_trạng_hôn_nhân: string | null;
   quan_hệ: string | null;
-  thành_phố: string;
-  phường: string;
-  thôn: string;
+  thành_phố: string | null;
+  phường: string | null;
+  thôn: string | null;
 }
 
 interface Party {
@@ -40,7 +40,7 @@ export interface HDMBCanHoPayload {
   năm_hoàn_thành_xây_dựng: string;
   ghi_chú_căn_hộ: string;
   số_thửa_đất: string;
-  số_tờ_bản_đồ: string;
+  số_tờ_bản_đồ: string | null;
   diện_tích_đất_bằng_số: string;
   diện_tích_đất_bằng_chữ: string;
   hình_thức_sở_hữu_đất: string;
@@ -53,7 +53,7 @@ export interface HDMBCanHoPayload {
 
 export interface ThongTinThuaDat {
   số_thửa_đất: string;
-  số_tờ_bản_đồ: string;
+  số_tờ_bản_đồ: string | null;
   diện_tích_đất_bằng_số: string;
   diện_tích_đất_bằng_chữ: string;
   hình_thức_sở_hữu_đất: string;

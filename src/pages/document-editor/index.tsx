@@ -30,6 +30,17 @@ export const DocumentEditor = () => {
     }
   };
 
+  const getTemplateName = () => {
+    switch (name) {
+      case "hdcn-quyen-su-dung-dat-toan-bo":
+        return "Hợp đồng chuyển nhượng quyền sử dụng đất (toàn bộ)";
+      case "hdmb-can-ho":
+        return "Hợp đồng mua bán căn hộ";
+      default:
+        return "";
+    }
+  };
+
   return (
     <Box>
       <Box
@@ -41,7 +52,7 @@ export const DocumentEditor = () => {
         alignItems="center"
       >
         <Typography variant="h4">
-          Chỉnh sửa văn bản: {name?.split("-").join(" ")}
+          Chỉnh sửa văn bản: {getTemplateName()}
         </Typography>
       </Box>
       <Box className="content" paddingX="1.5rem" paddingY="1rem">

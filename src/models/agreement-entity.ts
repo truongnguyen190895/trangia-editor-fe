@@ -159,9 +159,9 @@ export type SampleToKhaiChungPayload = {
   ngày_chứng_thực: string;
   số_thửa_đất: string;
   số_tờ_bản_đồ: string;
-  thôn: string;
-  phường: string;
-  thành_phố: string;
+  thôn: string | null;
+  phường: string | null;
+  thành_phố: string | null;
   đặc_điểm_thửa_đất: {
     mục_đích_và_thời_hạn_sử_dụng: Array<{
       phân_loại: string;

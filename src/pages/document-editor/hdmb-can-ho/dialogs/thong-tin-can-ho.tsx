@@ -76,6 +76,7 @@ export const ThongTinCanHoDialog = ({
       onSubmit: submitForm,
     });
 
+  console.log("values", values);
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
@@ -193,10 +194,10 @@ export const ThongTinCanHoDialog = ({
               />
               <TextField
                 fullWidth
-                type="date"
+                type="text"
+                label="Ngày cấp giấy chứng nhận (DD/MM/YYYY)*"
                 id="ngày_cấp_gcn"
                 name="ngày_cấp_gcn"
-                label="Ngày cấp giấy chứng nhận *"
                 value={values["ngày_cấp_gcn"]}
                 onChange={handleChange}
                 error={!!errors["ngày_cấp_gcn"] && touched["ngày_cấp_gcn"]}
@@ -286,6 +287,7 @@ export const ThongTinCanHoDialog = ({
                 id="kết_cấu"
                 name="kết_cấu"
                 label="Kết cấu *"
+                value={values["kết_cấu"]}
                 onChange={handleChange}
                 error={!!errors["kết_cấu"] && touched["kết_cấu"]}
                 helperText={

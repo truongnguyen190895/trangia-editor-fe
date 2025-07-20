@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 import { render_hdcn_quyen_sd_dat_toan_bo, render_to_khai_chung } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { extractAddress } from "@/utils/extract-address";
 
 export const ChuyenNhuongDatToanBo = () => {
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
@@ -195,9 +196,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
         quan_hệ: null,
-        thành_phố: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
@@ -206,9 +205,7 @@ export const ChuyenNhuongDatToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          thành_phố: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-          phường: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
     const couplesB = partyB["vợ_chồng"]
@@ -217,9 +214,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
-        thành_phố: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
@@ -228,9 +223,7 @@ export const ChuyenNhuongDatToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          thành_phố: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-          phường: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
 
@@ -240,9 +233,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(person["địa_chỉ_thường_trú"]),
       })),
       ...couplesA,
     ];
@@ -252,9 +243,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(person["địa_chỉ_thường_trú"]),
       })),
       ...couplesB,
     ];
@@ -304,9 +293,7 @@ export const ChuyenNhuongDatToanBo = () => {
       số_tiền: agreementObject["giá_tiền"],
       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
-      thôn: agreementObject["địa_chỉ_mới"].split(",")[0].trim(),
-      phường: agreementObject["địa_chỉ_mới"].split(",")[1].trim(),
-      thành_phố: agreementObject["địa_chỉ_mới"].split(",")[2].trim(),
+      ...extractAddress(agreementObject["địa_chỉ_mới"]),
     };
 
     return payload;
