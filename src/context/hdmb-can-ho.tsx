@@ -3,13 +3,14 @@ import type {
   SingleAgreementParty,
   Couple,
 } from "@/models/agreement-entity";
-import type { ThongTinThuaDat } from "@/models/agreement-object";
+import type { ThongTinCanHo, ThongTinThuaDat } from "@/models/hdmb-can-ho";
 import { createContext, useContext, useState } from "react";
 
 interface HDMBCanHoContextType {
   partyA: AgreementParty;
   partyB: AgreementParty;
   agreementObject: ThongTinThuaDat | null;
+  canHo: ThongTinCanHo | null;
   singlePartyAEntityIndex: number | null;
   singlePartyBEntityIndex: number | null;
   couplePartyAEntityIndex: number | null;
@@ -17,6 +18,8 @@ interface HDMBCanHoContextType {
   //   Single section
   addSinglePartyAEntity: (entity: SingleAgreementParty, index?: number) => void;
   addSinglePartyBEntity: (entity: SingleAgreementParty, index?: number) => void;
+  addCanHo: (canHo: ThongTinCanHo) => void;
+  deleteCanHo: () => void;
   deleteSinglePartyAEntity: (arrayIndex: number) => void;
   deleteSinglePartyBEntity: (arrayIndex: number) => void;
   deleteCouplePartyAEntity: (arrayIndex: number) => void;
@@ -45,17 +48,18 @@ interface HDMBCanHoContextType {
 
 export const HDMBCanHoContext = createContext<HDMBCanHoContextType>({
   agreementObject: null,
+  canHo: null,
   singlePartyAEntityIndex: null,
   singlePartyBEntityIndex: null,
   couplePartyAEntityIndex: null,
   couplePartyBEntityIndex: null,
   partyA: {
-    "cá_nhân": [],
-    "vợ_chồng": [],
+    cá_nhân: [],
+    vợ_chồng: [],
   },
   partyB: {
-    "cá_nhân": [],
-    "vợ_chồng": [],
+    cá_nhân: [],
+    vợ_chồng: [],
   },
   addSinglePartyAEntity: () => {},
   addCouplePartyAEntity: () => {},
@@ -74,6 +78,8 @@ export const HDMBCanHoContext = createContext<HDMBCanHoContextType>({
   editCouplePartyAEntity: () => {},
   editCouplePartyBEntity: () => {},
   addAgreementObject: () => {},
+  addCanHo: () => {},
+  deleteCanHo: () => {},
   //delete
   deleteAgreementObject: () => {},
 });
@@ -86,16 +92,17 @@ export const HDMBCanHoProvider = ({
   children: React.ReactNode;
 }) => {
   const [partyA, setPartyA] = useState<AgreementParty>({
-    "cá_nhân": [],
-    "vợ_chồng": [],
+    cá_nhân: [],
+    vợ_chồng: [],
   });
   const [partyB, setPartyB] = useState<AgreementParty>({
-    "cá_nhân": [],
-    "vợ_chồng": [],
+    cá_nhân: [],
+    vợ_chồng: [],
   });
 
   const [agreementObject, setAgreementObject] =
     useState<ThongTinThuaDat | null>(null);
+  const [canHo, setCanHo] = useState<ThongTinCanHo | null>(null);
   const [singlePartyAEntityIndex, setSinglePartyAEntityIndex] = useState<
     number | null
   >(null);
@@ -124,7 +131,7 @@ export const HDMBCanHoProvider = ({
     if (index !== undefined) {
       setPartyA({
         ...partyA,
-        "cá_nhân": [
+        cá_nhân: [
           ...partyA["cá_nhân"].slice(0, index),
           entity,
           ...partyA["cá_nhân"].slice(index + 1),
@@ -133,7 +140,7 @@ export const HDMBCanHoProvider = ({
     } else {
       setPartyA({
         ...partyA,
-        "cá_nhân": [...partyA["cá_nhân"], entity],
+        cá_nhân: [...partyA["cá_nhân"], entity],
       });
     }
   };
@@ -142,12 +149,12 @@ export const HDMBCanHoProvider = ({
     if (index !== undefined) {
       setPartyA({
         ...partyA,
-        "vợ_chồng": [...partyA["vợ_chồng"], entity],
+        vợ_chồng: [...partyA["vợ_chồng"], entity],
       });
     } else {
       setPartyA({
         ...partyA,
-        "vợ_chồng": [...partyA["vợ_chồng"], entity],
+        vợ_chồng: [...partyA["vợ_chồng"], entity],
       });
     }
   };
@@ -159,12 +166,12 @@ export const HDMBCanHoProvider = ({
     if (index !== undefined) {
       setPartyB({
         ...partyB,
-        "cá_nhân": [...partyB["cá_nhân"], entity],
+        cá_nhân: [...partyB["cá_nhân"], entity],
       });
     } else {
       setPartyB({
         ...partyB,
-        "cá_nhân": [...partyB["cá_nhân"], entity],
+        cá_nhân: [...partyB["cá_nhân"], entity],
       });
     }
   };
@@ -173,12 +180,12 @@ export const HDMBCanHoProvider = ({
     if (index !== undefined) {
       setPartyB({
         ...partyB,
-        "vợ_chồng": [...partyB["vợ_chồng"], entity],
+        vợ_chồng: [...partyB["vợ_chồng"], entity],
       });
     } else {
       setPartyB({
         ...partyB,
-        "vợ_chồng": [...partyB["vợ_chồng"], entity],
+        vợ_chồng: [...partyB["vợ_chồng"], entity],
       });
     }
   };
@@ -186,14 +193,14 @@ export const HDMBCanHoProvider = ({
   const deleteSinglePartyAEntity = (arrayIndex: number) => {
     setPartyA({
       ...partyA,
-      "cá_nhân": partyA["cá_nhân"].filter((_e, index) => index !== arrayIndex),
+      cá_nhân: partyA["cá_nhân"].filter((_e, index) => index !== arrayIndex),
     });
   };
 
   const deleteSinglePartyBEntity = (arrayIndex: number) => {
     setPartyB({
       ...partyB,
-      "cá_nhân": partyB["cá_nhân"].filter((_e, index) => index !== arrayIndex),
+      cá_nhân: partyB["cá_nhân"].filter((_e, index) => index !== arrayIndex),
     });
   };
 
@@ -203,7 +210,7 @@ export const HDMBCanHoProvider = ({
   ) => {
     setPartyA({
       ...partyA,
-      "cá_nhân": partyA["cá_nhân"].map((e, index) =>
+      cá_nhân: partyA["cá_nhân"].map((e, index) =>
         index === arrayIndex ? entity : e
       ),
     });
@@ -215,7 +222,7 @@ export const HDMBCanHoProvider = ({
   ) => {
     setPartyB({
       ...partyB,
-      "cá_nhân": partyB["cá_nhân"].map((e, index) =>
+      cá_nhân: partyB["cá_nhân"].map((e, index) =>
         index === arrayIndex ? entity : e
       ),
     });
@@ -224,7 +231,7 @@ export const HDMBCanHoProvider = ({
   const editCouplePartyAEntity = (entity: Couple, arrayIndex: number) => {
     setPartyA({
       ...partyA,
-      "vợ_chồng": partyA["vợ_chồng"].map((e, index) =>
+      vợ_chồng: partyA["vợ_chồng"].map((e, index) =>
         index === arrayIndex ? entity : e
       ),
     });
@@ -233,7 +240,7 @@ export const HDMBCanHoProvider = ({
   const editCouplePartyBEntity = (entity: Couple, arrayIndex: number) => {
     setPartyB({
       ...partyB,
-      "vợ_chồng": partyB["vợ_chồng"].map((e, index) =>
+      vợ_chồng: partyB["vợ_chồng"].map((e, index) =>
         index === arrayIndex ? entity : e
       ),
     });
@@ -242,25 +249,30 @@ export const HDMBCanHoProvider = ({
   const deleteCouplePartyAEntity = (arrayIndex: number) => {
     setPartyA({
       ...partyA,
-      "vợ_chồng": partyA["vợ_chồng"].filter(
-        (_e, index) => index !== arrayIndex
-      ),
+      vợ_chồng: partyA["vợ_chồng"].filter((_e, index) => index !== arrayIndex),
     });
   };
 
   const deleteCouplePartyBEntity = (arrayIndex: number) => {
     setPartyB({
       ...partyB,
-      "vợ_chồng": partyB["vợ_chồng"].filter(
-        (_e, index) => index !== arrayIndex
-      ),
+      vợ_chồng: partyB["vợ_chồng"].filter((_e, index) => index !== arrayIndex),
     });
+  };
+
+  const addCanHo = (canHo: ThongTinCanHo) => {
+    setCanHo(canHo);
+  };
+
+  const deleteCanHo = () => {
+    setCanHo(null);
   };
 
   return (
     <HDMBCanHoContext.Provider
       value={{
         agreementObject,
+        canHo,
         singlePartyAEntityIndex,
         singlePartyBEntityIndex,
         couplePartyAEntityIndex,
@@ -285,6 +297,8 @@ export const HDMBCanHoProvider = ({
         setCouplePartyBEntityIndex,
         addAgreementObject,
         deleteAgreementObject,
+        addCanHo,
+        deleteCanHo,
       }}
     >
       {children}

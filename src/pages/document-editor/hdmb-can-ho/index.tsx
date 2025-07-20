@@ -17,7 +17,6 @@ import { PartyEntity } from "./components/party-entity";
 import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
-import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import type {
   HDCNQuyenSDDatPayload,
   SampleToKhaiChungPayload,
@@ -26,9 +25,11 @@ import dayjs from "dayjs";
 import { render_hdcn_quyen_sd_dat_toan_bo, render_to_khai_chung } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 
 export const HDMBCanHo = () => {
-  const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
+  const { partyA, partyB, agreementObject } = useHDMBCanHoContext();
+  console.log(agreementObject);
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
