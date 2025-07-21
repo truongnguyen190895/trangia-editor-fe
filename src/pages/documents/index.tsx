@@ -5,17 +5,21 @@ import { DocumentThumbnail } from "../../components/document-thumbnail";
 const mockDocuments = [
   {
     id: 1,
-    name: "HĐCN Quyền sử dụng đất toàn bộ.docz",
-    thumbnail: "https://via.placeholder.com/150",
+    name: "HĐCN Quyền sử dụng đất toàn bộ.docx",
     type: "agreement",
     path: "hdcn-quyen-su-dung-dat-toan-bo",
   },
   {
     id: 2,
-    name: "HĐMB Căn hộ.docz",
-    thumbnail: "https://via.placeholder.com/150",
+    name: "HĐMB Căn hộ.docx",
     type: "agreement",
     path: "hdmb-can-ho",
+  },
+  {
+    id: 3,
+    name: "HĐMB nhà đất.docx",
+    type: "agreement",
+    path: "hdmb-nha-dat",
   },
 ];
 

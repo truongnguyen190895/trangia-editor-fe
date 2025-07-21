@@ -2,9 +2,11 @@ import { Box, Typography, Button } from "@mui/material";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ChuyenNhuongDatToanBo } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo";
 import { HDMBCanHo } from "@/pages/document-editor/hdmb-can-ho";
+import { HDMBNhaDat } from "@/pages/document-editor/hdmb-nha-dat";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import { HdcnQuyenSdDatProvider } from "@/context/hdcn-quyen-sd-dat-context";
 import { HDMBCanHoProvider } from "@/context/hdmb-can-ho";
+import { HDMBNhaDatProvider } from "@/context/hdmb-nha-dat";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
@@ -25,6 +27,12 @@ export const DocumentEditor = () => {
             <HDMBCanHo />
           </HDMBCanHoProvider>
         );
+      case "hdmb-nha-dat":
+        return (
+          <HDMBNhaDatProvider>
+            <HDMBNhaDat />
+          </HDMBNhaDatProvider>
+        );
       default:
         return <Box>Not found</Box>;
     }
@@ -36,6 +44,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng chuyển nhượng quyền sử dụng đất (toàn bộ)";
       case "hdmb-can-ho":
         return "Hợp đồng mua bán căn hộ";
+      case "hdmb-nha-dat":
+        return "Hợp đồng mua bán nhà đất";
       default:
         return "";
     }

@@ -4,10 +4,11 @@ import type {
   SampleToKhaiChungPayload,
 } from "@/models/agreement-entity";
 import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
+import type { HDMBNhaDatPayload } from "@/models/hdmb-nha-dat";
 
 export const api = axios.create({
-  baseURL: "https://tran-gia-be-0e12f8edbb33.herokuapp.com",
-    // baseURL: "http://localhost:8080",
+//   baseURL: "https://tran-gia-be-0e12f8edbb33.herokuapp.com",
+    baseURL: "http://localhost:8080",
 });
 
 api.interceptors.request.use((config) => {
@@ -36,6 +37,16 @@ export const render_hdmb_can_ho = async (payload: HDMBCanHoPayload) => {
     }
   );
 };
+
+export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
+    return api.post(
+      "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat",
+      payload,
+      {
+        responseType: "blob",
+      }
+    );
+  };
 
 export const render_to_khai_chung = async (
   payload: SampleToKhaiChungPayload
