@@ -11,7 +11,7 @@ export interface ThongTinThuaDat {
   diện_tích: string;
   diện_tích_bằng_chữ: string;
   hình_thức_sử_dụng: string;
-  nguồn_gốc_sử_dụng: string;
+  nguồn_gốc_sử_dụng: string | null;
   giá_tiền: string;
   giá_tiền_bằng_chữ: string;
   ghi_chú: string;

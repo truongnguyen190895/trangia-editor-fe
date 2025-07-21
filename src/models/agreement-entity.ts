@@ -56,8 +56,9 @@ interface BaseThuaDat {
       diện_tích: string | null;
       thời_hạn_sử_dụng: string;
     }>;
-    nguồn_gốc_sử_dụng: string;
+    nguồn_gốc_sử_dụng: string | null;
     ghi_chú: string;
+    thời_hạn: string | null;
   };
   số_tiền: string;
   số_tiền_bằng_chữ: string;
@@ -167,7 +168,7 @@ export type SampleToKhaiChungPayload = {
       phân_loại: string;
       diện_tích: string | null;
     }>;
-    nguồn_gốc_sử_dụng: string;
+    nguồn_gốc_sử_dụng: string | null;
     diện_tích: {
       số: string;
     };

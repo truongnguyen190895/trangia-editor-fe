@@ -53,7 +53,7 @@ const validationSchema = Yup.object({
   ),
   diện_tích: Yup.string().required("Diện tích là bắt buộc"),
   hình_thức_sử_dụng: Yup.string().required("Hình thức sử dụng là bắt buộc"),
-  nguồn_gốc_sử_dụng: Yup.string().required("Nguồn gốc sử dụng là bắt buộc"),
+  nguồn_gốc_sử_dụng: Yup.string().nullable(),
   giá_tiền: Yup.string().required("Giá tiền là bắt buộc"),
   giá_tiền_bằng_chữ: Yup.string().required("Giá tiền bằng chữ là bắt buộc"),
   ghi_chú: Yup.string().optional(),
@@ -105,7 +105,7 @@ export const ThemThongTinDat = ({
         diện_tích: "",
         diện_tích_bằng_chữ: "",
         hình_thức_sử_dụng: "",
-        nguồn_gốc_sử_dụng: "",
+        nguồn_gốc_sử_dụng: null,
         giá_tiền: "",
         giá_tiền_bằng_chữ: "",
         ghi_chú: "",
@@ -541,16 +541,7 @@ export const ThemThongTinDat = ({
                         event.target.value ?? ""
                       );
                     }}
-                    label="Nguồn gốc sử dụng *"
-                    error={
-                      !!errors["nguồn_gốc_sử_dụng"] &&
-                      touched["nguồn_gốc_sử_dụng"]
-                    }
-                    helperText={
-                      errors["nguồn_gốc_sử_dụng"] &&
-                      touched["nguồn_gốc_sử_dụng"] &&
-                      errors["nguồn_gốc_sử_dụng"]
-                    }
+                    label="Nguồn gốc sử dụng"
                   />
                 )}
               />

@@ -27,6 +27,7 @@ import { render_hdcn_quyen_sd_dat_toan_bo, render_to_khai_chung } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { extractAddress } from "@/utils/extract-address";
+import { generateThoiHanSuDung } from "@/utils/common";
 
 export const ChuyenNhuongDatToanBo = () => {
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
@@ -129,6 +130,7 @@ export const ChuyenNhuongDatToanBo = () => {
           diện_tích: item["diện_tích"] || null,
           thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
         })),
+        thời_hạn: generateThoiHanSuDung(agreementObject["mục_đích_và_thời_hạn_sử_dụng"])?.trim(),
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
         ghi_chú: agreementObject["ghi_chú"],
       },
