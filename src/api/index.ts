@@ -7,8 +7,8 @@ import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
 import type { HDMBNhaDatPayload } from "@/models/hdmb-nha-dat";
 
 export const api = axios.create({
-//   baseURL: "https://tran-gia-be-0e12f8edbb33.herokuapp.com",
-    baseURL: "http://localhost:8080",
+  baseURL: "https://tran-gia-be-0e12f8edbb33.herokuapp.com",
+    // baseURL: "http://localhost:8080",
 });
 
 api.interceptors.request.use((config) => {

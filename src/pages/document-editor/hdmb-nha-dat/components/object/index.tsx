@@ -9,24 +9,21 @@ import {
   TableContainer,
   TableRow,
   Paper,
-  List,
-  ListItem,
-  ListItemText,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ThemThongTinDat } from "../../dialogs/them-thong-tin-dat";
-import { ThongTinCanHoDialog } from "../../dialogs/thong-tin-can-ho";
-import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
+import { ThongTinNhaDatDialog } from "../../dialogs/thong-tin-nha-dat";
+import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
 
 interface ObjectEntityProps {
   title: string;
 }
 
 export const ObjectEntity = ({ title }: ObjectEntityProps) => {
-  const { agreementObject, canHo, deleteAgreementObject, deleteCanHo } =
-    useHDMBCanHoContext();
+  const { agreementObject, nhaDat, deleteAgreementObject, deleteNhaDat } =
+    useHDMBNhaDatContext();
   const [open, setOpen] = useState(false);
   const [openCanHo, setOpenCanHo] = useState(false);
 
@@ -43,7 +40,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
   };
 
   const handleDeleteCanHo = () => {
-    deleteCanHo();
+    deleteNhaDat();
   };
 
   return (
@@ -63,10 +60,10 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
             variant="outlined"
             color="secondary"
             startIcon={<AddIcon />}
-            disabled={Boolean(canHo)}
+            disabled={Boolean(nhaDat)}
             onClick={handleOpenThongTinCanHo}
           >
-            Thêm thông tin căn hộ
+            Thêm thông tin nhà ở
           </Button>
           <Button
             variant="contained"
@@ -81,9 +78,9 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
           <Typography
             variant="h4"
             color="#B12C00"
-            visibility={Boolean(canHo) ? "hidden" : "visible"}
+            visibility={Boolean(nhaDat) ? "hidden" : "visible"}
           >
-            Chưa có thông tin căn hộ
+            Chưa có thông nhà ở
           </Typography>
           <Typography
             variant="h4"
@@ -99,9 +96,11 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
               <TableBody>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Số căn hộ</Typography>
+                    <Typography variant="body1">
+                      Diện tích xây dựng (m2)
+                    </Typography>
                   </TableCell>
-                  <TableCell>{canHo?.["số_căn_hộ"]}</TableCell>
+                  <TableCell>{nhaDat?.["diện_tích_xây_dựng"]}</TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">Số thửa đất</Typography>
                   </TableCell>
@@ -109,9 +108,9 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Tên toà nhà</Typography>
+                    <Typography variant="body1">Diện tích sàn (m2)</Typography>
                   </TableCell>
-                  <TableCell>{canHo?.["tên_toà_nhà"]}</TableCell>
+                  <TableCell>{nhaDat?.["diện_tích_sàn"]}</TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">Tờ bản đồ số</Typography>
                   </TableCell>
@@ -119,9 +118,9 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Địa chỉ toà nhà</Typography>
+                    <Typography variant="body1">Số tầng</Typography>
                   </TableCell>
-                  <TableCell>{canHo?.["địa_chỉ_toà_nhà"]}</TableCell>
+                  <TableCell>{nhaDat?.["số_tầng"]}</TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">Diện tích (m2)</Typography>
                   </TableCell>
@@ -131,12 +130,9 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Diện tích sàn (m2)</Typography>
+                    <Typography variant="body1">Kết cấu</Typography>
                   </TableCell>
-                  <TableCell>
-                    {canHo?.["diện_tích_sàn_bằng_số"]} (
-                    {canHo?.["diện_tích_sàn_bằng_chữ"]})
-                  </TableCell>
+                  <TableCell>{nhaDat?.["kết_cấu"]}</TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">
                       Diện tích bằng chữ (mét vuông)
@@ -150,7 +146,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                   <TableCell component="th">
                     <Typography variant="body1">Cấp hạng</Typography>
                   </TableCell>
-                  <TableCell>{canHo?.["cấp_hạng"]}</TableCell>
+                  <TableCell>{nhaDat?.["cấp_hạng"]}</TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">Hình thức sử dụng</Typography>
                   </TableCell>
@@ -160,9 +156,11 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Tầng có căn hộ</Typography>
+                    <Typography variant="body1">
+                      Năm hoàn thành xây dựng
+                    </Typography>
                   </TableCell>
-                  <TableCell>{canHo?.["tầng_có_căn_hộ"]}</TableCell>
+                  <TableCell>{nhaDat?.["năm_hoàn_thành_xây_dựng"]}</TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">Mục đích sử dụng</Typography>
                   </TableCell>
@@ -172,9 +170,11 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Kết cấu</Typography>
+                    <Typography variant="body1">Số tiền</Typography>
                   </TableCell>
-                  <TableCell>{canHo?.["kết_cấu"]}</TableCell>
+                  <TableCell>
+                    {nhaDat?.["số_tiền"]} ({nhaDat?.["số_tiền_bằng_chữ"]})
+                  </TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">Thời hạn sử dụng</Typography>
                   </TableCell>
@@ -184,100 +184,15 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">
-                      Hình thức sở hữu căn hộ
-                    </Typography>
+                    <Typography variant="body1">Ghi chú</Typography>
                   </TableCell>
-                  <TableCell>{canHo?.["hình_thức_sở_hữu_căn_hộ"]}</TableCell>
+                  <TableCell>{nhaDat?.["ghi_chú"]}</TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">Nguồn gốc sử dụng</Typography>
                   </TableCell>
                   <TableCell>
                     {agreementObject?.["nguồn_gốc_sử_dụng_đất"]}
                   </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Năm hoàn thành xây dựng
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["năm_hoàn_thành_xây_dựng"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Thao tác</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box display="flex" gap={1}>
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleEditObject()}
-                      />
-                      <DeleteIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => deleteAgreementObject()}
-                      />
-                    </Box>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Ghi chú căn hộ</Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["ghi_chú_căn_hộ"]}</TableCell>
-                  <TableCell />
-                  <TableCell />
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Giá căn hộ</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {canHo?.["giá_căn_hộ_bằng_số"]} (
-                    {canHo?.["giá_căn_hộ_bằng_chữ"]})
-                  </TableCell>
-                  <TableCell />
-                  <TableCell />
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Giấy chứng nhận</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <List>
-                      <ListItem>
-                        <ListItemText
-                          primary="Loại"
-                          secondary={canHo?.["loại_gcn"]}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText
-                          primary="Số"
-                          secondary={canHo?.["số_gcn"]}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText
-                          primary="Số vào sổ"
-                          secondary={canHo?.["số_vào_sổ_cấp_gcn"]}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText
-                          primary="Nơi cấp"
-                          secondary={canHo?.["nơi_cấp_gcn"]}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText
-                          primary="Ngày cấp"
-                          secondary={canHo?.["ngày_cấp_gcn"]}
-                        />
-                      </ListItem>
-                    </List>
-                  </TableCell>
-                  <TableCell />
-                  <TableCell />
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
@@ -295,8 +210,83 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       />
                     </Box>
                   </TableCell>
+                  <TableCell component="th">
+                    <Typography variant="body1">Địa chỉ nhà đất</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["địa_chỉ_nhà_đất"]}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell />
                   <TableCell />
+                  <TableCell component="th">
+                    <Typography variant="body1">
+                      Loại giấy chứng nhận
+                    </Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["loại_gcn"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell component="th">
+                    <Typography variant="body1">Số giấy chứng nhân</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["số_gcn"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell component="th">
+                    <Typography variant="body1">
+                      Số vào sổ cấp giấy chứng nhận
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {agreementObject?.["số_vào_sổ_cấp_gcn"]}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell component="th">
+                    <Typography variant="body1">
+                      Nơi cấp giấy chứng nhận
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {agreementObject?.["nơi_cấp_gcn"]}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell component="th">
+                    <Typography variant="body1">
+                      Ngày cấp giấy chứng nhận
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {agreementObject?.["ngày_cấp_gcn"]}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell component="th">
+                    <Typography variant="body1">Thao tác</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Box display="flex" gap={1}>
+                      <EditIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleEditObject()}
+                      />
+                      <DeleteIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => deleteAgreementObject()}
+                      />
+                    </Box>
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -307,7 +297,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
         <ThemThongTinDat open={open} handleClose={() => setOpen(false)} />
       ) : null}
       {openCanHo ? (
-        <ThongTinCanHoDialog
+        <ThongTinNhaDatDialog
           open={openCanHo}
           handleClose={() => setOpenCanHo(false)}
         />

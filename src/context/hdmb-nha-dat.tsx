@@ -3,14 +3,14 @@ import type {
     SingleAgreementParty,
     Couple,
   } from "@/models/agreement-entity";
-  import type { ThongTinCanHo, ThongTinThuaDat } from "@/models/hdmb-can-ho";
+  import type { ThongTinNhaDat, ThongTinThuaDat } from "@/models/hdmb-nha-dat";
   import { createContext, useContext, useState } from "react";
   
   interface HDMBCanHoContextType {
     partyA: AgreementParty;
     partyB: AgreementParty;
     agreementObject: ThongTinThuaDat | null;
-    canHo: ThongTinCanHo | null;
+    nhaDat: ThongTinNhaDat | null;
     singlePartyAEntityIndex: number | null;
     singlePartyBEntityIndex: number | null;
     couplePartyAEntityIndex: number | null;
@@ -18,8 +18,8 @@ import type {
     //   Single section
     addSinglePartyAEntity: (entity: SingleAgreementParty, index?: number) => void;
     addSinglePartyBEntity: (entity: SingleAgreementParty, index?: number) => void;
-    addCanHo: (canHo: ThongTinCanHo) => void;
-    deleteCanHo: () => void;
+    addNhaDat: (nhaDat: ThongTinNhaDat) => void;
+    deleteNhaDat: () => void;
     deleteSinglePartyAEntity: (arrayIndex: number) => void;
     deleteSinglePartyBEntity: (arrayIndex: number) => void;
     deleteCouplePartyAEntity: (arrayIndex: number) => void;
@@ -48,7 +48,7 @@ import type {
   
   export const HDMBNhaDatContext = createContext<HDMBCanHoContextType>({
     agreementObject: null,
-    canHo: null,
+    nhaDat: null,
     singlePartyAEntityIndex: null,
     singlePartyBEntityIndex: null,
     couplePartyAEntityIndex: null,
@@ -78,8 +78,8 @@ import type {
     editCouplePartyAEntity: () => {},
     editCouplePartyBEntity: () => {},
     addAgreementObject: () => {},
-    addCanHo: () => {},
-    deleteCanHo: () => {},
+    addNhaDat: () => {},
+    deleteNhaDat: () => {},
     //delete
     deleteAgreementObject: () => {},
   });
@@ -102,7 +102,7 @@ import type {
   
     const [agreementObject, setAgreementObject] =
       useState<ThongTinThuaDat | null>(null);
-    const [canHo, setCanHo] = useState<ThongTinCanHo | null>(null);
+    const [nhaDat, setNhaDat] = useState<ThongTinNhaDat | null>(null);
     const [singlePartyAEntityIndex, setSinglePartyAEntityIndex] = useState<
       number | null
     >(null);
@@ -260,19 +260,19 @@ import type {
       });
     };
   
-    const addCanHo = (canHo: ThongTinCanHo) => {
-      setCanHo(canHo);
+    const addNhaDat = (nhaDat: ThongTinNhaDat) => {
+      setNhaDat(nhaDat);
     };
   
-    const deleteCanHo = () => {
-      setCanHo(null);
+    const deleteNhaDat = () => {
+      setNhaDat(null);
     };
   
     return (
       <HDMBNhaDatContext.Provider
         value={{
           agreementObject,
-          canHo,
+          nhaDat,
           singlePartyAEntityIndex,
           singlePartyBEntityIndex,
           couplePartyAEntityIndex,
@@ -297,8 +297,8 @@ import type {
           setCouplePartyBEntityIndex,
           addAgreementObject,
           deleteAgreementObject,
-          addCanHo,
-          deleteCanHo,
+          addNhaDat,
+          deleteNhaDat,
         }}
       >
         {children}
