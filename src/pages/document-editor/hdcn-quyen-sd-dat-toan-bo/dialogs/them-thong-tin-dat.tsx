@@ -605,7 +605,7 @@ export const ThemThongTinDat = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Hủy</Button>
-          <Button variant="contained" type="submit">
+          <Button variant="contained" type="submit" disabled={mụcđíchVàThờiHạnSửDụng.length === 0}>
             Thêm
           </Button>
         </DialogActions>
