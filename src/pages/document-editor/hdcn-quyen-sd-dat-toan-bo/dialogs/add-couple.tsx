@@ -93,6 +93,7 @@ export const AddCoupleDialog = ({
           nơi_cấp: "",
           địa_chỉ_thường_trú: "",
           quan_hệ: null,
+          tình_trạng_hôn_nhân_vợ_chồng: null,
         },
         vợ: {
           giới_tính: GENDER.FEMALE,
@@ -104,6 +105,7 @@ export const AddCoupleDialog = ({
           nơi_cấp: "",
           địa_chỉ_thường_trú: "",
           quan_hệ: null,
+          tình_trạng_hôn_nhân_vợ_chồng: null,
         },
       };
     }
@@ -137,7 +139,7 @@ export const AddCoupleDialog = ({
         <form>
           <Box display="grid" gridTemplateColumns="1fr 1fr" gap="4rem">
             <Box>
-              <Typography variant="body1" sx={{ marginBottom: "20px" }}>
+              <Typography variant="body1" fontSize="1.4rem" fontWeight="600" sx={{ marginBottom: "20px" }}>
                 Thông tin chồng
               </Typography>
               <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
@@ -245,7 +247,7 @@ export const AddCoupleDialog = ({
                       </FormHelperText>
                     )}
                   </FormControl>
-                  <FormControl sx={{ marginBottom: "10px" }}>
+                  <FormControl sx={{ marginBottom: "10px", gridColumn: "span 2" }}>
                     <FormLabel>Địa chỉ thường trú *</FormLabel>
                     <TextField
                       value={values["chồng"]["địa_chỉ_thường_trú"]}
@@ -368,7 +370,7 @@ export const AddCoupleDialog = ({
                       </FormHelperText>
                     )}
                   </FormControl>
-                  <FormControl sx={{ marginBottom: "10px" }}>
+                  <FormControl sx={{ marginBottom: "10px", gridColumn: 'span 2' }}>
                     <FormLabel>Địa chỉ thường trú *</FormLabel>
                     <TextField
                       value={values["vợ"]["địa_chỉ_thường_trú"]}
@@ -382,6 +384,19 @@ export const AddCoupleDialog = ({
                 </Box>
               </Box>
             </Box>
+          </Box>
+          <Box py="1rem">
+            <Typography variant="body1" fontSize="1.4rem" fontWeight="600" sx={{ marginBottom: "20px" }}>
+              Thông tin kết hôn của vợ chồng
+            </Typography>
+            <TextField
+              multiline
+              rows={4}
+              value={values["vợ"]["tình_trạng_hôn_nhân_vợ_chồng"]}
+              name="vợ.tình_trạng_hôn_nhân_vợ_chồng"
+              onChange={handleChange}
+              fullWidth
+            />
           </Box>
           <input type="submit" hidden />
         </form>

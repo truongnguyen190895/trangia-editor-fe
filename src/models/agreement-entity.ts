@@ -23,6 +23,7 @@ export interface SingleAgreementParty extends BaseAgreementParty {
 
 export interface CoupleAgreementParty extends BaseAgreementParty {
   quan_hệ: string | null;
+  tình_trạng_hôn_nhân_vợ_chồng: string | null;
 }
 
 export interface Couple {
@@ -77,6 +78,7 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       địa_chỉ_thường_trú: string;
       quan_hệ: string | null;
       tình_trạng_hôn_nhân: string | null;
+      tình_trạng_hôn_nhân_vợ_chồng: string | null;
     }>;
   };
   bên_B: {
@@ -89,8 +91,9 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       nơi_cấp: string;
       ngày_cấp: string;
       địa_chỉ_thường_trú: string;
-      tình_trạng_hôn_nhân: string | null;
       quan_hệ: string | null;
+      tình_trạng_hôn_nhân: string | null;
+      tình_trạng_hôn_nhân_vợ_chồng: string | null;
     }>;
   };
   ngày: string;

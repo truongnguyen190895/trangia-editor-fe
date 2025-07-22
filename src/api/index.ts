@@ -7,8 +7,8 @@ import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
 import type { HDMBNhaDatPayload } from "@/models/hdmb-nha-dat";
 
 export const api = axios.create({
-  baseURL: "https://tran-gia-be-0e12f8edbb33.herokuapp.com",
-    // baseURL: "http://localhost:8080",
+//   baseURL: "https://tran-gia-be-0e12f8edbb33.herokuapp.com",
+    baseURL: "http://localhost:8080",
 });
 
 api.interceptors.request.use((config) => {
@@ -20,7 +20,7 @@ export const render_hdcn_quyen_sd_dat_toan_bo = async (
   payload: HDCNQuyenSDDatPayload
 ) => {
   return api.post(
-    "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat",
+    "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-toan-bo",
     payload,
     {
       responseType: "blob",
