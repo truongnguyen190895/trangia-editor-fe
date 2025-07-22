@@ -21,6 +21,12 @@ const mockDocuments = [
     type: "agreement",
     path: "hdmb-nha-dat-toan-bo",
   },
+  {
+    id: 4,
+    name: "HĐCN Quyền sử dụng đất nông nghiệp toàn bộ.docx",
+    type: "agreement",
+    path: "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo",
+  },
 ];
 
 export const Documents = () => {

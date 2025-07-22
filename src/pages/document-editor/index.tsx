@@ -14,11 +14,17 @@ export const DocumentEditor = () => {
   const name = searchParams.get("name");
 
   const renderContent = () => {
+    console.log('name ', name);
     switch (name) {
       case "hdcn-quyen-su-dung-dat-toan-bo":
+      case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
         return (
           <HdcnQuyenSdDatProvider>
-            <ChuyenNhuongDatToanBo />
+            <ChuyenNhuongDatToanBo
+              isNongNghiep={
+                name === "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo"
+              }
+            />
           </HdcnQuyenSdDatProvider>
         );
       case "hdmb-can-ho-toan-bo":
@@ -42,10 +48,12 @@ export const DocumentEditor = () => {
     switch (name) {
       case "hdcn-quyen-su-dung-dat-toan-bo":
         return "Hợp đồng chuyển nhượng quyền sử dụng đất (toàn bộ)";
-      case "hdmb-can-ho":
-        return "Hợp đồng mua bán căn hộ";
-      case "hdmb-nha-dat":
-        return "Hợp đồng mua bán nhà đất";
+      case "hdmb-can-ho-toan-bo":
+        return "Hợp đồng mua bán căn hộ toàn bộ";
+      case "hdmb-nha-dat-toan-bo":
+        return "Hợp đồng mua bán nhà đất toàn bộ";
+      case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
+        return "Hợp đồng chuyển nhượng quyền sử dụng đất nông nghiệp (toàn bộ)";
       default:
         return "";
     }

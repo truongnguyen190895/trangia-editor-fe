@@ -41,6 +41,7 @@ interface BaseThuaDat {
   số_tờ_bản_đồ: string;
   địa_chỉ_cũ: string | null;
   địa_chỉ_mới: string;
+  địa_chỉ_hiển_thị: string;
   loại_giấy_chứng_nhận: string;
   số_giấy_chứng_nhận: string;
   số_vào_sổ_cấp_giấy_chứng_nhận: string;

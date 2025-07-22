@@ -17,10 +17,10 @@ api.interceptors.request.use((config) => {
 });
 
 export const render_hdcn_quyen_sd_dat_toan_bo = async (
-  payload: HDCNQuyenSDDatPayload
+  payload: HDCNQuyenSDDatPayload, isNongNghiep: boolean
 ) => {
   return api.post(
-    "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-toan-bo",
+    `/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-${isNongNghiep ? "nong-nghiep" : ""}-toan-bo`,
     payload,
     {
       responseType: "blob",

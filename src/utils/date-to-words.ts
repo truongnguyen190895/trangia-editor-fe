@@ -47,9 +47,10 @@ export function translateDateToVietnamese(dateString: string) {
     if (num < 100) {
       const ten = Math.floor(num / 10);
       const unit = num % 10;
-      return (
-        tens[ten] + (unit !== 0 ? " " + (unit === 5 ? "lăm" : units[unit]) : "")
-      );
+      let unitStr = units[unit];
+      if (unit === 1 && ten > 1) unitStr = "mốt";
+      if (unit === 5) unitStr = "lăm";
+      return tens[ten] + (unit !== 0 ? " " + unitStr : "");
     }
 
     // Handle years (up to 9999)

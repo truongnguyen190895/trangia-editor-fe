@@ -29,7 +29,11 @@ import { numberToVietnamese } from "@/utils/number-to-words";
 import { extractAddress } from "@/utils/extract-address";
 import { generateThoiHanSuDung } from "@/utils/common";
 
-export const ChuyenNhuongDatToanBo = () => {
+interface Props {
+  isNongNghiep?: boolean;
+}
+
+export const ChuyenNhuongDatToanBo = ({ isNongNghiep = false }: Props) => {
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -53,7 +57,8 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng: couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
+        tình_trạng_hôn_nhân_vợ_chồng:
+          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
@@ -62,7 +67,8 @@ export const ChuyenNhuongDatToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng: couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
+          tình_trạng_hôn_nhân_vợ_chồng:
+            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
         }))
       );
     const couplesB = partyB["vợ_chồng"]
@@ -71,7 +77,8 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng: couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
+        tình_trạng_hôn_nhân_vợ_chồng:
+          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
@@ -80,7 +87,8 @@ export const ChuyenNhuongDatToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng: couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
+          tình_trạng_hôn_nhân_vợ_chồng:
+            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
         }))
       );
 
@@ -113,7 +121,10 @@ export const ChuyenNhuongDatToanBo = () => {
       },
       số_thửa_đất: agreementObject["số_thửa_đất"],
       số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-      địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"] || null,
+      địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"],
+      địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
+        ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_mới"]})`
+        : agreementObject["địa_chỉ_mới"],
       địa_chỉ_mới: agreementObject["địa_chỉ_mới"],
       loại_giấy_chứng_nhận: agreementObject["loại_giấy_chứng_nhận"],
       số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
@@ -136,7 +147,9 @@ export const ChuyenNhuongDatToanBo = () => {
           diện_tích: item["diện_tích"] || null,
           thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
         })),
-        thời_hạn: generateThoiHanSuDung(agreementObject["mục_đích_và_thời_hạn_sử_dụng"])?.trim(),
+        thời_hạn: generateThoiHanSuDung(
+          agreementObject["mục_đích_và_thời_hạn_sử_dụng"]
+        )?.trim(),
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
         ghi_chú: agreementObject["ghi_chú"],
       },
@@ -166,7 +179,7 @@ export const ChuyenNhuongDatToanBo = () => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdcn_quyen_sd_dat_toan_bo(payload)
+    render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -294,7 +307,7 @@ export const ChuyenNhuongDatToanBo = () => {
           "mục_đích_và_thời_hạn_sử_dụng"
         ]?.map((item) => ({
           phân_loại: item["phân_loại"],
-          diện_tích: item["diện_tích"] || null,
+          diện_tích: item["diện_tích"] || agreementObject["diện_tích"],
         })),
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
       },
