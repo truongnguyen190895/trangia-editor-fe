@@ -53,7 +53,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng: null,
+        tình_trạng_hôn_nhân_vợ_chồng: couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
@@ -62,7 +62,7 @@ export const ChuyenNhuongDatToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng: null,
+          tình_trạng_hôn_nhân_vợ_chồng: couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
         }))
       );
     const couplesB = partyB["vợ_chồng"]
@@ -71,7 +71,7 @@ export const ChuyenNhuongDatToanBo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng: null,
+        tình_trạng_hôn_nhân_vợ_chồng: couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
@@ -80,7 +80,7 @@ export const ChuyenNhuongDatToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng: null,
+          tình_trạng_hôn_nhân_vợ_chồng: couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
         }))
       );
 

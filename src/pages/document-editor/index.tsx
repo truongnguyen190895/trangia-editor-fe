@@ -1,8 +1,8 @@
 import { Box, Typography, Button } from "@mui/material";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ChuyenNhuongDatToanBo } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo";
-import { HDMBCanHo } from "@/pages/document-editor/hdmb-can-ho";
-import { HDMBNhaDat } from "@/pages/document-editor/hdmb-nha-dat";
+import { HDMBCanHoToanBo } from "@/pages/document-editor/hdmb-can-ho-toan-bo";
+import { HDMBNhaDatToanBo } from "@/pages/document-editor/hdmb-nha-dat-toan-bo";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import { HdcnQuyenSdDatProvider } from "@/context/hdcn-quyen-sd-dat-context";
 import { HDMBCanHoProvider } from "@/context/hdmb-can-ho";
@@ -24,13 +24,13 @@ export const DocumentEditor = () => {
       case "hdmb-can-ho":
         return (
           <HDMBCanHoProvider>
-            <HDMBCanHo />
+            <HDMBCanHoToanBo />
           </HDMBCanHoProvider>
         );
       case "hdmb-nha-dat":
         return (
           <HDMBNhaDatProvider>
-            <HDMBNhaDat />
+            <HDMBNhaDatToanBo />
           </HDMBNhaDatProvider>
         );
       default:

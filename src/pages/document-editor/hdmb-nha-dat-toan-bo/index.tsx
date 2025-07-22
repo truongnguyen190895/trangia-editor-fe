@@ -17,17 +17,16 @@ import { PartyEntity } from "./components/party-entity";
 import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
-import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
+import type { HDMBNhaDatPayload } from "@/models/hdmb-nha-dat";
 import dayjs from "dayjs";
-import { render_hdmb_can_ho } from "@/api";
+import { render_hdmb_nha_dat } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
-import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
+import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 
-export const HDMBCanHo = () => {
-  const { partyA, partyB, agreementObject, canHo } = useHDMBCanHoContext();
-
+export const HDMBNhaDatToanBo = () => {
+  const { partyA, partyB, agreementObject, nhaDat } = useHDMBNhaDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
@@ -38,11 +37,11 @@ export const HDMBCanHo = () => {
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
     agreementObject !== null &&
-    canHo !== null;
+    nhaDat !== null;
 
-  const getPayload = (): HDMBCanHoPayload => {
-    if (!agreementObject || !canHo) {
-      throw new Error("Agreement object or can ho is null");
+  const getPayload = (): HDMBNhaDatPayload => {
+    if (!agreementObject || !nhaDat) {
+      throw new Error("Agreement object or nha dat is null");
     }
 
     const couplesA = partyA["vợ_chồng"]
@@ -51,6 +50,8 @@ export const HDMBCanHo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
+        tình_trạng_hôn_nhân_vợ_chồng:
+          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
         ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
@@ -60,6 +61,8 @@ export const HDMBCanHo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
+          tình_trạng_hôn_nhân_vợ_chồng:
+            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
           ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
@@ -82,7 +85,7 @@ export const HDMBCanHo = () => {
         }))
       );
 
-    const payload: HDMBCanHoPayload = {
+    const payload: HDMBNhaDatPayload = {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -90,6 +93,7 @@ export const HDMBCanHo = () => {
             ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
             ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+            tình_trạng_hôn_nhân_vợ_chồng: null,
             quan_hệ: person["quan_hệ"] || null,
             ...extractAddress(person["địa_chỉ_thường_trú"]),
           })),
@@ -103,38 +107,15 @@ export const HDMBCanHo = () => {
             ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
             ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+            tình_trạng_hôn_nhân_vợ_chồng: null,
             quan_hệ: person["quan_hệ"] || null,
             ...extractAddress(person["địa_chỉ_thường_trú"]),
           })),
           ...couplesB,
         ],
       },
-      số_căn_hộ: canHo["số_căn_hộ"],
-      tên_toà_nhà: canHo["tên_toà_nhà"],
-      địa_chỉ_toà_nhà: canHo["địa_chỉ_toà_nhà"],
-      loại_gcn: canHo["loại_gcn"],
-      số_gcn: canHo["số_gcn"],
-      số_vào_sổ_cấp_gcn: canHo["số_vào_sổ_cấp_gcn"],
-      nơi_cấp_gcn: canHo["nơi_cấp_gcn"],
-      ngày_cấp_gcn: canHo["ngày_cấp_gcn"],
-      diện_tích_sàn_bằng_số: canHo["diện_tích_sàn_bằng_số"],
-      diện_tích_sàn_bằng_chữ: canHo["diện_tích_sàn_bằng_chữ"],
-      cấp_hạng: canHo["cấp_hạng"],
-      tầng_có_căn_hộ: canHo["tầng_có_căn_hộ"],
-      kết_cấu: canHo["kết_cấu"],
-      hình_thức_sở_hữu_căn_hộ: canHo["hình_thức_sở_hữu_căn_hộ"],
-      năm_hoàn_thành_xây_dựng: canHo["năm_hoàn_thành_xây_dựng"],
-      ghi_chú_căn_hộ: canHo["ghi_chú_căn_hộ"],
-      giá_căn_hộ_bằng_số: canHo["giá_căn_hộ_bằng_số"],
-      giá_căn_hộ_bằng_chữ: canHo["giá_căn_hộ_bằng_chữ"],
-      số_thửa_đất: agreementObject["số_thửa_đất"],
-      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-      diện_tích_đất_bằng_số: agreementObject["diện_tích_đất_bằng_số"],
-      diện_tích_đất_bằng_chữ: agreementObject["diện_tích_đất_bằng_chữ"],
-      hình_thức_sở_hữu_đất: agreementObject["hình_thức_sở_hữu_đất"],
-      mục_đích_sở_hữu_đất: agreementObject["mục_đích_sở_hữu_đất"],
-      thời_hạn_sử_dụng_đất: agreementObject["thời_hạn_sử_dụng_đất"],
-      nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
+      ...agreementObject,
+      ...nhaDat,
       ngày: dayjs().format("DD/MM/YYYY").toString(),
       ngày_bằng_chữ: translateDateToVietnamese(
         dayjs().format("DD/MM/YYYY").toString()
@@ -158,7 +139,7 @@ export const HDMBCanHo = () => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdmb_can_ho(payload)
+    render_hdmb_nha_dat(payload)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -167,7 +148,7 @@ export const HDMBCanHo = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `Hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+        link.download = `Hợp đồng mua bán nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

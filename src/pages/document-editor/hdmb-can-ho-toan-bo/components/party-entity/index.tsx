@@ -15,9 +15,9 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
-import { AddSingleDialog } from "@/pages/document-editor/hdmb-nha-dat/dialogs/add-single";
-import { AddCoupleDialog } from "@/pages/document-editor/hdmb-nha-dat/dialogs/add-couple";
+import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
+import { AddSingleDialog } from "../../dialogs/add-single";
+import { AddCoupleDialog } from "../../dialogs/add-couple";
 import dayjs from "dayjs";
 
 interface PartyEntityProps {
@@ -37,7 +37,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
     setSinglePartyBEntityIndex,
     setCouplePartyAEntityIndex,
     setCouplePartyBEntityIndex,
-  } = useHDMBNhaDatContext();
+  } = useHDMBCanHoContext();
   const [openSingleDialog, setOpenSingleDialog] = useState(false);
   const [openCoupleDialog, setOpenCoupleDialog] = useState(false);
   const partyEntities = side === "partyA" ? partyA : partyB;

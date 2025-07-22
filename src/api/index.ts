@@ -30,7 +30,7 @@ export const render_hdcn_quyen_sd_dat_toan_bo = async (
 
 export const render_hdmb_can_ho = async (payload: HDMBCanHoPayload) => {
   return api.post(
-    "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-can-ho",
+    "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-can-ho-toan-bo",
     payload,
     {
       responseType: "blob",
@@ -40,7 +40,7 @@ export const render_hdmb_can_ho = async (payload: HDMBCanHoPayload) => {
 
 export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
     return api.post(
-      "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat",
+      "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-toan-bo",
       payload,
       {
         responseType: "blob",

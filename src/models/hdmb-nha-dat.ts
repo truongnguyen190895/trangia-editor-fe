@@ -10,6 +10,7 @@ interface BaseParty {
   nơi_cấp: string;
   địa_chỉ_thường_trú: string;
   tình_trạng_hôn_nhân: string | null;
+  tình_trạng_hôn_nhân_vợ_chồng: string | null;
   quan_hệ: string | null;
   thành_phố: string | null;
   phường: string | null;

@@ -11,6 +11,7 @@ interface BaseParty {
   địa_chỉ_thường_trú: string;
   tình_trạng_hôn_nhân: string | null;
   quan_hệ: string | null;
+  tình_trạng_hôn_nhân_vợ_chồng: string | null;
   thành_phố: string | null;
   phường: string | null;
   thôn: string | null;

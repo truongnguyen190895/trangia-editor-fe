@@ -13,7 +13,7 @@ import {
   DialogActions,
   FormHelperText,
 } from "@mui/material";
-import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
+import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 import type { Couple } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
 import { useFormik } from "formik";
@@ -66,7 +66,7 @@ export const AddCoupleDialog = ({
     addCouplePartyBEntity,
     editCouplePartyAEntity,
     editCouplePartyBEntity,
-  } = useHDMBNhaDatContext();
+  } = useHDMBCanHoContext();
 
   const addPartyEntity =
     side === "partyA" ? addCouplePartyAEntity : addCouplePartyBEntity;
@@ -93,6 +93,7 @@ export const AddCoupleDialog = ({
           nơi_cấp: "",
           địa_chỉ_thường_trú: "",
           quan_hệ: null,
+          tình_trạng_hôn_nhân_vợ_chồng: null,
         },
         vợ: {
           giới_tính: GENDER.FEMALE,
@@ -104,6 +105,7 @@ export const AddCoupleDialog = ({
           nơi_cấp: "",
           địa_chỉ_thường_trú: "",
           quan_hệ: null,
+          tình_trạng_hôn_nhân_vợ_chồng: null,
         },
       };
     }
@@ -245,7 +247,7 @@ export const AddCoupleDialog = ({
                       </FormHelperText>
                     )}
                   </FormControl>
-                  <FormControl sx={{ marginBottom: "10px" }}>
+                  <FormControl sx={{ marginBottom: "10px", gridColumn: 'span 2' }}>
                     <FormLabel>Địa chỉ thường trú *</FormLabel>
                     <TextField
                       value={values["chồng"]["địa_chỉ_thường_trú"]}
@@ -368,7 +370,7 @@ export const AddCoupleDialog = ({
                       </FormHelperText>
                     )}
                   </FormControl>
-                  <FormControl sx={{ marginBottom: "10px" }}>
+                  <FormControl sx={{ marginBottom: "10px", gridColumn: 'span 2' }}>
                     <FormLabel>Địa chỉ thường trú *</FormLabel>
                     <TextField
                       value={values["vợ"]["địa_chỉ_thường_trú"]}
@@ -382,6 +384,24 @@ export const AddCoupleDialog = ({
                 </Box>
               </Box>
             </Box>
+          </Box>
+          <Box py="1rem">
+            <Typography
+              variant="body1"
+              fontSize="1.4rem"
+              fontWeight="600"
+              sx={{ marginBottom: "20px" }}
+            >
+              Thông tin kết hôn của vợ chồng
+            </Typography>
+            <TextField
+              multiline
+              rows={4}
+              value={values["vợ"]["tình_trạng_hôn_nhân_vợ_chồng"]}
+              name="vợ.tình_trạng_hôn_nhân_vợ_chồng"
+              onChange={handleChange}
+              fullWidth
+            />
           </Box>
           <input type="submit" hidden />
         </form>
