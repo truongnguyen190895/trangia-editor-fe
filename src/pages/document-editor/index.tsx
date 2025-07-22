@@ -21,13 +21,13 @@ export const DocumentEditor = () => {
             <ChuyenNhuongDatToanBo />
           </HdcnQuyenSdDatProvider>
         );
-      case "hdmb-can-ho":
+      case "hdmb-can-ho-toan-bo":
         return (
           <HDMBCanHoProvider>
             <HDMBCanHoToanBo />
           </HDMBCanHoProvider>
         );
-      case "hdmb-nha-dat":
+      case "hdmb-nha-dat-toan-bo":
         return (
           <HDMBNhaDatProvider>
             <HDMBNhaDatToanBo />

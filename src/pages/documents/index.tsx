@@ -11,15 +11,15 @@ const mockDocuments = [
   },
   {
     id: 2,
-    name: "HĐMB Căn hộ.docx",
+    name: "HĐMB Căn hộ toàn bộ.docx",
     type: "agreement",
-    path: "hdmb-can-ho",
+    path: "hdmb-can-ho-toan-bo",
   },
   {
     id: 3,
-    name: "HĐMB nhà đất.docx",
+    name: "HĐMB nhà đất toàn bộ.docx",
     type: "agreement",
-    path: "hdmb-nha-dat",
+    path: "hdmb-nha-dat-toan-bo",
   },
 ];
 
