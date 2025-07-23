@@ -7,12 +7,11 @@ import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
 import type { HDMBNhaDatPayload } from "@/models/hdmb-nha-dat";
 
 export const api = axios.create({
-  baseURL: "https://tran-gia-be-0e12f8edbb33.herokuapp.com",
-    // baseURL: "http://localhost:8080",
+  baseURL: import.meta.env.VITE_BASE_API_URL,
 });
 
 api.interceptors.request.use((config) => {
-  config.headers["x-api-key"] = "d5be9ee46778dcaca57b709ba7bdb6ea";
+  config.headers["x-api-key"] = import.meta.env.VITE_API_KEY;
   return config;
 });
 
