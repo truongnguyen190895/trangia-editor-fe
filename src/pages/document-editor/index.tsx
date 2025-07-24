@@ -9,6 +9,7 @@ import { HdcnQuyenSdDatProvider } from "@/context/hdcn-quyen-sd-dat-context";
 import { HDMBCanHoProvider } from "@/context/hdmb-can-ho";
 import { HDMBNhaDatProvider } from "@/context/hdmb-nha-dat";
 import { HDCNDatVaTaiSanGanLienVoiDatToanBoProvider } from "@/context/hdcn-dat-va-tai-san-glvd";
+import { HDTangChoCanHoToanBo } from "@/pages/document-editor/hdtc-can-ho-toan-bo";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
@@ -46,6 +47,12 @@ export const DocumentEditor = () => {
             <HDCNDatVaTaiSanGanLienVoiDatToanBo />
           </HDCNDatVaTaiSanGanLienVoiDatToanBoProvider>
         );
+      case "hd-tang-cho-can-ho-toan-bo":
+        return (
+          <HDMBCanHoProvider>
+            <HDTangChoCanHoToanBo />
+          </HDMBCanHoProvider>
+        );
       default:
         return <Box>Not found</Box>;
     }
@@ -63,6 +70,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng chuyển nhượng quyền sử dụng đất nông nghiệp (toàn bộ)";
       case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
         return "Hợp đồng chuyển nhượng quyền sử dụng đất và tài sản gắn liền với đất (toàn bộ)";
+      case "hd-tang-cho-can-ho-toan-bo":
+        return "Hợp đồng tặng cho căn hộ (toàn bộ)";
       default:
         return "";
     }

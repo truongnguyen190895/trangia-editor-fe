@@ -13,11 +13,11 @@ const mockData = [
   },
   {
     id: 2,
-    name: "Nhóm Uỷ Quyền",
-    description: "Uỷ quyền",
+    name: "Nhóm Tặng Cho",
+    description: "Tặng cho",
     category: "hop-dong",
-    subCategory: "uy-quyen",
-    active: false,
+    subCategory: "tang-cho",
+    active: true,
   },
 ];
 

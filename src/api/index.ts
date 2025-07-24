@@ -17,10 +17,13 @@ api.interceptors.request.use((config) => {
 });
 
 export const render_hdcn_quyen_sd_dat_toan_bo = async (
-  payload: HDCNQuyenSDDatPayload, isNongNghiep: boolean
+  payload: HDCNQuyenSDDatPayload,
+  isNongNghiep: boolean
 ) => {
   return api.post(
-    `/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat${isNongNghiep ? "-nong-nghiep" : ""}-toan-bo`,
+    `/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat${
+      isNongNghiep ? "-nong-nghiep" : ""
+    }-toan-bo`,
     payload,
     {
       responseType: "blob",
@@ -39,16 +42,18 @@ export const render_hdmb_can_ho = async (payload: HDMBCanHoPayload) => {
 };
 
 export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
-    return api.post(
-      "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-toan-bo",
-      payload,
-      {
-        responseType: "blob",
-      }
-    );
-  };
+  return api.post(
+    "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-toan-bo",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
+};
 
-export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload) => {
+export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (
+  payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload
+) => {
   return api.post(
     "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-dat-va-tsglvd-toan-bo",
     payload,
@@ -56,6 +61,12 @@ export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (payloa
       responseType: "blob",
     }
   );
+};
+
+export const render_hdtc_can_ho_toan_bo = async (payload: HDMBCanHoPayload) => {
+  return api.post("/templates/nhom-tang-cho/hd-tang-cho-can-ho-toan-bo", payload, {
+    responseType: "blob",
+  });
 };
 
 export const render_to_khai_chung = async (
