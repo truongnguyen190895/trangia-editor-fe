@@ -3,10 +3,12 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { ChuyenNhuongDatToanBo } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo";
 import { HDMBCanHoToanBo } from "@/pages/document-editor/hdmb-can-ho-toan-bo";
 import { HDMBNhaDatToanBo } from "@/pages/document-editor/hdmb-nha-dat-toan-bo";
+import { HDCNDatVaTaiSanGanLienVoiDatToanBo } from "@/pages/document-editor/hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import { HdcnQuyenSdDatProvider } from "@/context/hdcn-quyen-sd-dat-context";
 import { HDMBCanHoProvider } from "@/context/hdmb-can-ho";
 import { HDMBNhaDatProvider } from "@/context/hdmb-nha-dat";
+import { HDCNDatVaTaiSanGanLienVoiDatToanBoProvider } from "@/context/hdcn-dat-va-tai-san-glvd";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
@@ -14,7 +16,6 @@ export const DocumentEditor = () => {
   const name = searchParams.get("name");
 
   const renderContent = () => {
-    console.log('name ', name);
     switch (name) {
       case "hdcn-quyen-su-dung-dat-toan-bo":
       case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
@@ -39,6 +40,12 @@ export const DocumentEditor = () => {
             <HDMBNhaDatToanBo />
           </HDMBNhaDatProvider>
         );
+      case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
+        return (
+          <HDCNDatVaTaiSanGanLienVoiDatToanBoProvider>
+            <HDCNDatVaTaiSanGanLienVoiDatToanBo />
+          </HDCNDatVaTaiSanGanLienVoiDatToanBoProvider>
+        );
       default:
         return <Box>Not found</Box>;
     }
@@ -54,6 +61,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng mua bán nhà đất toàn bộ";
       case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
         return "Hợp đồng chuyển nhượng quyền sử dụng đất nông nghiệp (toàn bộ)";
+      case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
+        return "Hợp đồng chuyển nhượng quyền sử dụng đất và tài sản gắn liền với đất (toàn bộ)";
       default:
         return "";
     }
@@ -63,7 +72,7 @@ export const DocumentEditor = () => {
     <Box>
       <Box
         className="header"
-        height="5rem"
+        height="8rem"
         bgcolor="#E0E0E0"
         paddingX="1.5rem"
         display="flex"

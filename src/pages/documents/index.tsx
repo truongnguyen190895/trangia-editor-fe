@@ -27,6 +27,12 @@ const mockDocuments = [
     type: "agreement",
     path: "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo",
   },
+  {
+    id: 5,
+    name: "HĐCN đất và tài sản gắn liền với đất toàn bộ.docx",
+    type: "agreement",
+    path: "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo",
+  },
 ];
 
 export const Documents = () => {

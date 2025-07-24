@@ -5,6 +5,7 @@ import type {
 } from "@/models/agreement-entity";
 import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
 import type { HDMBNhaDatPayload } from "@/models/hdmb-nha-dat";
+import type { HDCNDatVaTaiSanGanLienVoiDatToanBoPayload } from "@/models/hdcn-dat-va-tsglvd";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -46,6 +47,16 @@ export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
       }
     );
   };
+
+export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload) => {
+  return api.post(
+    "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-dat-va-tsglvd-toan-bo",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
+};
 
 export const render_to_khai_chung = async (
   payload: SampleToKhaiChungPayload
