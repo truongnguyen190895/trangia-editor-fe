@@ -32,6 +32,7 @@ import EditIcon from "@mui/icons-material/Edit";
 
 interface ThemThongTinDatProps {
   open: boolean;
+  isTangCho?: boolean;
   handleClose: () => void;
 }
 
@@ -62,6 +63,7 @@ const validationSchema = Yup.object({
 export const ThemThongTinDat = ({
   open,
   handleClose,
+  isTangCho = false,
 }: ThemThongTinDatProps) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
   const [mụcđíchVàThờiHạnSửDụng, setMụcĐíchVàThờiHạnSửDụng] = useState<
@@ -106,8 +108,8 @@ export const ThemThongTinDat = ({
         diện_tích_bằng_chữ: "",
         hình_thức_sử_dụng: "",
         nguồn_gốc_sử_dụng: null,
-        giá_tiền: "",
-        giá_tiền_bằng_chữ: "",
+        giá_tiền: isTangCho ? "0" : "",
+        giá_tiền_bằng_chữ: isTangCho ? "Không" : "",
         ghi_chú: "",
         mục_đích_và_thời_hạn_sử_dụng: [],
       }
@@ -527,10 +529,7 @@ export const ThemThongTinDat = ({
                 options={NGUỒN_GỐC_SỬ_DỤNG_ĐẤT.map((item) => item.value)}
                 value={values["nguồn_gốc_sử_dụng"]}
                 onChange={(_event, value) => {
-                  setFieldValue(
-                    "nguồn_gốc_sử_dụng",
-                    value ?? ""
-                  );
+                  setFieldValue("nguồn_gốc_sử_dụng", value ?? "");
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -545,45 +544,53 @@ export const ThemThongTinDat = ({
                   />
                 )}
               />
-              <TextField
-                fullWidth
-                id="giá_tiền"
-                name="giá_tiền"
-                label="Giá tiền *"
-                value={values["giá_tiền"]}
-                onChange={(event) => {
-                  handleChange(event);
-                  setFieldValue(
-                    "giá_tiền_bằng_chữ",
-                    numberToVietnamese(
-                      event.target.value?.replace(/\./g, "").replace(/\,/g, ".")
-                    )
-                  );
-                }}
-                error={!!errors["giá_tiền"] && touched["giá_tiền"]}
-                helperText={
-                  errors["giá_tiền"] &&
-                  touched["giá_tiền"] &&
-                  errors["giá_tiền"]
-                }
-              />
-              <TextField
-                sx={{ gridColumn: "span 2" }}
-                fullWidth
-                id="giá_tiền_bằng_chữ"
-                name="giá_tiền_bằng_chữ"
-                label="Giá tiền bằng chữ *"
-                value={values["giá_tiền_bằng_chữ"]}
-                onChange={handleChange}
-                error={
-                  !!errors["giá_tiền_bằng_chữ"] && touched["giá_tiền_bằng_chữ"]
-                }
-                helperText={
-                  errors["giá_tiền_bằng_chữ"] &&
-                  touched["giá_tiền_bằng_chữ"] &&
-                  errors["giá_tiền_bằng_chữ"]
-                }
-              />
+
+              {!isTangCho && (
+                <>
+                  <TextField
+                    fullWidth
+                    id="giá_tiền"
+                    name="giá_tiền"
+                    label="Giá tiền *"
+                    value={values["giá_tiền"]}
+                    onChange={(event) => {
+                      handleChange(event);
+                      setFieldValue(
+                        "giá_tiền_bằng_chữ",
+                        numberToVietnamese(
+                          event.target.value
+                            ?.replace(/\./g, "")
+                            .replace(/\,/g, ".")
+                        )
+                      );
+                    }}
+                    error={!!errors["giá_tiền"] && touched["giá_tiền"]}
+                    helperText={
+                      errors["giá_tiền"] &&
+                      touched["giá_tiền"] &&
+                      errors["giá_tiền"]
+                    }
+                  />
+                  <TextField
+                    sx={{ gridColumn: "span 2" }}
+                    fullWidth
+                    id="giá_tiền_bằng_chữ"
+                    name="giá_tiền_bằng_chữ"
+                    label="Giá tiền bằng chữ *"
+                    value={values["giá_tiền_bằng_chữ"]}
+                    onChange={handleChange}
+                    error={
+                      !!errors["giá_tiền_bằng_chữ"] &&
+                      touched["giá_tiền_bằng_chữ"]
+                    }
+                    helperText={
+                      errors["giá_tiền_bằng_chữ"] &&
+                      touched["giá_tiền_bằng_chữ"] &&
+                      errors["giá_tiền_bằng_chữ"]
+                    }
+                  />
+                </>
+              )}
               <Box sx={{ gridColumn: "span 3" }}>
                 <TextField
                   fullWidth
@@ -605,7 +612,11 @@ export const ThemThongTinDat = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Hủy</Button>
-          <Button variant="contained" type="submit" disabled={mụcđíchVàThờiHạnSửDụng.length === 0}>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={mụcđíchVàThờiHạnSửDụng.length === 0}
+          >
             Thêm
           </Button>
         </DialogActions>

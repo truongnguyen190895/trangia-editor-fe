@@ -69,6 +69,12 @@ export const render_hdtc_can_ho_toan_bo = async (payload: HDMBCanHoPayload) => {
   });
 };
 
+export const render_hdtc_dat_nong_nghiep_toan_bo = async (payload: HDCNQuyenSDDatPayload) => {
+  return api.post("/templates/nhom-tang-cho/hd-tang-cho-dat-nong-nghiep-toan-bo", payload, {
+    responseType: "blob",
+  });
+};
+
 export const render_to_khai_chung = async (
   payload: SampleToKhaiChungPayload
 ) => {

@@ -20,12 +20,14 @@ export const DocumentEditor = () => {
     switch (name) {
       case "hdcn-quyen-su-dung-dat-toan-bo":
       case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
+      case "hd-tang-cho-dat-nong-nghiep-toan-bo":
         return (
           <HdcnQuyenSdDatProvider>
             <ChuyenNhuongDatToanBo
               isNongNghiep={
                 name === "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo"
               }
+              isTangCho={name === "hd-tang-cho-dat-nong-nghiep-toan-bo"}
             />
           </HdcnQuyenSdDatProvider>
         );
@@ -72,6 +74,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng chuyển nhượng quyền sử dụng đất và tài sản gắn liền với đất (toàn bộ)";
       case "hd-tang-cho-can-ho-toan-bo":
         return "Hợp đồng tặng cho căn hộ (toàn bộ)";
+      case "hd-tang-cho-dat-nong-nghiep-toan-bo":
+        return "Hợp đồng tặng cho đất nông nghiệp (toàn bộ)";
       default:
         return "";
     }

@@ -23,7 +23,11 @@ import type {
   SampleToKhaiChungPayload,
 } from "@/models/agreement-entity";
 import dayjs from "dayjs";
-import { render_hdcn_quyen_sd_dat_toan_bo, render_to_khai_chung } from "@/api";
+import {
+  render_hdcn_quyen_sd_dat_toan_bo,
+  render_to_khai_chung,
+  render_hdtc_dat_nong_nghiep_toan_bo,
+} from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { extractAddress } from "@/utils/extract-address";
@@ -31,9 +35,10 @@ import { generateThoiHanSuDung } from "@/utils/common";
 
 interface Props {
   isNongNghiep?: boolean;
+  isTangCho?: boolean;
 }
 
-export const ChuyenNhuongDatToanBo = ({ isNongNghiep = false }: Props) => {
+export const ChuyenNhuongDatToanBo = ({ isNongNghiep = false, isTangCho = false }: Props) => {
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -179,30 +184,57 @@ export const ChuyenNhuongDatToanBo = ({ isNongNghiep = false }: Props) => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    if (isTangCho) {
+        render_hdtc_dat_nong_nghiep_toan_bo(payload)
+        .then((res) => {
+            const blob = new Blob([res.data], {
+                type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `HDTC đất nông nghiệp - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+            console.error("Error generating document:", error);
+            window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+            setIsGenerating(false);
+            setSốBảnGốc(2);
+            setIsOutSide(false);
         });
-
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-        setSốBảnGốc(2);
-        setIsOutSide(false);
-      });
+    } else {
+        render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+  
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
+        });
+    }
+    
   };
 
   const getPayloadToKhaiChung = (): SampleToKhaiChungPayload => {
