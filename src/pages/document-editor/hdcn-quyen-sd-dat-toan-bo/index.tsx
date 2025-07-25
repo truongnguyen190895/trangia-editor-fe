@@ -25,7 +25,7 @@ import type {
 import dayjs from "dayjs";
 import {
   render_hdcn_quyen_sd_dat_toan_bo,
-  render_to_khai_chung,
+  render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep,
   render_hdtc_dat_toan_bo,
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -361,7 +361,7 @@ export const ChuyenNhuongDatToanBo = ({
     const payload = getPayloadToKhaiChung();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_to_khai_chung(payload)
+    render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

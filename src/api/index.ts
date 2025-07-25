@@ -85,10 +85,10 @@ export const render_hdtc_dat_toan_bo = async (
   );
 };
 
-export const render_to_khai_chung = async (
+export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   payload: SampleToKhaiChungPayload
 ) => {
-  return api.post("/templates/to-khai-chung", payload, {
+  return api.post("/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep", payload, {
     responseType: "blob",
   });
 };
