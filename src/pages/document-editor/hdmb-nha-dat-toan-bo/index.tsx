@@ -357,8 +357,8 @@ export const HDMBNhaDatToanBo = () => {
         padding="1rem"
         flex={4}
       >
-        <PartyEntity title="Bên chuyển nhượng" side="partyA" />
-        <PartyEntity title="Bên nhận chuyển nhượng" side="partyB" />
+        <PartyEntity title="Bên A" side="partyA" />
+        <PartyEntity title="Bên B" side="partyB" />
         <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
         <Box display="flex" gap="1rem">
           <Button

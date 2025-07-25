@@ -95,6 +95,12 @@ export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   });
 };
 
+export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (payload: SampleToKhaiChungPayload) => {
+  return api.post("/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep", payload, {
+    responseType: "blob",
+  });
+};
+
 export const render_khai_thue_hdmb_can_ho_toan_bo = async (payload: KhaiThueHDMBCanHoToanBoPayload) => {
   return api.post("/templates/khai-thue/khai-thue-mua-ban-can-ho", payload, {
     responseType: "blob",

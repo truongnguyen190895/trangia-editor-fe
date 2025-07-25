@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 import {
   render_hdcn_quyen_sd_dat_toan_bo,
   render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep,
+  render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo,
   render_hdtc_dat_toan_bo,
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -198,7 +199,9 @@ export const ChuyenNhuongDatToanBo = ({
           link.href = url;
           link.download = `HDTC đất ${
             isNongNghiep ? "nông nghiệp" : ""
-          } toàn bộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          } toàn bộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${
+            payload["bên_B"]["cá_thể"][0]["tên"]
+          }.docx`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -359,28 +362,52 @@ export const ChuyenNhuongDatToanBo = ({
     const payload = getPayloadToKhaiChung();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    if (isTangCho) {
+      render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "to-khai-chung.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
         });
+    } else {
+      render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
 
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "to-khai-chung.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "to-khai-chung.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+        });
+    }
   };
 
   return (
@@ -418,8 +445,8 @@ export const ChuyenNhuongDatToanBo = ({
         padding="1rem"
         flex={4}
       >
-        <PartyEntity title="Bên chuyển nhượng" side="partyA" />
-        <PartyEntity title="Bên nhận chuyển nhượng" side="partyB" />
+        <PartyEntity title="Bên A" side="partyA" />
+        <PartyEntity title="Bên B" side="partyB" />
         <ObjectEntity
           title="Đối tượng chuyển nhượng của hợp đồng"
           isTangCho={isTangCho}
