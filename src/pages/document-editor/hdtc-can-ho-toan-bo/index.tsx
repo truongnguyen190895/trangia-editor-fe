@@ -17,9 +17,15 @@ import { PartyEntity } from "./components/party-entity";
 import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
-import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
+import type {
+  HDMBCanHoPayload,
+  KhaiThueHDMBCanHoToanBoPayload,
+} from "@/models/hdmb-can-ho";
 import dayjs from "dayjs";
-import { render_hdtc_can_ho_toan_bo } from "@/api";
+import {
+  render_hdtc_can_ho_toan_bo,
+  render_khai_thue_hdtc_can_ho_toan_bo,
+} from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -51,7 +57,8 @@ export const HDTangChoCanHoToanBo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng: couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
+        tình_trạng_hôn_nhân_vợ_chồng:
+          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
         ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
@@ -61,7 +68,8 @@ export const HDTangChoCanHoToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng: couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
+          tình_trạng_hôn_nhân_vợ_chồng:
+            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
           ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
@@ -71,7 +79,8 @@ export const HDTangChoCanHoToanBo = () => {
         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
         tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng: couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
+        tình_trạng_hôn_nhân_vợ_chồng:
+          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
         ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
@@ -81,7 +90,8 @@ export const HDTangChoCanHoToanBo = () => {
           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
           tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng: couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
+          tình_trạng_hôn_nhân_vợ_chồng:
+            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
           ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
@@ -173,7 +183,7 @@ export const HDTangChoCanHoToanBo = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `Hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+        link.download = `Hợp đồng tặng cho căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -190,162 +200,167 @@ export const HDTangChoCanHoToanBo = () => {
       });
   };
 
-  //   const getPayloadToKhaiChung = (): SampleToKhaiChungPayload => {
-  //     if (!agreementObject) {
-  //       throw new Error("Agreement object is null");
-  //     }
+  const getPayloadKhaiThue = (): KhaiThueHDMBCanHoToanBoPayload => {
+    if (!agreementObject || !canHo) {
+      throw new Error("Agreement object is null");
+    }
 
-  //     const couplesA = partyA["vợ_chồng"]
-  //       .map((couple) => ({
-  //         ...couple.chồng,
-  //         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-  //         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
-  //         tình_trạng_hôn_nhân: null,
-  //         quan_hệ: null,
-  //         thành_phố: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-  //         phường: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-  //         thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-  //       }))
-  //       .concat(
-  //         partyA["vợ_chồng"].map((couple) => ({
-  //           ...couple.vợ,
-  //           quan_hệ: null,
-  //           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-  //           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
-  //           tình_trạng_hôn_nhân: null,
-  //           thành_phố: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-  //           phường: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-  //           thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-  //         }))
-  //       );
-  //     const couplesB = partyB["vợ_chồng"]
-  //       .map((couple) => ({
-  //         ...couple.chồng,
-  //         ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-  //         ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
-  //         tình_trạng_hôn_nhân: null,
-  //         thành_phố: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-  //         phường: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-  //         thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-  //       }))
-  //       .concat(
-  //         partyB["vợ_chồng"].map((couple) => ({
-  //           ...couple.vợ,
-  //           quan_hệ: null,
-  //           ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-  //           ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
-  //           tình_trạng_hôn_nhân: null,
-  //           thành_phố: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-  //           phường: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-  //           thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-  //         }))
-  //       );
+    const couplesA = partyA["vợ_chồng"]
+      .map((couple) => ({
+        ...couple.chồng,
+        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: null,
+        quan_hệ: null,
+        thành_phố:
+          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
+        phường:
+          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
+        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+      }))
+      .concat(
+        partyA["vợ_chồng"].map((couple) => ({
+          ...couple.vợ,
+          quan_hệ: null,
+          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
+          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          tình_trạng_hôn_nhân: null,
+          thành_phố:
+            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
+          phường:
+            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
+          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        }))
+      );
+    const couplesB = partyB["vợ_chồng"]
+      .map((couple) => ({
+        ...couple.chồng,
+        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: null,
+        thành_phố:
+          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
+        phường:
+          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
+        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+      }))
+      .concat(
+        partyB["vợ_chồng"].map((couple) => ({
+          ...couple.vợ,
+          quan_hệ: null,
+          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
+          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          tình_trạng_hôn_nhân: null,
+          thành_phố:
+            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
+          phường:
+            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
+          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        }))
+      );
 
-  //     const các_cá_thể_bên_A = [
-  //       ...partyA["cá_nhân"].map((person) => ({
-  //         ...person,
-  //         ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-  //         ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
-  //         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-  //         thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-  //         phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-  //         thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-  //       })),
-  //       ...couplesA,
-  //     ];
-  //     const các_cá_thể_bên_B = [
-  //       ...partyB["cá_nhân"].map((person) => ({
-  //         ...person,
-  //         ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-  //         ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
-  //         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-  //         thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-  //         phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-  //         thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-  //       })),
-  //       ...couplesB,
-  //     ];
+    const các_cá_thể_bên_A = [
+      ...partyA["cá_nhân"].map((person) => ({
+        ...person,
+        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
+        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
+        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+      })),
+      ...couplesA,
+    ];
+    const các_cá_thể_bên_B = [
+      ...partyB["cá_nhân"].map((person) => ({
+        ...person,
+        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
+        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
+        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
+        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+      })),
+      ...couplesB,
+    ];
 
-  //     const payload: SampleToKhaiChungPayload = {
-  //       bên_A: {
-  //         cá_thể: các_cá_thể_bên_A,
-  //       },
-  //       bên_B: {
-  //         cá_thể: các_cá_thể_bên_B,
-  //       },
-  //       bảng_tncn_bên_A: các_cá_thể_bên_A.map((person, index) => ({
-  //         stt: index + 1,
-  //         tên: person["tên"],
-  //         số_giấy_tờ: person["số_giấy_tờ"],
-  //       })),
-  //       bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
-  //         stt: index + 1,
-  //         tên: person["tên"],
-  //         số_giấy_tờ: person["số_giấy_tờ"],
-  //       })),
-  //       bảng_bên_A: các_cá_thể_bên_A.map((person, index) => ({
-  //         stt: index + 1,
-  //         tên: person["tên"],
-  //       })),
-  //       tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
-  //       số_thửa_đất: agreementObject["số_thửa_đất"],
-  //       số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-  //       loại_giấy_tờ: agreementObject["loại_giấy_chứng_nhận"],
-  //       số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
-  //       ngày_cấp_giấy_chứng_nhận: dayjs(
-  //         agreementObject["ngày_cấp_giấy_chứng_nhận"]
-  //       ).format("DD/MM/YYYY"),
-  //       nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
-  //       đặc_điểm_thửa_đất: {
-  //         diện_tích: {
-  //           số: agreementObject["diện_tích"],
-  //         },
-  //         mục_đích_và_thời_hạn_sử_dụng: agreementObject[
-  //           "mục_đích_và_thời_hạn_sử_dụng"
-  //         ]?.map((item) => ({
-  //           phân_loại: item["phân_loại"],
-  //           diện_tích: item["diện_tích"] || null,
-  //         })),
-  //         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
-  //       },
-  //       số_tiền: agreementObject["giá_tiền"],
-  //       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
-  //       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
-  //       thôn: agreementObject["địa_chỉ_mới"].split(",")[0].trim(),
-  //       phường: agreementObject["địa_chỉ_mới"].split(",")[1].trim(),
-  //       thành_phố: agreementObject["địa_chỉ_mới"].split(",")[2].trim(),
-  //     };
+    const payload: KhaiThueHDMBCanHoToanBoPayload = {
+      bên_A: {
+        cá_thể: các_cá_thể_bên_A,
+      },
+      bên_B: {
+        cá_thể: các_cá_thể_bên_B,
+      },
+      bảng_tncn_bên_A: các_cá_thể_bên_A.map((person, index) => ({
+        stt: index + 1,
+        tên: person["tên"],
+        số_giấy_tờ: person["số_giấy_tờ"],
+      })),
+      bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
+        stt: index + 1,
+        tên: person["tên"],
+        số_giấy_tờ: person["số_giấy_tờ"],
+      })),
+      bảng_bên_A: các_cá_thể_bên_A.map((person, index) => ({
+        stt: index + 1,
+        tên: person["tên"],
+      })),
+      tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
+      số_thửa_đất: agreementObject["số_thửa_đất"],
+      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"] || "",
+      loại_giấy_tờ: canHo["loại_gcn"],
+      số_giấy_chứng_nhận: canHo["số_gcn"],
+      ngày_cấp_giấy_chứng_nhận: canHo["ngày_cấp_gcn"],
+      nơi_cấp_giấy_chứng_nhận: canHo["nơi_cấp_gcn"],
+      đặc_điểm_thửa_đất: {
+        diện_tích: {
+          số: canHo["diện_tích_sàn_bằng_số"],
+        },
+        mục_đích_và_thời_hạn_sử_dụng: [],
+        nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
+      },
+      số_tiền: canHo["giá_căn_hộ_bằng_số"],
+      ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
+      ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
+      diện_tích_sàn_bằng_số: canHo["diện_tích_sàn_bằng_số"],
+      kết_cấu: canHo["kết_cấu"],
+      tầng_có_căn_hộ: canHo["tầng_có_căn_hộ"],
+      năm_hoàn_thành_xây_dựng: canHo["năm_hoàn_thành_xây_dựng"],
+      cấp_hạng: canHo["cấp_hạng"],
+      ...extractAddress(canHo["địa_chỉ_toà_nhà"]),
+    };
 
-  //     return payload;
-  //   };
+    return payload;
+  };
 
-  //   const handleGenerateToKhaiChung = () => {
-  //     const payload = getPayloadToKhaiChung();
-  //     setOpenDialog(false);
-  //     setIsGenerating(true);
-  //     render_to_khai_chung(payload)
-  //       .then((res) => {
-  //         const blob = new Blob([res.data], {
-  //           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  //         });
+  const handleGenerateKhaiThue = () => {
+    const payload = getPayloadKhaiThue();
 
-  //         const url = window.URL.createObjectURL(blob);
-  //         const link = document.createElement("a");
-  //         link.href = url;
-  //         link.download = "to-khai-chung.docx";
-  //         document.body.appendChild(link);
-  //         link.click();
-  //         document.body.removeChild(link);
-  //         window.URL.revokeObjectURL(url);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error generating document:", error);
-  //         window.alert("Lỗi khi tạo hợp đồng");
-  //       })
-  //       .finally(() => {
-  //         setIsGenerating(false);
-  //       });
-  //   };
+    setOpenDialog(false);
+    setIsGenerating(true);
+    render_khai_thue_hdtc_can_ho_toan_bo(payload)
+      .then((res) => {
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "khai-thue-hdtc-can-ho-toan-bo.docx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error("Error generating document:", error);
+        window.alert("Lỗi khi tạo hợp đồng");
+      })
+      .finally(() => {
+        setIsGenerating(false);
+      });
+  };
 
   return (
     <Box display="flex" gap="2rem">
@@ -411,8 +426,8 @@ export const HDTangChoCanHoToanBo = () => {
               textTransform: "uppercase",
               width: "200px",
             }}
-            disabled={true}
-            // onClick={handleGenerateToKhaiChung}
+            disabled={!isFormValid}
+            onClick={handleGenerateKhaiThue}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
           </Button>

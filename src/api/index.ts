@@ -60,6 +60,18 @@ export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
   );
 };
 
+export const render_hdtc_nha_dat_toan_bo = async (
+  payload: HDMBNhaDatPayload
+) => {
+  return api.post(
+    "/templates/nhom-tang-cho/hd-tang-cho-nha-dat-toan-bo",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
+};
+
 export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (
   payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload
 ) => {
@@ -147,4 +159,20 @@ export const render_khai_thue_hdcn_dat_va_tsglvd_toan_bo = async (
       responseType: "blob",
     }
   );
+};
+
+export const render_khai_thue_hdtc_nha_dat_toan_bo = async (
+  payload: KhaiThueHDMBNhaDatToanBoPayload
+) => {
+  return api.post("/templates/khai-thue/khai-thue-tang-cho-nha-dat", payload, {
+    responseType: "blob",
+  });
+};
+
+export const render_khai_thue_hdtc_can_ho_toan_bo = async (
+  payload: KhaiThueHDMBCanHoToanBoPayload
+) => {
+  return api.post("/templates/khai-thue/khai-thue-tang-cho-can-ho", payload, {
+    responseType: "blob",
+  });
 };

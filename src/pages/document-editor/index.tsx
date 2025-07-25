@@ -37,9 +37,10 @@ export const DocumentEditor = () => {
           </HDMBCanHoProvider>
         );
       case "hdmb-nha-dat-toan-bo":
+      case "hd-tang-cho-nha-dat-toan-bo":
         return (
           <HDMBNhaDatProvider>
-            <HDMBNhaDatToanBo />
+            <HDMBNhaDatToanBo isTangCho={/tang-cho/.test(name ?? "")}/>
           </HDMBNhaDatProvider>
         );
       case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":

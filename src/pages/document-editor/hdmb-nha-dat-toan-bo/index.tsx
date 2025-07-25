@@ -25,13 +25,18 @@ import dayjs from "dayjs";
 import {
   render_hdmb_nha_dat,
   render_khai_thue_hdmb_nha_dat_toan_bo,
+  render_hdtc_nha_dat_toan_bo,
 } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 
-export const HDMBNhaDatToanBo = () => {
+interface Props {
+  isTangCho?: boolean;
+}
+
+export const HDMBNhaDatToanBo = ({ isTangCho = false }: Props) => {
   const { partyA, partyB, agreementObject, nhaDat } = useHDMBNhaDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -145,30 +150,57 @@ export const HDMBNhaDatToanBo = () => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdmb_nha_dat(payload)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
+    if (isTangCho) {
+      render_hdtc_nha_dat_toan_bo(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
 
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Hợp đồng mua bán nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-        setSốBảnGốc(2);
-        setIsOutSide(false);
-      });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `Hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
+        });
+    } else {
+      render_hdmb_nha_dat(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `Hợp đồng mua bán nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
+        });
+    }
   };
 
   const getPayloadToKhaiChung = (): KhaiThueHDMBNhaDatToanBoPayload => {
@@ -400,7 +432,7 @@ export const HDMBNhaDatToanBo = () => {
               textTransform: "uppercase",
               width: "200px",
             }}
-            disabled={!isFormValid}
+            disabled={!isFormValid || isTangCho}
             onClick={handleKhaiThue}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
