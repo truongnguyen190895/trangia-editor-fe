@@ -64,15 +64,25 @@ export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (
 };
 
 export const render_hdtc_can_ho_toan_bo = async (payload: HDMBCanHoPayload) => {
-  return api.post("/templates/nhom-tang-cho/hd-tang-cho-can-ho-toan-bo", payload, {
-    responseType: "blob",
-  });
+  return api.post(
+    "/templates/nhom-tang-cho/hd-tang-cho-can-ho-toan-bo",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
 };
 
-export const render_hdtc_dat_nong_nghiep_toan_bo = async (payload: HDCNQuyenSDDatPayload) => {
-  return api.post("/templates/nhom-tang-cho/hd-tang-cho-dat-nong-nghiep-toan-bo", payload, {
-    responseType: "blob",
-  });
+export const render_hdtc_dat_toan_bo = async (
+  payload: HDCNQuyenSDDatPayload,
+  isNongNghiep: boolean
+) => {
+  return api.post(
+    `/templates/nhom-tang-cho/hd-tang-cho-dat-toan-bo${
+      isNongNghiep ? "-nong-nghiep" : ""
+    }`,
+    payload
+  );
 };
 
 export const render_to_khai_chung = async (

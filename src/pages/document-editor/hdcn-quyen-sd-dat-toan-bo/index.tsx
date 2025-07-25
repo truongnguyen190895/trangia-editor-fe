@@ -26,7 +26,7 @@ import dayjs from "dayjs";
 import {
   render_hdcn_quyen_sd_dat_toan_bo,
   render_to_khai_chung,
-  render_hdtc_dat_nong_nghiep_toan_bo,
+  render_hdtc_dat_toan_bo,
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
@@ -38,7 +38,12 @@ interface Props {
   isTangCho?: boolean;
 }
 
-export const ChuyenNhuongDatToanBo = ({ isNongNghiep = false, isTangCho = false }: Props) => {
+export const ChuyenNhuongDatToanBo = ({
+  isNongNghiep = false,
+  isTangCho = false,
+}: Props) => {
+  console.log("isTangCho", isTangCho);
+  console.log("isNongNghiep", isNongNghiep);
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -185,36 +190,37 @@ export const ChuyenNhuongDatToanBo = ({ isNongNghiep = false, isTangCho = false 
     setOpenDialog(false);
     setIsGenerating(true);
     if (isTangCho) {
-        render_hdtc_dat_nong_nghiep_toan_bo(payload)
-        .then((res) => {
-            const blob = new Blob([res.data], {
-                type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `HDTC đất nông nghiệp - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        })
-        .catch((error) => {
-            console.error("Error generating document:", error);
-            window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-            setIsGenerating(false);
-            setSốBảnGốc(2);
-            setIsOutSide(false);
-        });
-    } else {
-        render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
+      render_hdtc_dat_toan_bo(payload, isNongNghiep)
         .then((res) => {
           const blob = new Blob([res.data], {
             type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
           });
-  
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `HDTC đất ${
+            isNongNghiep ? "nông nghiệp" : ""
+          } toàn bộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
+        });
+    } else {
+      render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = url;
@@ -234,7 +240,6 @@ export const ChuyenNhuongDatToanBo = ({ isNongNghiep = false, isTangCho = false 
           setIsOutSide(false);
         });
     }
-    
   };
 
   const getPayloadToKhaiChung = (): SampleToKhaiChungPayload => {
@@ -417,7 +422,10 @@ export const ChuyenNhuongDatToanBo = ({ isNongNghiep = false, isTangCho = false 
       >
         <PartyEntity title="Bên chuyển nhượng" side="partyA" />
         <PartyEntity title="Bên nhận chuyển nhượng" side="partyB" />
-        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
+        <ObjectEntity
+          title="Đối tượng chuyển nhượng của hợp đồng"
+          isTangCho={isTangCho}
+        />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"

@@ -113,4 +113,11 @@ export const templates = [
     subCategory: "tang-cho",
     path: "hd-tang-cho-dat-nong-nghiep-toan-bo",
   },
+  {
+    id: 8,
+    name: "HĐ tặng cho đất toàn bộ.docx",
+    type: "agreement",
+    subCategory: "tang-cho",
+    path: "hd-tang-cho-dat-toan-bo",
+  },
 ];

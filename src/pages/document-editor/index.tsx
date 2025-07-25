@@ -21,13 +21,12 @@ export const DocumentEditor = () => {
       case "hdcn-quyen-su-dung-dat-toan-bo":
       case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
       case "hd-tang-cho-dat-nong-nghiep-toan-bo":
+      case "hd-tang-cho-dat-toan-bo":
         return (
           <HdcnQuyenSdDatProvider>
             <ChuyenNhuongDatToanBo
-              isNongNghiep={
-                name === "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo"
-              }
-              isTangCho={name === "hd-tang-cho-dat-nong-nghiep-toan-bo"}
+              isNongNghiep={/nong-nghiep/.test(name ?? "")}
+              isTangCho={/tang-cho/.test(name ?? "")}
             />
           </HdcnQuyenSdDatProvider>
         );
@@ -76,6 +75,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng tặng cho căn hộ (toàn bộ)";
       case "hd-tang-cho-dat-nong-nghiep-toan-bo":
         return "Hợp đồng tặng cho đất nông nghiệp (toàn bộ)";
+      case "hd-tang-cho-dat-toan-bo":
+        return "Hợp đồng tặng cho đất (toàn bộ)";
       default:
         return "";
     }
