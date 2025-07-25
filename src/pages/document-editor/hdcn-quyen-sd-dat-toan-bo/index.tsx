@@ -42,8 +42,6 @@ export const ChuyenNhuongDatToanBo = ({
   isNongNghiep = false,
   isTangCho = false,
 }: Props) => {
-  console.log("isTangCho", isTangCho);
-  console.log("isNongNghiep", isNongNghiep);
   const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);

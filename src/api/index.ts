@@ -81,7 +81,9 @@ export const render_hdtc_dat_toan_bo = async (
     `/templates/nhom-tang-cho/hd-tang-cho-dat-toan-bo${
       isNongNghiep ? "-nong-nghiep" : ""
     }`,
-    payload
+    payload, {
+        responseType: "blob",
+    }
   );
 };
 
