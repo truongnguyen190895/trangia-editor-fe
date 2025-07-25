@@ -4,7 +4,7 @@ import type {
   SampleToKhaiChungPayload,
 } from "@/models/agreement-entity";
 import type { HDMBCanHoPayload, KhaiThueHDMBCanHoToanBoPayload } from "@/models/hdmb-can-ho";
-import type { HDMBNhaDatPayload } from "@/models/hdmb-nha-dat";
+import type { HDMBNhaDatPayload, KhaiThueHDMBNhaDatToanBoPayload } from "@/models/hdmb-nha-dat";
 import type { HDCNDatVaTaiSanGanLienVoiDatToanBoPayload } from "@/models/hdcn-dat-va-tsglvd";
 
 export const api = axios.create({
@@ -103,6 +103,12 @@ export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (p
 
 export const render_khai_thue_hdmb_can_ho_toan_bo = async (payload: KhaiThueHDMBCanHoToanBoPayload) => {
   return api.post("/templates/khai-thue/khai-thue-mua-ban-can-ho", payload, {
+    responseType: "blob",
+  });
+};
+
+export const render_khai_thue_hdmb_nha_dat_toan_bo = async (payload: KhaiThueHDMBNhaDatToanBoPayload) => {
+  return api.post("/templates/khai-thue/khai-thue-mua-ban-nha-dat", payload, {
     responseType: "blob",
   });
 };

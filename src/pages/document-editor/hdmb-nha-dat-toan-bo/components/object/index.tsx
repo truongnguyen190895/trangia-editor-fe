@@ -195,21 +195,6 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  {/* <TableCell component="th">
-                    <Typography variant="body1">Thao tác</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box display="flex" gap={1}>
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleOpenThongTinCanHo()}
-                      />
-                      <DeleteIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleDeleteCanHo()}
-                      />
-                    </Box>
-                  </TableCell> */}
                   <TableCell component="th">
                     <Typography variant="body1">Loại nhà ở</Typography>
                   </TableCell>
