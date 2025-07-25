@@ -21,15 +21,10 @@ interface ThongTinNhaDatProps {
 const validationSchema = Yup.object({
   diện_tích_xây_dựng: Yup.string().required("Diện tích xây dựng là bắt buộc"),
   diện_tích_sàn: Yup.string().required("Diện tích sàn là bắt buộc"),
-  số_tầng: Yup.string().required("Số tầng là bắt buộc"),
-  kết_cấu: Yup.string().required("Kết cấu là bắt buộc"),
-  cấp_hạng: Yup.string().required("Cấp hạng là bắt buộc"),
-  năm_hoàn_thành_xây_dựng: Yup.string().required(
-    "Năm hoàn thành xây dựng là bắt buộc"
-  ),
   số_tiền: Yup.string().required("Số tiền là bắt buộc"),
   số_tiền_bằng_chữ: Yup.string().required("Số tiền bằng chữ là bắt buộc"),
   ghi_chú: Yup.string().nullable(),
+  hình_thức_sở_hữu: Yup.string().required("Hình thức sở hữu là bắt buộc"),
 });
 
 export const ThongTinNhaDatDialog = ({
@@ -50,12 +45,14 @@ export const ThongTinNhaDatDialog = ({
           diện_tích_xây_dựng: "",
           diện_tích_sàn: "",
           số_tầng: "",
-          kết_cấu: "",
-          cấp_hạng: "",
-          năm_hoàn_thành_xây_dựng: "",
+          kết_cấu: null,
+          cấp_hạng: null,
+          năm_hoàn_thành_xây_dựng: null,
           số_tiền: "",
           số_tiền_bằng_chữ: "",
           ghi_chú: "",
+          loại_nhà_ở: "",
+          hình_thức_sở_hữu: "",
         };
   };
 
@@ -109,7 +106,7 @@ export const ThongTinNhaDatDialog = ({
                 type="text"
                 id="số_tầng"
                 name="số_tầng"
-                label="Số tầng *"
+                label="Số tầng"
                 value={values["số_tầng"]}
                 onChange={handleChange}
               />
@@ -118,7 +115,7 @@ export const ThongTinNhaDatDialog = ({
                 type="text"
                 id="kết_cấu"
                 name="kết_cấu"
-                label="Kết cấu *"
+                label="Kết cấu"
                 value={values["kết_cấu"]}
                 onChange={handleChange}
               />
@@ -127,33 +124,18 @@ export const ThongTinNhaDatDialog = ({
                 type="text"
                 id="cấp_hạng"
                 name="cấp_hạng"
-                label="Cấp hạng *"
+                label="Cấp hạng"
                 value={values["cấp_hạng"]}
                 onChange={handleChange}
-                error={!!errors["cấp_hạng"] && touched["cấp_hạng"]}
-                helperText={
-                  errors["cấp_hạng"] &&
-                  touched["cấp_hạng"] &&
-                  errors["cấp_hạng"]
-                }
               />
               <TextField
                 fullWidth
                 type="text"
                 id="năm_hoàn_thành_xây_dựng"
                 name="năm_hoàn_thành_xây_dựng"
-                label="Năm hoàn thành xây dựng *"
+                label="Năm hoàn thành xây dựng"
                 value={values["năm_hoàn_thành_xây_dựng"]}
                 onChange={handleChange}
-                error={
-                  !!errors["năm_hoàn_thành_xây_dựng"] &&
-                  touched["năm_hoàn_thành_xây_dựng"]
-                }
-                helperText={
-                  errors["năm_hoàn_thành_xây_dựng"] &&
-                  touched["năm_hoàn_thành_xây_dựng"] &&
-                  errors["năm_hoàn_thành_xây_dựng"]
-                }
               />
               <TextField
                 fullWidth
@@ -191,6 +173,30 @@ export const ThongTinNhaDatDialog = ({
                   errors["số_tiền_bằng_chữ"] &&
                   touched["số_tiền_bằng_chữ"] &&
                   errors["số_tiền_bằng_chữ"]
+                }
+              />
+              <TextField
+                fullWidth
+                type="text"
+                id="loại_nhà_ở"
+                name="loại_nhà_ở"
+                label="Loại nhà ở"
+                value={values["loại_nhà_ở"]}
+                onChange={handleChange}
+              />
+              <TextField
+                fullWidth
+                type="text"
+                id="hình_thức_sở_hữu"
+                name="hình_thức_sở_hữu"
+                label="Hình thức sở hữu"
+                value={values["hình_thức_sở_hữu"]}
+                onChange={handleChange}
+                error={!!errors["hình_thức_sở_hữu"] && touched["hình_thức_sở_hữu"]}
+                helperText={
+                  errors["hình_thức_sở_hữu"] &&
+                  touched["hình_thức_sở_hữu"] &&
+                  errors["hình_thức_sở_hữu"]
                 }
               />
               <TextField

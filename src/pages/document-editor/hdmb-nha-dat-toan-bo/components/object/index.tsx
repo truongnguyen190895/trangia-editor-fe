@@ -184,15 +184,52 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Ghi chú</Typography>
+                    <Typography variant="body1">Hình thức sở hữu</Typography>
                   </TableCell>
-                  <TableCell>{nhaDat?.["ghi_chú"]}</TableCell>
+                  <TableCell>{nhaDat?.["hình_thức_sở_hữu"]}</TableCell>
                   <TableCell component="th">
                     <Typography variant="body1">Nguồn gốc sử dụng</Typography>
                   </TableCell>
                   <TableCell>
                     {agreementObject?.["nguồn_gốc_sử_dụng_đất"]}
                   </TableCell>
+                </TableRow>
+                <TableRow>
+                  {/* <TableCell component="th">
+                    <Typography variant="body1">Thao tác</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Box display="flex" gap={1}>
+                      <EditIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleOpenThongTinCanHo()}
+                      />
+                      <DeleteIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleDeleteCanHo()}
+                      />
+                    </Box>
+                  </TableCell> */}
+                  <TableCell component="th">
+                    <Typography variant="body1">Loại nhà ở</Typography>
+                  </TableCell>
+                  <TableCell>{nhaDat?.["loại_nhà_ở"]}</TableCell>
+                  <TableCell component="th">
+                    <Typography variant="body1">Địa chỉ nhà đất</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["địa_chỉ_nhà_đất"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Ghi chú</Typography>
+                  </TableCell>
+                  <TableCell>{nhaDat?.["ghi_chú"]}</TableCell>
+                  <TableCell component="th">
+                    <Typography variant="body1">
+                      Loại giấy chứng nhận
+                    </Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["loại_gcn"]}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
@@ -210,24 +247,6 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       />
                     </Box>
                   </TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Địa chỉ nhà đất</Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["địa_chỉ_nhà_đất"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell />
-                  <TableCell />
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Loại giấy chứng nhận
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["loại_gcn"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell />
-                  <TableCell />
                   <TableCell component="th">
                     <Typography variant="body1">Số giấy chứng nhân</Typography>
                   </TableCell>

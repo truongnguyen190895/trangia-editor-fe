@@ -53,11 +53,13 @@ export interface ThongTinThuaDat {
 export interface ThongTinNhaDat {
   diện_tích_xây_dựng: string;
   diện_tích_sàn: string;
-  số_tầng: string;
-  kết_cấu: string;
-  cấp_hạng: string;
-  năm_hoàn_thành_xây_dựng: string;
+  số_tầng: string | null;
+  kết_cấu: string | null;
+  cấp_hạng: string | null;
+  năm_hoàn_thành_xây_dựng: string | null;
   số_tiền: string;
   số_tiền_bằng_chữ: string;
   ghi_chú: string;
+  loại_nhà_ở: string | null;
+  hình_thức_sở_hữu: string;
 }

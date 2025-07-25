@@ -26,6 +26,12 @@ interface ThemThongTinDatProps {
 
 const validationSchema = Yup.object({
   số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
+  số_tờ_bản_đồ: Yup.string().required("Số tờ bản đồ là bắt buộc"),
+  diện_tích_đất_bằng_số: Yup.string().required("Diện tích đất bằng số là bắt buộc"),
+  diện_tích_đất_bằng_chữ: Yup.string().required("Diện tích đất bằng chữ là bắt buộc"),
+  hình_thức_sở_hữu_đất: Yup.string().required("Hình thức sở hữu đất là bắt buộc"),
+  mục_đích_sở_hữu_đất: Yup.string().required("Mục đích sở hữu đất là bắt buộc"),
+  thời_hạn_sử_dụng_đất: Yup.string().required("Thời hạn sử dụng đất là bắt buộc"),
 });
 
 export const ThemThongTinDat = ({
@@ -287,7 +293,7 @@ export const ThemThongTinDat = ({
                         event.target.value ?? ""
                       );
                     }}
-                    label="Nguồn gốc sử dụng *"
+                    label="Nguồn gốc sử dụng"
                     error={
                       !!errors["nguồn_gốc_sử_dụng_đất"] &&
                       touched["nguồn_gốc_sử_dụng_đất"]
