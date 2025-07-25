@@ -31,6 +31,9 @@ const validationSchema = Yup.object({
   ),
   nơi_cấp_gcn: Yup.string().required("Nơi cấp giấy chứng nhận là bắt buộc"),
   ngày_cấp_gcn: Yup.string().required("Ngày cấp giấy chứng nhận là bắt buộc"),
+  giá_căn_hộ_bằng_số: Yup.string().required("Giá căn hộ bằng số là bắt buộc"),
+  giá_căn_hộ_bằng_chữ: Yup.string().required("Giá căn hộ bằng chữ là bắt buộc"),
+  hình_thức_sở_hữu_căn_hộ: Yup.string().required("Hình thức sở hữu căn hộ là bắt buộc"),
 });
 
 export const ThongTinCanHoDialog = ({
@@ -255,43 +258,27 @@ export const ThongTinCanHoDialog = ({
                 type="text"
                 id="cấp_hạng"
                 name="cấp_hạng"
-                label="Cấp hạng *"
+                label="Cấp hạng"
                 value={values["cấp_hạng"]}
                 onChange={handleChange}
-                error={!!errors["cấp_hạng"] && touched["cấp_hạng"]}
-                helperText={
-                  errors["cấp_hạng"] &&
-                  touched["cấp_hạng"] &&
-                  errors["cấp_hạng"]
-                }
               />
               <TextField
                 fullWidth
                 type="text"
                 id="tầng_có_căn_hộ"
                 name="tầng_có_căn_hộ"
-                label="Tầng có căn hộ *"
+                label="Tầng có căn hộ"
                 value={values["tầng_có_căn_hộ"]}
                 onChange={handleChange}
-                error={!!errors["tầng_có_căn_hộ"] && touched["tầng_có_căn_hộ"]}
-                helperText={
-                  errors["tầng_có_căn_hộ"] &&
-                  touched["tầng_có_căn_hộ"] &&
-                  errors["tầng_có_căn_hộ"]
-                }
               />
               <TextField
                 fullWidth
                 type="text"
                 id="kết_cấu"
                 name="kết_cấu"
-                label="Kết cấu *"
+                label="Kết cấu"
                 value={values["kết_cấu"]}
                 onChange={handleChange}
-                error={!!errors["kết_cấu"] && touched["kết_cấu"]}
-                helperText={
-                  errors["kết_cấu"] && touched["kết_cấu"] && errors["kết_cấu"]
-                }
               />
               <TextField
                 fullWidth
@@ -316,18 +303,9 @@ export const ThongTinCanHoDialog = ({
                 type="text"
                 id="năm_hoàn_thành_xây_dựng"
                 name="năm_hoàn_thành_xây_dựng"
-                label="Năm hoàn thành xây dựng *"
+                label="Năm hoàn thành xây dựng"
                 value={values["năm_hoàn_thành_xây_dựng"]}
                 onChange={handleChange}
-                error={
-                  !!errors["năm_hoàn_thành_xây_dựng"] &&
-                  touched["năm_hoàn_thành_xây_dựng"]
-                }
-                helperText={
-                  errors["năm_hoàn_thành_xây_dựng"] &&
-                  touched["năm_hoàn_thành_xây_dựng"] &&
-                  errors["năm_hoàn_thành_xây_dựng"]
-                }
               />
               <TextField
                 fullWidth

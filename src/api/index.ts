@@ -3,7 +3,7 @@ import type {
   HDCNQuyenSDDatPayload,
   SampleToKhaiChungPayload,
 } from "@/models/agreement-entity";
-import type { HDMBCanHoPayload } from "@/models/hdmb-can-ho";
+import type { HDMBCanHoPayload, KhaiThueHDMBCanHoToanBoPayload } from "@/models/hdmb-can-ho";
 import type { HDMBNhaDatPayload } from "@/models/hdmb-nha-dat";
 import type { HDCNDatVaTaiSanGanLienVoiDatToanBoPayload } from "@/models/hdcn-dat-va-tsglvd";
 
@@ -89,6 +89,12 @@ export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   payload: SampleToKhaiChungPayload
 ) => {
   return api.post("/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep", payload, {
+    responseType: "blob",
+  });
+};
+
+export const render_khai_thue_hdmb_can_ho_toan_bo = async (payload: KhaiThueHDMBCanHoToanBoPayload) => {
+  return api.post("/templates/khai-thue/khai-thue-mua-ban-can-ho", payload, {
     responseType: "blob",
   });
 };
