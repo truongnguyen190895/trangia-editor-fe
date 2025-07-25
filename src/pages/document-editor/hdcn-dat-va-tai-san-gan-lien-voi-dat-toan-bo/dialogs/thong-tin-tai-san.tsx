@@ -21,6 +21,7 @@ interface ThongTinTaiSanProps {
 
 const validationSchema = Yup.object({
   thông_tin_tài_sản: Yup.string().required("Thông tin tài sản là bắt buộc"),
+  diện_tích_xây_dựng: Yup.string().required("Diện tích xây dựng là bắt buộc"),
   số_tiền: Yup.string().required("Số tiền là bắt buộc"),
   số_tiền_bằng_chữ: Yup.string().required("Số tiền bằng chữ là bắt buộc"),
 });
@@ -43,6 +44,7 @@ export const ThongTinTaiSanDialog = ({
           thông_tin_tài_sản: "",
           số_tiền: "",
           số_tiền_bằng_chữ: "",
+          diện_tích_xây_dựng: "",
         };
   };
 
@@ -58,54 +60,69 @@ export const ThongTinTaiSanDialog = ({
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin tài sản gắn liền với đất</DialogTitle>
         <DialogContent>
-          <TextField
-            fullWidth
-            multiline
-            rows={6}
-            name="thông_tin_tài_sản"
-            placeholder="Nhập thông tin tài sản, phân cách bởi dấu ; Ví dụ: Nhà bê tông; Diện tích chiếm đất 50 m2"
-            value={values.thông_tin_tài_sản}
-            onChange={handleChange}
-            error={!!errors.thông_tin_tài_sản}
-          />
-          <Typography
-            variant="body1"
-            fontSize="1.5rem"
-            fontWeight="600"
-            mt="20px"
-          >
-            Giá trị hợp đồng
-          </Typography>
-          <Box
-            mt="20px"
-            display="grid"
-            gridTemplateColumns="1fr 1fr"
-            gap="20px"
-          >
+          <Box sx={{ py: "20px" }}>
             <TextField
               fullWidth
-              id="số_tiền"
-              name="số_tiền"
-              label="Số tiền *"
-              value={values.số_tiền}
-              onChange={(e) => {
-                handleChange(e);
-                setFieldValue(
-                  "số_tiền_bằng_chữ",
-                  numberToVietnamese(e.target.value)
-                );
-              }}
-              helperText={errors.số_tiền}
-              error={!!errors.số_tiền}
-            />
-            <TextField
-              fullWidth
-              id="số_tiền_bằng_chữ"
-              name="số_tiền_bằng_chữ"
-              label="Số tiền bằng chữ"
-              value={values.số_tiền_bằng_chữ}
+              label="Tên tài sản"
+              name="thông_tin_tài_sản"
+              id="thông_tin_tài_sản"
+              value={values.thông_tin_tài_sản}
               onChange={handleChange}
+              error={!!errors.thông_tin_tài_sản}
+              helperText={errors.thông_tin_tài_sản}
             />
+            <TextField
+              sx={{ mt: "20px" }}
+              fullWidth
+              label="Diện tích xây dựng (m2)"
+              name="diện_tích_xây_dựng"
+              id="diện_tích_xây_dựng"
+              onChange={handleChange}
+              value={values.diện_tích_xây_dựng}
+              error={!!errors.diện_tích_xây_dựng}
+              helperText={errors.diện_tích_xây_dựng}
+            />
+            <Typography
+              variant="body1"
+              fontSize="1.5rem"
+              fontWeight="600"
+              mt="20px"
+            >
+              Giá trị hợp đồng
+            </Typography>
+            <Box
+              mt="20px"
+              display="grid"
+              gridTemplateColumns="1fr 1fr"
+              gap="20px"
+            >
+              <TextField
+                fullWidth
+                id="số_tiền"
+                name="số_tiền"
+                label="Số tiền *"
+                value={values.số_tiền}
+                onChange={(e) => {
+                  handleChange(e);
+                  setFieldValue(
+                    "số_tiền_bằng_chữ",
+                    numberToVietnamese(
+                      e.target.value?.replace(/\./g, "").replace(/\,/g, ".")
+                    )
+                  );
+                }}
+                helperText={errors.số_tiền}
+                error={!!errors.số_tiền}
+              />
+              <TextField
+                fullWidth
+                id="số_tiền_bằng_chữ"
+                name="số_tiền_bằng_chữ"
+                label="Số tiền bằng chữ"
+                value={values.số_tiền_bằng_chữ}
+                onChange={handleChange}
+              />
+            </Box>
           </Box>
         </DialogContent>
         <DialogActions>

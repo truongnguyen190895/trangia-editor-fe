@@ -3,9 +3,18 @@ import type {
   HDCNQuyenSDDatPayload,
   SampleToKhaiChungPayload,
 } from "@/models/agreement-entity";
-import type { HDMBCanHoPayload, KhaiThueHDMBCanHoToanBoPayload } from "@/models/hdmb-can-ho";
-import type { HDMBNhaDatPayload, KhaiThueHDMBNhaDatToanBoPayload } from "@/models/hdmb-nha-dat";
-import type { HDCNDatVaTaiSanGanLienVoiDatToanBoPayload } from "@/models/hdcn-dat-va-tsglvd";
+import type {
+  HDMBCanHoPayload,
+  KhaiThueHDMBCanHoToanBoPayload,
+} from "@/models/hdmb-can-ho";
+import type {
+  HDMBNhaDatPayload,
+  KhaiThueHDMBNhaDatToanBoPayload,
+} from "@/models/hdmb-nha-dat";
+import type {
+  HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
+  KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
+} from "@/models/hdcn-dat-va-tsglvd";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -81,8 +90,9 @@ export const render_hdtc_dat_toan_bo = async (
     `/templates/nhom-tang-cho/hd-tang-cho-dat-toan-bo${
       isNongNghiep ? "-nong-nghiep" : ""
     }`,
-    payload, {
-        responseType: "blob",
+    payload,
+    {
+      responseType: "blob",
     }
   );
 };
@@ -90,25 +100,51 @@ export const render_hdtc_dat_toan_bo = async (
 export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   payload: SampleToKhaiChungPayload
 ) => {
-  return api.post("/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep", payload, {
-    responseType: "blob",
-  });
+  return api.post(
+    "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
 };
 
-export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (payload: SampleToKhaiChungPayload) => {
-  return api.post("/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep", payload, {
-    responseType: "blob",
-  });
+export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
+  payload: SampleToKhaiChungPayload
+) => {
+  return api.post(
+    "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
 };
 
-export const render_khai_thue_hdmb_can_ho_toan_bo = async (payload: KhaiThueHDMBCanHoToanBoPayload) => {
+export const render_khai_thue_hdmb_can_ho_toan_bo = async (
+  payload: KhaiThueHDMBCanHoToanBoPayload
+) => {
   return api.post("/templates/khai-thue/khai-thue-mua-ban-can-ho", payload, {
     responseType: "blob",
   });
 };
 
-export const render_khai_thue_hdmb_nha_dat_toan_bo = async (payload: KhaiThueHDMBNhaDatToanBoPayload) => {
+export const render_khai_thue_hdmb_nha_dat_toan_bo = async (
+  payload: KhaiThueHDMBNhaDatToanBoPayload
+) => {
   return api.post("/templates/khai-thue/khai-thue-mua-ban-nha-dat", payload, {
     responseType: "blob",
   });
+};
+
+export const render_khai_thue_hdcn_dat_va_tsglvd_toan_bo = async (
+  payload: KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload
+) => {
+  return api.post(
+    "/templates/khai-thue/khai-thue-mua-ban-nha-dat-va-tsglvd",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
 };

@@ -81,8 +81,9 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
             </Typography>
             <Box mb="20px" border="1px solid #BCCCDC" borderRadius="5px" padding="10px">
               {taiSan?.["thông_tin_tài_sản"].split(";").map((item, index) => (
-                <Typography key={index}>- {item}</Typography>
+                <Typography key={index}>Tên tài sản: {item}</Typography>
               ))}
+              <Typography>Diện tích xây dựng: {taiSan?.["diện_tích_xây_dựng"]} m2</Typography>
               <Typography variant="body1" fontSize="1.3rem" fontWeight="600" mt="20px">Giá trị hợp đồng: {taiSan?.["số_tiền"]}</Typography>
             </Box>
             {taiSan ? (
