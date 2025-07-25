@@ -99,9 +99,9 @@ export const render_hdtc_dat_toan_bo = async (
   isNongNghiep: boolean
 ) => {
   return api.post(
-    `/templates/nhom-tang-cho/hd-tang-cho-dat-toan-bo${
+    `/templates/nhom-tang-cho/hd-tang-cho-dat${
       isNongNghiep ? "-nong-nghiep" : ""
-    }`,
+    }-toan-bo`,
     payload,
     {
       responseType: "blob",

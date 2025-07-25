@@ -122,7 +122,7 @@ export const templates = [
   },
   {
     id: 9,
-    name: "HĐ tặng cho nhà ở toàn bộ.docx",
+    name: "HĐ tặng cho nhà đất toàn bộ.docx",
     type: "agreement",
     subCategory: "tang-cho",
     path: "hd-tang-cho-nha-dat-toan-bo",
