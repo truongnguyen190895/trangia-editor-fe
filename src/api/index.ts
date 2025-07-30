@@ -29,13 +29,16 @@ api.interceptors.request.use((config) => {
 
 export const render_hdmb_xe_oto = async (
   payload: HDMBXeOtoPayload,
-  isXeMay?: boolean
+  isXeMay?: boolean,
+  isDauGia?: boolean
 ) => {
   let url = "";
   if (isXeMay) {
     url = "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-may";
   } else {
-    url = "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-oto";
+    url = isDauGia
+      ? "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-oto-va-bien-so"
+      : "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-oto";
   }
   return api.post(url, payload, { responseType: "blob" });
 };

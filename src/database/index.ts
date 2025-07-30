@@ -162,4 +162,11 @@ export const templates = [
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-xe-may",
   },
+  {
+    id: 15,
+    name: "HĐMB xe ôtô + Biển số xe.docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdmb-xe-oto-bien-so-xe",
+  },
 ];

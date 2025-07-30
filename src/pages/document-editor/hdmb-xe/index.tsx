@@ -26,9 +26,10 @@ import { useHDMBXeContext } from "@/context/hdmb-xe";
 
 interface HDMBXeProps {
   isXeMay?: boolean;
+  isDauGia?: boolean;
 }
 
-export const HDMBXe = ({ isXeMay = false }: HDMBXeProps) => {
+export const HDMBXe = ({ isXeMay = false, isDauGia = false }: HDMBXeProps) => {
   const { partyA, partyB, agreementObject } = useHDMBXeContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -136,9 +137,17 @@ export const HDMBXe = ({ isXeMay = false }: HDMBXeProps) => {
 
   const handleGenerateDocument = () => {
     const payload = getPayload();
+    let fileName = "";
+    if (isXeMay) {
+      fileName = "HDMB-Xe-may.docx";
+    } else if (isDauGia) {
+      fileName = "HDMB-Xe-oto-bien-so-xe.docx";
+    } else {
+      fileName = "HDMB-Xe-oto.docx";
+    }
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdmb_xe_oto(payload, isXeMay)
+    render_hdmb_xe_oto(payload, isXeMay, isDauGia)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -146,7 +155,7 @@ export const HDMBXe = ({ isXeMay = false }: HDMBXeProps) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = isXeMay ? "HDMB-Xe-may.docx" : "HDMB-Xe-oto.docx";
+        link.download = fileName;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -203,6 +212,7 @@ export const HDMBXe = ({ isXeMay = false }: HDMBXeProps) => {
         <ObjectEntity
           title="Đối tượng của hợp đồng"
           isXeMay={isXeMay}
+          isDauGia={isDauGia}
         />
         <Box display="flex" gap="1rem">
           <Button

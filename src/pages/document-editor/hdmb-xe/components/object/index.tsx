@@ -19,9 +19,14 @@ import { ThemThongTinXe } from "../../dialogs/them-thong-tin-xe";
 interface ObjectEntityProps {
   title: string;
   isXeMay?: boolean;
+  isDauGia?: boolean;
 }
 
-export const ObjectEntity = ({ title, isXeMay }: ObjectEntityProps) => {
+export const ObjectEntity = ({
+  title,
+  isXeMay,
+  isDauGia,
+}: ObjectEntityProps) => {
   const { agreementObject, deleteAgreementObject } = useHDMBXeContext();
   const [open, setOpen] = useState(false);
 
@@ -147,7 +152,40 @@ export const ObjectEntity = ({ title, isXeMay }: ObjectEntityProps) => {
                     </TableCell>
                     <TableCell>{agreementObject["số_tiền_bằng_chữ"]}</TableCell>
                   </TableRow>
-
+                  {isDauGia ? (
+                    <>
+                      <TableRow>
+                        <TableCell component="th">
+                          <Typography variant="body1">
+                            Số giấy chứng nhận/quyết định
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {agreementObject["số_bằng_chứng_trúng_đấu_giá"]}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell component="th">
+                          <Typography variant="body1">
+                            Nơi cấp đấu giá
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {agreementObject["nơi_cấp_đấu_giá"]}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell component="th">
+                          <Typography variant="body1">
+                            Ngày trúng đấu giá
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {agreementObject["ngày_trúng_đấu_giá"]}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ) : null}
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Thao tác</Typography>
@@ -175,6 +213,7 @@ export const ObjectEntity = ({ title, isXeMay }: ObjectEntityProps) => {
         <ThemThongTinXe
           open={open}
           isXeMay={isXeMay}
+          isDauGia={isDauGia}
           handleClose={() => setOpen(false)}
         />
       ) : null}

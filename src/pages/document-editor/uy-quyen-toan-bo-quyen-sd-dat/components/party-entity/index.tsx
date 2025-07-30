@@ -44,8 +44,6 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
   const individualParty = partyEntities["cá_nhân"];
   const coupleParty = partyEntities["vợ_chồng"];
 
-  console.log("form data", partyA, partyB);
-
   const handleDeleteSingleParty = (arrayIndex: number) => {
     if (side === "partyA") {
       deleteSinglePartyAEntity(arrayIndex);

@@ -21,6 +21,7 @@ import { useHDMBXeContext } from "@/context/hdmb-xe";
 interface ThemThongTinXeProps {
   open: boolean;
   isXeMay?: boolean;
+  isDauGia?: boolean;
   handleClose: () => void;
 }
 
@@ -40,6 +41,7 @@ const validationSchema = Yup.object({
 export const ThemThongTinXe = ({
   open,
   isXeMay,
+  isDauGia,
   handleClose,
 }: ThemThongTinXeProps) => {
   const { agreementObject, addAgreementObject } = useHDMBXeContext();
@@ -67,6 +69,9 @@ export const ThemThongTinXe = ({
         số_tiền: "",
         số_tiền_bằng_chữ: "",
         số_loại: null,
+        số_bằng_chứng_trúng_đấu_giá: null,
+        nơi_cấp_đấu_giá: null,
+        ngày_trúng_đấu_giá: null,
       }
     );
   };
@@ -235,6 +240,58 @@ export const ThemThongTinXe = ({
                     errors["số_loại"] && touched["số_loại"] && errors["số_loại"]
                   }
                 />
+              ) : null}
+              {isDauGia ? (
+                <>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="số_bằng_chứng_trúng_đấu_giá"
+                    name="số_bằng_chứng_trúng_đấu_giá"
+                    label="Số giấy chứng nhận/quyết định"
+                    value={values["số_bằng_chứng_trúng_đấu_giá"]}
+                    onChange={handleChange}
+                    error={
+                      !!errors["số_bằng_chứng_trúng_đấu_giá"] &&
+                      touched["số_bằng_chứng_trúng_đấu_giá"]
+                    }
+                    helperText={
+                      errors["số_bằng_chứng_trúng_đấu_giá"] &&
+                      touched["số_bằng_chứng_trúng_đấu_giá"] &&
+                      errors["số_bằng_chứng_trúng_đấu_giá"]
+                    }
+                  />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="nơi_cấp_đấu_giá"
+                    name="nơi_cấp_đấu_giá"
+                    label="Nơi cấp đấu giá"
+                    value={values["nơi_cấp_đấu_giá"]}
+                    onChange={handleChange}
+                    error={
+                      !!errors["nơi_cấp_đấu_giá"] && touched["nơi_cấp_đấu_giá"]
+                    }
+                  />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="ngày_trúng_đấu_giá"
+                    name="ngày_trúng_đấu_giá"
+                    label="Ngày trúng đấu giá"
+                    value={values["ngày_trúng_đấu_giá"]}
+                    onChange={handleChange}
+                    error={
+                      !!errors["ngày_trúng_đấu_giá"] &&
+                      touched["ngày_trúng_đấu_giá"]
+                    }
+                    helperText={
+                      errors["ngày_trúng_đấu_giá"] &&
+                      touched["ngày_trúng_đấu_giá"] &&
+                      errors["ngày_trúng_đấu_giá"]
+                    }
+                  />
+                </>
               ) : null}
               <Divider sx={{ gridColumn: "span 3" }} />
               <Box

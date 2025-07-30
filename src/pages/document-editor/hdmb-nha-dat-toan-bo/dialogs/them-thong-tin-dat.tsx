@@ -76,7 +76,7 @@ export const ThemThongTinDat = ({
       validationSchema,
       onSubmit: submitForm,
     });
-  console.log("errors", errors);
+
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>

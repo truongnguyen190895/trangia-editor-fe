@@ -32,6 +32,9 @@ export interface ThongTinXeOto {
   ngày_đăng_ký: string;
   số_tiền: string;
   số_tiền_bằng_chữ: string;
+  số_bằng_chứng_trúng_đấu_giá?: string | null;
+  nơi_cấp_đấu_giá: string | null;
+  ngày_trúng_đấu_giá: string | null;
 }
 
 export interface HDMBXeOtoPayload extends ThongTinXeOto {
