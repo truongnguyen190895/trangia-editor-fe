@@ -20,6 +20,7 @@ import { useHDMBXeContext } from "@/context/hdmb-xe";
 
 interface ThemThongTinXeProps {
   open: boolean;
+  isXeMay?: boolean;
   handleClose: () => void;
 }
 
@@ -36,7 +37,11 @@ const validationSchema = Yup.object({
   số_tiền: Yup.string().required("Số tiền là bắt buộc"),
 });
 
-export const ThemThongTinXe = ({ open, handleClose }: ThemThongTinXeProps) => {
+export const ThemThongTinXe = ({
+  open,
+  isXeMay,
+  handleClose,
+}: ThemThongTinXeProps) => {
   const { agreementObject, addAgreementObject } = useHDMBXeContext();
 
   const submitForm = (values: ThongTinXeOto) => {
@@ -61,6 +66,7 @@ export const ThemThongTinXe = ({ open, handleClose }: ThemThongTinXeProps) => {
         ngày_đăng_ký: "",
         số_tiền: "",
         số_tiền_bằng_chữ: "",
+        số_loại: null,
       }
     );
   };
@@ -75,7 +81,7 @@ export const ThemThongTinXe = ({ open, handleClose }: ThemThongTinXeProps) => {
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle>Thêm thông tin xe</DialogTitle>
+        <DialogTitle>Thêm thông tin xe {isXeMay ? "máy" : "ô tô"}</DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
@@ -215,6 +221,21 @@ export const ThemThongTinXe = ({ open, handleClose }: ThemThongTinXeProps) => {
                   errors["ngày_đăng_ký"]
                 }
               />
+              {isXeMay ? (
+                <TextField
+                  fullWidth
+                  type="text"
+                  id="số_loại"
+                  name="số_loại"
+                  label="Số loại"
+                  value={values["số_loại"]}
+                  onChange={handleChange}
+                  error={!!errors["số_loại"] && touched["số_loại"]}
+                  helperText={
+                    errors["số_loại"] && touched["số_loại"] && errors["số_loại"]
+                  }
+                />
+              ) : null}
               <Divider sx={{ gridColumn: "span 3" }} />
               <Box
                 sx={{ gridColumn: "span 3" }}

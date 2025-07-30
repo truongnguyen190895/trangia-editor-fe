@@ -70,9 +70,10 @@ export const DocumentEditor = () => {
           </HdcnQuyenSdDatProvider>
         );
       case "hdmb-xe-oto":
+      case "hdmb-xe-may":
         return (
           <HDMBXeProvider>
-            <HDMBXe />
+            <HDMBXe isXeMay={/hdmb-xe-may/.test(name ?? "")} />
           </HDMBXeProvider>
         );
       default:
@@ -106,6 +107,8 @@ export const DocumentEditor = () => {
         return "Uỷ quyền toàn bộ căn hộ";
       case "hdmb-xe-oto":
         return "Hợp đồng mua bán xe ô tô";
+      case "hdmb-xe-may":
+        return "Hợp đồng mua bán xe máy";
       default:
         return "";
     }

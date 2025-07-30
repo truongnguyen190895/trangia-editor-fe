@@ -25,6 +25,7 @@ export interface ThongTinXeOto {
   số_máy: string;
   số_khung: string;
   biển_số: string;
+  số_loại: string | null;
   số_đăng_ký: string;
   nơi_cấp: string;
   ngày_đăng_ký_lần_đầu: string | null;

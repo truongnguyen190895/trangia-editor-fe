@@ -18,11 +18,10 @@ import { ThemThongTinXe } from "../../dialogs/them-thong-tin-xe";
 
 interface ObjectEntityProps {
   title: string;
+  isXeMay?: boolean;
 }
 
-export const ObjectEntity = ({
-  title,
-}: ObjectEntityProps) => {
+export const ObjectEntity = ({ title, isXeMay }: ObjectEntityProps) => {
   const { agreementObject, deleteAgreementObject } = useHDMBXeContext();
   const [open, setOpen] = useState(false);
 
@@ -81,6 +80,12 @@ export const ObjectEntity = ({
                       <Typography variant="body1">Số máy</Typography>
                     </TableCell>
                     <TableCell>{agreementObject["số_máy"]}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell component="th">
+                      <Typography variant="body1">Số loại</Typography>
+                    </TableCell>
+                    <TableCell>{agreementObject["số_loại"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
@@ -169,6 +174,7 @@ export const ObjectEntity = ({
       {open ? (
         <ThemThongTinXe
           open={open}
+          isXeMay={isXeMay}
           handleClose={() => setOpen(false)}
         />
       ) : null}

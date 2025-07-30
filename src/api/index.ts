@@ -27,10 +27,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export const render_hdmb_xe_oto = async (payload: HDMBXeOtoPayload) => {
-  return api.post("/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-oto", payload, {
-    responseType: "blob",
-  });
+export const render_hdmb_xe_oto = async (
+  payload: HDMBXeOtoPayload,
+  isXeMay?: boolean
+) => {
+  let url = "";
+  if (isXeMay) {
+    url = "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-may";
+  } else {
+    url = "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-oto";
+  }
+  return api.post(url, payload, { responseType: "blob" });
 };
 
 export const render_hdcn_quyen_sd_dat_toan_bo = async (

@@ -24,7 +24,11 @@ import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { useHDMBXeContext } from "@/context/hdmb-xe";
 
-export const HDMBXe = () => {
+interface HDMBXeProps {
+  isXeMay?: boolean;
+}
+
+export const HDMBXe = ({ isXeMay = false }: HDMBXeProps) => {
   const { partyA, partyB, agreementObject } = useHDMBXeContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -110,18 +114,7 @@ export const HDMBXe = () => {
           ...couplesB,
         ],
       },
-      số_tiền: agreementObject["số_tiền"],
-      số_tiền_bằng_chữ: agreementObject["số_tiền_bằng_chữ"],
-      nhãn_hiệu: agreementObject["nhãn_hiệu"],
-      màu_sơn: agreementObject["màu_sơn"],
-      loại_xe: agreementObject["loại_xe"],
-      số_máy: agreementObject["số_máy"],
-      số_khung: agreementObject["số_khung"],
-      biển_số: agreementObject["biển_số"],
-      số_đăng_ký: agreementObject["số_đăng_ký"],
-      nơi_cấp: agreementObject["nơi_cấp"],
-      ngày_đăng_ký_lần_đầu: agreementObject["ngày_đăng_ký_lần_đầu"],
-      ngày_đăng_ký: agreementObject["ngày_đăng_ký"],
+      ...agreementObject,
       ngày: dayjs().format("DD/MM/YYYY").toString(),
       ngày_bằng_chữ: translateDateToVietnamese(
         dayjs().format("DD/MM/YYYY").toString()
@@ -145,7 +138,7 @@ export const HDMBXe = () => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdmb_xe_oto(payload)
+    render_hdmb_xe_oto(payload, isXeMay)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -153,7 +146,7 @@ export const HDMBXe = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "HDMB-Xe-oto.docx";
+        link.download = isXeMay ? "HDMB-Xe-may.docx" : "HDMB-Xe-oto.docx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -207,7 +200,10 @@ export const HDMBXe = () => {
       >
         <PartyEntity title="Bên A" side="partyA" />
         <PartyEntity title="Bên B" side="partyB" />
-        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
+        <ObjectEntity
+          title="Đối tượng của hợp đồng"
+          isXeMay={isXeMay}
+        />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
