@@ -39,9 +39,13 @@ export const DocumentEditor = () => {
         );
       case "hdmb-nha-dat-toan-bo":
       case "hd-tang-cho-nha-dat-toan-bo":
+      case "uy-quyen-toan-bo-nha-dat":
         return (
           <HDMBNhaDatProvider>
-            <HDMBNhaDatToanBo isTangCho={/tang-cho/.test(name ?? "")}/>
+            <HDMBNhaDatToanBo
+              isTangCho={/tang-cho/.test(name ?? "")}
+              isUyQuyen={/uy-quyen/.test(name ?? "")}
+            />
           </HDMBNhaDatProvider>
         );
       case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
@@ -87,6 +91,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng tặng cho đất (toàn bộ)";
       case "uy-quyen-toan-bo-quyen-su-dung-dat":
         return "Uỷ quyền toàn bộ quyền sử dụng đất";
+      case "uy-quyen-toan-bo-nha-dat":
+        return "Uỷ quyền toàn bộ nhà + đất";
       default:
         return "";
     }

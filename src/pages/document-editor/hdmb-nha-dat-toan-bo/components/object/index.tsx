@@ -19,9 +19,10 @@ import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
 
 interface ObjectEntityProps {
   title: string;
+  isUyQuyen?: boolean;
 }
 
-export const ObjectEntity = ({ title }: ObjectEntityProps) => {
+export const ObjectEntity = ({ title, isUyQuyen }: ObjectEntityProps) => {
   const { agreementObject, nhaDat, deleteAgreementObject, deleteNhaDat } =
     useHDMBNhaDatContext();
   const [open, setOpen] = useState(false);
@@ -56,15 +57,19 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
       </Box>
       <Box padding="10px">
         <Box display="flex" gap="10px" marginBottom="10px">
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<AddIcon />}
-            disabled={Boolean(nhaDat)}
-            onClick={handleOpenThongTinCanHo}
-          >
-            Thêm thông tin nhà ở
-          </Button>
+          {!isUyQuyen ? (
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<AddIcon />}
+              disabled={Boolean(nhaDat)}
+              onClick={handleOpenThongTinCanHo}
+            >
+              Thêm thông tin nhà ở
+            </Button>
+          ) : (
+            <></>
+          )}
           <Button
             variant="contained"
             startIcon={<AddIcon />}
@@ -74,14 +79,23 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
             Thêm thông tin mảnh đất
           </Button>
         </Box>
-        <Box display="grid" gridTemplateColumns="1fr 1fr" py="2rem">
-          <Typography
-            variant="h4"
-            color="#B12C00"
-            visibility={Boolean(nhaDat) ? "hidden" : "visible"}
-          >
-            Chưa có thông nhà ở
-          </Typography>
+        <Box display="grid" gridTemplateColumns="1fr 1fr" py="1rem">
+          {!isUyQuyen ? (
+            <Typography
+              variant="h4"
+              color="#B12C00"
+              visibility={Boolean(nhaDat) ? "hidden" : "visible"}
+            >
+              Chưa có thông tin nhà ở
+            </Typography>
+          ) : (
+            <Typography
+              color="#B12C00"
+              visibility={Boolean(nhaDat) ? "hidden" : "visible"}
+            >
+              Note: HĐ uỷ quyền không cần nhập thông tin nhà đất
+            </Typography>
+          )}
           <Typography
             variant="h4"
             color="#B12C00"
@@ -90,6 +104,20 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
             Chưa có thông tin mảnh đất
           </Typography>
         </Box>
+        {isUyQuyen ? (
+          <Box display="flex" flexDirection="column" gap="10px">
+            <Typography
+              variant="body1"
+              fontSize="1.2rem"
+              color="#B12C00"
+              fontWeight="bold"
+            >
+              Thời hạn uỷ quyền: {agreementObject?.["thời_hạn"]} năm
+            </Typography>
+          </Box>
+        ) : (
+          <></>
+        )}
         <Box>
           <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
             <Table sx={{ border: "1px solid #BCCCDC" }}>
@@ -257,9 +285,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       Nơi cấp giấy chứng nhận
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    {agreementObject?.["nơi_cấp_gcn"]}
-                  </TableCell>
+                  <TableCell>{agreementObject?.["nơi_cấp_gcn"]}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell />
@@ -269,9 +295,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                       Ngày cấp giấy chứng nhận
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    {agreementObject?.["ngày_cấp_gcn"]}
-                  </TableCell>
+                  <TableCell>{agreementObject?.["ngày_cấp_gcn"]}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell />
@@ -298,11 +322,16 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
         </Box>
       </Box>
       {open ? (
-        <ThemThongTinDat open={open} handleClose={() => setOpen(false)} />
+        <ThemThongTinDat
+          open={open}
+          isUyQuyen={isUyQuyen}
+          handleClose={() => setOpen(false)}
+        />
       ) : null}
       {openCanHo ? (
         <ThongTinNhaDatDialog
           open={openCanHo}
+          isUyQuyen={isUyQuyen}
           handleClose={() => setOpenCanHo(false)}
         />
       ) : null}

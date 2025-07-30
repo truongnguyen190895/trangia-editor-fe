@@ -26,6 +26,7 @@ import {
   render_hdmb_nha_dat,
   render_khai_thue_hdmb_nha_dat_toan_bo,
   render_hdtc_nha_dat_toan_bo,
+  render_uy_quyen_toan_bo_nha_dat,
 } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
@@ -34,9 +35,13 @@ import { numberToVietnamese } from "@/utils/number-to-words";
 
 interface Props {
   isTangCho?: boolean;
+  isUyQuyen?: boolean;
 }
 
-export const HDMBNhaDatToanBo = ({ isTangCho = false }: Props) => {
+export const HDMBNhaDatToanBo = ({
+  isTangCho = false,
+  isUyQuyen = false,
+}: Props) => {
   const { partyA, partyB, agreementObject, nhaDat } = useHDMBNhaDatContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -51,8 +56,14 @@ export const HDMBNhaDatToanBo = ({ isTangCho = false }: Props) => {
     nhaDat !== null;
 
   const getPayload = (): HDMBNhaDatPayload => {
-    if (!agreementObject || !nhaDat) {
-      throw new Error("Agreement object or nha dat is null");
+    if (isUyQuyen) {
+      if (!agreementObject) {
+        throw new Error("Nhà đất is null");
+      }
+    } else {
+      if (!agreementObject || !nhaDat) {
+        throw new Error("Agreement object or nha dat is null");
+      }
     }
 
     const couplesA = partyA["vợ_chồng"]
@@ -126,7 +137,7 @@ export const HDMBNhaDatToanBo = ({ isTangCho = false }: Props) => {
         ],
       },
       ...agreementObject,
-      ...nhaDat,
+      ...nhaDat!,
       ngày: dayjs().format("DD/MM/YYYY").toString(),
       ngày_bằng_chữ: translateDateToVietnamese(
         dayjs().format("DD/MM/YYYY").toString()
@@ -161,6 +172,30 @@ export const HDMBNhaDatToanBo = ({ isTangCho = false }: Props) => {
           const link = document.createElement("a");
           link.href = url;
           link.download = `Hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
+        });
+    } else if (isUyQuyen) {
+      render_uy_quyen_toan_bo_nha_dat(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "UQ toàn bộ nhà + đất.docx";
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -405,7 +440,7 @@ export const HDMBNhaDatToanBo = ({ isTangCho = false }: Props) => {
       >
         <PartyEntity title="Bên A" side="partyA" />
         <PartyEntity title="Bên B" side="partyB" />
-        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
+        <ObjectEntity title="Đối tượng của hợp đồng" isUyQuyen={isUyQuyen} />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
@@ -415,28 +450,36 @@ export const HDMBNhaDatToanBo = ({ isTangCho = false }: Props) => {
               fontSize: "1.2rem",
               fontWeight: "600",
               textTransform: "uppercase",
-              width: "200px",
+              width: "350px",
             }}
-            disabled={!isFormValid}
+            // disabled={!isFormValid || !isUyQuyen}
             onClick={() => setOpenDialog(true)}
           >
-            {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
+            {isGenerating ? (
+              <CircularProgress size={20} />
+            ) : (
+              `Tạo hợp đồng ${isUyQuyen ? "uỷ quyền" : ""}`
+            )}
           </Button>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: palette.softTeal,
-              height: "50px",
-              fontSize: "1.2rem",
-              fontWeight: "600",
-              textTransform: "uppercase",
-              width: "200px",
-            }}
-            disabled={!isFormValid || isTangCho}
-            onClick={handleKhaiThue}
-          >
-            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
-          </Button>
+          {!isUyQuyen ? (
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: palette.softTeal,
+                height: "50px",
+                fontSize: "1.2rem",
+                fontWeight: "600",
+                textTransform: "uppercase",
+                width: "200px",
+              }}
+              disabled={!isFormValid || isTangCho}
+              onClick={handleKhaiThue}
+            >
+              {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
+            </Button>
+          ) : (
+            <></>
+          )}
         </Box>
       </Box>
       <Dialog

@@ -48,6 +48,9 @@ export interface ThongTinThuaDat {
   số_vào_sổ_cấp_gcn: string;
   nơi_cấp_gcn: string;
   ngày_cấp_gcn: string;
+  // liên quan đến uỷ quyền
+  thời_hạn: string | null;
+  thời_hạn_bằng_chữ: string | null;
 }
 
 export interface ThongTinNhaDat {

@@ -15,6 +15,7 @@ import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
 
 interface ThongTinNhaDatProps {
   open: boolean;
+  isUyQuyen?: boolean;
   handleClose: () => void;
 }
 
