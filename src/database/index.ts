@@ -155,4 +155,11 @@ export const templates = [
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-xe-oto",
   },
+  {
+    id: 14,
+    name: "HĐMB xe máy.docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdmb-xe-may",
+  },
 ];

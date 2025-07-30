@@ -3,13 +3,13 @@ import type {
   SingleAgreementParty,
   Couple,
 } from "@/models/agreement-entity";
-import type { ThongTinThuaDat } from "@/models/agreement-object";
+import type { ThongTinXeOto } from "@/models/hdmb-xe";
 import { createContext, useContext, useState } from "react";
 
 interface HDMBXeContextType {
   partyA: AgreementParty;
   partyB: AgreementParty;
-  agreementObject: ThongTinThuaDat | null;
+  agreementObject: ThongTinXeOto | null;
   singlePartyAEntityIndex: number | null;
   singlePartyBEntityIndex: number | null;
   couplePartyAEntityIndex: number | null;
@@ -39,7 +39,7 @@ interface HDMBXeContextType {
   addCouplePartyAEntity: (entity: Couple, index?: number) => void;
   addCouplePartyBEntity: (entity: Couple, index?: number) => void;
   //   Common section
-  addAgreementObject: (object: ThongTinThuaDat) => void;
+  addAgreementObject: (object: ThongTinXeOto) => void;
   deleteAgreementObject: () => void;
 }
 
@@ -95,7 +95,7 @@ export const HDMBXeProvider = ({
   });
 
   const [agreementObject, setAgreementObject] =
-    useState<ThongTinThuaDat | null>(null);
+    useState<ThongTinXeOto | null>(null);
   const [singlePartyAEntityIndex, setSinglePartyAEntityIndex] = useState<
     number | null
   >(null);
@@ -109,7 +109,7 @@ export const HDMBXeProvider = ({
     number | null
   >(null);
 
-  const addAgreementObject = (object: ThongTinThuaDat) => {
+  const addAgreementObject = (object: ThongTinXeOto) => {
     setAgreementObject(object);
   };
 

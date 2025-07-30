@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -7,618 +6,255 @@ import {
   TextField,
   DialogActions,
   Button,
-  Autocomplete,
+  Divider,
   Typography,
-  TableCell,
-  TableRow,
-  TableHead,
-  Table,
-  TableContainer,
-  TableBody,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import type { ThongTinThuaDat } from "@/models/agreement-object";
-import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
-import {
-  CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT,
-  NGUỒN_GỐC_SỬ_DỤNG_ĐẤT,
-} from "@/constants";
-import { numberToVietnamese } from "@/utils/number-to-words";
-import AddIcon from "@mui/icons-material/Add";
-import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 
-interface ThemThongTinDatProps {
+import type { ThongTinXeOto } from "@/models/hdmb-xe";
+
+import { numberToVietnamese } from "@/utils/number-to-words";
+
+import { useHDMBXeContext } from "@/context/hdmb-xe";
+
+interface ThemThongTinXeProps {
   open: boolean;
-  isTangCho?: boolean;
   handleClose: () => void;
 }
 
 const validationSchema = Yup.object({
-  số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
-  số_tờ_bản_đồ: Yup.string().required("Tờ bản đồ số là bắt buộc"),
-  địa_chỉ_cũ: Yup.string().optional(),
-  địa_chỉ_mới: Yup.string().required("Địa chỉ là bắt buộc"),
-  loại_giấy_chứng_nhận: Yup.string().required("Loại giấy tờ là bắt buộc"),
-  số_giấy_chứng_nhận: Yup.string().required("Số giấy tờ là bắt buộc"),
-  số_vào_sổ_cấp_giấy_chứng_nhận: Yup.string().required(
-    "Số vào sổ cấp GCN là bắt buộc"
-  ),
-  nơi_cấp_giấy_chứng_nhận: Yup.string().required(
-    "Nơi cấp giấy chứng nhận là bắt buộc"
-  ),
-  ngày_cấp_giấy_chứng_nhận: Yup.string().required(
-    "Ngày cấp giấy chứng nhận là bắt buộc"
-  ),
-  diện_tích: Yup.string().required("Diện tích là bắt buộc"),
-  hình_thức_sử_dụng: Yup.string().required("Hình thức sử dụng là bắt buộc"),
-  nguồn_gốc_sử_dụng: Yup.string().nullable(),
-  giá_tiền: Yup.string().required("Giá tiền là bắt buộc"),
-  giá_tiền_bằng_chữ: Yup.string().required("Giá tiền bằng chữ là bắt buộc"),
-  ghi_chú: Yup.string().optional(),
+  nhãn_hiệu: Yup.string().required("Nhãn hiệu là bắt buộc"),
+  màu_sơn: Yup.string().required("Màu sơn là bắt buộc"),
+  loại_xe: Yup.string().required("Loại xe là bắt buộc"),
+  số_máy: Yup.string().required("Số máy là bắt buộc"),
+  số_khung: Yup.string().required("Số khung là bắt buộc"),
+  biển_số: Yup.string().required("Biển số là bắt buộc"),
+  số_đăng_ký: Yup.string().required("Số đăng ký là bắt buộc"),
+  nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
+  ngày_đăng_ký: Yup.string().required("Ngày đăng ký là bắt buộc"),
+  số_tiền: Yup.string().required("Số tiền là bắt buộc"),
 });
 
-export const ThemThongTinXe = ({
-  open,
-  handleClose,
-  isTangCho = false,
-}: ThemThongTinDatProps) => {
-  const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
-  const [mụcđíchVàThờiHạnSửDụng, setMụcĐíchVàThờiHạnSửDụng] = useState<
-    {
-      phân_loại: string;
-      diện_tích: string;
-      thời_hạn_sử_dụng: string;
-    }[]
-  >(agreementObject?.["mục_đích_và_thời_hạn_sử_dụng"] ?? []);
-  const [mụcđíchVàThờiHạnSửDụngEdit, setMụcĐíchVàThờiHạnSửDụngEdit] = useState<{
-    phân_loại: string;
-    diện_tích: string;
-    thời_hạn_sử_dụng: string;
-  }>({
-    phân_loại: "",
-    diện_tích: "",
-    thời_hạn_sử_dụng: "",
-  });
-  const [indexEdit, setIndexEdit] = useState<number | null>(null);
+export const ThemThongTinXe = ({ open, handleClose }: ThemThongTinXeProps) => {
+  const { agreementObject, addAgreementObject } = useHDMBXeContext();
 
-  const submitForm = (values: ThongTinThuaDat) => {
+  const submitForm = (values: ThongTinXeOto) => {
     addAgreementObject({
       ...values,
-      mục_đích_và_thời_hạn_sử_dụng: mụcđíchVàThờiHạnSửDụng,
     });
     handleClose();
   };
 
-  const getInitialValue = (): ThongTinThuaDat => {
+  const getInitialValue = (): ThongTinXeOto => {
     return (
       agreementObject ?? {
-        số_thửa_đất: "",
-        số_tờ_bản_đồ: "",
-        địa_chỉ_cũ: "",
-        địa_chỉ_mới: "",
-        loại_giấy_chứng_nhận: "",
-        số_giấy_chứng_nhận: "",
-        số_vào_sổ_cấp_giấy_chứng_nhận: "",
-        nơi_cấp_giấy_chứng_nhận: "",
-        ngày_cấp_giấy_chứng_nhận: "",
-        diện_tích: "",
-        diện_tích_bằng_chữ: "",
-        hình_thức_sử_dụng: "",
-        nguồn_gốc_sử_dụng: null,
-        giá_tiền: isTangCho ? "0" : "",
-        giá_tiền_bằng_chữ: isTangCho ? "Không" : "",
-        ghi_chú: "",
-        mục_đích_và_thời_hạn_sử_dụng: [],
-        thời_hạn: null,
-        thời_hạn_bằng_chữ: null,
+        nhãn_hiệu: "",
+        màu_sơn: "",
+        loại_xe: "",
+        số_máy: "",
+        số_khung: "",
+        biển_số: "",
+        số_đăng_ký: "",
+        nơi_cấp: "",
+        ngày_đăng_ký_lần_đầu: null,
+        ngày_đăng_ký: "",
+        số_tiền: "",
+        số_tiền_bằng_chữ: "",
       }
     );
   };
 
   const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinThuaDat>({
+    useFormik<ThongTinXeOto>({
       initialValues: getInitialValue(),
       validationSchema,
       onSubmit: submitForm,
     });
 
-  const handleAddMụcĐíchVàThờiHạnSửDụng = (indexEdit: number | null) => {
-    if (indexEdit !== null) {
-      setMụcĐíchVàThờiHạnSửDụng(
-        mụcđíchVàThờiHạnSửDụng.map((item, index) =>
-          index === indexEdit ? mụcđíchVàThờiHạnSửDụngEdit : item
-        )
-      );
-    } else {
-      setMụcĐíchVàThờiHạnSửDụng([
-        ...mụcđíchVàThờiHạnSửDụng,
-        mụcđíchVàThờiHạnSửDụngEdit,
-      ]);
-    }
-    setIndexEdit(null);
-    setMụcĐíchVàThờiHạnSửDụngEdit({
-      phân_loại: "",
-      diện_tích: "",
-      thời_hạn_sử_dụng: "",
-    });
-  };
-
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle>Thêm thông tin đất</DialogTitle>
+        <DialogTitle>Thêm thông tin xe</DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
                 fullWidth
-                id="số_thửa_đất"
-                name="số_thửa_đất"
-                label="Số thửa đất *"
-                value={values["số_thửa_đất"]}
+                id="nhãn_hiệu"
+                name="nhãn_hiệu"
+                label="Nhãn hiệu *"
+                value={values["nhãn_hiệu"]}
                 onChange={handleChange}
-                error={!!errors["số_thửa_đất"] && touched["số_thửa_đất"]}
+                error={!!errors["nhãn_hiệu"] && touched["nhãn_hiệu"]}
                 helperText={
-                  errors["số_thửa_đất"] &&
-                  touched["số_thửa_đất"] &&
-                  errors["số_thửa_đất"]
+                  errors["nhãn_hiệu"] &&
+                  touched["nhãn_hiệu"] &&
+                  errors["nhãn_hiệu"]
                 }
               />
               <TextField
                 fullWidth
-                id="số_tờ_bản_đồ"
-                name="số_tờ_bản_đồ"
-                label="Tờ bản đồ số *"
-                value={values["số_tờ_bản_đồ"]}
+                id="màu_sơn"
+                name="màu_sơn"
+                label="Màu sơn *"
+                value={values["màu_sơn"]}
                 onChange={handleChange}
-                error={!!errors["số_tờ_bản_đồ"] && touched["số_tờ_bản_đồ"]}
+                error={!!errors["màu_sơn"] && touched["màu_sơn"]}
                 helperText={
-                  errors["số_tờ_bản_đồ"] &&
-                  touched["số_tờ_bản_đồ"] &&
-                  errors["số_tờ_bản_đồ"]
+                  errors["màu_sơn"] && touched["màu_sơn"] && errors["màu_sơn"]
                 }
               />
               <TextField
                 fullWidth
-                id="địa_chỉ_cũ"
-                name="địa_chỉ_cũ"
-                label="Địa chỉ cũ"
-                value={values["địa_chỉ_cũ"]}
+                id="loại_xe"
+                name="loại_xe"
+                label="Loại xe *"
+                value={values["loại_xe"]}
                 onChange={handleChange}
-                error={!!errors["địa_chỉ_cũ"] && touched["địa_chỉ_cũ"]}
+                error={!!errors["loại_xe"] && touched["loại_xe"]}
                 helperText={
-                  errors["địa_chỉ_cũ"] &&
-                  touched["địa_chỉ_cũ"] &&
-                  errors["địa_chỉ_cũ"]
+                  errors["loại_xe"] && touched["loại_xe"] && errors["loại_xe"]
                 }
               />
               <TextField
                 fullWidth
-                id="địa_chỉ_mới"
-                name="địa_chỉ_mới"
-                label="Địa chỉ mới *"
-                value={values["địa_chỉ_mới"]}
+                id="số_máy"
+                name="số_máy"
+                label="Số máy *"
+                value={values["số_máy"]}
                 onChange={handleChange}
-                error={!!errors["địa_chỉ_mới"] && touched["địa_chỉ_mới"]}
+                error={!!errors["số_máy"] && touched["số_máy"]}
                 helperText={
-                  errors["địa_chỉ_mới"] &&
-                  touched["địa_chỉ_mới"] &&
-                  errors["địa_chỉ_mới"]
+                  errors["số_máy"] && touched["số_máy"] && errors["số_máy"]
                 }
-              />
-              <Autocomplete
-                sx={{ gridColumn: "span 2" }}
-                options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
-                value={
-                  CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
-                    (item) => item.value === values["loại_giấy_chứng_nhận"]
-                  ) ?? null
-                }
-                getOptionLabel={(option) => option.label}
-                onChange={(_event, value) => {
-                  handleChange({
-                    target: {
-                      name: "loại_giấy_chứng_nhận",
-                      value: value?.value,
-                    },
-                  });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    error={
-                      !!errors["loại_giấy_chứng_nhận"] &&
-                      touched["loại_giấy_chứng_nhận"]
-                    }
-                    helperText={
-                      errors["loại_giấy_chứng_nhận"] &&
-                      touched["loại_giấy_chứng_nhận"] &&
-                      errors["loại_giấy_chứng_nhận"]
-                    }
-                    label="Loại giấy chứng nhận *"
-                    name="loại_giấy_chứng_nhận"
-                  />
-                )}
-              />
-              <TextField
-                fullWidth
-                id="số_giấy_chứng_nhận"
-                name="số_giấy_chứng_nhận"
-                label="Số giấy tờ *"
-                value={values["số_giấy_chứng_nhận"]}
-                onChange={handleChange}
-                error={
-                  !!errors["số_giấy_chứng_nhận"] &&
-                  touched["số_giấy_chứng_nhận"]
-                }
-                helperText={
-                  errors["số_giấy_chứng_nhận"] &&
-                  touched["số_giấy_chứng_nhận"] &&
-                  errors["số_giấy_chứng_nhận"]
-                }
-              />
-              <TextField
-                fullWidth
-                id="số_vào_sổ_cấp_giấy_chứng_nhận"
-                name="số_vào_sổ_cấp_giấy_chứng_nhận"
-                label="Số vào sổ cấp GCN *"
-                value={values["số_vào_sổ_cấp_giấy_chứng_nhận"]}
-                onChange={handleChange}
-                error={
-                  !!errors["số_vào_sổ_cấp_giấy_chứng_nhận"] &&
-                  touched["số_vào_sổ_cấp_giấy_chứng_nhận"]
-                }
-                helperText={
-                  errors["số_vào_sổ_cấp_giấy_chứng_nhận"] &&
-                  touched["số_vào_sổ_cấp_giấy_chứng_nhận"] &&
-                  errors["số_vào_sổ_cấp_giấy_chứng_nhận"]
-                }
-              />
-              <TextField
-                fullWidth
-                id="nơi_cấp_giấy_chứng_nhận"
-                name="nơi_cấp_giấy_chứng_nhận"
-                label="Nơi cấp giấy chứng nhận *"
-                value={values["nơi_cấp_giấy_chứng_nhận"]}
-                onChange={handleChange}
-                error={
-                  !!errors["nơi_cấp_giấy_chứng_nhận"] &&
-                  touched["nơi_cấp_giấy_chứng_nhận"]
-                }
-                helperText={
-                  errors["nơi_cấp_giấy_chứng_nhận"] &&
-                  touched["nơi_cấp_giấy_chứng_nhận"] &&
-                  errors["nơi_cấp_giấy_chứng_nhận"]
-                }
-              />
-              <TextField
-                fullWidth
-                id="ngày_cấp_giấy_chứng_nhận"
-                name="ngày_cấp_giấy_chứng_nhận"
-                label="Ngày cấp giấy chứng nhận *"
-                type="date"
-                inputProps={{
-                  max: new Date().toISOString().split("T")[0],
-                }}
-                slotProps={{
-                  inputLabel: { shrink: true },
-                }}
-                value={values["ngày_cấp_giấy_chứng_nhận"]}
-                onChange={handleChange}
-                error={
-                  !!errors["ngày_cấp_giấy_chứng_nhận"] &&
-                  touched["ngày_cấp_giấy_chứng_nhận"]
-                }
-                helperText={
-                  errors["ngày_cấp_giấy_chứng_nhận"] &&
-                  touched["ngày_cấp_giấy_chứng_nhận"] &&
-                  errors["ngày_cấp_giấy_chứng_nhận"]
-                }
-              />
-              <TextField
-                fullWidth
-                type="text"
-                id="diện_tích"
-                name="diện_tích"
-                label="Diện tích (m2) *"
-                value={values["diện_tích"]}
-                onChange={(event) => {
-                  handleChange(event);
-                  setFieldValue(
-                    "diện_tích_bằng_chữ",
-                    numberToVietnamese(
-                      event.target.value?.replace(/\./g, "").replace(/\,/g, ".")
-                    )
-                  );
-                }}
-                error={!!errors["diện_tích"] && touched["diện_tích"]}
-                helperText={
-                  errors["diện_tích"] &&
-                  touched["diện_tích"] &&
-                  errors["diện_tích"]
-                }
-              />
-              <TextField
-                fullWidth
-                type="text"
-                id="diện_tích_bằng_chữ"
-                name="diện_tích_bằng_chữ"
-                label="Diện tích bằng chữ *"
-                value={values["diện_tích_bằng_chữ"]}
-                onChange={handleChange}
-                error={
-                  !!errors["diện_tích_bằng_chữ"] &&
-                  touched["diện_tích_bằng_chữ"]
-                }
-                helperText={
-                  errors["diện_tích_bằng_chữ"] &&
-                  touched["diện_tích_bằng_chữ"] &&
-                  errors["diện_tích_bằng_chữ"]
-                }
-              />
-              <TextField
-                fullWidth
-                id="hình_thức_sử_dụng"
-                name="hình_thức_sử_dụng"
-                label="Hình thức sử dụng *"
-                value={values["hình_thức_sử_dụng"]}
-                onChange={handleChange}
-                error={
-                  !!errors["hình_thức_sử_dụng"] && touched["hình_thức_sử_dụng"]
-                }
-                helperText={
-                  errors["hình_thức_sử_dụng"] &&
-                  touched["hình_thức_sử_dụng"] &&
-                  errors["hình_thức_sử_dụng"]
-                }
-              />
-              <Box
-                sx={{ gridColumn: "span 3" }}
-                border="1px solid #ccc"
-                borderRadius="10px"
-                padding="20px"
-              >
-                <Typography
-                  variant="body1"
-                  fontSize="1.2rem"
-                  fontWeight="600"
-                  sx={{ marginBottom: "20px" }}
-                >
-                  Mục đích và thời hạn sử dụng (nhập các giá trị sau đó bấm nút
-                  để thêm vào)
-                </Typography>
-                <Box
-                  display="grid"
-                  gridTemplateColumns="repeat(3, 1fr)"
-                  gap="20px"
-                >
-                  <Autocomplete
-                    fullWidth
-                    id="mục đích sử dụng"
-                    options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
-                    getOptionLabel={(option) => option.label}
-                    value={
-                      MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
-                        (item) =>
-                          item.value === mụcđíchVàThờiHạnSửDụngEdit["phân_loại"]
-                      ) ?? null
-                    }
-                    onChange={(_event, value) => {
-                      setMụcĐíchVàThờiHạnSửDụngEdit({
-                        ...mụcđíchVàThờiHạnSửDụngEdit,
-                        phân_loại: value?.value ?? "",
-                      });
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Mục đích sử dụng *" />
-                    )}
-                  />
-                  <TextField
-                    fullWidth
-                    id="diện_tích"
-                    name="diện_tích"
-                    label="Diện tích (m2)"
-                    value={mụcđíchVàThờiHạnSửDụngEdit["diện_tích"]}
-                    onChange={(event) => {
-                      setMụcĐíchVàThờiHạnSửDụngEdit({
-                        ...mụcđíchVàThờiHạnSửDụngEdit,
-                        diện_tích: event.target.value,
-                      });
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    id="thời_hạn_sử_dụng"
-                    name="thời_hạn_sử_dụng"
-                    label="Thời hạn sử dụng *"
-                    value={mụcđíchVàThờiHạnSửDụngEdit["thời_hạn_sử_dụng"]}
-                    onChange={(event) => {
-                      setMụcĐíchVàThờiHạnSửDụngEdit({
-                        ...mụcđíchVàThờiHạnSửDụngEdit,
-                        thời_hạn_sử_dụng: event.target.value,
-                      });
-                    }}
-                  />
-                </Box>
-                <Button
-                  variant="contained"
-                  color="success"
-                  sx={{ marginTop: "20px" }}
-                  startIcon={<AddIcon />}
-                  onClick={() => handleAddMụcĐíchVàThờiHạnSửDụng(indexEdit)}
-                >
-                  Thêm mục đích và thời hạn sử dụng
-                </Button>
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            fontSize="1rem"
-                            fontWeight="600"
-                          >
-                            Phân loại
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            fontSize="1rem"
-                            fontWeight="600"
-                          >
-                            Diện tích (m2)
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            fontSize="1rem"
-                            fontWeight="600"
-                          >
-                            Thời hạn sử dụng
-                          </Typography>
-                        </TableCell>
-                        <TableCell>Thao tác</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {mụcđíchVàThờiHạnSửDụng.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item["phân_loại"]}</TableCell>
-                          <TableCell>{item["diện_tích"]}</TableCell>
-                          <TableCell>{item["thời_hạn_sử_dụng"]}</TableCell>
-                          <TableCell>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              startIcon={<EditIcon />}
-                              onClick={() => {
-                                setMụcĐíchVàThờiHạnSửDụngEdit(item);
-                                setIndexEdit(index);
-                              }}
-                            >
-                              Sửa
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              startIcon={<DeleteIcon />}
-                              onClick={() => {
-                                setMụcĐíchVàThờiHạnSửDụng(
-                                  mụcđíchVàThờiHạnSửDụng.filter(
-                                    (_item, i) => i !== index
-                                  )
-                                );
-                              }}
-                            >
-                              Xóa
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-              <Autocomplete
-                sx={{ gridColumn: "span 3" }}
-                freeSolo
-                options={NGUỒN_GỐC_SỬ_DỤNG_ĐẤT.map((item) => item.value)}
-                value={values["nguồn_gốc_sử_dụng"]}
-                onChange={(_event, value) => {
-                  setFieldValue("nguồn_gốc_sử_dụng", value ?? "");
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    onChange={(event) => {
-                      setFieldValue(
-                        "nguồn_gốc_sử_dụng",
-                        event.target.value ?? ""
-                      );
-                    }}
-                    label="Nguồn gốc sử dụng"
-                  />
-                )}
               />
 
-              {!isTangCho && (
-                <>
-                  <TextField
-                    fullWidth
-                    id="giá_tiền"
-                    name="giá_tiền"
-                    label="Giá tiền *"
-                    value={values["giá_tiền"]}
-                    onChange={(event) => {
-                      handleChange(event);
-                      setFieldValue(
-                        "giá_tiền_bằng_chữ",
-                        numberToVietnamese(
-                          event.target.value
-                            ?.replace(/\./g, "")
-                            .replace(/\,/g, ".")
-                        )
-                      );
-                    }}
-                    error={!!errors["giá_tiền"] && touched["giá_tiền"]}
-                    helperText={
-                      errors["giá_tiền"] &&
-                      touched["giá_tiền"] &&
-                      errors["giá_tiền"]
-                    }
-                  />
-                  <TextField
-                    sx={{ gridColumn: "span 2" }}
-                    fullWidth
-                    id="giá_tiền_bằng_chữ"
-                    name="giá_tiền_bằng_chữ"
-                    label="Giá tiền bằng chữ *"
-                    value={values["giá_tiền_bằng_chữ"]}
-                    onChange={handleChange}
-                    error={
-                      !!errors["giá_tiền_bằng_chữ"] &&
-                      touched["giá_tiền_bằng_chữ"]
-                    }
-                    helperText={
-                      errors["giá_tiền_bằng_chữ"] &&
-                      touched["giá_tiền_bằng_chữ"] &&
-                      errors["giá_tiền_bằng_chữ"]
-                    }
-                  />
-                </>
-              )}
-              <Box sx={{ gridColumn: "span 3" }}>
+              <TextField
+                fullWidth
+                id="số_khung"
+                name="số_khung"
+                label="Số khung *"
+                value={values["số_khung"]}
+                onChange={handleChange}
+                error={!!errors["số_khung"] && touched["số_khung"]}
+                helperText={
+                  errors["số_khung"] &&
+                  touched["số_khung"] &&
+                  errors["số_khung"]
+                }
+              />
+              <TextField
+                fullWidth
+                id="biển_số"
+                name="biển_số"
+                label="Biển số *"
+                value={values["biển_số"]}
+                onChange={handleChange}
+                error={!!errors["biển_số"] && touched["biển_số"]}
+                helperText={
+                  errors["biển_số"] && touched["biển_số"] && errors["biển_số"]
+                }
+              />
+              <TextField
+                fullWidth
+                id="số_đăng_ký"
+                name="số_đăng_ký"
+                label="Số đăng ký *"
+                value={values["số_đăng_ký"]}
+                onChange={handleChange}
+                error={!!errors["số_đăng_ký"] && touched["số_đăng_ký"]}
+                helperText={
+                  errors["số_đăng_ký"] &&
+                  touched["số_đăng_ký"] &&
+                  errors["số_đăng_ký"]
+                }
+              />
+              <TextField
+                fullWidth
+                id="nơi_cấp"
+                name="nơi_cấp"
+                label="Nơi cấp *"
+                value={values["nơi_cấp"]}
+                onChange={handleChange}
+                error={!!errors["nơi_cấp"] && touched["nơi_cấp"]}
+                helperText={
+                  errors["nơi_cấp"] && touched["nơi_cấp"] && errors["nơi_cấp"]
+                }
+              />
+              <TextField
+                fullWidth
+                type="text"
+                id="ngày_đăng_ký_lần_đầu"
+                name="ngày_đăng_ký_lần_đầu"
+                label="Ngày đăng ký lần đầu (nếu có)"
+                value={values["ngày_đăng_ký_lần_đầu"]}
+                onChange={handleChange}
+                error={
+                  !!errors["ngày_đăng_ký_lần_đầu"] &&
+                  touched["ngày_đăng_ký_lần_đầu"]
+                }
+                helperText={
+                  errors["ngày_đăng_ký_lần_đầu"] &&
+                  touched["ngày_đăng_ký_lần_đầu"] &&
+                  errors["ngày_đăng_ký_lần_đầu"]
+                }
+              />
+              <TextField
+                fullWidth
+                type="text"
+                id="ngày_đăng_ký"
+                name="ngày_đăng_ký"
+                label="Ngày đăng ký *"
+                value={values["ngày_đăng_ký"]}
+                onChange={handleChange}
+                error={!!errors["ngày_đăng_ký"] && touched["ngày_đăng_ký"]}
+                helperText={
+                  errors["ngày_đăng_ký"] &&
+                  touched["ngày_đăng_ký"] &&
+                  errors["ngày_đăng_ký"]
+                }
+              />
+              <Divider sx={{ gridColumn: "span 3" }} />
+              <Box
+                sx={{ gridColumn: "span 3" }}
+                display="flex"
+                gap={2}
+                flexDirection="column"
+              >
+                <Typography variant="h6">Giá trị tài sản</Typography>
                 <TextField
                   fullWidth
-                  multiline
-                  rows={4}
-                  id="ghi_chú"
-                  name="ghi_chú"
-                  label="Ghi chú"
-                  value={values["ghi_chú"]}
-                  onChange={handleChange}
-                  error={!!errors["ghi_chú"] && touched["ghi_chú"]}
+                  id="số_tiền"
+                  name="số_tiền"
+                  label="Số tiền *"
+                  value={values["số_tiền"]}
+                  onChange={(event) => {
+                    handleChange(event);
+                    setFieldValue(
+                      "số_tiền_bằng_chữ",
+                      numberToVietnamese(
+                        event.target.value
+                          ?.replace(/\./g, "")
+                          .replace(/\,/g, ".")
+                      )
+                    );
+                  }}
+                  error={!!errors["số_tiền"] && touched["số_tiền"]}
                   helperText={
-                    errors["ghi_chú"] && touched["ghi_chú"] && errors["ghi_chú"]
+                    errors["số_tiền"] && touched["số_tiền"] && errors["số_tiền"]
                   }
                 />
+                <Typography sx={{ fontStyle: "italic" }} color="text.secondary">
+                  Bằng chữ: {values["số_tiền_bằng_chữ"]} đồng
+                </Typography>
               </Box>
             </Box>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Hủy</Button>
-          <Button
-            variant="contained"
-            type="submit"
-            disabled={mụcđíchVàThờiHạnSửDụng.length === 0}
-          >
+          <Button variant="contained" type="submit">
             Thêm
           </Button>
         </DialogActions>

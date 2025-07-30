@@ -225,17 +225,19 @@ export const AddSingleDialog = ({
                 onChange={handleChange}
               />
             </FormControl>
-            <FormControl sx={{ marginBottom: "10px", gridColumn: "span 3" }}>
-              <FormLabel>Tình trạng hôn nhân</FormLabel>
-              <TextField
-                value={values["tình_trạng_hôn_nhân"]}
-                name="tình_trạng_hôn_nhân"
-                onChange={handleChange}
-                fullWidth
-                multiline
-                rows={4}
-              />
-            </FormControl>
+            {side === "partyA" && (
+              <FormControl sx={{ marginBottom: "10px", gridColumn: "span 3" }}>
+                <FormLabel>Tình trạng hôn nhân</FormLabel>
+                <TextField
+                  value={values["tình_trạng_hôn_nhân"]}
+                  name="tình_trạng_hôn_nhân"
+                  onChange={handleChange}
+                  fullWidth
+                  multiline
+                  rows={4}
+                />
+              </FormControl>
+            )}
           </Box>
           <input type="submit" hidden />
         </form>

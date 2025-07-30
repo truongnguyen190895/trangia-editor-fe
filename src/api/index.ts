@@ -16,6 +16,7 @@ import type {
   KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
 } from "@/models/hdcn-dat-va-tsglvd";
 import type { UyQuyenToanBoQuyenSdDatPayload } from "@/models/uy-quyen";
+import type { HDMBXeOtoPayload } from "@/models/hdmb-xe";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -25,6 +26,12 @@ api.interceptors.request.use((config) => {
   config.headers["x-api-key"] = import.meta.env.VITE_API_KEY;
   return config;
 });
+
+export const render_hdmb_xe_oto = async (payload: HDMBXeOtoPayload) => {
+  return api.post("/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-oto", payload, {
+    responseType: "blob",
+  });
+};
 
 export const render_hdcn_quyen_sd_dat_toan_bo = async (
   payload: HDCNQuyenSDDatPayload,

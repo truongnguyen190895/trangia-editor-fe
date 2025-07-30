@@ -104,6 +104,8 @@ export const DocumentEditor = () => {
         return "Uỷ quyền toàn bộ nhà + đất";
       case "uy-quyen-toan-bo-can-ho":
         return "Uỷ quyền toàn bộ căn hộ";
+      case "hdmb-xe-oto":
+        return "Hợp đồng mua bán xe ô tô";
       default:
         return "";
     }

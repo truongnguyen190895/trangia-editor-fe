@@ -10,24 +10,20 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import { useHDMBXeContext } from "@/context/hdmb-xe";
 import AddIcon from "@mui/icons-material/Add";
-import dayjs from "dayjs";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ThemThongTinXe } from "../../dialogs/them-thong-tin-xe";
 
 interface ObjectEntityProps {
   title: string;
-  isTangCho?: boolean;
-  isNongNghiep?: boolean;
 }
 
 export const ObjectEntity = ({
   title,
-  isTangCho = false,
 }: ObjectEntityProps) => {
-  const { agreementObject, deleteAgreementObject } = useHdcnQuyenSdDatContext();
+  const { agreementObject, deleteAgreementObject } = useHDMBXeContext();
   const [open, setOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -64,61 +60,51 @@ export const ObjectEntity = ({
                 <TableBody>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Số thửa đất</Typography>
+                      <Typography variant="body1">Nhãn hiệu</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["số_thửa_đất"]}</TableCell>
+                    <TableCell>{agreementObject["nhãn_hiệu"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Tờ bản đồ số</Typography>
+                      <Typography variant="body1">Màu sơn</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["số_tờ_bản_đồ"]}</TableCell>
+                    <TableCell>{agreementObject["màu_sơn"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Địa chỉ cũ</Typography>
+                      <Typography variant="body1">Loại xe</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["địa_chỉ_cũ"]}</TableCell>
+                    <TableCell>{agreementObject["loại_xe"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Địa chỉ mới</Typography>
+                      <Typography variant="body1">Số máy</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["địa_chỉ_mới"]}</TableCell>
+                    <TableCell>{agreementObject["số_máy"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Loại giấy tờ</Typography>
+                      <Typography variant="body1">Số khung</Typography>
                     </TableCell>
-                    <TableCell>
-                      {agreementObject["loại_giấy_chứng_nhận"]}
-                    </TableCell>
+                    <TableCell>{agreementObject["số_khung"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Số giấy tờ</Typography>
+                      <Typography variant="body1">Biển số</Typography>
                     </TableCell>
-                    <TableCell>
-                      {agreementObject["số_giấy_chứng_nhận"]}
-                    </TableCell>
+                    <TableCell>{agreementObject["biển_số"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Số vào sổ cấp GCN</Typography>
+                      <Typography variant="body1">Số đăng ký</Typography>
                     </TableCell>
-                    <TableCell>
-                      {agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"]}
-                    </TableCell>
+                    <TableCell>{agreementObject["số_đăng_ký"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">
-                        Nơi cấp giấy chứng nhận
-                      </Typography>
+                      <Typography variant="body1">Nơi cấp</Typography>
                     </TableCell>
-                    <TableCell>
-                      {agreementObject["nơi_cấp_giấy_chứng_nhận"]}
-                    </TableCell>
+                    <TableCell>{agreementObject["nơi_cấp"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
@@ -126,83 +112,37 @@ export const ObjectEntity = ({
                         Ngày cấp giấy chứng nhận
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      {dayjs(
-                        agreementObject["ngày_cấp_giấy_chứng_nhận"]
-                      ).format("DD/MM/YYYY")}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Diện tích (m2)</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["diện_tích"]}</TableCell>
+                    <TableCell>{agreementObject["ngày_đăng_ký"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">
-                        Diện tích bằng chữ (mét vuông)
+                        Ngày đăng ký lần đầu
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {agreementObject["diện_tích_bằng_chữ"]}
+                      {agreementObject["ngày_đăng_ký_lần_đầu"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Giá tiền</Typography>
+                      <Typography variant="body1">Ngày đăng ký</Typography>
                     </TableCell>
-                    <TableCell>{agreementObject["giá_tiền"]}</TableCell>
+                    <TableCell>{agreementObject["ngày_đăng_ký"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Giá tiền bằng chữ</Typography>
+                      <Typography variant="body1">Số tiền</Typography>
                     </TableCell>
-                    <TableCell>
-                      {agreementObject["giá_tiền_bằng_chữ"]}
-                    </TableCell>
+                    <TableCell>{agreementObject["số_tiền"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
-                      <Typography variant="body1">Hình thức sử dụng</Typography>
+                      <Typography variant="body1">Số tiền bằng chữ</Typography>
                     </TableCell>
-                    <TableCell>
-                      {agreementObject["hình_thức_sử_dụng"]}
-                    </TableCell>
+                    <TableCell>{agreementObject["số_tiền_bằng_chữ"]}</TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">
-                        Mục đích và thời hạn sử dụng
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <ul>
-                        {agreementObject["mục_đích_và_thời_hạn_sử_dụng"].map(
-                          (item) => (
-                            <li key={item["phân_loại"]}>
-                              {item["phân_loại"]} - {item["diện_tích"]} (m2) -{" "}
-                              {item["thời_hạn_sử_dụng"]}
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Nguồn gốc sử dụng</Typography>
-                    </TableCell>
-                    <TableCell>
-                      {agreementObject["nguồn_gốc_sử_dụng"]}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Ghi chú</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["ghi_chú"]}</TableCell>
-                  </TableRow>
+
                   <TableRow>
                     <TableCell component="th">
                       <Typography variant="body1">Thao tác</Typography>
@@ -230,7 +170,6 @@ export const ObjectEntity = ({
         <ThemThongTinXe
           open={open}
           handleClose={() => setOpen(false)}
-          isTangCho={isTangCho}
         />
       ) : null}
     </Box>

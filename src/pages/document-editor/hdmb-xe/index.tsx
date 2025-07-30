@@ -17,25 +17,15 @@ import { PartyEntity } from "./components/party-entity";
 import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
-import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
-import type {
-  HDCNQuyenSDDatPayload,
-  SampleToKhaiChungPayload,
-} from "@/models/agreement-entity";
+import type { HDMBXeOtoPayload } from "@/models/hdmb-xe";
 import dayjs from "dayjs";
-import {
-  render_hdcn_quyen_sd_dat_toan_bo,
-  render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep,
-  render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo,
-  render_hdtc_dat_toan_bo,
-} from "@/api";
+import { render_hdmb_xe_oto } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
-import { extractAddress } from "@/utils/extract-address";
-import { generateThoiHanSuDung } from "@/utils/common";
+import { useHDMBXeContext } from "@/context/hdmb-xe";
 
 export const HDMBXe = () => {
-  const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
+  const { partyA, partyB, agreementObject } = useHDMBXeContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
@@ -47,7 +37,7 @@ export const HDMBXe = () => {
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
     agreementObject !== null;
 
-  const getPayload = (): HDCNQuyenSDDatPayload => {
+  const getPayload = (): HDMBXeOtoPayload => {
     if (!agreementObject) {
       throw new Error("Agreement object is null");
     }
@@ -93,7 +83,7 @@ export const HDMBXe = () => {
         }))
       );
 
-    const payload: HDCNQuyenSDDatPayload = {
+    const payload: HDMBXeOtoPayload = {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -120,42 +110,18 @@ export const HDMBXe = () => {
           ...couplesB,
         ],
       },
-      số_thửa_đất: agreementObject["số_thửa_đất"],
-      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-      địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"],
-      địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
-        ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_mới"]})`
-        : agreementObject["địa_chỉ_mới"],
-      địa_chỉ_mới: agreementObject["địa_chỉ_mới"],
-      loại_giấy_chứng_nhận: agreementObject["loại_giấy_chứng_nhận"],
-      số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
-      số_vào_sổ_cấp_giấy_chứng_nhận:
-        agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"],
-      ngày_cấp_giấy_chứng_nhận: dayjs(
-        agreementObject["ngày_cấp_giấy_chứng_nhận"]
-      ).format("DD/MM/YYYY"),
-      nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
-      đặc_điểm_thửa_đất: {
-        diện_tích: {
-          số: agreementObject["diện_tích"],
-          chữ: agreementObject["diện_tích_bằng_chữ"],
-        },
-        hình_thức_sử_dụng: agreementObject["hình_thức_sử_dụng"],
-        mục_đích_và_thời_hạn_sử_dụng: agreementObject[
-          "mục_đích_và_thời_hạn_sử_dụng"
-        ]?.map((item) => ({
-          phân_loại: item["phân_loại"],
-          diện_tích: item["diện_tích"] || null,
-          thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
-        })),
-        thời_hạn: generateThoiHanSuDung(
-          agreementObject["mục_đích_và_thời_hạn_sử_dụng"]
-        )?.trim(),
-        nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
-        ghi_chú: agreementObject["ghi_chú"],
-      },
-      số_tiền: agreementObject["giá_tiền"],
-      số_tiền_bằng_chữ: agreementObject["giá_tiền_bằng_chữ"],
+      số_tiền: agreementObject["số_tiền"],
+      số_tiền_bằng_chữ: agreementObject["số_tiền_bằng_chữ"],
+      nhãn_hiệu: agreementObject["nhãn_hiệu"],
+      màu_sơn: agreementObject["màu_sơn"],
+      loại_xe: agreementObject["loại_xe"],
+      số_máy: agreementObject["số_máy"],
+      số_khung: agreementObject["số_khung"],
+      biển_số: agreementObject["biển_số"],
+      số_đăng_ký: agreementObject["số_đăng_ký"],
+      nơi_cấp: agreementObject["nơi_cấp"],
+      ngày_đăng_ký_lần_đầu: agreementObject["ngày_đăng_ký_lần_đầu"],
+      ngày_đăng_ký: agreementObject["ngày_đăng_ký"],
       ngày: dayjs().format("DD/MM/YYYY").toString(),
       ngày_bằng_chữ: translateDateToVietnamese(
         dayjs().format("DD/MM/YYYY").toString()
@@ -169,7 +135,6 @@ export const HDMBXe = () => {
       số_bản_công_chứng_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc - 1)
       )?.toLocaleLowerCase(),
-
       ký_bên_ngoài: isOutSide,
     };
 
@@ -180,6 +145,29 @@ export const HDMBXe = () => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
+    render_hdmb_xe_oto(payload)
+      .then((res) => {
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "HDMB-Xe-oto.docx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error("Error generating document:", error);
+        window.alert("Lỗi khi tạo hợp đồng");
+      })
+      .finally(() => {
+        setIsGenerating(false);
+        setSốBảnGốc(2);
+        setIsOutSide(false);
+      });
   };
 
   return (
@@ -219,9 +207,7 @@ export const HDMBXe = () => {
       >
         <PartyEntity title="Bên A" side="partyA" />
         <PartyEntity title="Bên B" side="partyB" />
-        <ObjectEntity
-          title="Đối tượng chuyển nhượng của hợp đồng"
-        />
+        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
@@ -237,20 +223,6 @@ export const HDMBXe = () => {
             onClick={() => setOpenDialog(true)}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: palette.softTeal,
-              height: "50px",
-              fontSize: "1.2rem",
-              fontWeight: "600",
-              textTransform: "uppercase",
-              width: "200px",
-            }}
-            disabled={!isFormValid}
-          >
-            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
           </Button>
         </Box>
       </Box>
