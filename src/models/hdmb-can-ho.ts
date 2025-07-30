@@ -57,6 +57,8 @@ export interface HDMBCanHoPayload {
   số_bản_công_chứng: string;
   số_bản_công_chứng_bằng_chữ: string;
   ký_bên_ngoài: boolean;
+  thời_hạn: string | null;
+  thời_hạn_bằng_chữ: string | null;
 }
 
 export interface ThongTinThuaDat {
@@ -89,6 +91,8 @@ export interface ThongTinCanHo {
   ghi_chú_căn_hộ: string; //
   giá_căn_hộ_bằng_số: string; //
   giá_căn_hộ_bằng_chữ: string; //
+  thời_hạn: string | null;
+  thời_hạn_bằng_chữ: string | null;
 }
 
 export interface KhaiThueHDMBCanHoToanBoPayload {

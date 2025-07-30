@@ -165,6 +165,8 @@ export const HDTangChoCanHoToanBo = () => {
         String(sốBảnGốc - 1)
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
+      thời_hạn: null,
+      thời_hạn_bằng_chữ: null,
     };
 
     return payload;

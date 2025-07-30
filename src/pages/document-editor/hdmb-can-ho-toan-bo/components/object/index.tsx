@@ -22,9 +22,10 @@ import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 
 interface ObjectEntityProps {
   title: string;
+  isUyQuyen?: boolean;
 }
 
-export const ObjectEntity = ({ title }: ObjectEntityProps) => {
+export const ObjectEntity = ({ title, isUyQuyen }: ObjectEntityProps) => {
   const { agreementObject, canHo, deleteAgreementObject, deleteCanHo } =
     useHDMBCanHoContext();
   const [open, setOpen] = useState(false);
@@ -71,7 +72,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            disabled={Boolean(agreementObject)}
+            disabled={Boolean(agreementObject) || isUyQuyen}
             onClick={handleOpenThongTinDat}
           >
             Thêm thông tin mảnh đất
@@ -85,14 +86,30 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
           >
             Chưa có thông tin căn hộ
           </Typography>
-          <Typography
-            variant="h4"
-            color="#B12C00"
-            visibility={Boolean(agreementObject) ? "hidden" : "visible"}
-          >
-            Chưa có thông tin mảnh đất
-          </Typography>
+          {isUyQuyen ? null : (
+            <Typography
+              variant="h4"
+              color="#B12C00"
+              visibility={Boolean(agreementObject) ? "hidden" : "visible"}
+            >
+              Chưa có thông tin mảnh đất
+            </Typography>
+          )}
         </Box>
+        {isUyQuyen ? (
+          <Typography variant="body1" color="error">
+            Chú ý: đối với HĐ uỷ quyền, không cần nhập thông tin mảnh đất
+          </Typography>
+        ) : null}
+
+        {isUyQuyen ? (
+          <Box mt="20px">
+            <Typography variant="body1" fontSize="1.5rem">
+              Thời hạn uỷ quyền của HĐ này là: {canHo?.["thời_hạn"]} năm
+            </Typography>
+          </Box>
+        ) : null}
+
         <Box>
           <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
             <Table sx={{ border: "1px solid #BCCCDC" }}>
@@ -309,6 +326,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
       {openCanHo ? (
         <ThongTinCanHoDialog
           open={openCanHo}
+          isUyQuyen={isUyQuyen}
           handleClose={() => setOpenCanHo(false)}
         />
       ) : null}

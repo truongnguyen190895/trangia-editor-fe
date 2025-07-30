@@ -25,13 +25,18 @@ import dayjs from "dayjs";
 import {
   render_hdmb_can_ho,
   render_khai_thue_hdmb_can_ho_toan_bo,
+  render_uy_quyen_toan_bo_can_ho,
 } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 
-export const HDMBCanHoToanBo = () => {
+interface Props {
+  isUyQuyen?: boolean;
+}
+
+export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
   const { partyA, partyB, agreementObject, canHo } = useHDMBCanHoContext();
 
   const { palette } = useTheme();
@@ -40,15 +45,22 @@ export const HDMBCanHoToanBo = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [isOutSide, setIsOutSide] = useState(false);
 
-  const isFormValid =
-    (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-    (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
-    agreementObject !== null &&
-    canHo !== null;
+  const isFormValid = isUyQuyen
+    ? Boolean(canHo)
+    : (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
+      (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
+      agreementObject !== null &&
+      canHo !== null;
 
   const getPayload = (): HDMBCanHoPayload => {
-    if (!agreementObject || !canHo) {
-      throw new Error("Agreement object or can ho is null");
+    if (isUyQuyen) {
+      if (!canHo) {
+        throw new Error("Can ho is null");
+      }
+    } else {
+      if (!agreementObject || !canHo) {
+        throw new Error("Agreement object or can ho is null");
+      }
     }
 
     const couplesA = partyA["vợ_chồng"]
@@ -143,14 +155,14 @@ export const HDMBCanHoToanBo = () => {
       ghi_chú_căn_hộ: canHo["ghi_chú_căn_hộ"],
       giá_căn_hộ_bằng_số: canHo["giá_căn_hộ_bằng_số"],
       giá_căn_hộ_bằng_chữ: canHo["giá_căn_hộ_bằng_chữ"],
-      số_thửa_đất: agreementObject["số_thửa_đất"],
-      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-      diện_tích_đất_bằng_số: agreementObject["diện_tích_đất_bằng_số"],
-      diện_tích_đất_bằng_chữ: agreementObject["diện_tích_đất_bằng_chữ"],
-      hình_thức_sở_hữu_đất: agreementObject["hình_thức_sở_hữu_đất"],
-      mục_đích_sở_hữu_đất: agreementObject["mục_đích_sở_hữu_đất"],
-      thời_hạn_sử_dụng_đất: agreementObject["thời_hạn_sử_dụng_đất"],
-      nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
+      số_thửa_đất: agreementObject?.["số_thửa_đất"] ?? "",
+      số_tờ_bản_đồ: agreementObject?.["số_tờ_bản_đồ"] ?? "",
+      diện_tích_đất_bằng_số: agreementObject?.["diện_tích_đất_bằng_số"] ?? "",
+      diện_tích_đất_bằng_chữ: agreementObject?.["diện_tích_đất_bằng_chữ"] ?? "",
+      hình_thức_sở_hữu_đất: agreementObject?.["hình_thức_sở_hữu_đất"] ?? "",
+      mục_đích_sở_hữu_đất: agreementObject?.["mục_đích_sở_hữu_đất"] ?? "",
+      thời_hạn_sử_dụng_đất: agreementObject?.["thời_hạn_sử_dụng_đất"] ?? "",
+      nguồn_gốc_sử_dụng_đất: agreementObject?.["nguồn_gốc_sử_dụng_đất"] ?? "",
       ngày: dayjs().format("DD/MM/YYYY").toString(),
       ngày_bằng_chữ: translateDateToVietnamese(
         dayjs().format("DD/MM/YYYY").toString()
@@ -165,6 +177,8 @@ export const HDMBCanHoToanBo = () => {
         String(sốBảnGốc - 1)
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
+      thời_hạn: canHo?.["thời_hạn"] ?? null,
+      thời_hạn_bằng_chữ: canHo?.["thời_hạn_bằng_chữ"] ?? null,
     };
 
     return payload;
@@ -174,30 +188,57 @@ export const HDMBCanHoToanBo = () => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdmb_can_ho(payload)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
+    if (isUyQuyen) {
+      render_uy_quyen_toan_bo_can_ho(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
 
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-        setSốBảnGốc(2);
-        setIsOutSide(false);
-      });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "HD uỷ quyền toàn bộ căn hộ.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
+        });
+    } else {
+      render_hdmb_can_ho(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `Hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
+        });
+    }
   };
 
   const getPayloadKhaiThue = (): KhaiThueHDMBCanHoToanBoPayload => {
@@ -399,7 +440,7 @@ export const HDMBCanHoToanBo = () => {
       >
         <PartyEntity title="Bên A" side="partyA" />
         <PartyEntity title="Bên B" side="partyB" />
-        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
+        <ObjectEntity title="Đối tượng của hợp đồng" isUyQuyen={isUyQuyen} />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
@@ -409,28 +450,30 @@ export const HDMBCanHoToanBo = () => {
               fontSize: "1.2rem",
               fontWeight: "600",
               textTransform: "uppercase",
-              width: "200px",
+              width: "350px",
             }}
             disabled={!isFormValid}
             onClick={() => setOpenDialog(true)}
           >
-            {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
+            {isUyQuyen ? "Tạo hợp đồng uỷ quyền" : "Tạo hợp đồng"}
           </Button>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: palette.softTeal,
-              height: "50px",
-              fontSize: "1.2rem",
-              fontWeight: "600",
-              textTransform: "uppercase",
-              width: "200px",
-            }}
-            disabled={!isFormValid}
-            onClick={handleGenerateKhaiThue}
-          >
-            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
-          </Button>
+          {!isUyQuyen ? (
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: palette.softTeal,
+                height: "50px",
+                fontSize: "1.2rem",
+                fontWeight: "600",
+                textTransform: "uppercase",
+                width: "200px",
+              }}
+              disabled={!isFormValid}
+              onClick={handleGenerateKhaiThue}
+            >
+              {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
+            </Button>
+          ) : null}
         </Box>
       </Box>
       <Dialog
@@ -489,7 +532,7 @@ export const HDMBCanHoToanBo = () => {
             disabled={sốBảnGốc <= 0}
             onClick={handleGenerateDocument}
           >
-            Tạo hợp đồng
+            {isUyQuyen ? "Tạo hợp đồng uỷ quyền" : "Tạo hợp đồng"}
           </Button>
         </DialogActions>
       </Dialog>

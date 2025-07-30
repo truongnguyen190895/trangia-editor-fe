@@ -141,4 +141,11 @@ export const templates = [
     subCategory: "uy-quyen",
     path: "uy-quyen-toan-bo-nha-dat",
   },
+  {
+    id: 12,
+    name: "Uỷ quyền căn hộ.docx",
+    type: "agreement",
+    subCategory: "uy-quyen",
+    path: "uy-quyen-toan-bo-can-ho",
+  },
 ];

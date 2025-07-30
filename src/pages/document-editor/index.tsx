@@ -32,9 +32,10 @@ export const DocumentEditor = () => {
           </HdcnQuyenSdDatProvider>
         );
       case "hdmb-can-ho-toan-bo":
+      case "uy-quyen-toan-bo-can-ho":
         return (
           <HDMBCanHoProvider>
-            <HDMBCanHoToanBo />
+            <HDMBCanHoToanBo isUyQuyen={/uy-quyen/.test(name ?? "")} />
           </HDMBCanHoProvider>
         );
       case "hdmb-nha-dat-toan-bo":
@@ -93,6 +94,8 @@ export const DocumentEditor = () => {
         return "Uỷ quyền toàn bộ quyền sử dụng đất";
       case "uy-quyen-toan-bo-nha-dat":
         return "Uỷ quyền toàn bộ nhà + đất";
+      case "uy-quyen-toan-bo-can-ho":
+        return "Uỷ quyền toàn bộ căn hộ";
       default:
         return "";
     }

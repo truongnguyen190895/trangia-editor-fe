@@ -51,6 +51,14 @@ export const render_hdmb_can_ho = async (payload: HDMBCanHoPayload) => {
   );
 };
 
+export const render_uy_quyen_toan_bo_can_ho = async (
+  payload: HDMBCanHoPayload
+) => {
+  return api.post("/templates/nhom-uy-quyen/uq-toan-bo-can-ho", payload, {
+    responseType: "blob",
+  });
+};
+
 export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
   return api.post(
     "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-toan-bo",

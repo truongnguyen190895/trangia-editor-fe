@@ -69,6 +69,8 @@ export const ThongTinCanHoDialog = ({
           ghi_chú_căn_hộ: "",
           giá_căn_hộ_bằng_số: "0",
           giá_căn_hộ_bằng_chữ: "không",
+          thời_hạn: null,
+          thời_hạn_bằng_chữ: null,
         };
   };
 
