@@ -176,4 +176,11 @@ export const templates = [
     subCategory: "uy-quyen",
     path: "uy-quyen-xe-oto",
   },
+  {
+    id: 17,
+    name: "HĐMB tài sản.docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdmb-tai-san",
+  },
 ];
