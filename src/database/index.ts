@@ -127,4 +127,11 @@ export const templates = [
     subCategory: "tang-cho",
     path: "hd-tang-cho-nha-dat-toan-bo",
   },
+  {
+    id: 10,
+    name: "Uỷ quyền toàn bộ quyền sử dụng đất.docx",
+    type: "agreement",
+    subCategory: "uy-quyen",
+    path: "uy-quyen-toan-bo-quyen-su-dung-dat",
+  },
 ];

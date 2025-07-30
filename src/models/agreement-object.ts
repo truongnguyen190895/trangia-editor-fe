@@ -20,4 +20,7 @@ export interface ThongTinThuaDat {
     diện_tích: string;
     thời_hạn_sử_dụng: string;
   }[];
+  // liên quan đến uỷ quyền
+  thời_hạn: string | null;
+  thời_hạn_bằng_chữ: string | null;
 }

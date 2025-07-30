@@ -10,6 +10,7 @@ import { HDMBCanHoProvider } from "@/context/hdmb-can-ho";
 import { HDMBNhaDatProvider } from "@/context/hdmb-nha-dat";
 import { HDCNDatVaTaiSanGanLienVoiDatToanBoProvider } from "@/context/hdcn-dat-va-tai-san-glvd";
 import { HDTangChoCanHoToanBo } from "@/pages/document-editor/hdtc-can-ho-toan-bo";
+import { UyQuyenToanBoQuyenSdDat } from "@/pages/document-editor/uy-quyen-toan-bo-quyen-sd-dat";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
@@ -55,6 +56,12 @@ export const DocumentEditor = () => {
             <HDTangChoCanHoToanBo />
           </HDMBCanHoProvider>
         );
+      case "uy-quyen-toan-bo-quyen-su-dung-dat":
+        return (
+          <HdcnQuyenSdDatProvider>
+            <UyQuyenToanBoQuyenSdDat />
+          </HdcnQuyenSdDatProvider>
+        );
       default:
         return <Box>Not found</Box>;
     }
@@ -78,6 +85,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng tặng cho đất nông nghiệp (toàn bộ)";
       case "hd-tang-cho-dat-toan-bo":
         return "Hợp đồng tặng cho đất (toàn bộ)";
+      case "uy-quyen-toan-bo-quyen-su-dung-dat":
+        return "Uỷ quyền toàn bộ quyền sử dụng đất";
       default:
         return "";
     }

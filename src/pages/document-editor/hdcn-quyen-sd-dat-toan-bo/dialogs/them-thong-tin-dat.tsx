@@ -112,6 +112,8 @@ export const ThemThongTinDat = ({
         giá_tiền_bằng_chữ: isTangCho ? "Không" : "",
         ghi_chú: "",
         mục_đích_và_thời_hạn_sử_dụng: [],
+        thời_hạn: null,
+        thời_hạn_bằng_chữ: null,
       }
     );
   };

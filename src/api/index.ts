@@ -15,6 +15,7 @@ import type {
   HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
   KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
 } from "@/models/hdcn-dat-va-tsglvd";
+import type { UyQuyenToanBoQuyenSdDatPayload } from "@/models/uy-quyen";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -176,3 +177,11 @@ export const render_khai_thue_hdtc_can_ho_toan_bo = async (
     responseType: "blob",
   });
 };
+
+export const render_uy_quyen_toan_bo_quyen_su_dung_dat = async (
+    payload: UyQuyenToanBoQuyenSdDatPayload
+  ) => {
+    return api.post("/templates/nhom-uy-quyen/uq-toan-bo-quyen-sd-dat", payload, {
+      responseType: "blob",
+    });
+  };

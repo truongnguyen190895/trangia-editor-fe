@@ -19,6 +19,30 @@ const mockData = [
     subCategory: "tang-cho",
     active: true,
   },
+  {
+    id: 3,
+    name: "Nhóm Uỷ Quyền",
+    description: "Uỷ quyền",
+    category: "hop-dong",
+    subCategory: "uy-quyen",
+    active: true,
+  },
+  {
+    id: 4,
+    name: "Nhóm Thuê, mượn, đặt cọc",
+    description: "Thuê, mượn, đặt cọc",
+    category: "hop-dong",
+    subCategory: "thue-muon-dat-coc",
+    active: true,
+  },
+  {
+    id: 5,
+    name: "Huỷ, sửa đổi, bổ xung, chấm dứt",
+    description: "Huỷ, sửa đổi, bổ xung, chấm dứt",
+    category: "hop-dong",
+    subCategory: "huy-sua-doi-bo-xung-cham-dut",
+    active: true,
+  },
 ];
 
 const ChooseSubDocument = () => {
