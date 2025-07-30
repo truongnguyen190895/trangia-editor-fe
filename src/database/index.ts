@@ -148,4 +148,11 @@ export const templates = [
     subCategory: "uy-quyen",
     path: "uy-quyen-toan-bo-can-ho",
   },
+  {
+    id: 13,
+    name: "HĐMB xe ôtô.docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdmb-xe-oto",
+  },
 ];

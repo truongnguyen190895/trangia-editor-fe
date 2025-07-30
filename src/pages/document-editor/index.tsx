@@ -8,9 +8,11 @@ import BackIcon from "@mui/icons-material/ArrowBack";
 import { HdcnQuyenSdDatProvider } from "@/context/hdcn-quyen-sd-dat-context";
 import { HDMBCanHoProvider } from "@/context/hdmb-can-ho";
 import { HDMBNhaDatProvider } from "@/context/hdmb-nha-dat";
+import { HDMBXeProvider } from "@/context/hdmb-xe";
 import { HDCNDatVaTaiSanGanLienVoiDatToanBoProvider } from "@/context/hdcn-dat-va-tai-san-glvd";
 import { HDTangChoCanHoToanBo } from "@/pages/document-editor/hdtc-can-ho-toan-bo";
 import { UyQuyenToanBoQuyenSdDat } from "@/pages/document-editor/uy-quyen-toan-bo-quyen-sd-dat";
+import { HDMBXe } from "@/pages/document-editor/hdmb-xe";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
@@ -66,6 +68,12 @@ export const DocumentEditor = () => {
           <HdcnQuyenSdDatProvider>
             <UyQuyenToanBoQuyenSdDat />
           </HdcnQuyenSdDatProvider>
+        );
+      case "hdmb-xe-oto":
+        return (
+          <HDMBXeProvider>
+            <HDMBXe />
+          </HDMBXeProvider>
         );
       default:
         return <Box>Not found</Box>;
