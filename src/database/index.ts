@@ -169,4 +169,11 @@ export const templates = [
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-xe-oto-bien-so-xe",
   },
+  {
+    id: 16,
+    name: "Uỷ quyền xe ôtô.docx",
+    type: "agreement",
+    subCategory: "uy-quyen",
+    path: "uy-quyen-xe-oto",
+  },
 ];

@@ -72,11 +72,13 @@ export const DocumentEditor = () => {
       case "hdmb-xe-oto":
       case "hdmb-xe-may":
       case "hdmb-xe-oto-bien-so-xe":
+      case "uy-quyen-xe-oto":
         return (
           <HDMBXeProvider>
             <HDMBXe
               isXeMay={/hdmb-xe-may/.test(name ?? "")}
               isDauGia={/bien-so-xe/.test(name ?? "")}
+              isUyQuyen={/uy-quyen/.test(name ?? "")}
             />
           </HDMBXeProvider>
         );
@@ -115,6 +117,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng mua bán xe máy";
       case "hdmb-xe-oto-bien-so-xe":
         return "Hợp đồng mua bán xe ô tô + biển số xe";
+      case "uy-quyen-xe-oto":
+        return "Uỷ quyền xe ô tô";
       default:
         return "";
     }

@@ -22,29 +22,36 @@ interface ThemThongTinXeProps {
   open: boolean;
   isXeMay?: boolean;
   isDauGia?: boolean;
+  isUyQuyen?: boolean;
   handleClose: () => void;
 }
-
-const validationSchema = Yup.object({
-  nhãn_hiệu: Yup.string().required("Nhãn hiệu là bắt buộc"),
-  màu_sơn: Yup.string().required("Màu sơn là bắt buộc"),
-  loại_xe: Yup.string().required("Loại xe là bắt buộc"),
-  số_máy: Yup.string().required("Số máy là bắt buộc"),
-  số_khung: Yup.string().required("Số khung là bắt buộc"),
-  biển_số: Yup.string().required("Biển số là bắt buộc"),
-  số_đăng_ký: Yup.string().required("Số đăng ký là bắt buộc"),
-  nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
-  ngày_đăng_ký: Yup.string().required("Ngày đăng ký là bắt buộc"),
-  số_tiền: Yup.string().required("Số tiền là bắt buộc"),
-});
 
 export const ThemThongTinXe = ({
   open,
   isXeMay,
   isDauGia,
+  isUyQuyen,
   handleClose,
 }: ThemThongTinXeProps) => {
   const { agreementObject, addAgreementObject } = useHDMBXeContext();
+
+  const validationSchema = Yup.object({
+    nhãn_hiệu: Yup.string().required("Nhãn hiệu là bắt buộc"),
+    màu_sơn: Yup.string().required("Màu sơn là bắt buộc"),
+    loại_xe: Yup.string().required("Loại xe là bắt buộc"),
+    số_máy: Yup.string().required("Số máy là bắt buộc"),
+    số_khung: Yup.string().required("Số khung là bắt buộc"),
+    biển_số: Yup.string().required("Biển số là bắt buộc"),
+    số_đăng_ký: Yup.string().required("Số đăng ký là bắt buộc"),
+    nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
+    ngày_đăng_ký: Yup.string().required("Ngày đăng ký là bắt buộc"),
+    số_tiền: isUyQuyen
+      ? Yup.string()
+      : Yup.string().required("Số tiền là bắt buộc"),
+    thời_hạn: isUyQuyen
+      ? Yup.string().required("Thời hạn là bắt buộc")
+      : Yup.string().nullable(),
+  });
 
   const submitForm = (values: ThongTinXeOto) => {
     addAgreementObject({
@@ -72,6 +79,8 @@ export const ThemThongTinXe = ({
         số_bằng_chứng_trúng_đấu_giá: null,
         nơi_cấp_đấu_giá: null,
         ngày_trúng_đấu_giá: null,
+        thời_hạn: null,
+        thời_hạn_bằng_chữ: null,
       }
     );
   };
@@ -300,32 +309,75 @@ export const ThemThongTinXe = ({
                 gap={2}
                 flexDirection="column"
               >
-                <Typography variant="h6">Giá trị tài sản</Typography>
-                <TextField
-                  fullWidth
-                  id="số_tiền"
-                  name="số_tiền"
-                  label="Số tiền *"
-                  value={values["số_tiền"]}
-                  onChange={(event) => {
-                    handleChange(event);
-                    setFieldValue(
-                      "số_tiền_bằng_chữ",
-                      numberToVietnamese(
-                        event.target.value
-                          ?.replace(/\./g, "")
-                          .replace(/\,/g, ".")
-                      )
-                    );
-                  }}
-                  error={!!errors["số_tiền"] && touched["số_tiền"]}
-                  helperText={
-                    errors["số_tiền"] && touched["số_tiền"] && errors["số_tiền"]
-                  }
-                />
-                <Typography sx={{ fontStyle: "italic" }} color="text.secondary">
-                  Bằng chữ: {values["số_tiền_bằng_chữ"]} đồng
-                </Typography>
+                {isUyQuyen ? (
+                  <>
+                    <Typography variant="h6">Thời hạn uỷ quyền</Typography>
+                    <TextField
+                      fullWidth
+                      id="thời_hạn"
+                      name="thời_hạn"
+                      label="Thời hạn *"
+                      value={values["thời_hạn"]}
+                      onChange={(event) => {
+                        handleChange(event);
+                        setFieldValue(
+                          "thời_hạn_bằng_chữ",
+                          numberToVietnamese(
+                            event.target.value
+                              ?.replace(/\./g, "")
+                              .replace(/\,/g, ".")
+                          )
+                        );
+                      }}
+                      error={!!errors["thời_hạn"] && touched["thời_hạn"]}
+                      helperText={
+                        errors["thời_hạn"] &&
+                        touched["thời_hạn"] &&
+                        errors["thời_hạn"]
+                      }
+                    />
+                    <Typography
+                      sx={{ fontStyle: "italic" }}
+                      color="text.secondary"
+                    >
+                      Bằng chữ: {values["thời_hạn_bằng_chữ"]} năm
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h6">Giá trị tài sản</Typography>
+                    <TextField
+                      fullWidth
+                      id="số_tiền"
+                      name="số_tiền"
+                      label="Số tiền *"
+                      value={values["số_tiền"]}
+                      onChange={(event) => {
+                        handleChange(event);
+                        setFieldValue(
+                          "số_tiền_bằng_chữ",
+                          numberToVietnamese(
+                            event.target.value
+                              ?.replace(/\./g, "")
+                              .replace(/\,/g, ".")
+                          )
+                        );
+                      }}
+                      error={!!errors["số_tiền"] && touched["số_tiền"]}
+                      helperText={
+                        errors["số_tiền"] &&
+                        touched["số_tiền"] &&
+                        errors["số_tiền"]
+                      }
+                    />
+                    <Typography
+                      sx={{ fontStyle: "italic" }}
+                      color="text.secondary"
+                    >
+                      Bằng chữ: {values["số_tiền_bằng_chữ"]} đồng
+                    </Typography>
+                  </>
+                )}
               </Box>
             </Box>
           </Box>

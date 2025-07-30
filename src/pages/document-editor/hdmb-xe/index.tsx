@@ -19,7 +19,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type { HDMBXeOtoPayload } from "@/models/hdmb-xe";
 import dayjs from "dayjs";
-import { render_hdmb_xe_oto } from "@/api";
+import { render_hdmb_xe_oto, render_uy_quyen_toan_bo_xe_oto } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { useHDMBXeContext } from "@/context/hdmb-xe";
@@ -27,9 +27,14 @@ import { useHDMBXeContext } from "@/context/hdmb-xe";
 interface HDMBXeProps {
   isXeMay?: boolean;
   isDauGia?: boolean;
+  isUyQuyen?: boolean;
 }
 
-export const HDMBXe = ({ isXeMay = false, isDauGia = false }: HDMBXeProps) => {
+export const HDMBXe = ({
+  isXeMay = false,
+  isDauGia = false,
+  isUyQuyen = false,
+}: HDMBXeProps) => {
   const { partyA, partyB, agreementObject } = useHDMBXeContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -147,29 +152,55 @@ export const HDMBXe = ({ isXeMay = false, isDauGia = false }: HDMBXeProps) => {
     }
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdmb_xe_oto(payload, isXeMay, isDauGia)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    if (isUyQuyen) {
+      render_uy_quyen_toan_bo_xe_oto(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "UQ-Xe-oto.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
         });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-        setSốBảnGốc(2);
-        setIsOutSide(false);
-      });
+    } else {
+      render_hdmb_xe_oto(payload, isXeMay, isDauGia)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(2);
+          setIsOutSide(false);
+        });
+    }
   };
 
   return (
@@ -208,11 +239,12 @@ export const HDMBXe = ({ isXeMay = false, isDauGia = false }: HDMBXeProps) => {
         flex={4}
       >
         <PartyEntity title="Bên A" side="partyA" />
-        <PartyEntity title="Bên B" side="partyB" />
+        <PartyEntity title="Bên B" side="partyB" isUyQuyen={isUyQuyen} />
         <ObjectEntity
           title="Đối tượng của hợp đồng"
           isXeMay={isXeMay}
           isDauGia={isDauGia}
+          isUyQuyen={isUyQuyen}
         />
         <Box display="flex" gap="1rem">
           <Button

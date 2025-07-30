@@ -218,3 +218,11 @@ export const render_uy_quyen_toan_bo_nha_dat = async (
     responseType: "blob",
   });
 };
+
+export const render_uy_quyen_toan_bo_xe_oto = async (
+  payload: HDMBXeOtoPayload
+) => {
+  return api.post("/templates/nhom-uy-quyen/uq-xe-oto", payload, {
+    responseType: "blob",
+  });
+};

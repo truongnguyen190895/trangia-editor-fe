@@ -20,12 +20,14 @@ interface ObjectEntityProps {
   title: string;
   isXeMay?: boolean;
   isDauGia?: boolean;
+  isUyQuyen?: boolean;
 }
 
 export const ObjectEntity = ({
   title,
   isXeMay,
   isDauGia,
+  isUyQuyen,
 }: ObjectEntityProps) => {
   const { agreementObject, deleteAgreementObject } = useHDMBXeContext();
   const [open, setOpen] = useState(false);
@@ -140,18 +142,46 @@ export const ObjectEntity = ({
                     </TableCell>
                     <TableCell>{agreementObject["ngày_đăng_ký"]}</TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Số tiền</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["số_tiền"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Số tiền bằng chữ</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["số_tiền_bằng_chữ"]}</TableCell>
-                  </TableRow>
+                  {isUyQuyen ? (
+                    <>
+                      <TableRow>
+                        <TableCell component="th">
+                          <Typography variant="body1">Thời hạn</Typography>
+                        </TableCell>
+                        <TableCell>{agreementObject["thời_hạn"]}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell component="th">
+                          <Typography variant="body1">
+                            Thời hạn bằng chữ
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {agreementObject["thời_hạn_bằng_chữ"]}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ) : (
+                    <>
+                      <TableRow>
+                        <TableCell component="th">
+                          <Typography variant="body1">Số tiền</Typography>
+                        </TableCell>
+                        <TableCell>{agreementObject["số_tiền"]}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell component="th">
+                          <Typography variant="body1">
+                            Số tiền bằng chữ
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {agreementObject["số_tiền_bằng_chữ"]}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )}
+
                   {isDauGia ? (
                     <>
                       <TableRow>
@@ -214,6 +244,7 @@ export const ObjectEntity = ({
           open={open}
           isXeMay={isXeMay}
           isDauGia={isDauGia}
+          isUyQuyen={isUyQuyen}
           handleClose={() => setOpen(false)}
         />
       ) : null}

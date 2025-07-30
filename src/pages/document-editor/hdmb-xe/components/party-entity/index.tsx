@@ -23,9 +23,10 @@ import dayjs from "dayjs";
 interface PartyEntityProps {
   title: string;
   side: "partyA" | "partyB";
+  isUyQuyen?: boolean;
 }
 
-export const PartyEntity = ({ title, side }: PartyEntityProps) => {
+export const PartyEntity = ({ title, side, isUyQuyen }: PartyEntityProps) => {
   const {
     partyA,
     partyB,
@@ -43,6 +44,13 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
   const partyEntities = side === "partyA" ? partyA : partyB;
   const individualParty = partyEntities["cá_nhân"];
   const coupleParty = partyEntities["vợ_chồng"];
+  const shouldHideCoupleB = () => {
+    if (isUyQuyen) {
+      return false;
+    } else {
+      return side === "partyB";
+    }
+  };
 
   const handleDeleteSingleParty = (arrayIndex: number) => {
     if (side === "partyA") {
@@ -205,7 +213,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
           )}
         </Box>
         <Divider />
-        <Box display={side === "partyA" ? "block" : "none"}>
+        <Box display={shouldHideCoupleB() ? "none" : "block"}>
           <Typography variant="h6">Chủ thể là vợ chồng</Typography>
           {coupleParty.length > 0 ? (
             <Box>
