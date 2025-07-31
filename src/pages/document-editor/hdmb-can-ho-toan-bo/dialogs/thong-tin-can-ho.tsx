@@ -44,14 +44,14 @@ export const ThongTinCanHoDialog = ({
       ? Yup.string().optional()
       : Yup.string().required("Giá căn hộ bằng số là bắt buộc"),
     giá_căn_hộ_bằng_chữ: isUyQuyen
-      ? Yup.string().optional()
+      ? Yup.string().nullable()
       : Yup.string().required("Giá căn hộ bằng chữ là bắt buộc"),
     hình_thức_sở_hữu_căn_hộ: isUyQuyen
-      ? Yup.string().optional()
+      ? Yup.string().nullable()
       : Yup.string().required("Hình thức sở hữu căn hộ là bắt buộc"),
     thời_hạn: isUyQuyen
       ? Yup.string().required("Thời hạn là bắt buộc")
-      : Yup.string().optional(),
+      : Yup.string().nullable(),
   });
 
   const submitForm = (values: ThongTinCanHo) => {
@@ -92,6 +92,8 @@ export const ThongTinCanHoDialog = ({
       validationSchema,
       onSubmit: submitForm,
     });
+
+  console.log("errors", errors);
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
