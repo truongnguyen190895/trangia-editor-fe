@@ -17,6 +17,7 @@ import type {
 } from "@/models/hdcn-dat-va-tsglvd";
 import type { UyQuyenToanBoQuyenSdDatPayload } from "@/models/uy-quyen";
 import type { HDMBXeOtoPayload } from "@/models/hdmb-xe";
+import type { HDMBTaiSanPayload, KhaiThueHDMBTaiSanPayload } from "@/models/hdmb-tai-san";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -223,6 +224,18 @@ export const render_uy_quyen_toan_bo_xe_oto = async (
   payload: HDMBXeOtoPayload
 ) => {
   return api.post("/templates/nhom-uy-quyen/uq-xe-oto", payload, {
+    responseType: "blob",
+  });
+};
+
+export const render_hdmb_tai_san = async (payload: HDMBTaiSanPayload) => {
+  return api.post("/templates/nhom-chuyen-nhuong-mua-ban/hdmb-tai-san", payload, {
+    responseType: "blob",
+  });
+};
+
+export const render_khai_thue_hdmb_tai_san = async (payload: KhaiThueHDMBTaiSanPayload) => {
+  return api.post("/templates/khai-thue/khai-thue-mua-ban-tai-san", payload, {
     responseType: "blob",
   });
 };

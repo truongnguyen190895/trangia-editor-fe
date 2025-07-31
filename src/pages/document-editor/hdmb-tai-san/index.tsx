@@ -18,11 +18,11 @@ import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type {
-  HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
-  KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
-} from "@/models/hdcn-dat-va-tsglvd";
+  HDMBTaiSanPayload,
+  KhaiThueHDMBTaiSanPayload,
+} from "@/models/hdmb-tai-san";
 import dayjs from "dayjs";
-import { render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo, render_khai_thue_hdcn_dat_va_tsglvd_toan_bo } from "@/api";
+import { render_hdmb_tai_san, render_khai_thue_hdmb_tai_san } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBTaiSanContext } from "@/context/hdmb-tai-san";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -43,7 +43,7 @@ export const HDMBTaiSan = () => {
     agreementObject !== null &&
     taiSan !== null;
 
-  const getPayload = (): HDCNDatVaTaiSanGanLienVoiDatToanBoPayload => {
+  const getPayload = (): HDMBTaiSanPayload => {
     if (!agreementObject || !taiSan) {
       throw new Error("Agreement object or nha dat is null");
     }
@@ -89,7 +89,7 @@ export const HDMBTaiSan = () => {
         }))
       );
 
-    const payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload = {
+    const payload: HDMBTaiSanPayload = {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -119,10 +119,9 @@ export const HDMBTaiSan = () => {
         ],
       },
       ...agreementObject,
-      tài_sản: taiSan.thông_tin_tài_sản.split(";")?.map((item) => item.trim()),
+      ...taiSan,
       số_tiền: taiSan.số_tiền,
       số_tiền_bằng_chữ: taiSan.số_tiền_bằng_chữ,
-      diện_tích_xây_dựng: taiSan.diện_tích_xây_dựng,
       ngày: dayjs().format("DD/MM/YYYY").toString(),
       ngày_bằng_chữ: translateDateToVietnamese(
         dayjs().format("DD/MM/YYYY").toString()
@@ -146,7 +145,7 @@ export const HDMBTaiSan = () => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo(payload)
+    render_hdmb_tai_san(payload)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -155,7 +154,7 @@ export const HDMBTaiSan = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `HDCN qsdd và tsglvd (toàn bộ) - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+        link.download = 'HDMB Tai San.docx';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -172,7 +171,7 @@ export const HDMBTaiSan = () => {
       });
   };
 
-  const getPayloadToKhaiChung = (): KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload => {
+  const getPayloadToKhaiChung = (): KhaiThueHDMBTaiSanPayload => {
     if (!agreementObject || !taiSan) {
       throw new Error("Agreement object is null");
     }
@@ -256,7 +255,7 @@ export const HDMBTaiSan = () => {
       ...couplesB,
     ];
 
-    const payload: KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload = {
+    const payload: KhaiThueHDMBTaiSanPayload = {
       bên_A: {
         cá_thể: các_cá_thể_bên_A,
       },
@@ -278,8 +277,8 @@ export const HDMBTaiSan = () => {
         tên: person["tên"],
       })),
       tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
-      số_thửa_đất: agreementObject["số_thửa_đất"],
-      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
+      số_thửa_đất: "",
+      số_tờ_bản_đồ: "",
       số_giấy_chứng_nhận: agreementObject["số_gcn"],
       nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_gcn"],
       ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
@@ -289,18 +288,19 @@ export const HDMBTaiSan = () => {
         },
         mục_đích_và_thời_hạn_sử_dụng: [
             {
-                phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
+                phân_loại: agreementObject["mục_đích_sử_dụng_đất"],
                 diện_tích: agreementObject["diện_tích_đất_bằng_số"]
             }
         ],
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
       },
       số_tiền: taiSan["số_tiền"],
-      diện_tích_xây_dựng: taiSan["diện_tích_xây_dựng"],
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
-      tài_sản: taiSan.thông_tin_tài_sản,
+      tên_tài_sản: taiSan.tên_tài_sản,
       nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
-      ...extractAddress(agreementObject["địa_chỉ_nhà_đất"]),
+      ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
+      diện_tích_sàn: taiSan.diện_tích_sử_dụng,
+      ...extractAddress(agreementObject["địa_chỉ"]),
     };
 
     return payload;
@@ -310,16 +310,15 @@ export const HDMBTaiSan = () => {
     const payload = getPayloadToKhaiChung();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_khai_thue_hdcn_dat_va_tsglvd_toan_bo(payload)
+    render_khai_thue_hdmb_tai_san(payload)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
-
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "to-khai-chung.docx";
+        link.download = "Khai thuế mua bán tài sản.docx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

@@ -16,7 +16,7 @@ import {
 } from "@/constants";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
-import type { ThongTinThuaDat } from "@/models/hdcn-dat-va-tsglvd";
+import type { ThongTinThuaDat } from "@/models/hdmb-tai-san";
 import { useHDMBTaiSanContext } from "@/context/hdmb-tai-san";
 
 interface ThemThongTinDatProps {
@@ -25,15 +25,20 @@ interface ThemThongTinDatProps {
 }
 
 const validationSchema = Yup.object({
-  số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
+  diện_tích_đất_bằng_số: Yup.string().required("Diện tích đất là bắt buộc"),
+  diện_tích_đất_bằng_chữ: Yup.string().required("Diện tích đất là bắt buộc"),
+  hình_thức_sử_dụng_đất: Yup.string().required("Hình thức sử dụng là bắt buộc"),
+  loại_gcn: Yup.string().required("Loại giấy chứng nhận là bắt buộc"),
+  số_gcn: Yup.string().required("Số giấy chứng nhận là bắt buộc"),
+  số_vào_sổ_cấp_gcn: Yup.string().required("Số vào sổ cấp giấy chứng nhận là bắt buộc"),
+  nơi_cấp_gcn: Yup.string().required("Nơi cấp giấy chứng nhận là bắt buộc"),
 });
 
 export const ThemThongTinDat = ({
   open,
   handleClose,
 }: ThemThongTinDatProps) => {
-  const { agreementObject, addAgreementObject } =
-    useHDMBTaiSanContext();
+  const { agreementObject, addAgreementObject } = useHDMBTaiSanContext();
 
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
@@ -44,20 +49,18 @@ export const ThemThongTinDat = ({
     return agreementObject
       ? agreementObject
       : {
-          số_thửa_đất: "",
-          số_tờ_bản_đồ: "",
+          thời_hạn_sử_dụng_đất: "",
+          mục_đích_sử_dụng_đất: "",
+          hình_thức_sử_dụng_đất: "",
+          nguồn_gốc_sử_dụng_đất: "",
           diện_tích_đất_bằng_số: "",
           diện_tích_đất_bằng_chữ: "",
-          hình_thức_sở_hữu_đất: "",
-          mục_đích_sở_hữu_đất: "",
-          thời_hạn_sử_dụng_đất: "",
-          nguồn_gốc_sử_dụng_đất: "",
-          địa_chỉ_nhà_đất: "",
           loại_gcn: "",
           số_gcn: "",
           số_vào_sổ_cấp_gcn: "",
           nơi_cấp_gcn: "",
           ngày_cấp_gcn: "",
+          địa_chỉ: "",
         };
   };
 
@@ -68,6 +71,8 @@ export const ThemThongTinDat = ({
       onSubmit: submitForm,
     });
 
+  console.log("errors", errors);
+
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
@@ -75,28 +80,6 @@ export const ThemThongTinDat = ({
         <DialogContent>
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
-              <TextField
-                fullWidth
-                id="số_thửa_đất"
-                name="số_thửa_đất"
-                label="Số thửa đất *"
-                value={values["số_thửa_đất"]}
-                onChange={handleChange}
-                error={!!errors["số_thửa_đất"] && touched["số_thửa_đất"]}
-                helperText={
-                  errors["số_thửa_đất"] &&
-                  touched["số_thửa_đất"] &&
-                  errors["số_thửa_đất"]
-                }
-              />
-              <TextField
-                fullWidth
-                id="số_tờ_bản_đồ"
-                name="số_tờ_bản_đồ"
-                label="Tờ bản đồ số"
-                value={values["số_tờ_bản_đồ"]}
-                onChange={handleChange}
-              />
               <TextField
                 fullWidth
                 type="text"
@@ -132,19 +115,25 @@ export const ThemThongTinDat = ({
                   errors["diện_tích_đất_bằng_chữ"]
                 }
               />
-              <Box sx={{ gridColumn: "span 2" }}>
-                <TextField
-                  fullWidth
-                  id="địa_chỉ_nhà_đất"
-                  name="địa_chỉ_nhà_đất"
-                  label="Địa chỉ đất *"
-                  value={values["địa_chỉ_nhà_đất"]}
-                  onChange={handleChange}
-                />
-              </Box>
-
+              <TextField
+                fullWidth
+                id="hình_thức_sử_dụng_đất"
+                name="hình_thức_sử_dụng_đất"
+                label="Hình thức sử dụng *"
+                value={values["hình_thức_sử_dụng_đất"]}
+                onChange={handleChange}
+                error={
+                  !!errors["hình_thức_sử_dụng_đất"] &&
+                  touched["hình_thức_sử_dụng_đất"]
+                }
+                helperText={
+                  errors["hình_thức_sử_dụng_đất"] &&
+                  touched["hình_thức_sử_dụng_đất"] &&
+                  errors["hình_thức_sử_dụng_đất"]
+                }
+              />
               <Autocomplete
-                sx={{ gridColumn: "span 2" }}
+                sx={{ gridColumn: "span 3" }}
                 freeSolo
                 options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.map(
                   (item) => item.value
@@ -229,23 +218,6 @@ export const ThemThongTinDat = ({
                   errors["ngày_cấp_gcn"]
                 }
               />
-              <TextField
-                fullWidth
-                id="hình_thức_sở_hữu_đất"
-                name="hình_thức_sở_hữu_đất"
-                label="Hình thức sử dụng *"
-                value={values["hình_thức_sở_hữu_đất"]}
-                onChange={handleChange}
-                error={
-                  !!errors["hình_thức_sở_hữu_đất"] &&
-                  touched["hình_thức_sở_hữu_đất"]
-                }
-                helperText={
-                  errors["hình_thức_sở_hữu_đất"] &&
-                  touched["hình_thức_sở_hữu_đất"] &&
-                  errors["hình_thức_sở_hữu_đất"]
-                }
-              />
 
               <Autocomplete
                 fullWidth
@@ -254,11 +226,11 @@ export const ThemThongTinDat = ({
                 getOptionLabel={(option) => option.label}
                 value={
                   MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
-                    (item) => item.value === values["mục_đích_sở_hữu_đất"]
+                    (item) => item.value === values["mục_đích_sử_dụng_đất"]
                   ) ?? null
                 }
                 onChange={(_event, value) => {
-                  setFieldValue("mục_đích_sở_hữu_đất", value?.value ?? "");
+                  setFieldValue("mục_đích_sử_dụng_đất", value?.value ?? "");
                 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Mục đích sử dụng *" />
@@ -291,7 +263,7 @@ export const ThemThongTinDat = ({
                         event.target.value ?? ""
                       );
                     }}
-                    label="Nguồn gốc sử dụng *"
+                    label="Nguồn gốc sử dụng"
                     error={
                       !!errors["nguồn_gốc_sử_dụng_đất"] &&
                       touched["nguồn_gốc_sử_dụng_đất"]
@@ -303,6 +275,19 @@ export const ThemThongTinDat = ({
                     }
                   />
                 )}
+              />
+              <TextField
+                sx={{ gridColumn: "span 3" }}
+                fullWidth
+                id="địa_chỉ"
+                name="địa_chỉ"
+                label="Địa chỉ"
+                value={values["địa_chỉ"]}
+                onChange={handleChange}
+                error={!!errors["địa_chỉ"] && touched["địa_chỉ"]}
+                helperText={
+                  errors["địa_chỉ"] && touched["địa_chỉ"] && errors["địa_chỉ"]
+                }
               />
             </Box>
           </Box>

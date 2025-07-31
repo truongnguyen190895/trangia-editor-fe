@@ -6,9 +6,7 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableRow,
-  Paper,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -55,7 +53,12 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
         <Typography variant="h6">{title}</Typography>
       </Box>
       <Box padding="10px">
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px" marginBottom="10px">
+        <Box
+          display="grid"
+          gridTemplateColumns="1fr 1fr"
+          gap="10px"
+          marginBottom="10px"
+        >
           <Button
             variant="outlined"
             color="secondary"
@@ -74,55 +77,71 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
             Thêm thông tin mảnh đất
           </Button>
         </Box>
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px">
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px" py="1rem">
           <Box>
-            <Typography variant="h4" color="#B12C00" my="1rem">
+            <Typography variant="h4" color="#B12C00">
               Thông tin tài sản
             </Typography>
-            <Box mb="20px" border="1px solid #BCCCDC" borderRadius="5px" padding="10px">
-              {taiSan?.["thông_tin_tài_sản"].split(";").map((item, index) => (
-                <Typography key={index}>Tên tài sản: {item}</Typography>
-              ))}
-              <Typography>Diện tích xây dựng: {taiSan?.["diện_tích_xây_dựng"]} m2</Typography>
-              <Typography variant="body1" fontSize="1.3rem" fontWeight="600" mt="20px">Giá trị hợp đồng: {taiSan?.["số_tiền"]}</Typography>
-            </Box>
-            {taiSan ? (
-              <Box display="flex" gap="10px">
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={handleOpenThongTinTaiSan}
-                >
-                  Sửa
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleDeleteTaiSan}
-                >
-                  Xoá
-                </Button>
-              </Box>
-            ) : null}
-          </Box>
-          <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
-            <Typography variant="h4" color="#B12C00" my="1rem">
-              Thông tin mảnh đất
-            </Typography>
-            <Table sx={{ border: "1px solid #BCCCDC" }}>
+            <Table sx={{ border: "1px solid #BCCCDC", mt: "1rem" }}>
               <TableBody>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Số thửa đất</Typography>
+                    <Typography variant="body1">Tên tài sản</Typography>
                   </TableCell>
-                  <TableCell>{agreementObject?.["số_thửa_đất"]}</TableCell>
+                  <TableCell>{taiSan?.["tên_tài_sản"]}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Tờ bản đồ số</Typography>
+                    <Typography variant="body1">Diện tích sử dụng</Typography>
                   </TableCell>
-                  <TableCell>{agreementObject?.["số_tờ_bản_đồ"]}</TableCell>
+                  <TableCell>{taiSan?.["diện_tích_sử_dụng"]} m2</TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Hình thức sở hữu</Typography>
+                  </TableCell>
+                  <TableCell>{taiSan?.["hình_thức_sở_hữu"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">
+                      Giá trị chuyển nhượng, mua bán
+                    </Typography>
+                  </TableCell>
+                  <TableCell>{taiSan?.["số_tiền"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Bằng chữ</Typography>
+                  </TableCell>
+                  <TableCell>{taiSan?.["số_tiền_bằng_chữ"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Thao tác</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Box display="flex" gap={1}>
+                      <EditIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={handleOpenThongTinTaiSan}
+                      />
+                      <DeleteIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={handleDeleteTaiSan}
+                      />
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Box>
+          <Box>
+            <Typography variant="h4" color="#B12C00">
+              Thông tin mảnh đất
+            </Typography>
+            <Table sx={{ border: "1px solid #BCCCDC", mt: "1rem" }}>
+              <TableBody>
                 <TableRow>
                   <TableCell component="th">
                     <Typography variant="body1">Diện tích (m2)</Typography>
@@ -146,7 +165,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                     <Typography variant="body1">Hình thức sử dụng</Typography>
                   </TableCell>
                   <TableCell>
-                    {agreementObject?.["hình_thức_sở_hữu_đất"]}
+                    {agreementObject?.["hình_thức_sử_dụng_đất"]}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -154,7 +173,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                     <Typography variant="body1">Mục đích sử dụng</Typography>
                   </TableCell>
                   <TableCell>
-                    {agreementObject?.["mục_đích_sở_hữu_đất"]}
+                    {agreementObject?.["mục_đích_sử_dụng_đất"]}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -175,9 +194,9 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
-                    <Typography variant="body1">Địa chỉ nhà đất</Typography>
+                    <Typography variant="body1">Địa chỉ</Typography>
                   </TableCell>
-                  <TableCell>{agreementObject?.["địa_chỉ_nhà_đất"]}</TableCell>
+                  <TableCell>{agreementObject?.["địa_chỉ"]}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
@@ -238,7 +257,7 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                 </TableRow>
               </TableBody>
             </Table>
-          </TableContainer>
+          </Box>
         </Box>
       </Box>
       {open ? (

@@ -3,7 +3,7 @@ import type {
     SingleAgreementParty,
     Couple,
   } from "@/models/agreement-entity";
-  import type { ThongTinTaiSan, ThongTinThuaDat } from "@/models/hdcn-dat-va-tsglvd";
+  import type { ThongTinTaiSan, ThongTinThuaDat } from "@/models/hdmb-tai-san";
   import { createContext, useContext, useState } from "react";
   
   interface HDMBTaiSanContextType {
