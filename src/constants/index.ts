@@ -193,6 +193,10 @@ export const NGUỒN_GỐC_SỬ_DỤNG_ĐẤT: Option[] = [
     value: "Nhà nước giao đất không thu tiền sử dụng đất",
     label: "Nhà nước giao đất không thu tiền sử dụng đất",
   },
+  {
+    value: "Nhà nước giao đất có thu tiền sử dụng đất",
+    label: "Nhà nước giao đất có thu tiền sử dụng đất",
+  },
 ];
 
 export const MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT: Option[] = [
