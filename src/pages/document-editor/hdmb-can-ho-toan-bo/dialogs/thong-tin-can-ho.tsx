@@ -40,12 +40,8 @@ export const ThongTinCanHoDialog = ({
     ),
     nơi_cấp_gcn: Yup.string().required("Nơi cấp giấy chứng nhận là bắt buộc"),
     ngày_cấp_gcn: Yup.string().required("Ngày cấp giấy chứng nhận là bắt buộc"),
-    giá_căn_hộ_bằng_số: isUyQuyen
-      ? Yup.string().optional()
-      : Yup.string().required("Giá căn hộ bằng số là bắt buộc"),
-    giá_căn_hộ_bằng_chữ: isUyQuyen
-      ? Yup.string().nullable()
-      : Yup.string().required("Giá căn hộ bằng chữ là bắt buộc"),
+    giá_căn_hộ_bằng_số: Yup.string().nullable(),
+    giá_căn_hộ_bằng_chữ: Yup.string().nullable(),
     hình_thức_sở_hữu_căn_hộ: isUyQuyen
       ? Yup.string().nullable()
       : Yup.string().required("Hình thức sở hữu căn hộ là bắt buộc"),
@@ -367,7 +363,7 @@ export const ThongTinCanHoDialog = ({
                     type="text"
                     id="giá_căn_hộ_bằng_số"
                     name="giá_căn_hộ_bằng_số"
-                    label="Giá căn hộ bằng số *"
+                    label="Giá căn hộ bằng số"
                     value={values["giá_căn_hộ_bằng_số"]}
                     onChange={(event) => {
                       handleChange(event);
@@ -395,7 +391,7 @@ export const ThongTinCanHoDialog = ({
                     type="text"
                     id="giá_căn_hộ_bằng_chữ"
                     name="giá_căn_hộ_bằng_chữ"
-                    label="Giá căn hộ bằng chữ *"
+                    label="Giá căn hộ bằng chữ"
                     value={values["giá_căn_hộ_bằng_chữ"]}
                     onChange={handleChange}
                     error={
