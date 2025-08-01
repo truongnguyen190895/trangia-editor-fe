@@ -55,8 +55,8 @@ const validationSchema = Yup.object({
   diện_tích: Yup.string().required("Diện tích là bắt buộc"),
   hình_thức_sử_dụng: Yup.string().required("Hình thức sử dụng là bắt buộc"),
   nguồn_gốc_sử_dụng: Yup.string().nullable(),
-  giá_tiền: Yup.string().required("Giá tiền là bắt buộc"),
-  giá_tiền_bằng_chữ: Yup.string().required("Giá tiền bằng chữ là bắt buộc"),
+  giá_tiền: Yup.string().nullable(),
+  giá_tiền_bằng_chữ: Yup.string().nullable(),
   ghi_chú: Yup.string().optional(),
 });
 
@@ -553,7 +553,7 @@ export const ThemThongTinDat = ({
                     fullWidth
                     id="giá_tiền"
                     name="giá_tiền"
-                    label="Giá tiền *"
+                    label="Giá tiền"
                     value={values["giá_tiền"]}
                     onChange={(event) => {
                       handleChange(event);
@@ -578,7 +578,7 @@ export const ThemThongTinDat = ({
                     fullWidth
                     id="giá_tiền_bằng_chữ"
                     name="giá_tiền_bằng_chữ"
-                    label="Giá tiền bằng chữ *"
+                    label="Giá tiền bằng chữ"
                     value={values["giá_tiền_bằng_chữ"]}
                     onChange={handleChange}
                     error={
