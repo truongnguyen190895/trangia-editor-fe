@@ -22,8 +22,8 @@ interface ThongTinNhaDatProps {
 const validationSchema = Yup.object({
   diện_tích_xây_dựng: Yup.string().required("Diện tích xây dựng là bắt buộc"),
   diện_tích_sàn: Yup.string().required("Diện tích sàn là bắt buộc"),
-  số_tiền: Yup.string().required("Số tiền là bắt buộc"),
-  số_tiền_bằng_chữ: Yup.string().required("Số tiền bằng chữ là bắt buộc"),
+  số_tiền: Yup.string(),
+  số_tiền_bằng_chữ: Yup.string(),
   ghi_chú: Yup.string().nullable(),
   hình_thức_sở_hữu: Yup.string().required("Hình thức sở hữu là bắt buộc"),
 });
@@ -143,7 +143,7 @@ export const ThongTinNhaDatDialog = ({
                 type="text"
                 id="số_tiền"
                 name="số_tiền"
-                label="Số tiền *"
+                label="Số tiền"
                 value={values["số_tiền"]}
                 onChange={(event) => {
                   handleChange(event);
@@ -164,7 +164,7 @@ export const ThongTinNhaDatDialog = ({
                 type="text"
                 id="số_tiền_bằng_chữ"
                 name="số_tiền_bằng_chữ"
-                label="Số tiền bằng chữ *"
+                label="Số tiền bằng chữ"
                 value={values["số_tiền_bằng_chữ"]}
                 onChange={handleChange}
                 error={
