@@ -255,3 +255,9 @@ export const render_vb_huy = async (payload: NhomHuySuaDoiPayload) => {
     responseType: "blob",
   });
 };
+
+export const render_vb_cham_dut_hd = async (payload: NhomHuySuaDoiPayload) => {
+    return api.post("/templates/nhom-huy-sua-doi/vb-cham-dut-hd", payload, {
+      responseType: "blob",
+    });
+  };

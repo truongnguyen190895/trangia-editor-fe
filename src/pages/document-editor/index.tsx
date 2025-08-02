@@ -92,9 +92,10 @@ export const DocumentEditor = () => {
           </HDMBTaiSanProvider>
         );
       case "vb-huy":
+      case "vb-cham-dut-hd":
         return (
           <HDMBXeProvider>
-            <NhomHuySuaDoi isHuy={/huy/.test(name ?? "")} />
+            <NhomHuySuaDoi isHuy={/huy/.test(name ?? "")} isChamDutHD={/cham-dut-hd/.test(name ?? "")} />
           </HDMBXeProvider>
         );
       default:

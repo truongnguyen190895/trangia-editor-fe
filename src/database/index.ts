@@ -190,4 +190,11 @@ export const templates = [
     subCategory: "huy-sua-doi-bo-sung-cham-dut",
     path: "vb-huy",
   },
+  {
+    id: 19,
+    name: "VB chấm dứt hợp đồng.docx",
+    type: "agreement",
+    subCategory: "huy-sua-doi-bo-sung-cham-dut",
+    path: "vb-cham-dut-hd",
+  },
 ];

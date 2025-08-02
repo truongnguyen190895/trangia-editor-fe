@@ -262,7 +262,7 @@ export const AddCoupleDialog = ({
               </Box>
             </Box>
             <Box>
-              <Typography variant="body1" sx={{ marginBottom: "20px" }}>
+              <Typography variant="body1" fontSize="1.4rem" fontWeight="600" sx={{ marginBottom: "20px" }}>
                 Thông tin vợ
               </Typography>
               <Box border="1px solid #ccc" borderRadius="10px" padding="20px">

@@ -18,16 +18,20 @@ import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type { NhomHuySuaDoiPayload } from "@/models/nhom-huy-sua-doi";
 import dayjs from "dayjs";
-import { render_vb_huy } from "@/api";
+import { render_vb_huy, render_vb_cham_dut_hd } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { useHDMBXeContext } from "@/context/hdmb-xe";
 
 interface NhomHuySuaDoiProps {
   isHuy?: boolean;
+  isChamDutHD?: boolean;
 }
 
-export const NhomHuySuaDoi = ({ isHuy = false }: NhomHuySuaDoiProps) => {
+export const NhomHuySuaDoi = ({
+  isHuy = false,
+  isChamDutHD = false,
+}: NhomHuySuaDoiProps) => {
   const { partyA, partyB } = useHDMBXeContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -138,29 +142,55 @@ export const NhomHuySuaDoi = ({ isHuy = false }: NhomHuySuaDoiProps) => {
     setOpenDialog(false);
     setIsGenerating(true);
 
-    render_vb_huy(payload)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    if (isHuy) {
+      render_vb_huy(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "VB-Huy.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(4);
+          setIsOutSide(false);
         });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "VB-Huy.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-        setSốBảnGốc(4);
-        setIsOutSide(false);
-      });
+    } else if (isChamDutHD) {
+      render_vb_cham_dut_hd(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "VB-cham-dut-hd.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(4);
+          setIsOutSide(false);
+        });
+    }
   };
 
   return (
