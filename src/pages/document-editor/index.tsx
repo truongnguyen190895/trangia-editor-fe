@@ -94,7 +94,7 @@ export const DocumentEditor = () => {
       case "vb-huy":
         return (
           <HDMBXeProvider>
-            <NhomHuySuaDoi />
+            <NhomHuySuaDoi isHuy={/huy/.test(name ?? "")} />
           </HDMBXeProvider>
         );
       default:

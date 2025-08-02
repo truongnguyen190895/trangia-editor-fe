@@ -23,7 +23,11 @@ import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { useHDMBXeContext } from "@/context/hdmb-xe";
 
-export const NhomHuySuaDoi = () => {
+interface NhomHuySuaDoiProps {
+  isHuy?: boolean;
+}
+
+export const NhomHuySuaDoi = ({ isHuy = false }: NhomHuySuaDoiProps) => {
   const { partyA, partyB } = useHDMBXeContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -31,9 +35,15 @@ export const NhomHuySuaDoi = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [isOutSide, setIsOutSide] = useState(false);
 
-  const isFormValid =
-    (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-    (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0);
+  const validatePayload = (): boolean => {
+    if (isHuy) {
+      return partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
+    }
+    return (
+      (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
+      (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0)
+    );
+  };
 
   const getPayload = (): NhomHuySuaDoiPayload => {
     const couplesA = partyA["vợ_chồng"]
@@ -148,7 +158,7 @@ export const NhomHuySuaDoi = () => {
       })
       .finally(() => {
         setIsGenerating(false);
-        setSốBảnGốc(2);
+        setSốBảnGốc(4);
         setIsOutSide(false);
       });
   };
@@ -189,7 +199,7 @@ export const NhomHuySuaDoi = () => {
         flex={4}
       >
         <PartyEntity title="Bên A" side="partyA" />
-        <PartyEntity title="Bên B" side="partyB" />
+        {!isHuy && <PartyEntity title="Bên B" side="partyB" />}
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
@@ -201,7 +211,7 @@ export const NhomHuySuaDoi = () => {
               textTransform: "uppercase",
               width: "200px",
             }}
-            disabled={!isFormValid}
+            disabled={!validatePayload()}
             onClick={() => setOpenDialog(true)}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
