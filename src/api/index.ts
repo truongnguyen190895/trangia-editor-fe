@@ -15,9 +15,13 @@ import type {
   HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
   KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
 } from "@/models/hdcn-dat-va-tsglvd";
+import type { NhomHuySuaDoiPayload } from "@/models/nhom-huy-sua-doi";
 import type { UyQuyenToanBoQuyenSdDatPayload } from "@/models/uy-quyen";
 import type { HDMBXeOtoPayload } from "@/models/hdmb-xe";
-import type { HDMBTaiSanPayload, KhaiThueHDMBTaiSanPayload } from "@/models/hdmb-tai-san";
+import type {
+  HDMBTaiSanPayload,
+  KhaiThueHDMBTaiSanPayload,
+} from "@/models/hdmb-tai-san";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -229,13 +233,25 @@ export const render_uy_quyen_toan_bo_xe_oto = async (
 };
 
 export const render_hdmb_tai_san = async (payload: HDMBTaiSanPayload) => {
-  return api.post("/templates/nhom-chuyen-nhuong-mua-ban/hdmb-tai-san", payload, {
+  return api.post(
+    "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-tai-san",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
+};
+
+export const render_khai_thue_hdmb_tai_san = async (
+  payload: KhaiThueHDMBTaiSanPayload
+) => {
+  return api.post("/templates/khai-thue/khai-thue-mua-ban-tai-san", payload, {
     responseType: "blob",
   });
 };
 
-export const render_khai_thue_hdmb_tai_san = async (payload: KhaiThueHDMBTaiSanPayload) => {
-  return api.post("/templates/khai-thue/khai-thue-mua-ban-tai-san", payload, {
+export const render_vb_huy = async (payload: NhomHuySuaDoiPayload) => {
+  return api.post("/templates/nhom-huy-sua-doi/vb-huy", payload, {
     responseType: "blob",
   });
 };

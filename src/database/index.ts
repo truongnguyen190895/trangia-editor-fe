@@ -183,4 +183,11 @@ export const templates = [
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-tai-san",
   },
+  {
+    id: 18,
+    name: "VB huỷ.docx",
+    type: "agreement",
+    subCategory: "huy-sua-doi-bo-sung-cham-dut",
+    path: "vb-huy",
+  },
 ];

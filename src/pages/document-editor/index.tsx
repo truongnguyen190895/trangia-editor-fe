@@ -15,6 +15,7 @@ import { HDTangChoCanHoToanBo } from "@/pages/document-editor/hdtc-can-ho-toan-b
 import { UyQuyenToanBoQuyenSdDat } from "@/pages/document-editor/uy-quyen-toan-bo-quyen-sd-dat";
 import { HDMBXe } from "@/pages/document-editor/hdmb-xe";
 import { HDMBTaiSan } from "@/pages/document-editor/hdmb-tai-san";
+import { NhomHuySuaDoi } from "@/pages/document-editor/nhom-huy-sua-doi";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
@@ -90,6 +91,12 @@ export const DocumentEditor = () => {
             <HDMBTaiSan />
           </HDMBTaiSanProvider>
         );
+      case "vb-huy":
+        return (
+          <HDMBXeProvider>
+            <NhomHuySuaDoi />
+          </HDMBXeProvider>
+        );
       default:
         return <Box>Not found</Box>;
     }
@@ -129,6 +136,8 @@ export const DocumentEditor = () => {
         return "Uỷ quyền xe ô tô";
       case "hdmb-tai-san":
         return "Hợp đồng mua bán tài sản";
+      case "vb-huy":
+        return "Văn bản huỷ";
       default:
         return "";
     }
