@@ -22,8 +22,8 @@ interface ThongTinTaiSanProps {
 const validationSchema = Yup.object({
   thông_tin_tài_sản: Yup.string().required("Thông tin tài sản là bắt buộc"),
   diện_tích_xây_dựng: Yup.string().required("Diện tích xây dựng là bắt buộc"),
-  số_tiền: Yup.string().required("Số tiền là bắt buộc"),
-  số_tiền_bằng_chữ: Yup.string().required("Số tiền bằng chữ là bắt buộc"),
+  số_tiền: Yup.string(),
+  số_tiền_bằng_chữ: Yup.string(),
 });
 
 export const ThongTinTaiSanDialog = ({
@@ -100,7 +100,7 @@ export const ThongTinTaiSanDialog = ({
                 fullWidth
                 id="số_tiền"
                 name="số_tiền"
-                label="Số tiền *"
+                label="Số tiền"
                 value={values.số_tiền}
                 onChange={(e) => {
                   handleChange(e);

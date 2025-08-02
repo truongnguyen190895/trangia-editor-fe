@@ -37,10 +37,10 @@ const mockData = [
   },
   {
     id: 5,
-    name: "Huỷ, sửa đổi, bổ xung, chấm dứt",
-    description: "Huỷ, sửa đổi, bổ xung, chấm dứt",
+    name: "Huỷ, sửa đổi, bổ sung, chấm dứt",
+    description: "Huỷ, sửa đổi, bổ sung, chấm dứt",
     category: "hop-dong",
-    subCategory: "huy-sua-doi-bo-xung-cham-dut",
+    subCategory: "huy-sua-doi-bo-sung-cham-dut",
     active: true,
   },
 ];
