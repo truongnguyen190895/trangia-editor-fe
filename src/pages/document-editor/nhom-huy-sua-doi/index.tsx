@@ -18,7 +18,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type { NhomHuySuaDoiPayload } from "@/models/nhom-huy-sua-doi";
 import dayjs from "dayjs";
-import { render_vb_huy, render_vb_cham_dut_hd } from "@/api";
+import {
+  render_vb_huy,
+  render_vb_cham_dut_hd,
+  render_vb_cham_dut_hq_uy_quyen,
+} from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { useHDMBXeContext } from "@/context/hdmb-xe";
@@ -26,11 +30,13 @@ import { useHDMBXeContext } from "@/context/hdmb-xe";
 interface NhomHuySuaDoiProps {
   isHuy?: boolean;
   isChamDutHD?: boolean;
+  isChamDutHQUyQuyen?: boolean;
 }
 
 export const NhomHuySuaDoi = ({
   isHuy = false,
   isChamDutHD = false,
+  isChamDutHQUyQuyen = false,
 }: NhomHuySuaDoiProps) => {
   const { partyA, partyB } = useHDMBXeContext();
   const { palette } = useTheme();
@@ -176,6 +182,30 @@ export const NhomHuySuaDoi = ({
           const link = document.createElement("a");
           link.href = url;
           link.download = "VB-cham-dut-hd.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+          setSốBảnGốc(4);
+          setIsOutSide(false);
+        });
+    } else if (isChamDutHQUyQuyen) {
+      render_vb_cham_dut_hq_uy_quyen(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "VB-cham-dut-hq-uy-quyen.docx";
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);

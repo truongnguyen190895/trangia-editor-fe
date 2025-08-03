@@ -257,7 +257,13 @@ export const render_vb_huy = async (payload: NhomHuySuaDoiPayload) => {
 };
 
 export const render_vb_cham_dut_hd = async (payload: NhomHuySuaDoiPayload) => {
-    return api.post("/templates/nhom-huy-sua-doi/vb-cham-dut-hd", payload, {
-      responseType: "blob",
-    });
-  };
+  return api.post("/templates/nhom-huy-sua-doi/vb-cham-dut-hd", payload, {
+    responseType: "blob",
+  });
+};
+
+export const render_vb_cham_dut_hq_uy_quyen = async (payload: NhomHuySuaDoiPayload) => {
+  return api.post("/templates/nhom-huy-sua-doi/vb-cham-dut-hq-uy-quyen", payload, {
+    responseType: "blob",
+  });
+};

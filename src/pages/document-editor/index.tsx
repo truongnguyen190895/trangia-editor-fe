@@ -93,9 +93,14 @@ export const DocumentEditor = () => {
         );
       case "vb-huy":
       case "vb-cham-dut-hd":
+      case "vb-cham-dut-hq-uy-quyen":
         return (
           <HDMBXeProvider>
-            <NhomHuySuaDoi isHuy={/huy/.test(name ?? "")} isChamDutHD={/cham-dut-hd/.test(name ?? "")} />
+            <NhomHuySuaDoi
+              isHuy={/huy/.test(name ?? "")}
+              isChamDutHD={/cham-dut-hd/.test(name ?? "")}
+              isChamDutHQUyQuyen={/cham-dut-hq-uy-quyen/.test(name ?? "")}
+            />
           </HDMBXeProvider>
         );
       default:
@@ -139,6 +144,10 @@ export const DocumentEditor = () => {
         return "Hợp đồng mua bán tài sản";
       case "vb-huy":
         return "Văn bản huỷ";
+      case "vb-cham-dut-hq-uy-quyen":
+        return "Văn bản chấm dứt hợp đồng uỷ quyền";
+      case "vb-cham-dut-hd":
+        return "Văn bản chấm dứt hợp đồng";
       default:
         return "";
     }
