@@ -204,4 +204,11 @@ export const templates = [
     subCategory: "huy-sua-doi-bo-sung-cham-dut",
     path: "vb-cham-dut-hq-uy-quyen",
   },
+  {
+    id: 21,
+    name: "HĐ đặt cọc.docx",
+    type: "agreement",
+    subCategory: "thue-muon-dat-coc",
+    path: "hd-dat-coc",
+  },
 ];

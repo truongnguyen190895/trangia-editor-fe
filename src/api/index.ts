@@ -22,6 +22,7 @@ import type {
   HDMBTaiSanPayload,
   KhaiThueHDMBTaiSanPayload,
 } from "@/models/hdmb-tai-san";
+import type { HdDatCocPayload } from "@/models/hd-dat-coc";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -264,6 +265,12 @@ export const render_vb_cham_dut_hd = async (payload: NhomHuySuaDoiPayload) => {
 
 export const render_vb_cham_dut_hq_uy_quyen = async (payload: NhomHuySuaDoiPayload) => {
   return api.post("/templates/nhom-huy-sua-doi/vb-cham-dut-hq-uy-quyen", payload, {
+    responseType: "blob",
+  });
+};
+
+export const render_hd_dat_coc = async (payload: HdDatCocPayload) => {
+  return api.post("/templates/nhom-thue-muon-dat-coc/hd-dat-coc", payload, {
     responseType: "blob",
   });
 };

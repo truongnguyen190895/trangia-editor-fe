@@ -9,6 +9,7 @@ import { HdcnQuyenSdDatProvider } from "@/context/hdcn-quyen-sd-dat-context";
 import { HDMBCanHoProvider } from "@/context/hdmb-can-ho";
 import { HDMBNhaDatProvider } from "@/context/hdmb-nha-dat";
 import { HDMBTaiSanProvider } from "@/context/hdmb-tai-san";
+import { HDDatCocProvider } from "@/context/hd-dat-coc";
 import { HDMBXeProvider } from "@/context/hdmb-xe";
 import { HDCNDatVaTaiSanGanLienVoiDatToanBoProvider } from "@/context/hdcn-dat-va-tai-san-glvd";
 import { HDTangChoCanHoToanBo } from "@/pages/document-editor/hdtc-can-ho-toan-bo";
@@ -16,6 +17,7 @@ import { UyQuyenToanBoQuyenSdDat } from "@/pages/document-editor/uy-quyen-toan-b
 import { HDMBXe } from "@/pages/document-editor/hdmb-xe";
 import { HDMBTaiSan } from "@/pages/document-editor/hdmb-tai-san";
 import { NhomHuySuaDoi } from "@/pages/document-editor/nhom-huy-sua-doi";
+import { NhomThueMuonDatCoc } from "@/pages/document-editor/nhom-thue-muon-dat-coc";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
@@ -103,6 +105,12 @@ export const DocumentEditor = () => {
             />
           </HDMBXeProvider>
         );
+      case "hd-dat-coc":
+        return (
+          <HDDatCocProvider>
+            <NhomThueMuonDatCoc />
+          </HDDatCocProvider>
+        );
       default:
         return <Box>Not found</Box>;
     }
@@ -148,6 +156,8 @@ export const DocumentEditor = () => {
         return "Văn bản chấm dứt hợp đồng uỷ quyền";
       case "vb-cham-dut-hd":
         return "Văn bản chấm dứt hợp đồng";
+      case "hd-dat-coc":
+        return "Hợp đồng đặt cọc";
       default:
         return "";
     }
