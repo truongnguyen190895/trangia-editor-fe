@@ -13,7 +13,7 @@ export interface HdDatCocPayload {
   đặt_cọc_đất: DatCocDatHoacNhaDat | null;
   đặt_cọc_nhà_đất: DatCocDatHoacNhaDat | null;
   đặt_cọc_căn_hộ: DatCocCanHo | null;
-  đặt_cọc_tài_sản: DatCocTàiSản | null;
+  đặt_cọc_tài_sản: DatCocTaiSan | null;
   số_tiền_cọc: string;
   số_tiền_cọc_bằng_chữ: string;
   thời_hạn_cọc: string;
@@ -42,7 +42,7 @@ export interface DatCocCanHo extends GiayChungNhan {
   địa_chỉ_hiển_thị: string;
 }
 
-export interface DatCocTàiSản extends GiayChungNhan {
+export interface DatCocTaiSan extends GiayChungNhan {
   tên_tài_sản: string;
   địa_chỉ_hiển_thị: string;
 }
