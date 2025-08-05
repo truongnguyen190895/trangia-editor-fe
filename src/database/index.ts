@@ -211,4 +211,11 @@ export const templates = [
     subCategory: "thue-muon-dat-coc",
     path: "hd-dat-coc",
   },
+  {
+    id: 22,
+    name: "HĐ đặt cọc chưa xoá chấp.docx",
+    type: "agreement",
+    subCategory: "thue-muon-dat-coc",
+    path: "hd-dat-coc-chua-xoa-chap",
+  },
 ];

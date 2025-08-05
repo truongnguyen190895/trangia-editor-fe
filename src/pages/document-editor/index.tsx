@@ -106,9 +106,10 @@ export const DocumentEditor = () => {
           </HDMBXeProvider>
         );
       case "hd-dat-coc":
+      case "hd-dat-coc-chua-xoa-chap":
         return (
           <HDDatCocProvider>
-            <NhomThueMuonDatCoc />
+            <NhomThueMuonDatCoc isChuaXoaChap={/chua-xoa-chap/.test(name ?? "")} />
           </HDDatCocProvider>
         );
       default:
@@ -158,6 +159,8 @@ export const DocumentEditor = () => {
         return "Văn bản chấm dứt hợp đồng";
       case "hd-dat-coc":
         return "Hợp đồng đặt cọc";
+      case "hd-dat-coc-chua-xoa-chap":
+        return "Hợp đồng đặt cọc chưa xoá chấp";
       default:
         return "";
     }

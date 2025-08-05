@@ -56,7 +56,11 @@ interface AdditionalInfo {
   tiền_phạt_cọc_bằng_chữ: string;
 }
 
-export const NhomThueMuonDatCoc = () => {
+interface Props {
+  isChuaXoaChap: boolean;
+}
+
+export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
   const { partyA, partyB } = useHDDatCocContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -219,7 +223,7 @@ export const NhomThueMuonDatCoc = () => {
     const payload = getPayload();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hd_dat_coc(payload)
+    render_hd_dat_coc(payload, isChuaXoaChap)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -227,7 +231,7 @@ export const NhomThueMuonDatCoc = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "HD Dat-coc.docx";
+        link.download = isChuaXoaChap ? "HD Dat-coc chưa xoá chấp.docx" : "HD Dat-coc.docx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

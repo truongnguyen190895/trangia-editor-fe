@@ -269,8 +269,14 @@ export const render_vb_cham_dut_hq_uy_quyen = async (payload: NhomHuySuaDoiPaylo
   });
 };
 
-export const render_hd_dat_coc = async (payload: HdDatCocPayload) => {
-  return api.post("/templates/nhom-thue-muon-dat-coc/hd-dat-coc", payload, {
+export const render_hd_dat_coc = async (payload: HdDatCocPayload, isChuaXoaChap: boolean) => {
+    let url = '';
+    if (isChuaXoaChap) {
+        url = "/templates/nhom-thue-muon-dat-coc/hd-dat-coc-chua-xoa-chap";
+    } else {
+        url = "/templates/nhom-thue-muon-dat-coc/hd-dat-coc";
+    }
+  return api.post(url, payload, {
     responseType: "blob",
   });
 };
