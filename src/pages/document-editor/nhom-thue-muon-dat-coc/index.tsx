@@ -15,6 +15,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Autocomplete,
 } from "@mui/material";
 import { PartyEntity } from "./components/party-entity";
 import SearchIcon from "@mui/icons-material/Search";
@@ -25,6 +26,7 @@ import { render_hd_dat_coc } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { useHDDatCocContext } from "@/context/hd-dat-coc";
+import { CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT } from "@/constants";
 
 const typeOptions = [
   {
@@ -225,7 +227,7 @@ export const NhomThueMuonDatCoc = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "VB-Huy.docx";
+        link.download = "HD Dat-coc.docx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -366,6 +368,7 @@ export const NhomThueMuonDatCoc = () => {
               }
             />
             <TextField
+              sx={{ gridColumn: "span 2" }}
               label="Địa chỉ"
               value={datCocTaiSanForm.địa_chỉ_hiển_thị}
               onChange={(e) =>
@@ -449,15 +452,37 @@ export const NhomThueMuonDatCoc = () => {
                 gridTemplateColumns="repeat(3, 1fr)"
                 gap="1rem"
               >
-                <TextField
-                  label="Loại giấy chứng nhận"
-                  value={giayChungNhan.loại_gcn}
-                  onChange={(e) =>
+                <Autocomplete
+                  sx={{ gridColumn: "span 2" }}
+                  freeSolo
+                  options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
+                  value={
+                    CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
+                      (item) => item.value === giayChungNhan.loại_gcn
+                    ) ?? null
+                  }
+                  getOptionLabel={(option) => 
+                    typeof option === 'string' ? option : option?.label ?? ""
+                  }
+                  onChange={(_event, value) => {
                     setGiayChungNhan({
                       ...giayChungNhan,
-                      loại_gcn: e.target.value,
-                    })
-                  }
+                      loại_gcn: typeof value === 'string' ? value : value?.value ?? "",
+                    });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Loại giấy chứng nhận"
+                      name="loại_giấy_chứng_nhận"
+                      onChange={(e) => {
+                        setGiayChungNhan({
+                          ...giayChungNhan,
+                          loại_gcn: e.target.value,
+                        });
+                      }}
+                    />
+                  )}
                 />
                 <TextField
                   label="Số giấy chứng nhận"
@@ -510,7 +535,7 @@ export const NhomThueMuonDatCoc = () => {
                 gap="1rem"
               >
                 <TextField
-                  label="Số tiền cọc"
+                  label="Số tiền cọc (VNĐ)"
                   value={additionalInfo.số_tiền_cọc}
                   helperText={`Bằng chữ: ${additionalInfo.số_tiền_cọc_bằng_chữ}`}
                   onChange={(e) =>
@@ -524,7 +549,7 @@ export const NhomThueMuonDatCoc = () => {
                   }
                 />
                 <TextField
-                  label="Thời hạn cọc"
+                  label="Thời hạn cọc (năm)"
                   value={additionalInfo.thời_hạn_cọc}
                   onChange={(e) =>
                     setAdditionalInfo({
@@ -538,7 +563,7 @@ export const NhomThueMuonDatCoc = () => {
                   helperText={`Bằng chữ: ${additionalInfo.thời_hạn_cọc_bằng_chữ}`}
                 />
                 <TextField
-                  label="Tiền phạt cọc"
+                  label="Tiền phạt cọc (VNĐ)"
                   value={additionalInfo.tiền_phạt_cọc}
                   onChange={(e) =>
                     setAdditionalInfo({
