@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import AddIcon from "@mui/icons-material/Add";
-import dayjs from "dayjs";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ThemThongTinDat } from "../../dialogs/them-thong-tin-dat";
@@ -127,9 +126,7 @@ export const ObjectEntity = ({
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {dayjs(
-                        agreementObject["ngày_cấp_giấy_chứng_nhận"]
-                      ).format("DD/MM/YYYY")}
+                      {agreementObject["ngày_cấp_giấy_chứng_nhận"]}
                     </TableCell>
                   </TableRow>
                   <TableRow>

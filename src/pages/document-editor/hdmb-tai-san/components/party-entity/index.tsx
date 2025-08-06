@@ -18,7 +18,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useHDMBTaiSanContext } from "@/context/hdmb-tai-san";
 import { AddSingleDialog } from "../../dialogs/add-single";
 import { AddCoupleDialog } from "../../dialogs/add-couple";
-import dayjs from "dayjs";
 
 interface PartyEntityProps {
   title: string;
@@ -146,7 +145,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                       <TableCell>{entity["giới_tính"]}</TableCell>
                       <TableCell>{entity.tên}</TableCell>
                       <TableCell>
-                        {dayjs(entity["ngày_sinh"]).format("DD/MM/YYYY")}
+                        {entity["ngày_sinh"]}
                       </TableCell>
                       <TableCell>{entity["loại_giấy_tờ"]}</TableCell>
                       <TableCell>{entity["số_giấy_tờ"]}</TableCell>
@@ -256,9 +255,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                         <TableCell>{entity.chồng["giới_tính"]}</TableCell>
                         <TableCell>{entity.chồng.tên}</TableCell>
                         <TableCell>
-                          {dayjs(entity.chồng["ngày_sinh"]).format(
-                            "DD/MM/YYYY"
-                          )}
+                          {entity.chồng["ngày_sinh"]}
                         </TableCell>
                         <TableCell>{entity.chồng["loại_giấy_tờ"]}</TableCell>
                         <TableCell>{entity.chồng["số_giấy_tờ"]}</TableCell>
@@ -299,7 +296,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                         <TableCell>{entity.vợ["giới_tính"]}</TableCell>
                         <TableCell>{entity.vợ.tên}</TableCell>
                         <TableCell>
-                          {dayjs(entity.vợ["ngày_sinh"]).format("DD/MM/YYYY")}
+                          {entity.vợ["ngày_sinh"]}
                         </TableCell>
                         <TableCell>{entity.vợ["loại_giấy_tờ"]}</TableCell>
                         <TableCell>{entity.vợ["số_giấy_tờ"]}</TableCell>

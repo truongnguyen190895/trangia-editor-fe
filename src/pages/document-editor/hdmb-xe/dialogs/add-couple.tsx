@@ -173,7 +173,6 @@ export const AddCoupleDialog = ({
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Ngày sinh *</FormLabel>
                     <TextField
-                      type="date"
                       value={values["chồng"]["ngày_sinh"]}
                       name="chồng.ngày_sinh"
                       onChange={handleChange}
@@ -217,7 +216,6 @@ export const AddCoupleDialog = ({
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Ngày cấp *</FormLabel>
                     <TextField
-                      type="date"
                       value={values["chồng"]["ngày_cấp"]}
                       name="chồng.ngày_cấp"
                       onChange={handleChange}
@@ -296,7 +294,6 @@ export const AddCoupleDialog = ({
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Ngày sinh *</FormLabel>
                     <TextField
-                      type="date"
                       value={values["vợ"]["ngày_sinh"]}
                       name="vợ.ngày_sinh"
                       onChange={handleChange}
@@ -340,7 +337,6 @@ export const AddCoupleDialog = ({
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Ngày cấp *</FormLabel>
                     <TextField
-                      type="date"
                       value={values["vợ"]["ngày_cấp"]}
                       name="vợ.ngày_cấp"
                       onChange={handleChange}

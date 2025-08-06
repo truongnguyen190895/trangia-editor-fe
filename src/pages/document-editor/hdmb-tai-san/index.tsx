@@ -29,8 +29,7 @@ import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 
 export const HDMBTaiSan = () => {
-  const { partyA, partyB, agreementObject, taiSan } =
-    useHDMBTaiSanContext();
+  const { partyA, partyB, agreementObject, taiSan } = useHDMBTaiSanContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
@@ -51,8 +50,8 @@ export const HDMBTaiSan = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         tình_trạng_hôn_nhân_vợ_chồng:
           couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
@@ -62,8 +61,8 @@ export const HDMBTaiSan = () => {
         partyA["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: "vợ",
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
           tình_trạng_hôn_nhân_vợ_chồng:
             couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
@@ -73,8 +72,8 @@ export const HDMBTaiSan = () => {
     const couplesB = partyB["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
@@ -82,8 +81,8 @@ export const HDMBTaiSan = () => {
         partyB["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: "vợ",
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
           ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
@@ -94,8 +93,8 @@ export const HDMBTaiSan = () => {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
             ...person,
-            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            ngày_sinh: person["ngày_sinh"],
+            ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
             quan_hệ: person["quan_hệ"] || null,
@@ -108,8 +107,8 @@ export const HDMBTaiSan = () => {
         cá_thể: [
           ...partyB["cá_nhân"].map((person) => ({
             ...person,
-            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            ngày_sinh: person["ngày_sinh"],
+            ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
             quan_hệ: person["quan_hệ"] || null,
@@ -154,7 +153,7 @@ export const HDMBTaiSan = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = 'HDMB Tai San.docx';
+        link.download = "HDMB Tai San.docx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -179,78 +178,58 @@ export const HDMBTaiSan = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         quan_hệ: null,
-        thành_phố:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: null,
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
-          thành_phố:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-          phường:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
     const couplesB = partyB["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
-        thành_phố:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: null,
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
-          thành_phố:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-          phường:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
 
     const các_cá_thể_bên_A = [
       ...partyA["cá_nhân"].map((person) => ({
         ...person,
-        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: person["ngày_sinh"],
+        ngày_cấp: person["ngày_cấp"],
         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(person["địa_chỉ_thường_trú"]),
       })),
       ...couplesA,
     ];
     const các_cá_thể_bên_B = [
       ...partyB["cá_nhân"].map((person) => ({
         ...person,
-        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: person["ngày_sinh"],
+        ngày_cấp: person["ngày_cấp"],
         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(person["địa_chỉ_thường_trú"]),
       })),
       ...couplesB,
     ];
@@ -287,10 +266,10 @@ export const HDMBTaiSan = () => {
           số: agreementObject["diện_tích_đất_bằng_số"],
         },
         mục_đích_và_thời_hạn_sử_dụng: [
-            {
-                phân_loại: agreementObject["mục_đích_sử_dụng_đất"],
-                diện_tích: agreementObject["diện_tích_đất_bằng_số"]
-            }
+          {
+            phân_loại: agreementObject["mục_đích_sử_dụng_đất"],
+            diện_tích: agreementObject["diện_tích_đất_bằng_số"],
+          },
         ],
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
       },

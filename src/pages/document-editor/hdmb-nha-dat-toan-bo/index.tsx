@@ -69,8 +69,8 @@ export const HDMBNhaDatToanBo = ({
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         tình_trạng_hôn_nhân_vợ_chồng:
           couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
@@ -80,8 +80,8 @@ export const HDMBNhaDatToanBo = ({
         partyA["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: "vợ",
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
           tình_trạng_hôn_nhân_vợ_chồng:
             couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
@@ -91,8 +91,8 @@ export const HDMBNhaDatToanBo = ({
     const couplesB = partyB["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
@@ -100,8 +100,8 @@ export const HDMBNhaDatToanBo = ({
         partyB["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: "vợ",
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
           ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
@@ -112,8 +112,8 @@ export const HDMBNhaDatToanBo = ({
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
             ...person,
-            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            ngày_sinh: person["ngày_sinh"],
+            ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
             quan_hệ: person["quan_hệ"] || null,
@@ -126,8 +126,8 @@ export const HDMBNhaDatToanBo = ({
         cá_thể: [
           ...partyB["cá_nhân"].map((person) => ({
             ...person,
-            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            ngày_sinh: person["ngày_sinh"],
+            ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
             quan_hệ: person["quan_hệ"] || null,
@@ -246,78 +246,58 @@ export const HDMBNhaDatToanBo = ({
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         quan_hệ: null,
-        thành_phố:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: null,
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
-          thành_phố:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-          phường:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
     const couplesB = partyB["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: (couple.chồng["ngày_sinh"]),
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
-        thành_phố:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: null,
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
-          thành_phố:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-          phường:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
 
     const các_cá_thể_bên_A = [
       ...partyA["cá_nhân"].map((person) => ({
         ...person,
-        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: person["ngày_sinh"],
+        ngày_cấp: person["ngày_cấp"],
         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(person["địa_chỉ_thường_trú"]),
       })),
       ...couplesA,
     ];
     const các_cá_thể_bên_B = [
       ...partyB["cá_nhân"].map((person) => ({
         ...person,
-        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: person["ngày_sinh"],
+        ngày_cấp: person["ngày_cấp"],
         tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+        ...extractAddress(person["địa_chỉ_thường_trú"]),
       })),
       ...couplesB,
     ];

@@ -241,7 +241,6 @@ export const ThemThongTinDat = ({
                 id="ngày_cấp_giấy_chứng_nhận"
                 name="ngày_cấp_giấy_chứng_nhận"
                 label="Ngày cấp giấy chứng nhận *"
-                type="date"
                 inputProps={{
                   max: new Date().toISOString().split("T")[0],
                 }}

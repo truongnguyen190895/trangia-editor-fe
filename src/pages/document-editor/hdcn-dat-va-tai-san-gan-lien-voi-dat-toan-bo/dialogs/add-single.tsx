@@ -141,7 +141,6 @@ export const AddSingleDialog = ({
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Ngày sinh *</FormLabel>
               <TextField
-                type="date"
                 value={values["ngày_sinh"]}
                 name="ngày_sinh"
                 fullWidth
@@ -183,7 +182,6 @@ export const AddSingleDialog = ({
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Ngày cấp *</FormLabel>
               <TextField
-                type="date"
                 value={values["ngày_cấp"]}
                 name="ngày_cấp"
                 onChange={handleChange}
@@ -211,7 +209,7 @@ export const AddSingleDialog = ({
                 <FormHelperText error>{errors["nơi_cấp"]}</FormHelperText>
               )}
             </FormControl>
-            <FormControl sx={{ marginBottom: "10px" }}>
+            <FormControl sx={{ marginBottom: "10px", gridColumn: "span 2" }}>
               <FormLabel>Địa chỉ thường trú *</FormLabel>
               <TextField
                 value={values["địa_chỉ_thường_trú"]}

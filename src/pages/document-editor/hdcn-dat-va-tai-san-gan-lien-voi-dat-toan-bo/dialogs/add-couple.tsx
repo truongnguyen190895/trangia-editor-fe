@@ -173,7 +173,6 @@ export const AddCoupleDialog = ({
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Ngày sinh *</FormLabel>
                     <TextField
-                      type="date"
                       value={values["chồng"]["ngày_sinh"]}
                       name="chồng.ngày_sinh"
                       onChange={handleChange}
@@ -217,7 +216,6 @@ export const AddCoupleDialog = ({
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Ngày cấp *</FormLabel>
                     <TextField
-                      type="date"
                       value={values["chồng"]["ngày_cấp"]}
                       name="chồng.ngày_cấp"
                       onChange={handleChange}
@@ -247,7 +245,9 @@ export const AddCoupleDialog = ({
                       </FormHelperText>
                     )}
                   </FormControl>
-                  <FormControl sx={{ marginBottom: "10px", gridColumn: 'span 2' }}>
+                  <FormControl
+                    sx={{ marginBottom: "10px", gridColumn: "span 2" }}
+                  >
                     <FormLabel>Địa chỉ thường trú *</FormLabel>
                     <TextField
                       value={values["chồng"]["địa_chỉ_thường_trú"]}
@@ -296,7 +296,6 @@ export const AddCoupleDialog = ({
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Ngày sinh *</FormLabel>
                     <TextField
-                      type="date"
                       value={values["vợ"]["ngày_sinh"]}
                       name="vợ.ngày_sinh"
                       onChange={handleChange}
@@ -340,7 +339,6 @@ export const AddCoupleDialog = ({
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Ngày cấp *</FormLabel>
                     <TextField
-                      type="date"
                       value={values["vợ"]["ngày_cấp"]}
                       name="vợ.ngày_cấp"
                       onChange={handleChange}
@@ -370,7 +368,9 @@ export const AddCoupleDialog = ({
                       </FormHelperText>
                     )}
                   </FormControl>
-                  <FormControl sx={{ marginBottom: "10px", gridColumn: 'span 2' }}>
+                  <FormControl
+                    sx={{ marginBottom: "10px", gridColumn: "span 2" }}
+                  >
                     <FormLabel>Địa chỉ thường trú *</FormLabel>
                     <TextField
                       value={values["vợ"]["địa_chỉ_thường_trú"]}

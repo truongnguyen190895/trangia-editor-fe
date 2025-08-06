@@ -22,7 +22,10 @@ import type {
   KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
 } from "@/models/hdcn-dat-va-tsglvd";
 import dayjs from "dayjs";
-import { render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo, render_khai_thue_hdcn_dat_va_tsglvd_toan_bo } from "@/api";
+import {
+  render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo,
+  render_khai_thue_hdcn_dat_va_tsglvd_toan_bo,
+} from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat-va-tai-san-glvd";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -51,8 +54,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         tình_trạng_hôn_nhân_vợ_chồng:
           couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
@@ -62,8 +65,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
         partyA["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: "vợ",
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
           tình_trạng_hôn_nhân_vợ_chồng:
             couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
@@ -73,8 +76,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
     const couplesB = partyB["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
@@ -82,8 +85,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
         partyB["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: "vợ",
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
           ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
@@ -94,8 +97,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
             ...person,
-            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            ngày_sinh: person["ngày_sinh"],
+            ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
             quan_hệ: person["quan_hệ"] || null,
@@ -108,8 +111,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
         cá_thể: [
           ...partyB["cá_nhân"].map((person) => ({
             ...person,
-            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            ngày_sinh: person["ngày_sinh"],
+            ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
             quan_hệ: person["quan_hệ"] || null,
@@ -172,139 +175,120 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
       });
   };
 
-  const getPayloadToKhaiChung = (): KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload => {
-    if (!agreementObject || !taiSan) {
-      throw new Error("Agreement object is null");
-    }
+  const getPayloadToKhaiChung =
+    (): KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload => {
+      if (!agreementObject || !taiSan) {
+        throw new Error("Agreement object is null");
+      }
 
-    const couplesA = partyA["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
-        tình_trạng_hôn_nhân: null,
-        quan_hệ: null,
-        thành_phố:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-      }))
-      .concat(
-        partyA["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: null,
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+      const couplesA = partyA["vợ_chồng"]
+        .map((couple) => ({
+          ...couple.chồng,
+          ngày_sinh: couple.chồng["ngày_sinh"],
+          ngày_cấp: couple.chồng["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
-          thành_phố:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-          phường:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-        }))
-      );
-    const couplesB = partyB["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
-        tình_trạng_hôn_nhân: null,
-        thành_phố:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường:
-          couple.chồng["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: couple.chồng["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-      }))
-      .concat(
-        partyB["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
           quan_hệ: null,
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
-          tình_trạng_hôn_nhân: null,
-          thành_phố:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-          phường:
-            couple.vợ["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-          thôn: couple.vợ["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
+          ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
         }))
-      );
+        .concat(
+          partyA["vợ_chồng"].map((couple) => ({
+            ...couple.vợ,
+            quan_hệ: null,
+            ngày_sinh: couple.vợ["ngày_sinh"],
+            ngày_cấp: couple.vợ["ngày_cấp"],
+            tình_trạng_hôn_nhân: null,
+            ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
+          }))
+        );
+      const couplesB = partyB["vợ_chồng"]
+        .map((couple) => ({
+          ...couple.chồng,
+          ngày_sinh: couple.chồng["ngày_sinh"],
+          ngày_cấp: couple.chồng["ngày_cấp"],
+          tình_trạng_hôn_nhân: null,
+          ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
+        }))
+        .concat(
+          partyB["vợ_chồng"].map((couple) => ({
+            ...couple.vợ,
+            quan_hệ: null,
+            ngày_sinh: couple.vợ["ngày_sinh"],
+            ngày_cấp: couple.vợ["ngày_cấp"],
+            tình_trạng_hôn_nhân: null,
+            ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
+          }))
+        );
 
-    const các_cá_thể_bên_A = [
-      ...partyA["cá_nhân"].map((person) => ({
-        ...person,
-        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
-        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-      })),
-      ...couplesA,
-    ];
-    const các_cá_thể_bên_B = [
-      ...partyB["cá_nhân"].map((person) => ({
-        ...person,
-        ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
-        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        thành_phố: person["địa_chỉ_thường_trú"]?.split(",")[2]?.trim() || null,
-        phường: person["địa_chỉ_thường_trú"]?.split(",")[1]?.trim() || null,
-        thôn: person["địa_chỉ_thường_trú"]?.split(",")[0]?.trim() || null,
-      })),
-      ...couplesB,
-    ];
+      const các_cá_thể_bên_A = [
+        ...partyA["cá_nhân"].map((person) => ({
+          ...person,
+          ngày_sinh: person["ngày_sinh"],
+          ngày_cấp: person["ngày_cấp"],
+          tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+          ...extractAddress(person["địa_chỉ_thường_trú"]),
+        })),
+        ...couplesA,
+      ];
+      const các_cá_thể_bên_B = [
+        ...partyB["cá_nhân"].map((person) => ({
+          ...person,
+          ngày_sinh: person["ngày_sinh"],
+          ngày_cấp: person["ngày_cấp"],
+          tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+          ...extractAddress(person["địa_chỉ_thường_trú"]),
+        })),
+        ...couplesB,
+      ];
 
-    const payload: KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload = {
-      bên_A: {
-        cá_thể: các_cá_thể_bên_A,
-      },
-      bên_B: {
-        cá_thể: các_cá_thể_bên_B,
-      },
-      bảng_tncn_bên_A: các_cá_thể_bên_A.map((person, index) => ({
-        stt: index + 1,
-        tên: person["tên"],
-        số_giấy_tờ: person["số_giấy_tờ"],
-      })),
-      bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
-        stt: index + 1,
-        tên: person["tên"],
-        số_giấy_tờ: person["số_giấy_tờ"],
-      })),
-      bảng_bên_A: các_cá_thể_bên_A.map((person, index) => ({
-        stt: index + 1,
-        tên: person["tên"],
-      })),
-      tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
-      số_thửa_đất: agreementObject["số_thửa_đất"],
-      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-      số_giấy_chứng_nhận: agreementObject["số_gcn"],
-      nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_gcn"],
-      ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
-      đặc_điểm_thửa_đất: {
-        diện_tích: {
-          số: agreementObject["diện_tích_đất_bằng_số"],
+      const payload: KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload = {
+        bên_A: {
+          cá_thể: các_cá_thể_bên_A,
         },
-        mục_đích_và_thời_hạn_sử_dụng: [
+        bên_B: {
+          cá_thể: các_cá_thể_bên_B,
+        },
+        bảng_tncn_bên_A: các_cá_thể_bên_A.map((person, index) => ({
+          stt: index + 1,
+          tên: person["tên"],
+          số_giấy_tờ: person["số_giấy_tờ"],
+        })),
+        bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
+          stt: index + 1,
+          tên: person["tên"],
+          số_giấy_tờ: person["số_giấy_tờ"],
+        })),
+        bảng_bên_A: các_cá_thể_bên_A.map((person, index) => ({
+          stt: index + 1,
+          tên: person["tên"],
+        })),
+        tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
+        số_thửa_đất: agreementObject["số_thửa_đất"],
+        số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
+        số_giấy_chứng_nhận: agreementObject["số_gcn"],
+        nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_gcn"],
+        ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
+        đặc_điểm_thửa_đất: {
+          diện_tích: {
+            số: agreementObject["diện_tích_đất_bằng_số"],
+          },
+          mục_đích_và_thời_hạn_sử_dụng: [
             {
-                phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
-                diện_tích: agreementObject["diện_tích_đất_bằng_số"]
-            }
-        ],
-        nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
-      },
-      số_tiền: taiSan["số_tiền"],
-      diện_tích_xây_dựng: taiSan["diện_tích_xây_dựng"],
-      ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
-      tài_sản: taiSan.thông_tin_tài_sản,
-      nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
-      ...extractAddress(agreementObject["địa_chỉ_nhà_đất"]),
-    };
+              phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
+              diện_tích: agreementObject["diện_tích_đất_bằng_số"],
+            },
+          ],
+          nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
+        },
+        số_tiền: taiSan["số_tiền"],
+        diện_tích_xây_dựng: taiSan["diện_tích_xây_dựng"],
+        ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
+        tài_sản: taiSan.thông_tin_tài_sản,
+        nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
+        ...extractAddress(agreementObject["địa_chỉ_nhà_đất"]),
+      };
 
-    return payload;
-  };
+      return payload;
+    };
 
   const handleGenerateToKhaiThue = () => {
     const payload = getPayloadToKhaiChung();

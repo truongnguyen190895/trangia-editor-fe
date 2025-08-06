@@ -46,8 +46,8 @@ export const UyQuyenToanBoQuyenSdDat = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
         tình_trạng_hôn_nhân_vợ_chồng:
@@ -57,8 +57,8 @@ export const UyQuyenToanBoQuyenSdDat = () => {
         partyA["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: "vợ",
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
           ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
           tình_trạng_hôn_nhân_vợ_chồng:
@@ -68,8 +68,8 @@ export const UyQuyenToanBoQuyenSdDat = () => {
     const couplesB = partyB["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
-        ngày_sinh: dayjs(couple.chồng["ngày_sinh"]).format("DD/MM/YYYY"),
-        ngày_cấp: dayjs(couple.chồng["ngày_cấp"]).format("DD/MM/YYYY"),
+        ngày_sinh: couple.chồng["ngày_sinh"],
+        ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
         tình_trạng_hôn_nhân_vợ_chồng:
           couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
@@ -81,8 +81,8 @@ export const UyQuyenToanBoQuyenSdDat = () => {
         partyB["vợ_chồng"].map((couple) => ({
           ...couple.vợ,
           quan_hệ: "vợ",
-          ngày_sinh: dayjs(couple.vợ["ngày_sinh"]).format("DD/MM/YYYY"),
-          ngày_cấp: dayjs(couple.vợ["ngày_cấp"]).format("DD/MM/YYYY"),
+          ngày_sinh: couple.vợ["ngày_sinh"],
+          ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
           tình_trạng_hôn_nhân_vợ_chồng:
             couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
@@ -97,8 +97,8 @@ export const UyQuyenToanBoQuyenSdDat = () => {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
             ...person,
-            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            ngày_sinh: person["ngày_sinh"],
+            ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             quan_hệ: person["quan_hệ"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
@@ -113,8 +113,8 @@ export const UyQuyenToanBoQuyenSdDat = () => {
         cá_thể: [
           ...partyB["cá_nhân"].map((person) => ({
             ...person,
-            ngày_sinh: dayjs(person["ngày_sinh"]).format("DD/MM/YYYY"),
-            ngày_cấp: dayjs(person["ngày_cấp"]).format("DD/MM/YYYY"),
+            ngày_sinh: person["ngày_sinh"],
+            ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
             quan_hệ: person["quan_hệ"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
@@ -134,9 +134,7 @@ export const UyQuyenToanBoQuyenSdDat = () => {
       số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
       số_vào_sổ_cấp_giấy_chứng_nhận:
         agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"],
-      ngày_cấp_giấy_chứng_nhận: dayjs(
-        agreementObject["ngày_cấp_giấy_chứng_nhận"]
-      ).format("DD/MM/YYYY"),
+      ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_giấy_chứng_nhận"],
       nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
       ngày: dayjs().format("DD/MM/YYYY").toString(),
       ngày_bằng_chữ: translateDateToVietnamese(
