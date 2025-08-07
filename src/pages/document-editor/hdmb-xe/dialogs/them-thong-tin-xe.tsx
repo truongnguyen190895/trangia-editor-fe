@@ -326,7 +326,7 @@ export const ThemThongTinXe = ({
                             event.target.value
                               ?.replace(/\./g, "")
                               .replace(/\,/g, ".")
-                          )
+                          )?.toLocaleLowerCase()
                         );
                       }}
                       error={!!errors["thời_hạn"] && touched["thời_hạn"]}
