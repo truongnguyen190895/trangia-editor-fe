@@ -17,12 +17,12 @@ import { ThemThongTinDat } from "../../dialogs/them-thong-tin-dat";
 import { ThongTinNhaDatDialog } from "../../dialogs/thong-tin-nha-dat";
 import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
 
-interface ObjectEntityProps {
+interface DoiTuongHopDongProps {
   title: string;
   isUyQuyen?: boolean;
 }
 
-export const ObjectEntity = ({ title, isUyQuyen }: ObjectEntityProps) => {
+export const DoiTuongHopDong = ({ title, isUyQuyen }: DoiTuongHopDongProps) => {
   const { agreementObject, nhaDat, deleteAgreementObject, deleteNhaDat } =
     useHDMBNhaDatContext();
   const [open, setOpen] = useState(false);
