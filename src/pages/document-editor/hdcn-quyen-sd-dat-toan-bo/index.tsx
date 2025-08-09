@@ -6,18 +6,12 @@ import {
   TextField,
   InputAdornment,
   useTheme,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  InputLabel,
-  Checkbox,
 } from "@mui/material";
-import { PartyEntity } from "./components/party-entity";
-import { ObjectEntity } from "./components/object";
+import { ThongTinDat } from "./components/thong-tin-dat";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import { useThemChuTheContext } from "@/context/them-chu-the";
 import type {
   HDCNQuyenSDDatPayload,
   SampleToKhaiChungPayload,
@@ -33,6 +27,9 @@ import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { extractAddress } from "@/utils/extract-address";
 import { generateThoiHanSuDung } from "@/utils/common";
+import { ThemChuThe } from "@/components/common/them-chu-the";
+import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
+import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 
 interface Props {
   isNongNghiep?: boolean;
@@ -43,19 +40,23 @@ export const ChuyenNhuongDatToanBo = ({
   isNongNghiep = false,
   isTangCho = false,
 }: Props) => {
-  const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
+  const { agreementObject } = useHdcnQuyenSdDatContext();
+  const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
   const [openDialog, setOpenDialog] = useState(false);
-  const [isOutSide, setIsOutSide] = useState(false);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
     agreementObject !== null;
 
-  const getPayload = (): HDCNQuyenSDDatPayload => {
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDCNQuyenSDDatPayload => {
     if (!agreementObject) {
       throw new Error("Agreement object is null");
     }
@@ -164,10 +165,8 @@ export const ChuyenNhuongDatToanBo = ({
       },
       số_tiền: agreementObject["giá_tiền"],
       số_tiền_bằng_chữ: agreementObject["giá_tiền_bằng_chữ"],
-      ngày: dayjs().format("DD/MM/YYYY").toString(),
-      ngày_bằng_chữ: translateDateToVietnamese(
-        dayjs().format("DD/MM/YYYY").toString()
-      ),
+      ngày: ngày,
+      ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc)
@@ -177,15 +176,20 @@ export const ChuyenNhuongDatToanBo = ({
       số_bản_công_chứng_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc - 1)
       )?.toLocaleLowerCase(),
-
       ký_bên_ngoài: isOutSide,
+      công_chứng_viên: côngChứngViên,
     };
 
     return payload;
   };
 
-  const handleGenerateDocument = () => {
-    const payload = getPayload();
+  const handleGenerateDocument = (metaData: MetaData) => {
+    const payload = getPayload(
+      metaData.sốBảnGốc,
+      metaData.isOutSide,
+      metaData.côngChứngViên,
+      metaData.ngày
+    );
     setOpenDialog(false);
     setIsGenerating(true);
     if (isTangCho) {
@@ -213,8 +217,6 @@ export const ChuyenNhuongDatToanBo = ({
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(2);
-          setIsOutSide(false);
         });
     } else {
       render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
@@ -237,8 +239,6 @@ export const ChuyenNhuongDatToanBo = ({
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(2);
-          setIsOutSide(false);
         });
     }
   };
@@ -443,9 +443,9 @@ export const ChuyenNhuongDatToanBo = ({
         padding="1rem"
         flex={4}
       >
-        <PartyEntity title="Bên A" side="partyA" />
-        <PartyEntity title="Bên B" side="partyB" />
-        <ObjectEntity
+        <ThemChuThe title="Bên A" side="partyA" />
+        <ThemChuThe title="Bên B" side="partyB" />
+        <ThongTinDat
           title="Đối tượng chuyển nhượng của hợp đồng"
           isTangCho={isTangCho}
         />
@@ -482,66 +482,11 @@ export const ChuyenNhuongDatToanBo = ({
           </Button>
         </Box>
       </Box>
-      <Dialog
+      <ThemLoiChungDialog
         open={openDialog}
-        fullWidth
-        maxWidth="md"
         onClose={() => setOpenDialog(false)}
-      >
-        <DialogTitle>Thông tin hợp đồng</DialogTitle>
-        <DialogContent>
-          <Box>
-            <Box display="flex" gap="0.5rem" alignItems="center">
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Số bản gốc
-              </InputLabel>
-              <TextField
-                type="number"
-                name="sốBảnGốc"
-                slotProps={{
-                  htmlInput: {
-                    min: 2,
-                  },
-                }}
-                value={sốBảnGốc}
-                onChange={(e) => setSốBảnGốc(Number(e.target.value))}
-              />
-            </Box>
-
-            <Box display="flex" alignItems="center" gap="0.5rem">
-              <InputLabel
-                htmlFor="isOutSide"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Hợp đồng được ký bên ngoài văn phòng?
-              </InputLabel>
-              <Checkbox
-                id="isOutSide"
-                size="large"
-                color="info"
-                checked={isOutSide}
-                onChange={() => setIsOutSide(!isOutSide)}
-              />
-            </Box>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setOpenDialog(false)}>
-            Hủy
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={sốBảnGốc <= 0}
-            onClick={handleGenerateDocument}
-          >
-            Tạo hợp đồng
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleGenerateDocument={handleGenerateDocument}
+      />
     </Box>
   );
 };

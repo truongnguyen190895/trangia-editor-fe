@@ -15,16 +15,16 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
-import { AddSingleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-single";
-import { AddCoupleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-couple";
+import { useThemChuTheContext } from "@/context/them-chu-the";
+import { ThemCaNhanDialog } from "./them-ca-nhan-dialog";
+import { ThemVoChongDialog } from "./them-vo-chong-dialog";
 
-interface PartyEntityProps {
+interface ThemChuTheProps {
   title: string;
   side: "partyA" | "partyB";
 }
 
-export const PartyEntity = ({ title, side }: PartyEntityProps) => {
+export const ThemChuThe = ({ title, side }: ThemChuTheProps) => {
   const {
     partyA,
     partyB,
@@ -36,7 +36,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
     setSinglePartyBEntityIndex,
     setCouplePartyAEntityIndex,
     setCouplePartyBEntityIndex,
-  } = useHdcnQuyenSdDatContext();
+  } = useThemChuTheContext();
   const [openSingleDialog, setOpenSingleDialog] = useState(false);
   const [openCoupleDialog, setOpenCoupleDialog] = useState(false);
   const partyEntities = side === "partyA" ? partyA : partyB;
@@ -144,9 +144,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                     >
                       <TableCell>{entity["giới_tính"]}</TableCell>
                       <TableCell>{entity.tên}</TableCell>
-                      <TableCell>
-                        {entity["ngày_sinh"]}
-                      </TableCell>
+                      <TableCell>{entity["ngày_sinh"]}</TableCell>
                       <TableCell>{entity["loại_giấy_tờ"]}</TableCell>
                       <TableCell>{entity["số_giấy_tờ"]}</TableCell>
                       <TableCell>
@@ -254,9 +252,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                       >
                         <TableCell>{entity.chồng["giới_tính"]}</TableCell>
                         <TableCell>{entity.chồng.tên}</TableCell>
-                        <TableCell>
-                          {entity.chồng["ngày_sinh"]}
-                        </TableCell>
+                        <TableCell>{entity.chồng["ngày_sinh"]}</TableCell>
                         <TableCell>{entity.chồng["loại_giấy_tờ"]}</TableCell>
                         <TableCell>{entity.chồng["số_giấy_tờ"]}</TableCell>
                         <TableCell>
@@ -295,9 +291,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                       >
                         <TableCell>{entity.vợ["giới_tính"]}</TableCell>
                         <TableCell>{entity.vợ.tên}</TableCell>
-                        <TableCell>
-                          {entity.vợ["ngày_sinh"]}
-                        </TableCell>
+                        <TableCell>{entity.vợ["ngày_sinh"]}</TableCell>
                         <TableCell>{entity.vợ["loại_giấy_tờ"]}</TableCell>
                         <TableCell>{entity.vợ["số_giấy_tờ"]}</TableCell>
                         <TableCell>
@@ -357,14 +351,14 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
         </Box>
       </Box>
       {openSingleDialog && (
-        <AddSingleDialog
+        <ThemCaNhanDialog
           open={openSingleDialog}
           side={side}
           onClose={() => setOpenSingleDialog(false)}
         />
       )}
       {openCoupleDialog && (
-        <AddCoupleDialog
+        <ThemVoChongDialog
           open={openCoupleDialog}
           side={side}
           onClose={() => setOpenCoupleDialog(false)}
