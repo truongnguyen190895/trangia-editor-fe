@@ -29,6 +29,7 @@ import { extractAddress } from "@/utils/extract-address";
 import { generateThoiHanSuDung } from "@/utils/common";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
+import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 
 interface Props {
   isNongNghiep?: boolean;
@@ -43,16 +44,19 @@ export const ChuyenNhuongDatToanBo = ({
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
   const [openDialog, setOpenDialog] = useState(false);
-  const [isOutSide, setIsOutSide] = useState(false);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
     agreementObject !== null;
 
-  const getPayload = (): HDCNQuyenSDDatPayload => {
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDCNQuyenSDDatPayload => {
     if (!agreementObject) {
       throw new Error("Agreement object is null");
     }
@@ -161,10 +165,8 @@ export const ChuyenNhuongDatToanBo = ({
       },
       số_tiền: agreementObject["giá_tiền"],
       số_tiền_bằng_chữ: agreementObject["giá_tiền_bằng_chữ"],
-      ngày: dayjs().format("DD/MM/YYYY").toString(),
-      ngày_bằng_chữ: translateDateToVietnamese(
-        dayjs().format("DD/MM/YYYY").toString()
-      ),
+      ngày: ngày,
+      ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc)
@@ -174,15 +176,20 @@ export const ChuyenNhuongDatToanBo = ({
       số_bản_công_chứng_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc - 1)
       )?.toLocaleLowerCase(),
-
       ký_bên_ngoài: isOutSide,
+      công_chứng_viên: côngChứngViên,
     };
 
     return payload;
   };
 
-  const handleGenerateDocument = () => {
-    const payload = getPayload();
+  const handleGenerateDocument = (metaData: MetaData) => {
+    const payload = getPayload(
+      metaData.sốBảnGốc,
+      metaData.isOutSide,
+      metaData.côngChứngViên,
+      metaData.ngày
+    );
     setOpenDialog(false);
     setIsGenerating(true);
     if (isTangCho) {
@@ -210,8 +217,6 @@ export const ChuyenNhuongDatToanBo = ({
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(2);
-          setIsOutSide(false);
         });
     } else {
       render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
@@ -234,8 +239,6 @@ export const ChuyenNhuongDatToanBo = ({
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(2);
-          setIsOutSide(false);
         });
     }
   };

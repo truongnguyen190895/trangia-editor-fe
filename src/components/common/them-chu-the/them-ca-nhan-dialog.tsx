@@ -209,7 +209,7 @@ import {
                   <FormHelperText error>{errors["nơi_cấp"]}</FormHelperText>
                 )}
               </FormControl>
-              <FormControl sx={{ marginBottom: "10px" }}>
+              <FormControl sx={{ marginBottom: "10px", gridColumn: "span 2" }}>
                 <FormLabel>Địa chỉ thường trú *</FormLabel>
                 <TextField
                   value={values["địa_chỉ_thường_trú"]}
