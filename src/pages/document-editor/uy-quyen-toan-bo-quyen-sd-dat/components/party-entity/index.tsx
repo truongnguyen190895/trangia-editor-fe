@@ -16,8 +16,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
-import { AddSingleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-single";
-import { AddCoupleDialog } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/dialogs/add-couple";
+import { AddSingleDialog } from "../../dialogs/add-single";
+import { AddCoupleDialog } from "../../dialogs/add-couple";
 
 interface PartyEntityProps {
   title: string;

@@ -6,18 +6,12 @@ import {
   TextField,
   InputAdornment,
   useTheme,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  InputLabel,
-  Checkbox,
 } from "@mui/material";
-import { PartyEntity } from "./components/party-entity";
-import { ObjectEntity } from "./components/object";
+import { ThongTinDat } from "./components/thong-tin-dat";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
+import { useThemChuTheContext } from "@/context/them-chu-the";
 import type {
   HDCNQuyenSDDatPayload,
   SampleToKhaiChungPayload,
@@ -33,6 +27,8 @@ import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { extractAddress } from "@/utils/extract-address";
 import { generateThoiHanSuDung } from "@/utils/common";
+import { ThemChuThe } from "@/components/common/them-chu-the";
+import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 
 interface Props {
   isNongNghiep?: boolean;
@@ -43,7 +39,8 @@ export const ChuyenNhuongDatToanBo = ({
   isNongNghiep = false,
   isTangCho = false,
 }: Props) => {
-  const { partyA, partyB, agreementObject } = useHdcnQuyenSdDatContext();
+  const { agreementObject } = useHdcnQuyenSdDatContext();
+  const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
@@ -443,9 +440,9 @@ export const ChuyenNhuongDatToanBo = ({
         padding="1rem"
         flex={4}
       >
-        <PartyEntity title="Bên A" side="partyA" />
-        <PartyEntity title="Bên B" side="partyB" />
-        <ObjectEntity
+        <ThemChuThe title="Bên A" side="partyA" />
+        <ThemChuThe title="Bên B" side="partyB" />
+        <ThongTinDat
           title="Đối tượng chuyển nhượng của hợp đồng"
           isTangCho={isTangCho}
         />
@@ -482,66 +479,11 @@ export const ChuyenNhuongDatToanBo = ({
           </Button>
         </Box>
       </Box>
-      <Dialog
+      <ThemLoiChungDialog
         open={openDialog}
-        fullWidth
-        maxWidth="md"
         onClose={() => setOpenDialog(false)}
-      >
-        <DialogTitle>Thông tin hợp đồng</DialogTitle>
-        <DialogContent>
-          <Box>
-            <Box display="flex" gap="0.5rem" alignItems="center">
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Số bản gốc
-              </InputLabel>
-              <TextField
-                type="number"
-                name="sốBảnGốc"
-                slotProps={{
-                  htmlInput: {
-                    min: 2,
-                  },
-                }}
-                value={sốBảnGốc}
-                onChange={(e) => setSốBảnGốc(Number(e.target.value))}
-              />
-            </Box>
-
-            <Box display="flex" alignItems="center" gap="0.5rem">
-              <InputLabel
-                htmlFor="isOutSide"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Hợp đồng được ký bên ngoài văn phòng?
-              </InputLabel>
-              <Checkbox
-                id="isOutSide"
-                size="large"
-                color="info"
-                checked={isOutSide}
-                onChange={() => setIsOutSide(!isOutSide)}
-              />
-            </Box>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setOpenDialog(false)}>
-            Hủy
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={sốBảnGốc <= 0}
-            onClick={handleGenerateDocument}
-          >
-            Tạo hợp đồng
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleGenerateDocument={handleGenerateDocument}
+      />
     </Box>
   );
 };
