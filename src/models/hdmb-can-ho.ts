@@ -39,6 +39,7 @@ export interface HDMBCanHoPayload {
   ký_bên_ngoài: boolean;
   thời_hạn: string | null;
   thời_hạn_bằng_chữ: string | null;
+  công_chứng_viên: string;
 }
 
 export interface ThongTinThuaDat {

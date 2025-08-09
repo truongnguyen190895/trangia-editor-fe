@@ -167,6 +167,7 @@ export const HDTangChoCanHoToanBo = () => {
       ký_bên_ngoài: isOutSide,
       thời_hạn: null,
       thời_hạn_bằng_chữ: null,
+      công_chứng_viên: "_______________________",
     };
 
     return payload;

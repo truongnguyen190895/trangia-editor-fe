@@ -25,7 +25,7 @@ interface ObjectEntityProps {
   isUyQuyen?: boolean;
 }
 
-export const ObjectEntity = ({ title, isUyQuyen }: ObjectEntityProps) => {
+export const ThongTinCanHo = ({ title, isUyQuyen }: ObjectEntityProps) => {
   const { agreementObject, canHo, deleteAgreementObject, deleteCanHo } =
     useHDMBCanHoContext();
   const [open, setOpen] = useState(false);

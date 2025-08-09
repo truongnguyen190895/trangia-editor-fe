@@ -6,15 +6,8 @@ import {
   TextField,
   InputAdornment,
   useTheme,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  InputLabel,
-  Checkbox,
 } from "@mui/material";
-import { PartyEntity } from "./components/party-entity";
-import { ObjectEntity } from "./components/object";
+import { ThongTinCanHo } from "./components/thong-tin-can-ho";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type {
@@ -29,21 +22,23 @@ import {
 } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
+import { useThemChuTheContext } from "@/context/them-chu-the";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { ThemChuThe } from "@/components/common/them-chu-the";
+import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
+import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 
 interface Props {
   isUyQuyen?: boolean;
 }
 
 export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
-  const { partyA, partyB, agreementObject, canHo } = useHDMBCanHoContext();
-
+  const { agreementObject, canHo } = useHDMBCanHoContext();
+  const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
   const [openDialog, setOpenDialog] = useState(false);
-  const [isOutSide, setIsOutSide] = useState(false);
 
   const isFormValid = isUyQuyen
     ? Boolean(canHo)
@@ -52,7 +47,12 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       agreementObject !== null &&
       canHo !== null;
 
-  const getPayload = (): HDMBCanHoPayload => {
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDMBCanHoPayload => {
     if (isUyQuyen) {
       if (!canHo) {
         throw new Error("Can ho is null");
@@ -163,10 +163,8 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       mục_đích_sở_hữu_đất: agreementObject?.["mục_đích_sở_hữu_đất"] ?? "",
       thời_hạn_sử_dụng_đất: agreementObject?.["thời_hạn_sử_dụng_đất"] ?? "",
       nguồn_gốc_sử_dụng_đất: agreementObject?.["nguồn_gốc_sử_dụng_đất"] ?? "",
-      ngày: dayjs().format("DD/MM/YYYY").toString(),
-      ngày_bằng_chữ: translateDateToVietnamese(
-        dayjs().format("DD/MM/YYYY").toString()
-      ),
+      ngày: ngày,
+      ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc)
@@ -179,13 +177,19 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       ký_bên_ngoài: isOutSide,
       thời_hạn: canHo?.["thời_hạn"] ?? null,
       thời_hạn_bằng_chữ: canHo?.["thời_hạn_bằng_chữ"] ?? null,
+      công_chứng_viên: côngChứngViên,
     };
 
     return payload;
   };
 
-  const handleGenerateDocument = () => {
-    const payload = getPayload();
+  const handleGenerateDocument = (metaData: MetaData) => {
+    const payload = getPayload(
+      metaData.sốBảnGốc,
+      metaData.isOutSide,
+      metaData.côngChứngViên,
+      metaData.ngày
+    );
     setOpenDialog(false);
     setIsGenerating(true);
     if (isUyQuyen) {
@@ -210,8 +214,6 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(2);
-          setIsOutSide(false);
         });
     } else {
       render_hdmb_can_ho(payload)
@@ -235,8 +237,6 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(2);
-          setIsOutSide(false);
         });
     }
   };
@@ -418,9 +418,9 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
         padding="1rem"
         flex={4}
       >
-        <PartyEntity title="Bên A" side="partyA" />
-        <PartyEntity title="Bên B" side="partyB" />
-        <ObjectEntity title="Đối tượng của hợp đồng" isUyQuyen={isUyQuyen} />
+        <ThemChuThe title="Bên A" side="partyA" />
+        <ThemChuThe title="Bên B" side="partyB" />
+        <ThongTinCanHo title="Đối tượng của hợp đồng" isUyQuyen={isUyQuyen} />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
@@ -456,66 +456,11 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
           ) : null}
         </Box>
       </Box>
-      <Dialog
+      <ThemLoiChungDialog
         open={openDialog}
-        fullWidth
-        maxWidth="md"
         onClose={() => setOpenDialog(false)}
-      >
-        <DialogTitle>Thông tin hợp đồng</DialogTitle>
-        <DialogContent>
-          <Box>
-            <Box display="flex" gap="0.5rem" alignItems="center">
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Số bản gốc
-              </InputLabel>
-              <TextField
-                type="number"
-                name="sốBảnGốc"
-                slotProps={{
-                  htmlInput: {
-                    min: 2,
-                  },
-                }}
-                value={sốBảnGốc}
-                onChange={(e) => setSốBảnGốc(Number(e.target.value))}
-              />
-            </Box>
-
-            <Box display="flex" alignItems="center" gap="0.5rem">
-              <InputLabel
-                htmlFor="isOutSide"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Hợp đồng được ký bên ngoài văn phòng?
-              </InputLabel>
-              <Checkbox
-                id="isOutSide"
-                size="large"
-                color="info"
-                checked={isOutSide}
-                onChange={() => setIsOutSide(!isOutSide)}
-              />
-            </Box>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setOpenDialog(false)}>
-            Hủy
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={sốBảnGốc <= 0}
-            onClick={handleGenerateDocument}
-          >
-            {isUyQuyen ? "Tạo hợp đồng uỷ quyền" : "Tạo hợp đồng"}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleGenerateDocument={handleGenerateDocument}
+      />
     </Box>
   );
 };
