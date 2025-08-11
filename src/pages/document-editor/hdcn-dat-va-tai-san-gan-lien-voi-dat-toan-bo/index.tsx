@@ -6,14 +6,7 @@ import {
   TextField,
   InputAdornment,
   useTheme,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  InputLabel,
-  Checkbox,
 } from "@mui/material";
-import { PartyEntity } from "./components/party-entity";
 import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
@@ -30,15 +23,18 @@ import { extractAddress } from "@/utils/extract-address";
 import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat-va-tai-san-glvd";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { ThemChuThe } from "@/components/common/them-chu-the";
+import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
+import type { MetaData } from "@/components/common/them-loi-chung-dialog";
+import { useThemChuTheContext } from "@/context/them-chu-the";
 
 export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
-  const { partyA, partyB, agreementObject, taiSan } =
+  const { agreementObject, taiSan } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
+  const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sốBảnGốc, setSốBảnGốc] = useState<number>(2);
   const [openDialog, setOpenDialog] = useState(false);
-  const [isOutSide, setIsOutSide] = useState(false);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -46,7 +42,12 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
     agreementObject !== null &&
     taiSan !== null;
 
-  const getPayload = (): HDCNDatVaTaiSanGanLienVoiDatToanBoPayload => {
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDCNDatVaTaiSanGanLienVoiDatToanBoPayload => {
     if (!agreementObject || !taiSan) {
       throw new Error("Agreement object or nha dat is null");
     }
@@ -126,10 +127,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
       số_tiền: taiSan.số_tiền,
       số_tiền_bằng_chữ: taiSan.số_tiền_bằng_chữ,
       diện_tích_xây_dựng: taiSan.diện_tích_xây_dựng,
-      ngày: dayjs().format("DD/MM/YYYY").toString(),
-      ngày_bằng_chữ: translateDateToVietnamese(
-        dayjs().format("DD/MM/YYYY").toString()
-      ),
+      ngày: ngày,
+      ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc)
@@ -140,13 +139,19 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
         String(sốBảnGốc - 1)
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
+      công_chứng_viên: côngChứngViên,
     };
 
     return payload;
   };
 
-  const handleGenerateDocument = () => {
-    const payload = getPayload();
+  const handleGenerateDocument = (metaData: MetaData) => {
+    const payload = getPayload(
+      metaData.sốBảnGốc,
+      metaData.isOutSide,
+      metaData.côngChứngViên,
+      metaData.ngày
+    );
     setOpenDialog(false);
     setIsGenerating(true);
     render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo(payload)
@@ -170,8 +175,6 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
       })
       .finally(() => {
         setIsGenerating(false);
-        setSốBảnGốc(2);
-        setIsOutSide(false);
       });
   };
 
@@ -353,8 +356,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
         padding="1rem"
         flex={4}
       >
-        <PartyEntity title="Bên A" side="partyA" />
-        <PartyEntity title="Bên B" side="partyB" />
+        <ThemChuThe title="Bên A" side="partyA" />
+        <ThemChuThe title="Bên B" side="partyB" />
         <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
         <Box display="flex" gap="1rem">
           <Button
@@ -389,66 +392,11 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
           </Button>
         </Box>
       </Box>
-      <Dialog
+      <ThemLoiChungDialog
         open={openDialog}
-        fullWidth
-        maxWidth="md"
         onClose={() => setOpenDialog(false)}
-      >
-        <DialogTitle>Thông tin hợp đồng</DialogTitle>
-        <DialogContent>
-          <Box>
-            <Box display="flex" gap="0.5rem" alignItems="center">
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Số bản gốc
-              </InputLabel>
-              <TextField
-                type="number"
-                name="sốBảnGốc"
-                slotProps={{
-                  htmlInput: {
-                    min: 2,
-                  },
-                }}
-                value={sốBảnGốc}
-                onChange={(e) => setSốBảnGốc(Number(e.target.value))}
-              />
-            </Box>
-
-            <Box display="flex" alignItems="center" gap="0.5rem">
-              <InputLabel
-                htmlFor="isOutSide"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Hợp đồng được ký bên ngoài văn phòng?
-              </InputLabel>
-              <Checkbox
-                id="isOutSide"
-                size="large"
-                color="info"
-                checked={isOutSide}
-                onChange={() => setIsOutSide(!isOutSide)}
-              />
-            </Box>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setOpenDialog(false)}>
-            Hủy
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={sốBảnGốc <= 0}
-            onClick={handleGenerateDocument}
-          >
-            Tạo hợp đồng
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleGenerateDocument={handleGenerateDocument}
+      />
     </Box>
   );
 };

@@ -16,6 +16,7 @@ export interface HDCNDatVaTaiSanGanLienVoiDatToanBoPayload
   số_tiền: string;
   số_tiền_bằng_chữ: string;
   diện_tích_xây_dựng: string;
+  công_chứng_viên: string;
 }
 
 export interface ThongTinThuaDat {
