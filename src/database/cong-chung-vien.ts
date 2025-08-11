@@ -23,8 +23,4 @@ export const CÔNG_CHỨNG_VIÊN = [
     id: 6,
     name: "Ngọc Thị Tuyết Nhung",
   },
-  {
-    id: 7,
-    name: "Nguyễn Thị Thu Hiền",
-  },
 ];
