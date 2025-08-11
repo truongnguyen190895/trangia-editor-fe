@@ -55,189 +55,186 @@ export const ObjectEntity = ({
         <Button
           variant="contained"
           startIcon={<AddIcon />}
+          disabled={agreementObject !== null}
           onClick={handleOpenModal}
         >
           Thêm
         </Button>
-        {agreementObject !== null ? (
-          <Box>
-            <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
-              <Table sx={{ border: "1px solid #BCCCDC" }}>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Nhãn hiệu</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["nhãn_hiệu"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Màu sơn</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["màu_sơn"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Loại xe</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["loại_xe"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Số máy</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["số_máy"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Số loại</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["số_loại"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Số khung</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["số_khung"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Biển số</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["biển_số"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Số đăng ký</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["số_đăng_ký"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Nơi cấp</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["nơi_cấp"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">
-                        Ngày cấp giấy chứng nhận
-                      </Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["ngày_đăng_ký"]}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">
-                        Ngày đăng ký lần đầu
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      {agreementObject["ngày_đăng_ký_lần_đầu"]}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Ngày đăng ký</Typography>
-                    </TableCell>
-                    <TableCell>{agreementObject["ngày_đăng_ký"]}</TableCell>
-                  </TableRow>
-                  {isUyQuyen ? (
-                    <>
-                      <TableRow>
-                        <TableCell component="th">
-                          <Typography variant="body1">Thời hạn</Typography>
-                        </TableCell>
-                        <TableCell>{agreementObject["thời_hạn"]}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell component="th">
-                          <Typography variant="body1">
-                            Thời hạn bằng chữ
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {agreementObject["thời_hạn_bằng_chữ"]}
-                        </TableCell>
-                      </TableRow>
-                    </>
-                  ) : (
-                    <>
-                      <TableRow>
-                        <TableCell component="th">
-                          <Typography variant="body1">Số tiền</Typography>
-                        </TableCell>
-                        <TableCell>{agreementObject["số_tiền"]}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell component="th">
-                          <Typography variant="body1">
-                            Số tiền bằng chữ
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {agreementObject["số_tiền_bằng_chữ"]}
-                        </TableCell>
-                      </TableRow>
-                    </>
-                  )}
+        <Box>
+          <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
+            <Table sx={{ border: "1px solid #BCCCDC" }}>
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Nhãn hiệu</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["nhãn_hiệu"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Màu sơn</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["màu_sơn"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Loại xe</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["loại_xe"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Số máy</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["số_máy"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Số loại</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["số_loại"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Số khung</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["số_khung"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Biển số</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["biển_số"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Số đăng ký</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["số_đăng_ký"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Nơi cấp</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["nơi_cấp"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">
+                      Ngày cấp giấy chứng nhận
+                    </Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["ngày_đăng_ký"]}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">
+                      Ngày đăng ký lần đầu
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {agreementObject?.["ngày_đăng_ký_lần_đầu"]}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Ngày đăng ký</Typography>
+                  </TableCell>
+                  <TableCell>{agreementObject?.["ngày_đăng_ký"]}</TableCell>
+                </TableRow>
+                {isUyQuyen ? (
+                  <>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">Thời hạn</Typography>
+                      </TableCell>
+                      <TableCell>{agreementObject?.["thời_hạn"]}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">
+                          Thời hạn bằng chữ
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {agreementObject?.["thời_hạn_bằng_chữ"]}
+                      </TableCell>
+                    </TableRow>
+                  </>
+                ) : (
+                  <>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">Số tiền</Typography>
+                      </TableCell>
+                      <TableCell>{agreementObject?.["số_tiền"]}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">
+                          Số tiền bằng chữ
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {agreementObject?.["số_tiền_bằng_chữ"]}
+                      </TableCell>
+                    </TableRow>
+                  </>
+                )}
 
-                  {isDauGia ? (
-                    <>
-                      <TableRow>
-                        <TableCell component="th">
-                          <Typography variant="body1">
-                            Số giấy chứng nhận/quyết định
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {agreementObject["số_bằng_chứng_trúng_đấu_giá"]}
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell component="th">
-                          <Typography variant="body1">
-                            Nơi cấp đấu giá
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {agreementObject["nơi_cấp_đấu_giá"]}
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell component="th">
-                          <Typography variant="body1">
-                            Ngày trúng đấu giá
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {agreementObject["ngày_trúng_đấu_giá"]}
-                        </TableCell>
-                      </TableRow>
-                    </>
-                  ) : null}
-                  <TableRow>
-                    <TableCell component="th">
-                      <Typography variant="body1">Thao tác</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Box display="flex" gap={1}>
-                        <EditIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => handleEditObject()}
-                        />
-                        <DeleteIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => deleteAgreementObject()}
-                        />
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        ) : null}
+                {isDauGia ? (
+                  <>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">
+                          Số giấy chứng nhận/quyết định
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {agreementObject?.["số_bằng_chứng_trúng_đấu_giá"]}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">Nơi cấp đấu giá</Typography>
+                      </TableCell>
+                      <TableCell>
+                        {agreementObject?.["nơi_cấp_đấu_giá"]}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th">
+                        <Typography variant="body1">
+                          Ngày trúng đấu giá
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {agreementObject?.["ngày_trúng_đấu_giá"]}
+                      </TableCell>
+                    </TableRow>
+                  </>
+                ) : null}
+                <TableRow>
+                  <TableCell component="th">
+                    <Typography variant="body1">Thao tác</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Box display="flex" gap={1}>
+                      <EditIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleEditObject()}
+                      />
+                      <DeleteIcon
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => deleteAgreementObject()}
+                      />
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Box>
       {open ? (
         <ThemThongTinXe

@@ -22,9 +22,10 @@ import { ThemVoChongDialog } from "./them-vo-chong-dialog";
 interface ThemChuTheProps {
   title: string;
   side: "partyA" | "partyB";
+  isUyQuyen?: boolean;
 }
 
-export const ThemChuThe = ({ title, side }: ThemChuTheProps) => {
+export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
   const {
     partyA,
     partyB,
@@ -42,6 +43,14 @@ export const ThemChuThe = ({ title, side }: ThemChuTheProps) => {
   const partyEntities = side === "partyA" ? partyA : partyB;
   const individualParty = partyEntities["cá_nhân"];
   const coupleParty = partyEntities["vợ_chồng"];
+
+  const shouldHideCoupleB = () => {
+    if (isUyQuyen) {
+      return false;
+    } else {
+      return side === "partyB";
+    }
+  };
 
   const handleDeleteSingleParty = (arrayIndex: number) => {
     if (side === "partyA") {
@@ -202,7 +211,7 @@ export const ThemChuThe = ({ title, side }: ThemChuTheProps) => {
           )}
         </Box>
         <Divider />
-        <Box>
+        <Box display={shouldHideCoupleB() ? "none" : "block"}>
           <Typography variant="h6">Chủ thể là vợ chồng</Typography>
           {coupleParty.length > 0 ? (
             <Box>
