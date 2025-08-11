@@ -140,9 +140,7 @@ export const ChuyenNhuongDatToanBo = ({
       số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
       số_vào_sổ_cấp_giấy_chứng_nhận:
         agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"],
-      ngày_cấp_giấy_chứng_nhận: dayjs(
-        agreementObject["ngày_cấp_giấy_chứng_nhận"]
-      ).format("DD/MM/YYYY"),
+      ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_giấy_chứng_nhận"],
       nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
       đặc_điểm_thửa_đất: {
         diện_tích: {
