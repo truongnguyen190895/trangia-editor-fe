@@ -6,27 +6,22 @@ import {
   TextField,
   InputAdornment,
   useTheme,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  InputLabel,
-  Checkbox,
   RadioGroup,
   FormControlLabel,
   Radio,
   Autocomplete,
 } from "@mui/material";
-import { PartyEntity } from "./components/party-entity";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type { HdDatCocPayload, GiayChungNhan } from "@/models/hd-dat-coc";
-import dayjs from "dayjs";
 import { render_hd_dat_coc } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
-import { useHDDatCocContext } from "@/context/hd-dat-coc";
 import { CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT } from "@/constants";
+import { useThemChuTheContext } from "@/context/them-chu-the";
+import { ThemChuThe } from "@/components/common/them-chu-the";
+import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
+import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 
 const typeOptions = [
   {
@@ -61,12 +56,10 @@ interface Props {
 }
 
 export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
-  const { partyA, partyB } = useHDDatCocContext();
+  const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sốBảnGốc, setSốBảnGốc] = useState<number>(4);
   const [openDialog, setOpenDialog] = useState(false);
-  const [isOutSide, setIsOutSide] = useState(false);
   const [type, setType] = useState<string>("đặt_cọc_đất");
   const [giayChungNhan, setGiayChungNhan] = useState<GiayChungNhan>({
     loại_gcn: "",
@@ -116,7 +109,12 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
     );
   };
 
-  const getPayload = (): HdDatCocPayload => {
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HdDatCocPayload => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -185,10 +183,8 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
           ...couplesB,
         ],
       },
-      ngày: dayjs().format("DD/MM/YYYY").toString(),
-      ngày_bằng_chữ: translateDateToVietnamese(
-        dayjs().format("DD/MM/YYYY").toString()
-      ),
+      ngày: ngày,
+      ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc)
@@ -199,6 +195,7 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
         String(sốBảnGốc - 1)
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
+      công_chứng_viên: côngChứngViên,
       đặt_cọc_đất:
         type === "đặt_cọc_đất" ? { ...datCocDatForm, ...giayChungNhan } : null,
       đặt_cọc_nhà_đất:
@@ -219,8 +216,13 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
     return payload;
   };
 
-  const handleGenerateDocument = () => {
-    const payload = getPayload();
+  const handleGenerateDocument = (metaData: MetaData) => {
+    const payload = getPayload(
+      metaData.sốBảnGốc,
+      metaData.isOutSide,
+      metaData.côngChứngViên,
+      metaData.ngày
+    );
     setOpenDialog(false);
     setIsGenerating(true);
     render_hd_dat_coc(payload, isChuaXoaChap)
@@ -231,7 +233,9 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = isChuaXoaChap ? "HD Dat-coc chưa xoá chấp.docx" : "HD Dat-coc.docx";
+        link.download = isChuaXoaChap
+          ? "HD Dat-coc chưa xoá chấp.docx"
+          : "HD Dat-coc.docx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -243,8 +247,6 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
       })
       .finally(() => {
         setIsGenerating(false);
-        setSốBảnGốc(4);
-        setIsOutSide(false);
       });
   };
 
@@ -424,8 +426,8 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
         padding="1rem"
         flex={4}
       >
-        <PartyEntity title="Bên A" side="partyA" />
-        <PartyEntity title="Bên B" side="partyB" />
+        <ThemChuThe title="Bên A" side="partyA" />
+        <ThemChuThe title="Bên B" side="partyB" />
         <Box display="flex" gap="2rem">
           <Box flex={1}>
             <Typography variant="h6">Loại hợp đồng</Typography>
@@ -465,13 +467,14 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
                       (item) => item.value === giayChungNhan.loại_gcn
                     ) ?? null
                   }
-                  getOptionLabel={(option) => 
-                    typeof option === 'string' ? option : option?.label ?? ""
+                  getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option?.label ?? ""
                   }
                   onChange={(_event, value) => {
                     setGiayChungNhan({
                       ...giayChungNhan,
-                      loại_gcn: typeof value === 'string' ? value : value?.value ?? "",
+                      loại_gcn:
+                        typeof value === "string" ? value : value?.value ?? "",
                     });
                   }}
                   renderInput={(params) => (
@@ -602,66 +605,11 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
           </Button>
         </Box>
       </Box>
-      <Dialog
+      <ThemLoiChungDialog
         open={openDialog}
-        fullWidth
-        maxWidth="md"
         onClose={() => setOpenDialog(false)}
-      >
-        <DialogTitle>Thông tin hợp đồng</DialogTitle>
-        <DialogContent>
-          <Box>
-            <Box display="flex" gap="0.5rem" alignItems="center">
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Số bản gốc
-              </InputLabel>
-              <TextField
-                type="number"
-                name="sốBảnGốc"
-                slotProps={{
-                  htmlInput: {
-                    min: 2,
-                  },
-                }}
-                value={sốBảnGốc}
-                onChange={(e) => setSốBảnGốc(Number(e.target.value))}
-              />
-            </Box>
-
-            <Box display="flex" alignItems="center" gap="0.5rem">
-              <InputLabel
-                htmlFor="isOutSide"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Hợp đồng được ký bên ngoài văn phòng?
-              </InputLabel>
-              <Checkbox
-                id="isOutSide"
-                size="large"
-                color="info"
-                checked={isOutSide}
-                onChange={() => setIsOutSide(!isOutSide)}
-              />
-            </Box>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setOpenDialog(false)}>
-            Hủy
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={sốBảnGốc <= 0}
-            onClick={handleGenerateDocument}
-          >
-            Tạo hợp đồng
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleGenerateDocument={handleGenerateDocument}
+      />
     </Box>
   );
 };

@@ -20,6 +20,7 @@ export interface HdDatCocPayload {
   thời_hạn_cọc_bằng_chữ: string;
   tiền_phạt_cọc: string;
   tiền_phạt_cọc_bằng_chữ: string;
+  công_chứng_viên: string;
 }
 
 export interface GiayChungNhan {

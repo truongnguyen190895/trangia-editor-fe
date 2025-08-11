@@ -6,18 +6,10 @@ import {
   TextField,
   InputAdornment,
   useTheme,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  InputLabel,
-  Checkbox,
 } from "@mui/material";
-import { PartyEntity } from "./components/party-entity";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type { NhomHuySuaDoiPayload } from "@/models/nhom-huy-sua-doi";
-import dayjs from "dayjs";
 import {
   render_vb_huy,
   render_vb_cham_dut_hd,
@@ -25,7 +17,10 @@ import {
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
-import { useHDMBXeContext } from "@/context/hdmb-xe";
+import { useThemChuTheContext } from "@/context/them-chu-the";
+import { ThemChuThe } from "@/components/common/them-chu-the";
+import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
+import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 
 interface NhomHuySuaDoiProps {
   isHuy?: boolean;
@@ -38,12 +33,10 @@ export const NhomHuySuaDoi = ({
   isChamDutHD = false,
   isChamDutHQUyQuyen = false,
 }: NhomHuySuaDoiProps) => {
-  const { partyA, partyB } = useHDMBXeContext();
+  const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sốBảnGốc, setSốBảnGốc] = useState<number>(4);
   const [openDialog, setOpenDialog] = useState(false);
-  const [isOutSide, setIsOutSide] = useState(false);
 
   const validatePayload = (): boolean => {
     if (isHuy) {
@@ -55,7 +48,12 @@ export const NhomHuySuaDoi = ({
     );
   };
 
-  const getPayload = (): NhomHuySuaDoiPayload => {
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): NhomHuySuaDoiPayload => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -124,10 +122,8 @@ export const NhomHuySuaDoi = ({
           ...couplesB,
         ],
       },
-      ngày: dayjs().format("DD/MM/YYYY").toString(),
-      ngày_bằng_chữ: translateDateToVietnamese(
-        dayjs().format("DD/MM/YYYY").toString()
-      ),
+      ngày: ngày,
+      ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
         String(sốBảnGốc)
@@ -138,13 +134,19 @@ export const NhomHuySuaDoi = ({
         String(sốBảnGốc - 1)
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
+      công_chứng_viên: côngChứngViên,
     };
 
     return payload;
   };
 
-  const handleGenerateDocument = () => {
-    const payload = getPayload();
+  const handleGenerateDocument = (metaData: MetaData) => {
+    const payload = getPayload(
+      metaData.sốBảnGốc,
+      metaData.isOutSide,
+      metaData.côngChứngViên,
+      metaData.ngày
+    );
     setOpenDialog(false);
     setIsGenerating(true);
 
@@ -169,8 +171,6 @@ export const NhomHuySuaDoi = ({
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(4);
-          setIsOutSide(false);
         });
     } else if (isChamDutHD) {
       render_vb_cham_dut_hd(payload)
@@ -193,8 +193,6 @@ export const NhomHuySuaDoi = ({
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(4);
-          setIsOutSide(false);
         });
     } else if (isChamDutHQUyQuyen) {
       render_vb_cham_dut_hq_uy_quyen(payload)
@@ -217,8 +215,6 @@ export const NhomHuySuaDoi = ({
         })
         .finally(() => {
           setIsGenerating(false);
-          setSốBảnGốc(4);
-          setIsOutSide(false);
         });
     }
   };
@@ -258,8 +254,8 @@ export const NhomHuySuaDoi = ({
         padding="1rem"
         flex={4}
       >
-        <PartyEntity title="Bên A" side="partyA" />
-        {!isHuy && <PartyEntity title="Bên B" side="partyB" />}
+        <ThemChuThe title="Bên A" side="partyA" />
+        {!isHuy && <ThemChuThe title="Bên B" side="partyB" />}
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
@@ -278,66 +274,11 @@ export const NhomHuySuaDoi = ({
           </Button>
         </Box>
       </Box>
-      <Dialog
+      <ThemLoiChungDialog
         open={openDialog}
-        fullWidth
-        maxWidth="md"
         onClose={() => setOpenDialog(false)}
-      >
-        <DialogTitle>Thông tin hợp đồng</DialogTitle>
-        <DialogContent>
-          <Box>
-            <Box display="flex" gap="0.5rem" alignItems="center">
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Số bản gốc
-              </InputLabel>
-              <TextField
-                type="number"
-                name="sốBảnGốc"
-                slotProps={{
-                  htmlInput: {
-                    min: 2,
-                  },
-                }}
-                value={sốBảnGốc}
-                onChange={(e) => setSốBảnGốc(Number(e.target.value))}
-              />
-            </Box>
-
-            <Box display="flex" alignItems="center" gap="0.5rem">
-              <InputLabel
-                htmlFor="isOutSide"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
-                Hợp đồng được ký bên ngoài văn phòng?
-              </InputLabel>
-              <Checkbox
-                id="isOutSide"
-                size="large"
-                color="info"
-                checked={isOutSide}
-                onChange={() => setIsOutSide(!isOutSide)}
-              />
-            </Box>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setOpenDialog(false)}>
-            Hủy
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={sốBảnGốc <= 0}
-            onClick={handleGenerateDocument}
-          >
-            Tạo hợp đồng
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleGenerateDocument={handleGenerateDocument}
+      />
     </Box>
   );
 };

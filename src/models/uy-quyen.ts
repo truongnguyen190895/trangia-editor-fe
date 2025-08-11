@@ -41,6 +41,7 @@ export interface UyQuyenToanBoQuyenSdDatPayload {
   số_vào_sổ_cấp_giấy_chứng_nhận: string;
   nơi_cấp_giấy_chứng_nhận: string;
   ngày_cấp_giấy_chứng_nhận: string;
+  công_chứng_viên: string;
 }
 
 export interface ThongTinThuaDat {

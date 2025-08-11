@@ -43,14 +43,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
   const partyEntities = side === "partyA" ? partyA : partyB;
   const individualParty = partyEntities["cá_nhân"];
   const coupleParty = partyEntities["vợ_chồng"];
-
-  const shouldHideCoupleB = () => {
-    if (isUyQuyen) {
-      return false;
-    } else {
-      return side === "partyB";
-    }
-  };
+  console.log(isUyQuyen);
 
   const handleDeleteSingleParty = (arrayIndex: number) => {
     if (side === "partyA") {
@@ -211,7 +204,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
           )}
         </Box>
         <Divider />
-        <Box display={shouldHideCoupleB() ? "none" : "block"}>
+        <Box>
           <Typography variant="h6">Chủ thể là vợ chồng</Typography>
           {coupleParty.length > 0 ? (
             <Box>
