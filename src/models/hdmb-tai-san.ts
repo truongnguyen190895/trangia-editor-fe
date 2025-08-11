@@ -11,6 +11,7 @@ export interface HDMBTaiSanPayload extends ThongTinThuaDat, ThongTinTaiSan {
   số_bản_công_chứng: string;
   số_bản_công_chứng_bằng_chữ: string;
   ký_bên_ngoài: boolean;
+  công_chứng_viên: string;
 }
 
 export interface ThongTinThuaDat {
