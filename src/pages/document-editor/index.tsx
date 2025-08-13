@@ -167,7 +167,7 @@ export const DocumentEditor = () => {
   };
 
   return (
-    <Box>
+    <Box className="editor-container">
       <Box
         className="header"
         height="8rem"
@@ -180,7 +180,7 @@ export const DocumentEditor = () => {
           Chỉnh sửa văn bản: {getTemplateName()}
         </Typography>
       </Box>
-      <Box className="content" paddingX="1.5rem" paddingY="1rem">
+      <Box className="content" py="1rem">
         <Button
           variant="contained"
           onClick={() => navigate("/")}

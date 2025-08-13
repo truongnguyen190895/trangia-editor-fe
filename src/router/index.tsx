@@ -5,6 +5,7 @@ import Layout from "../components/layout";
 import { Documents } from "../pages/documents";
 import { DocumentEditor } from "../pages/document-editor";
 import { ThemChuTheProvider } from "@/context/them-chu-the";
+import LoginPage from "@/pages/login";
 
 export const router = createBrowserRouter([
   {
@@ -23,14 +24,19 @@ export const router = createBrowserRouter([
         path: "/van-ban/:category/:subCategory",
         element: <Documents />,
       },
+      {
+        path: "/editor",
+        element: (
+          <ThemChuTheProvider>
+            <DocumentEditor />
+          </ThemChuTheProvider>
+        ),
+      },
     ],
   },
+
   {
-    path: "/editor",
-    element: (
-      <ThemChuTheProvider>
-        <DocumentEditor />
-      </ThemChuTheProvider>
-    ),
+    path: "/login",
+    element: <LoginPage />,
   },
 ]);
