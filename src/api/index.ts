@@ -165,6 +165,18 @@ export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
   );
 };
 
+export const render_khai_thue_tang_cho_nha_dat_toan_bo = async (
+    payload: KhaiThueHDMBNhaDatToanBoPayload
+  ) => {
+    return api.post(
+      "/templates/khai-thue/khai-thue-tang-cho-nha-dat-va-tsglvd",
+      payload,
+      {
+        responseType: "blob",
+      }
+    );
+  };
+
 export const render_khai_thue_hdmb_can_ho_toan_bo = async (
   payload: KhaiThueHDMBCanHoToanBoPayload
 ) => {

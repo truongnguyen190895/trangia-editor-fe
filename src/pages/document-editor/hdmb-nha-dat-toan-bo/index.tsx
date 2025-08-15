@@ -17,6 +17,7 @@ import type {
 import {
   render_hdmb_nha_dat,
   render_khai_thue_hdmb_nha_dat_toan_bo,
+  render_khai_thue_tang_cho_nha_dat_toan_bo,
   render_hdtc_nha_dat_toan_bo,
   render_uy_quyen_toan_bo_nha_dat,
 } from "@/api";
@@ -357,28 +358,52 @@ export const HDMBNhaDatToanBo = ({
     const payload = getPayloadToKhaiChung();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_khai_thue_hdmb_nha_dat_toan_bo(payload)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    if (isTangCho) {
+      render_khai_thue_tang_cho_nha_dat_toan_bo(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "khai-thue-tang-cho-nha-dat-toan-bo.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
         });
+    } else {
+      render_khai_thue_hdmb_nha_dat_toan_bo(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
 
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "khai-thue-hdmb-nha-dat-toan-bo.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "khai-thue-hdmb-nha-dat-toan-bo.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+        });
+    }
   };
 
   return (
@@ -450,7 +475,7 @@ export const HDMBNhaDatToanBo = ({
                 textTransform: "uppercase",
                 width: "200px",
               }}
-              disabled={!isFormValid || isTangCho}
+              disabled={!isFormValid}
               onClick={handleKhaiThue}
             >
               {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
