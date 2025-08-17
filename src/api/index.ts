@@ -314,6 +314,9 @@ export const render_phieu_thu_ly = async (
     case "hdcn-quyen-sd-dat-toan-bo":
       documentName = "ptl-hdcn-quyen-su-dung-dat-toan-bo";
       break;
+    case "hdmb-can-ho-toan-bo":
+      documentName = "ptl-hdmb-can-ho-toan-bo";
+      break;
     default:
       documentName = "";
   }

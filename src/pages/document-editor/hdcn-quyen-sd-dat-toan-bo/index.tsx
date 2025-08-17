@@ -507,7 +507,6 @@ export const ChuyenNhuongDatToanBo = ({
                 ? { ...getBenABenB(), ...getAdditionalForThuLy() }
                 : null
             }
-            tên_hợp_đồng="HỢP ĐỒNG CHUYỂN NHƯỢNG QUYỀN SỬ DỤNG ĐẤT"
             type="hdcn-quyen-sd-dat-toan-bo"
           />
         </Box>

@@ -4,13 +4,11 @@ import { render_phieu_thu_ly } from "@/api";
 
 interface PhieuThuLyButtonProps {
   commonPayload: any;
-  tên_hợp_đồng: string;
   type: string;
 }
 
 export const PhieuThuLyButton = ({
   commonPayload,
-  tên_hợp_đồng,
   type,
 }: PhieuThuLyButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -19,7 +17,6 @@ export const PhieuThuLyButton = ({
     const tenChuyenVien = localStorage.getItem("username") || "";
     return {
       ...commonPayload,
-      tên_hợp_đồng: tên_hợp_đồng,
       tên_chuyên_viên: tenChuyenVien,
     };
   };

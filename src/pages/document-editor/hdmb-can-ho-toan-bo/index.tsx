@@ -28,6 +28,7 @@ import { numberToVietnamese } from "@/utils/number-to-words";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
+import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 
 interface Props {
   isUyQuyen?: boolean;
@@ -47,22 +48,7 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       agreementObject !== null &&
       canHo !== null;
 
-  const getPayload = (
-    sốBảnGốc: number,
-    isOutSide: boolean,
-    côngChứngViên: string,
-    ngày: string
-  ): HDMBCanHoPayload => {
-    if (isUyQuyen) {
-      if (!canHo) {
-        throw new Error("Can ho is null");
-      }
-    } else {
-      if (!agreementObject || !canHo) {
-        throw new Error("Agreement object or can ho is null");
-      }
-    }
-
+  const getBenABenB = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -108,7 +94,7 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
         }))
       );
 
-    const payload: HDMBCanHoPayload = {
+    return {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -137,6 +123,39 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
           ...couplesB,
         ],
       },
+    };
+  };
+
+  const getAdditionalForThuLy = () => {
+    if (!agreementObject) {
+      return null;
+    }
+
+    return {
+      số_căn_hộ: canHo?.["số_căn_hộ"],
+      tên_toà_nhà: canHo?.["tên_toà_nhà"],
+      địa_chỉ_toà_nhà: canHo?.["địa_chỉ_toà_nhà"],
+    };
+  };
+
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDMBCanHoPayload => {
+    if (isUyQuyen) {
+      if (!canHo) {
+        throw new Error("Can ho is null");
+      }
+    } else {
+      if (!agreementObject || !canHo) {
+        throw new Error("Agreement object or can ho is null");
+      }
+    }
+
+    const payload: HDMBCanHoPayload = {
+      ...getBenABenB(),
       số_căn_hộ: canHo["số_căn_hộ"],
       tên_toà_nhà: canHo["tên_toà_nhà"],
       địa_chỉ_toà_nhà: canHo["địa_chỉ_toà_nhà"],
@@ -454,6 +473,14 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
               {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
             </Button>
           ) : null}
+          <PhieuThuLyButton
+            commonPayload={
+              agreementObject
+                ? { ...getBenABenB(), ...getAdditionalForThuLy() }
+                : null
+            }
+            type="hdmb-can-ho-toan-bo"
+          />
         </Box>
       </Box>
       <ThemLoiChungDialog

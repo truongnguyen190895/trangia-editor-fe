@@ -412,7 +412,6 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
                 ? { ...getBenABenB(), ...getTaiSan() }
                 : null
             }
-            tên_hợp_đồng="HỢP ĐỒNG CHUYỂN NHƯỢNG QUYỀN SỬ DỤNG ĐẤT VÀ TÀI SẢN GẮN LIỀN VỚI ĐẤT"
             type="hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo"
           />
         </Box>
