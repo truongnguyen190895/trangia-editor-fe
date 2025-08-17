@@ -166,16 +166,16 @@ export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
 };
 
 export const render_khai_thue_tang_cho_nha_dat_toan_bo = async (
-    payload: KhaiThueHDMBNhaDatToanBoPayload
-  ) => {
-    return api.post(
-      "/templates/khai-thue/khai-thue-tang-cho-nha-dat-va-tsglvd",
-      payload,
-      {
-        responseType: "blob",
-      }
-    );
-  };
+  payload: KhaiThueHDMBNhaDatToanBoPayload
+) => {
+  return api.post(
+    "/templates/khai-thue/khai-thue-tang-cho-nha-dat-va-tsglvd",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
+};
 
 export const render_khai_thue_hdmb_can_ho_toan_bo = async (
   payload: KhaiThueHDMBCanHoToanBoPayload
@@ -275,20 +275,46 @@ export const render_vb_cham_dut_hd = async (payload: NhomHuySuaDoiPayload) => {
   });
 };
 
-export const render_vb_cham_dut_hq_uy_quyen = async (payload: NhomHuySuaDoiPayload) => {
-  return api.post("/templates/nhom-huy-sua-doi/vb-cham-dut-hq-uy-quyen", payload, {
+export const render_vb_cham_dut_hq_uy_quyen = async (
+  payload: NhomHuySuaDoiPayload
+) => {
+  return api.post(
+    "/templates/nhom-huy-sua-doi/vb-cham-dut-hq-uy-quyen",
+    payload,
+    {
+      responseType: "blob",
+    }
+  );
+};
+
+export const render_hd_dat_coc = async (
+  payload: HdDatCocPayload,
+  isChuaXoaChap: boolean
+) => {
+  let url = "";
+  if (isChuaXoaChap) {
+    url = "/templates/nhom-thue-muon-dat-coc/hd-dat-coc-chua-xoa-chap";
+  } else {
+    url = "/templates/nhom-thue-muon-dat-coc/hd-dat-coc";
+  }
+  return api.post(url, payload, {
     responseType: "blob",
   });
 };
 
-export const render_hd_dat_coc = async (payload: HdDatCocPayload, isChuaXoaChap: boolean) => {
-    let url = '';
-    if (isChuaXoaChap) {
-        url = "/templates/nhom-thue-muon-dat-coc/hd-dat-coc-chua-xoa-chap";
-    } else {
-        url = "/templates/nhom-thue-muon-dat-coc/hd-dat-coc";
-    }
-  return api.post(url, payload, {
+export const render_phieu_thu_ly = async (
+  payload: any,
+  name: string
+) => {
+  let documentName = "";
+  switch (name) {
+    case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
+      documentName = "ptl-hdcn-dat-va-tsglvd-toan-bo";
+      break;
+    default:
+      documentName = "";
+  }
+  return api.post(`/templates/phieu-thu-ly/${documentName}`, payload, {
     responseType: "blob",
   });
 };

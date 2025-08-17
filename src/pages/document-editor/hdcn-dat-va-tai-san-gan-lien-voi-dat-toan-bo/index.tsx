@@ -27,6 +27,7 @@ import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
+import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 
 export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
   const { agreementObject, taiSan } =
@@ -42,16 +43,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
     agreementObject !== null &&
     taiSan !== null;
 
-  const getPayload = (
-    sốBảnGốc: number,
-    isOutSide: boolean,
-    côngChứngViên: string,
-    ngày: string
-  ): HDCNDatVaTaiSanGanLienVoiDatToanBoPayload => {
-    if (!agreementObject || !taiSan) {
-      throw new Error("Agreement object or nha dat is null");
-    }
-
+  const getBenABenB = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -93,7 +85,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
         }))
       );
 
-    const payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload = {
+    return {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -122,11 +114,35 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
           ...couplesB,
         ],
       },
+    };
+  };
+
+  const getTaiSan = () => {
+    if (!agreementObject || !taiSan) {
+      throw new Error("Agreement object or nha dat is null");
+    }
+    return {
       ...agreementObject,
       tài_sản: taiSan.thông_tin_tài_sản.split(";")?.map((item) => item.trim()),
       số_tiền: taiSan.số_tiền,
       số_tiền_bằng_chữ: taiSan.số_tiền_bằng_chữ,
       diện_tích_xây_dựng: taiSan.diện_tích_xây_dựng,
+    };
+  };
+
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDCNDatVaTaiSanGanLienVoiDatToanBoPayload => {
+    if (!agreementObject || !taiSan) {
+      throw new Error("Agreement object or nha dat is null");
+    }
+
+    const payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload = {
+      ...getBenABenB(),
+      ...getTaiSan(),
       ngày: ngày,
       ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
@@ -390,6 +406,15 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
           </Button>
+          <PhieuThuLyButton
+            commonPayload={
+              agreementObject && taiSan
+                ? { ...getBenABenB(), ...getTaiSan() }
+                : null
+            }
+            tên_hợp_đồng="HỢP ĐỒNG CHUYỂN NHƯỢNG QUYỀN SỬ DỤNG ĐẤT VÀ TÀI SẢN GẮN LIỀN VỚI ĐẤT"
+            type="hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo"
+          />
         </Box>
       </Box>
       <ThemLoiChungDialog
