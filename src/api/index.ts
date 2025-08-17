@@ -318,6 +318,16 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
     case "hdmb-nha-dat-toan-bo":
       documentName = "ptl-hdmb-nha-dat-toan-bo";
       break;
+    case "hdmb-xe-oto":
+    case "hdmb-xe-oto-bien-so-xe":
+      documentName = "ptl-hdmb-xe-oto";
+      break;
+    case "hdmb-xe-may":
+      documentName = "ptl-hdmb-xe-may";
+      break;
+    case "hdmb-tai-san":
+      documentName = "ptl-hdmb-tai-san";
+      break;
     default:
       documentName = "";
   }

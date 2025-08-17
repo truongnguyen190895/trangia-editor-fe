@@ -19,6 +19,7 @@ import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
+import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 
 interface HDMBXeProps {
   isXeMay?: boolean;
@@ -42,16 +43,7 @@ export const HDMBXe = ({
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
     agreementObject !== null;
 
-  const getPayload = (
-    sốBảnGốc: number,
-    isOutSide: boolean,
-    côngChứngViên: string,
-    ngày: string
-  ): HDMBXeOtoPayload => {
-    if (!agreementObject) {
-      throw new Error("Agreement object is null");
-    }
-
+  const getBenABenB = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -93,7 +85,7 @@ export const HDMBXe = ({
         }))
       );
 
-    const payload: HDMBXeOtoPayload = {
+    return {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -120,6 +112,38 @@ export const HDMBXe = ({
           ...couplesB,
         ],
       },
+    };
+  };
+
+  const getAdditionalForThuLy = () => {
+    if (!agreementObject) {
+      return null;
+    }
+
+    return {
+      nhãn_hiệu: agreementObject?.["nhãn_hiệu"] ?? "",
+      màu_sơn: agreementObject?.["màu_sơn"] ?? "",
+      loại_xe: agreementObject?.["loại_xe"] ?? "",
+      số_máy: agreementObject?.["số_máy"] ?? "",
+      số_khung: agreementObject?.["số_khung"] ?? "",
+      biển_số: agreementObject?.["biển_số"] ?? "",
+      số_loại: agreementObject?.["số_loại"] ?? "",
+      số_đăng_ký: agreementObject?.["số_đăng_ký"] ?? "",
+    };
+  };
+
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDMBXeOtoPayload => {
+    if (!agreementObject) {
+      throw new Error("Agreement object is null");
+    }
+
+    const payload: HDMBXeOtoPayload = {
+      ...getBenABenB(),
       ...agreementObject,
       ngày: ngày,
       ngày_bằng_chữ: translateDateToVietnamese(ngày),
@@ -262,6 +286,20 @@ export const HDMBXe = ({
           >
             {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
           </Button>
+          <PhieuThuLyButton
+            commonPayload={
+              agreementObject
+                ? { ...getBenABenB(), ...getAdditionalForThuLy() }
+                : null
+            }
+            type={
+              isXeMay
+                ? "hdmb-xe-may"
+                : isDauGia
+                ? "hdmb-xe-oto-bien-so-xe"
+                : "hdmb-xe-oto"
+            }
+          />
         </Box>
       </Box>
       <ThemLoiChungDialog
