@@ -29,6 +29,7 @@ import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
+import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 
 interface Props {
   isTangCho?: boolean;
@@ -51,22 +52,7 @@ export const HDMBNhaDatToanBo = ({
     agreementObject !== null &&
     nhaDat !== null;
 
-  const getPayload = (
-    sốBảnGốc: number,
-    isOutSide: boolean,
-    côngChứngViên: string,
-    ngày: string
-  ): HDMBNhaDatPayload => {
-    if (isUyQuyen) {
-      if (!agreementObject) {
-        throw new Error("Nhà đất is null");
-      }
-    } else {
-      if (!agreementObject || !nhaDat) {
-        throw new Error("Agreement object or nha dat is null");
-      }
-    }
-
+  const getBenABenB = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -108,7 +94,7 @@ export const HDMBNhaDatToanBo = ({
         }))
       );
 
-    const payload: HDMBNhaDatPayload = {
+    return {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -137,6 +123,39 @@ export const HDMBNhaDatToanBo = ({
           ...couplesB,
         ],
       },
+    };
+  };
+
+  const getAdditionalForThuLy = () => {
+    if (!agreementObject) {
+      return null;
+    }
+
+    return {
+      số_thửa_đất: agreementObject?.["số_thửa_đất"],
+      số_tờ_bản_đồ: agreementObject?.["số_tờ_bản_đồ"],
+      địa_chỉ_nhà_đất: agreementObject?.["địa_chỉ_nhà_đất"],
+    };
+  };
+
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDMBNhaDatPayload => {
+    if (isUyQuyen) {
+      if (!agreementObject) {
+        throw new Error("Nhà đất is null");
+      }
+    } else {
+      if (!agreementObject || !nhaDat) {
+        throw new Error("Agreement object or nha dat is null");
+      }
+    }
+
+    const payload: HDMBNhaDatPayload = {
+      ...getBenABenB(),
       ...agreementObject,
       ...nhaDat!,
       ngày: ngày,
@@ -483,6 +502,14 @@ export const HDMBNhaDatToanBo = ({
           ) : (
             <></>
           )}
+          <PhieuThuLyButton
+            commonPayload={
+              agreementObject && nhaDat
+                ? { ...getBenABenB(), ...getAdditionalForThuLy() }
+                : null
+            }
+            type="hdmb-nha-dat-toan-bo"
+          />
         </Box>
       </Box>
       <ThemLoiChungDialog

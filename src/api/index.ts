@@ -302,20 +302,21 @@ export const render_hd_dat_coc = async (
   });
 };
 
-export const render_phieu_thu_ly = async (
-  payload: any,
-  name: string
-) => {
+export const render_phieu_thu_ly = async (payload: any, name: string) => {
   let documentName = "";
   switch (name) {
     case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
       documentName = "ptl-hdcn-dat-va-tsglvd-toan-bo";
       break;
     case "hdcn-quyen-sd-dat-toan-bo":
+    case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
       documentName = "ptl-hdcn-quyen-su-dung-dat-toan-bo";
       break;
     case "hdmb-can-ho-toan-bo":
       documentName = "ptl-hdmb-can-ho-toan-bo";
+      break;
+    case "hdmb-nha-dat-toan-bo":
+      documentName = "ptl-hdmb-nha-dat-toan-bo";
       break;
     default:
       documentName = "";
