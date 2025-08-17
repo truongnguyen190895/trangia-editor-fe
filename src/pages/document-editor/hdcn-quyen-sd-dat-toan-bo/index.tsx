@@ -30,6 +30,7 @@ import { generateThoiHanSuDung } from "@/utils/common";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
+import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 
 interface Props {
   isNongNghiep?: boolean;
@@ -51,16 +52,7 @@ export const ChuyenNhuongDatToanBo = ({
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
     agreementObject !== null;
 
-  const getPayload = (
-    sốBảnGốc: number,
-    isOutSide: boolean,
-    côngChứngViên: string,
-    ngày: string
-  ): HDCNQuyenSDDatPayload => {
-    if (!agreementObject) {
-      throw new Error("Agreement object is null");
-    }
-
+  const getBenABenB = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -69,6 +61,7 @@ export const ChuyenNhuongDatToanBo = ({
         tình_trạng_hôn_nhân: null,
         tình_trạng_hôn_nhân_vợ_chồng:
           couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
+        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
         partyA["vợ_chồng"].map((couple) => ({
@@ -79,6 +72,7 @@ export const ChuyenNhuongDatToanBo = ({
           tình_trạng_hôn_nhân: null,
           tình_trạng_hôn_nhân_vợ_chồng:
             couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
+          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
     const couplesB = partyB["vợ_chồng"]
@@ -87,8 +81,7 @@ export const ChuyenNhuongDatToanBo = ({
         ngày_sinh: couple.chồng["ngày_sinh"],
         ngày_cấp: couple.chồng["ngày_cấp"],
         tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng:
-          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
+        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
       }))
       .concat(
         partyB["vợ_chồng"].map((couple) => ({
@@ -97,12 +90,11 @@ export const ChuyenNhuongDatToanBo = ({
           ngày_sinh: couple.vợ["ngày_sinh"],
           ngày_cấp: couple.vợ["ngày_cấp"],
           tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng:
-            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
+          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
         }))
       );
 
-    const payload: HDCNQuyenSDDatPayload = {
+    return {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -110,8 +102,9 @@ export const ChuyenNhuongDatToanBo = ({
             ngày_sinh: person["ngày_sinh"],
             ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-            quan_hệ: person["quan_hệ"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
+            quan_hệ: person["quan_hệ"] || null,
+            ...extractAddress(person["địa_chỉ_thường_trú"]),
           })),
           ...couplesA,
         ],
@@ -123,12 +116,42 @@ export const ChuyenNhuongDatToanBo = ({
             ngày_sinh: person["ngày_sinh"],
             ngày_cấp: person["ngày_cấp"],
             tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-            quan_hệ: person["quan_hệ"] || null,
             tình_trạng_hôn_nhân_vợ_chồng: null,
+            quan_hệ: person["quan_hệ"] || null,
+            ...extractAddress(person["địa_chỉ_thường_trú"]),
           })),
           ...couplesB,
         ],
       },
+    };
+  };
+
+  const getAdditionalForThuLy = () => {
+    if (!agreementObject) {
+      return null;
+    }
+
+    return {
+      số_thửa_đất: agreementObject?.["số_thửa_đất"],
+      số_tờ_bản_đồ: agreementObject?.["số_tờ_bản_đồ"],
+      địa_chỉ_hiển_thị: agreementObject?.["địa_chỉ_cũ"]
+        ? `${agreementObject?.["địa_chỉ_cũ"]} (nay là ${agreementObject?.["địa_chỉ_mới"]})`
+        : agreementObject?.["địa_chỉ_mới"],
+    };
+  };
+
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDCNQuyenSDDatPayload => {
+    if (!agreementObject) {
+      throw new Error("Agreement object is null");
+    }
+
+    const payload: HDCNQuyenSDDatPayload = {
+      ...getBenABenB(),
       số_thửa_đất: agreementObject["số_thửa_đất"],
       số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
       địa_chỉ_cũ: agreementObject["địa_chỉ_cũ"],
@@ -478,6 +501,15 @@ export const ChuyenNhuongDatToanBo = ({
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
           </Button>
+          <PhieuThuLyButton
+            commonPayload={
+              agreementObject
+                ? { ...getBenABenB(), ...getAdditionalForThuLy() }
+                : null
+            }
+            tên_hợp_đồng="HỢP ĐỒNG CHUYỂN NHƯỢNG QUYỀN SỬ DỤNG ĐẤT"
+            type="hdcn-quyen-sd-dat-toan-bo"
+          />
         </Box>
       </Box>
       <ThemLoiChungDialog

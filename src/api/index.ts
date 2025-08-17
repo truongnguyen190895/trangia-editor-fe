@@ -311,6 +311,9 @@ export const render_phieu_thu_ly = async (
     case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
       documentName = "ptl-hdcn-dat-va-tsglvd-toan-bo";
       break;
+    case "hdcn-quyen-sd-dat-toan-bo":
+      documentName = "ptl-hdcn-quyen-su-dung-dat-toan-bo";
+      break;
     default:
       documentName = "";
   }
