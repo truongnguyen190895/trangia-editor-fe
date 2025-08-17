@@ -24,6 +24,7 @@ import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
+import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 
 export const HDMBTaiSan = () => {
   const { agreementObject, taiSan } = useHDMBTaiSanContext();
@@ -38,16 +39,7 @@ export const HDMBTaiSan = () => {
     agreementObject !== null &&
     taiSan !== null;
 
-  const getPayload = (
-    sốBảnGốc: number,
-    isOutSide: boolean,
-    côngChứngViên: string,
-    ngày: string
-  ): HDMBTaiSanPayload => {
-    if (!agreementObject || !taiSan) {
-      throw new Error("Agreement object or nha dat is null");
-    }
-
+  const getBenABenB = () => {
     const couplesA = partyA["vợ_chồng"]
       .map((couple) => ({
         ...couple.chồng,
@@ -89,7 +81,7 @@ export const HDMBTaiSan = () => {
         }))
       );
 
-    const payload: HDMBTaiSanPayload = {
+    return {
       bên_A: {
         cá_thể: [
           ...partyA["cá_nhân"].map((person) => ({
@@ -118,6 +110,28 @@ export const HDMBTaiSan = () => {
           ...couplesB,
         ],
       },
+    };
+  };
+
+  const getAdditionalForThuLy = () => {
+    return {
+      tên_tài_sản: taiSan?.tên_tài_sản ?? "",
+      địa_chỉ: agreementObject?.["địa_chỉ"] ?? "",
+    };
+  };
+
+  const getPayload = (
+    sốBảnGốc: number,
+    isOutSide: boolean,
+    côngChứngViên: string,
+    ngày: string
+  ): HDMBTaiSanPayload => {
+    if (!agreementObject || !taiSan) {
+      throw new Error("Agreement object or nha dat is null");
+    }
+
+    const payload: HDMBTaiSanPayload = {
+      ...getBenABenB(),
       ...agreementObject,
       ...taiSan,
       số_tiền: taiSan.số_tiền,
@@ -369,6 +383,7 @@ export const HDMBTaiSan = () => {
           >
             {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
           </Button>
+
           <Button
             variant="contained"
             sx={{
@@ -384,6 +399,14 @@ export const HDMBTaiSan = () => {
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
           </Button>
+          <PhieuThuLyButton
+            commonPayload={
+              agreementObject && taiSan
+                ? { ...getBenABenB(), ...getAdditionalForThuLy() }
+                : null
+            }
+            type="hdmb-tai-san"
+          />
         </Box>
       </Box>
       <ThemLoiChungDialog
