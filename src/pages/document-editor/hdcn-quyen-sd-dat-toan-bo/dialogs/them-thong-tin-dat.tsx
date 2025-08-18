@@ -390,19 +390,29 @@ export const ThemThongTinDat = ({
                 >
                   <Autocomplete
                     fullWidth
+                    freeSolo
                     id="mục đích sử dụng"
                     options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
-                    getOptionLabel={(option) => option.label}
+                    getOptionLabel={(option) => 
+                      typeof option === 'string' ? option : option.label
+                    }
                     value={
                       MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
                         (item) =>
                           item.value === mụcđíchVàThờiHạnSửDụngEdit["phân_loại"]
-                      ) ?? null
+                      ) ?? mụcđíchVàThờiHạnSửDụngEdit["phân_loại"]
                     }
                     onChange={(_event, value) => {
+                      const newValue = typeof value === 'string' ? value : value?.value ?? "";
                       setMụcĐíchVàThờiHạnSửDụngEdit({
                         ...mụcđíchVàThờiHạnSửDụngEdit,
-                        phân_loại: value?.value ?? "",
+                        phân_loại: newValue,
+                      });
+                    }}
+                    onInputChange={(_event, newInputValue) => {
+                      setMụcĐíchVàThờiHạnSửDụngEdit({
+                        ...mụcđíchVàThờiHạnSửDụngEdit,
+                        phân_loại: newInputValue,
                       });
                     }}
                     renderInput={(params) => (
