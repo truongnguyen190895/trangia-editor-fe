@@ -25,30 +25,49 @@ function convertInteger(num: number) {
     const scales = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ', 'triệu tỷ', 'tỷ tỷ'];
     
     let words = [];
-    let scaleIndex = 0;
+    let chunks = [];
     
-    while (num > 0) {
-        let chunk = num % 1000;
-        num = Math.floor(num / 1000);
+    // First, collect all chunks
+    let tempNum = num;
+    while (tempNum > 0) {
+        let chunk = tempNum % 1000;
+        chunks.unshift(chunk);
+        tempNum = Math.floor(tempNum / 1000);
+    }
+    
+    // Process chunks with proper handling of zeros
+    for (let i = 0; i < chunks.length; i++) {
+        let chunk = chunks[i];
+        let scaleIndex = chunks.length - 1 - i;
         
         if (chunk !== 0) {
-            let chunkWords = convertThreeDigits(chunk);
+            // Include "không trăm" if this chunk is not the leftmost chunk (i > 0)
+            let shouldForceZeroHundreds = i > 0;
+            let chunkWords = convertThreeDigits(chunk, shouldForceZeroHundreds);
             
             if (scaleIndex > 0) {
                 chunkWords += ' ' + scales[scaleIndex];
             }
             
-            words.unshift(chunkWords);
+            words.push(chunkWords);
+        } else if (scaleIndex > 0 && i < chunks.length - 1) {
+            // Handle zero chunks that are not the last chunk and have a scale
+            // This ensures we include "không trăm" when needed
+            let chunkWords = convertThreeDigits(chunk, true);
+            
+            if (scaleIndex > 0) {
+                chunkWords += ' ' + scales[scaleIndex];
+            }
+            
+            words.push(chunkWords);
         }
-        
-        scaleIndex++;
     }
     
     let result = words.join(' ');
     return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
-function convertThreeDigits(num: number) {
+function convertThreeDigits(num: number, forceIncludeZeroHundreds: boolean = false) {
     const units = ['', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
     const tens = ['', 'mười', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 
                  'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];
@@ -59,6 +78,9 @@ function convertThreeDigits(num: number) {
     
     if (hundred > 0) {
         words.push(units[hundred] + ' trăm');
+    } else if (forceIncludeZeroHundreds && num > 0) {
+        // Add "không trăm" when we're forced to include it for proper representation
+        words.push('không trăm');
     }
     
     if (remainder > 0) {
