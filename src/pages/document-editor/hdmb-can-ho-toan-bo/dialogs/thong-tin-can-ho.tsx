@@ -33,6 +33,7 @@ export const ThongTinCanHoDialog = ({
     số_căn_hộ: Yup.string().required("Số căn hộ là bắt buộc"),
     tên_toà_nhà: Yup.string().required("Tên toà nhà là bắt buộc"),
     địa_chỉ_toà_nhà: Yup.string().required("Địa chỉ toà nhà là bắt buộc"),
+    địa_chỉ_cũ: Yup.string(),
     loại_gcn: Yup.string().required("Loại giấy chứng nhận là bắt buộc"),
     số_gcn: Yup.string().required("Số giấy chứng nhận là bắt buộc"),
     số_vào_sổ_cấp_gcn: Yup.string().required(
@@ -62,6 +63,7 @@ export const ThongTinCanHoDialog = ({
           số_căn_hộ: "",
           tên_toà_nhà: "",
           địa_chỉ_toà_nhà: "",
+          địa_chỉ_cũ: "",
           loại_gcn: "",
           số_gcn: "",
           số_vào_sổ_cấp_gcn: "",
@@ -140,6 +142,14 @@ export const ThongTinCanHoDialog = ({
                   touched["địa_chỉ_toà_nhà"] &&
                   errors["địa_chỉ_toà_nhà"]
                 }
+              />
+              <TextField
+                fullWidth
+                id="địa_chỉ_cũ"
+                name="địa_chỉ_cũ"
+                label="Địa chỉ cũ"
+                value={values["địa_chỉ_cũ"]}
+                onChange={handleChange}
               />
               <Autocomplete
                 sx={{ gridColumn: "span 2" }}

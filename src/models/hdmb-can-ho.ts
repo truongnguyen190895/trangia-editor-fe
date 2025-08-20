@@ -6,7 +6,7 @@ export interface HDMBCanHoPayload {
   bên_B: Party;
   số_căn_hộ: string;
   tên_toà_nhà: string;
-  địa_chỉ_toà_nhà: string;
+  địa_chỉ_hiển_thị: string;
   loại_gcn: string;
   số_gcn: string;
   số_vào_sổ_cấp_gcn: string;
@@ -57,6 +57,7 @@ export interface ThongTinCanHo {
   số_căn_hộ: string; //
   tên_toà_nhà: string; //
   địa_chỉ_toà_nhà: string; //
+  địa_chỉ_cũ: string;
   loại_gcn: string; //
   số_gcn: string; //
   số_vào_sổ_cấp_gcn: string; //

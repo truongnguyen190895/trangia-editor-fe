@@ -158,7 +158,9 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       ...getBenABenB(),
       số_căn_hộ: canHo["số_căn_hộ"],
       tên_toà_nhà: canHo["tên_toà_nhà"],
-      địa_chỉ_toà_nhà: canHo["địa_chỉ_toà_nhà"],
+      địa_chỉ_hiển_thị: canHo["địa_chỉ_cũ"]
+        ? `${canHo["địa_chỉ_cũ"]} (nay là ${canHo["địa_chỉ_toà_nhà"]})`
+        : canHo["địa_chỉ_toà_nhà"],
       loại_gcn: canHo["loại_gcn"],
       số_gcn: canHo["số_gcn"],
       số_vào_sổ_cấp_gcn: canHo["số_vào_sổ_cấp_gcn"],

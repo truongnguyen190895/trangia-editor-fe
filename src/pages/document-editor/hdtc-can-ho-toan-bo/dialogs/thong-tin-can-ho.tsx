@@ -54,6 +54,7 @@ export const ThongTinCanHoDialog = ({
           số_căn_hộ: "",
           tên_toà_nhà: "",
           địa_chỉ_toà_nhà: "",
+          địa_chỉ_cũ: "",
           loại_gcn: "",
           số_gcn: "",
           số_vào_sổ_cấp_gcn: "",
@@ -123,6 +124,14 @@ export const ThongTinCanHoDialog = ({
                 name="địa_chỉ_toà_nhà"
                 label="Địa chỉ toà nhà *"
                 value={values["địa_chỉ_toà_nhà"]}
+                onChange={handleChange}
+              />
+              <TextField
+                fullWidth
+                id="địa_chỉ_cũ"
+                name="địa_chỉ_cũ"
+                label="Địa chỉ cũ"
+                value={values["địa_chỉ_cũ"]}
                 onChange={handleChange}
               />
               <Autocomplete
