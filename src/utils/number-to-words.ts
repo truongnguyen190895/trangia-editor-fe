@@ -50,16 +50,6 @@ function convertInteger(num: number) {
             }
             
             words.push(chunkWords);
-        } else if (scaleIndex > 0 && i < chunks.length - 1) {
-            // Handle zero chunks that are not the last chunk and have a scale
-            // This ensures we include "không trăm" when needed
-            let chunkWords = convertThreeDigits(chunk, true);
-            
-            if (scaleIndex > 0) {
-                chunkWords += ' ' + scales[scaleIndex];
-            }
-            
-            words.push(chunkWords);
         }
     }
     
