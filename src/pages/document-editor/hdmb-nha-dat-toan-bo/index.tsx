@@ -134,7 +134,9 @@ export const HDMBNhaDatToanBo = ({
     return {
       số_thửa_đất: agreementObject?.["số_thửa_đất"],
       số_tờ_bản_đồ: agreementObject?.["số_tờ_bản_đồ"],
-      địa_chỉ_nhà_đất: agreementObject?.["địa_chỉ_nhà_đất"],
+      địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
+        ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_nhà_đất"]})`
+        : agreementObject["địa_chỉ_nhà_đất"],
     };
   };
 
@@ -158,6 +160,9 @@ export const HDMBNhaDatToanBo = ({
       ...getBenABenB(),
       ...agreementObject,
       ...nhaDat!,
+      địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
+        ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_nhà_đất"]})`
+        : agreementObject["địa_chỉ_nhà_đất"],
       ngày: ngày,
       ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
@@ -425,6 +430,14 @@ export const HDMBNhaDatToanBo = ({
     }
   };
 
+  const generateThuLyType = () => {
+    if (isTangCho) {
+      return "hd-tang-cho-nha-dat-toan-bo";
+    } else {
+      return "hdmb-nha-dat-toan-bo";
+    }
+  };
+
   return (
     <Box display="flex" gap="2rem">
       <Box
@@ -508,7 +521,7 @@ export const HDMBNhaDatToanBo = ({
                 ? { ...getBenABenB(), ...getAdditionalForThuLy() }
                 : null
             }
-            type="hdmb-nha-dat-toan-bo"
+            type={generateThuLyType()}
           />
         </Box>
       </Box>

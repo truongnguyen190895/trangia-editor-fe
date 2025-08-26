@@ -60,6 +60,7 @@ export const ThemThongTinDat = ({
           thời_hạn_sử_dụng_đất: "",
           nguồn_gốc_sử_dụng_đất: "",
           địa_chỉ_nhà_đất: "",
+          địa_chỉ_cũ: "",
           loại_gcn: "",
           số_gcn: "",
           số_vào_sổ_cấp_gcn: "",
@@ -127,6 +128,14 @@ export const ThemThongTinDat = ({
                   touched["địa_chỉ_nhà_đất"] &&
                   errors["địa_chỉ_nhà_đất"]
                 }
+              />
+              <TextField
+                fullWidth
+                id="địa_chỉ_cũ"
+                name="địa_chỉ_cũ"
+                label="Địa chỉ cũ"
+                value={values["địa_chỉ_cũ"]}
+                onChange={handleChange}
               />
               <Autocomplete
                 sx={{ gridColumn: "span 2" }}

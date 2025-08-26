@@ -12,12 +12,14 @@ export interface HDMBNhaDatPayload extends ThongTinThuaDat, ThongTinNhaDat {
   số_bản_công_chứng_bằng_chữ: string;
   ký_bên_ngoài: boolean;
   công_chứng_viên: string;
+  địa_chỉ_hiển_thị: string;
 }
 
 export interface ThongTinThuaDat {
   số_thửa_đất: string;
   số_tờ_bản_đồ: string | null;
   địa_chỉ_nhà_đất: string;
+  địa_chỉ_cũ: string;
   diện_tích_đất_bằng_số: string;
   diện_tích_đất_bằng_chữ: string;
   hình_thức_sở_hữu_đất: string;
