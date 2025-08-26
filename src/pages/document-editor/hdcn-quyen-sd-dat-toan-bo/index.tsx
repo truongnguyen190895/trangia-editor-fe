@@ -429,6 +429,18 @@ export const ChuyenNhuongDatToanBo = ({
     }
   };
 
+  const generateThuLyType = () => {
+    if (isNongNghiep && isTangCho) {
+      return "hd-tang-cho-dat-nong-nghiep-toan-bo";
+    } else if (isTangCho) {
+      return "hd-tang-cho-dat-toan-bo";
+    } else if (isNongNghiep) {
+      return "hd-tang-cho-dat-nong-nghiep-toan-bo";
+    } else {
+      return "hdcn-quyen-sd-dat-toan-bo";
+    }
+  };
+
   return (
     <Box display="flex" gap="2rem">
       <Box
@@ -507,7 +519,7 @@ export const ChuyenNhuongDatToanBo = ({
                 ? { ...getBenABenB(), ...getAdditionalForThuLy() }
                 : null
             }
-            type="hdcn-quyen-sd-dat-toan-bo"
+            type={generateThuLyType()}
           />
         </Box>
       </Box>
