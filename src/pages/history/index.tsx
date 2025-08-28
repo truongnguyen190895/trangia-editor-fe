@@ -13,10 +13,14 @@ import {
 import { listContracts, exportExcel } from "@/api/contract";
 import type { Contract } from "@/api/contract";
 import dayjs from "dayjs";
+import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const History = () => {
+  const [open, setOpen] = useState(false);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingExcel, setLoadingExcel] = useState(false);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
   const isAdmin = userRoles.some((role: string) => role === "ROLE_Admin");
 
@@ -43,7 +47,7 @@ const History = () => {
   });
 
   const handleExportExcel = () => {
-    setLoading(true);
+    setLoadingExcel(true);
     exportExcel()
       .then((res) => {
         const blob = new Blob([res.data], {
@@ -59,15 +63,60 @@ const History = () => {
         window.URL.revokeObjectURL(url);
       })
       .finally(() => {
+        setLoadingExcel(false);
+      });
+  };
+
+  const handleUpdateData = () => {
+    setLoading(true);
+    listContracts()
+      .then(() => {
+        setOpen(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
         setLoading(false);
       });
+  };
+
+  const handleClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const renderTableContent = () => {
+    if (loading) {
+      return <Typography>Đang tải dữ liệu...</Typography>;
+    }
+    if (cleanData.length === 0) {
+      return <Typography>Không có dữ liệu</Typography>;
+    }
+    return cleanData.map((contract) => (
+      <TableRow key={contract.số_hợp_đồng}>
+        <TableCell>{contract.ngay}</TableCell>
+        <TableCell>{contract.tenChuyenVien}</TableCell>
+        <TableCell>{contract.số_hợp_đồng}</TableCell>
+        <TableCell>{contract.tên_hợp_đồng}</TableCell>
+        <TableCell>{contract.tên_khách_hàng}</TableCell>
+        <TableCell>{contract.số_tiền}</TableCell>
+        <TableCell>{contract.bản_sao}</TableCell>
+        <TableCell>{contract.ghi_chú}</TableCell>
+      </TableRow>
+    ));
   };
 
   return (
     <Box>
       <Typography variant="h4">Danh sách hợp đồng</Typography>
       {isAdmin ? (
-        <Box mt="1rem">
+        <Box mt="1rem" display="flex" gap="1rem" alignItems="center">
           <Button
             variant="contained"
             color="primary"
@@ -75,53 +124,51 @@ const History = () => {
               backgroundColor: "green",
             }}
             onClick={handleExportExcel}
-            disabled={loading}
+            disabled={loadingExcel}
           >
-            {loading ? <CircularProgress size={20} /> : "Xuất báo cáo excel"}
+            {loadingExcel ? (
+              <CircularProgress size={20} />
+            ) : (
+              "Xuất báo cáo excel"
+            )}
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#33A1E0" }}
+            onClick={handleUpdateData}
+          >
+            Cập nhật dữ liệu mới nhất
           </Button>
         </Box>
       ) : null}
 
       <Box mt="2rem">
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Ngày viết phiếu</TableCell>
-                <TableCell>Tên chuyên viên</TableCell>
-                <TableCell>Số HĐ</TableCell>
-                <TableCell>Tên HĐ</TableCell>
-                <TableCell>Tên KH</TableCell>
-                <TableCell>Số tiền</TableCell>
-                <TableCell>Bản sao</TableCell>
-                <TableCell>Ghi chú (Qh.....)</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {cleanData.length > 0 ? (
-                cleanData.map((contract) => (
-                  <TableRow>
-                    <TableCell>{contract.ngay}</TableCell>
-                    <TableCell>{contract.tenChuyenVien}</TableCell>
-                    <TableCell>{contract.số_hợp_đồng}</TableCell>
-                    <TableCell>{contract.tên_hợp_đồng}</TableCell>
-                    <TableCell>{contract.tên_khách_hàng}</TableCell>
-                    <TableCell>{contract.số_tiền}</TableCell>
-                    <TableCell>{contract.bản_sao}</TableCell>
-                    <TableCell>{contract.ghi_chú}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <Box py="2rem">
-                  <Typography>Không có dữ liệu</Typography>
-                </Box>
-              )}
-            </TableBody>
-          </Table>
-        )}
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Ngày viết phiếu</TableCell>
+              <TableCell>Tên chuyên viên</TableCell>
+              <TableCell>Số HĐ</TableCell>
+              <TableCell>Tên HĐ</TableCell>
+              <TableCell>Tên KH</TableCell>
+              <TableCell>Số tiền</TableCell>
+              <TableCell>Bản sao</TableCell>
+              <TableCell>Ghi chú (Qh.....)</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{renderTableContent()}</TableBody>
+        </Table>
       </Box>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Cập nhật dữ liệu thành công
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
