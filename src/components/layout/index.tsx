@@ -22,8 +22,7 @@ const Layout = () => {
   const userName = localStorage.getItem("username");
 
   const handleLogOut = () => {
-    localStorage.removeItem("username");
-    localStorage.removeItem("access_token");
+    localStorage.clear();
     navigate("/login");
   };
 

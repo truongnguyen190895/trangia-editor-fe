@@ -44,3 +44,14 @@ export const submitContract = (payload: SubmitContractPayload) => {
 export const listContracts = (): Promise<ContractResponse> => {
   return api.get("/files").then((resp) => resp.data);
 };
+
+export const exportExcel = () => {
+  return api
+    .get("/files", {
+      headers: {
+        'accept':
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+      responseType: "blob",
+    })
+};

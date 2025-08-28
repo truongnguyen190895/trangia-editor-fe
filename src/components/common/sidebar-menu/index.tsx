@@ -9,12 +9,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import {
-  Description,
-  AccountBalance,
-  Create,
-  Timeline
-} from "@mui/icons-material";
+import { Description, Create, Timeline } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
 interface SidebarMenuProps {
@@ -34,14 +29,9 @@ const menuItems = [
     path: "/submit-contract",
   },
   {
-    text: "Lịch sử hợp đồng",
+    text: "Tổng hợp",
     icon: <Timeline />,
     path: "/history",
-  },
-  {
-    text: "Kế toán",
-    icon: <AccountBalance />,
-    path: "/accounting",
   },
 ];
 

@@ -108,8 +108,8 @@ export const LoginPage = () => {
               <Button
                 type="submit"
                 fullWidth
-                variant="outlined"
-                sx={{ mt: 3, mb: 2, height: "50px", fontSize: "1.2rem" }}
+                variant="contained"
+                sx={{ mt: 3, mb: 2, height: "50px", fontSize: "1.2rem", backgroundColor: "green"}}
               >
                 {loading ? (
                   <CircularProgress size={20} sx={{ mr: 1 }} />
