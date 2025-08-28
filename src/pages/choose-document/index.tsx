@@ -35,7 +35,7 @@ const ChooseDocument = () => {
 
   return (
     <Box>
-      <Typography variant="h3">Chọn danh mục văn bản</Typography>
+      <Typography variant="h4">Chọn danh mục văn bản</Typography>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }} mt="20px">
         {mockData.map((item) => (
           <RoundedBox

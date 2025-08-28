@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { SidebarMenu } from "../common/sidebar-menu";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Layout = () => {
 
   const handleLogOut = () => {
     localStorage.removeItem("username");
+    localStorage.removeItem("access_token");
     navigate("/login");
   };
 
@@ -32,32 +34,26 @@ const Layout = () => {
   return (
     <Box
       position="relative"
-      sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      sx={{ display: "flex", flexDirection: "column", height: "100vh" }}
       className="layout-container"
     >
       <Box
         className="navigator"
-        height="7rem"
         bgcolor="#1C6EA4"
         color="#fff"
         display="flex"
         alignItems="center"
         px="1rem"
         justifyContent="space-between"
+        sx={{ height: '100px'}}
       >
-        <Typography variant="h3">Tran Gia</Typography>
+        <Typography variant="h3">Công chứng Trần Gia</Typography>
         <Box display="flex" alignItems="center" gap="1rem">
           <Typography variant="h5">Xin chào: {userName}</Typography>
           <Button variant="contained" color="error" onClick={handleLogOut}>
             Đăng xuất
           </Button>
-        </Box>
-      </Box>
-      <Box className="content" p="2rem">
-        <Outlet />
-      </Box>
-      <Box px="2rem">
-        <Typography
+          <Typography
           variant="caption"
           sx={{
             ml: "auto",
@@ -67,6 +63,15 @@ const Layout = () => {
         >
           Deployed: {formatBuildTime(__BUILD_TIME__)}
         </Typography>
+        </Box>
+      </Box>
+      <Box className="content" display="flex" flex={1}>
+        <Box>
+          <SidebarMenu />
+        </Box>
+        <Box flex={1} p="2rem">
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

@@ -29,7 +29,11 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  config.headers["x-api-key"] = import.meta.env.VITE_API_KEY;
+  const accessToken = localStorage.getItem("access_token");
+  if (accessToken) {
+    config.headers["Authorization"] = `Bearer ${accessToken}`;
+  }
+  console.log(config);
   return config;
 });
 

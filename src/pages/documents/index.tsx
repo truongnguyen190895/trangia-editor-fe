@@ -12,7 +12,7 @@ export const Documents = () => {
 
   return (
     <Box>
-      <Typography variant="h3">Chọn văn bản cần chỉnh sửa</Typography>
+      <Typography variant="h4">Chọn văn bản cần chỉnh sửa</Typography>
       <Box display="flex" flexDirection="column" gap={2} mt={5}>
         {documents.map((document) => (
           <DocumentThumbnail

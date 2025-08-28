@@ -6,6 +6,10 @@ import { Documents } from "../pages/documents";
 import { DocumentEditor } from "../pages/document-editor";
 import { ThemChuTheProvider } from "@/context/them-chu-the";
 import LoginPage from "@/pages/login";
+import SubmitContract from "@/pages/submit-contract";
+import History from "@/pages/history";
+import Accounting from "@/pages/accounting";
+import NotFound from "@/pages/not-found";
 
 export const router = createBrowserRouter([
   {
@@ -32,11 +36,26 @@ export const router = createBrowserRouter([
           </ThemChuTheProvider>
         ),
       },
+      {
+        path: "/submit-contract",
+        element: <SubmitContract />,
+      },
+      {
+        path: "/history",
+        element: <History />,
+      },
+      {
+        path: "/accounting",
+        element: <Accounting />,
+      },
     ],
   },
-
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
