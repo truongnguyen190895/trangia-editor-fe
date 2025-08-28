@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/api/auth";
+import LoginBGImage from "@/assets/images/login-bg-image.jpg";
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -25,7 +26,6 @@ export const LoginPage = () => {
     e.preventDefault();
     try {
       const response = await login({ username: account, password });
-      console.log(response);
       localStorage.setItem("access_token", response.accessToken);
       localStorage.setItem("username", username);
       localStorage.setItem("roles", JSON.stringify(response.authorities));
@@ -38,15 +38,19 @@ export const LoginPage = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundImage: `url(${LoginBGImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        display: "flex",
+        py: "6rem",
+        justifyContent: "center",
+      }}
+    >
+      <Container component="main" maxWidth="xs" sx={{ opacity: 0.85 }}>
         <Paper elevation={3} sx={{ padding: 4, width: "100%" }}>
           <Box
             sx={{
@@ -109,7 +113,13 @@ export const LoginPage = () => {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, height: "50px", fontSize: "1.2rem", backgroundColor: "green"}}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  height: "50px",
+                  fontSize: "1.2rem",
+                  backgroundColor: "green",
+                }}
               >
                 {loading ? (
                   <CircularProgress size={20} sx={{ mr: 1 }} />
@@ -120,8 +130,8 @@ export const LoginPage = () => {
             </Box>
           </Box>
         </Paper>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 

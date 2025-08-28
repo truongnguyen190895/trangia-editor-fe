@@ -20,13 +20,14 @@ const Layout = () => {
   };
 
   const userName = localStorage.getItem("username");
+  const access_token = localStorage.getItem("access_token");
 
   const handleLogOut = () => {
     localStorage.clear();
     navigate("/login");
   };
 
-  if (!userName) {
+  if (!userName || !access_token) {
     return <Navigate to="/login" />;
   }
 
@@ -44,7 +45,7 @@ const Layout = () => {
         alignItems="center"
         px="1rem"
         justifyContent="space-between"
-        sx={{ height: '100px'}}
+        sx={{ height: "100px" }}
       >
         <Typography variant="h3">Công chứng Trần Gia</Typography>
         <Box display="flex" alignItems="center" gap="1rem">
@@ -53,15 +54,15 @@ const Layout = () => {
             Đăng xuất
           </Button>
           <Typography
-          variant="caption"
-          sx={{
-            ml: "auto",
-            opacity: 0.7,
-            fontSize: "0.75rem",
-          }}
-        >
-          Deployed: {formatBuildTime(__BUILD_TIME__)}
-        </Typography>
+            variant="caption"
+            sx={{
+              ml: "auto",
+              opacity: 0.7,
+              fontSize: "0.75rem",
+            }}
+          >
+            Deployed: {formatBuildTime(__BUILD_TIME__)}
+          </Typography>
         </Box>
       </Box>
       <Box className="content" display="flex" flex={1}>

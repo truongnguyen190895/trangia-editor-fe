@@ -123,6 +123,7 @@ const SubmitContract = () => {
               <Button
                 type="submit"
                 variant="contained"
+                sx={{ backgroundColor: "green", width: "200px", height: '40px' }}
               >
                 {isLoading ? <CircularProgress size={20} /> : "Lưu thông tin"}
               </Button>
