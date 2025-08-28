@@ -22,7 +22,7 @@ const History = () => {
   const [loading, setLoading] = useState(false);
   const [loadingExcel, setLoadingExcel] = useState(false);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
-  const isAdmin = userRoles.some((role: string) => role === "ROLE_Admin");
+  const isAdmin = userRoles.some((role: string) => role === "ROLE_Admin" || role === "ROLE_Manager");
 
   useEffect(() => {
     setLoading(true);
