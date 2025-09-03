@@ -36,13 +36,15 @@ const History = () => {
   const cleanData = contracts.map((contract) => {
     return {
       ngay: dayjs(contract.date).format("DD/MM/YYYY"),
-      tenChuyenVien: contract.audit?.created_by_username,
-      số_hợp_đồng: contract.id,
-      tên_hợp_đồng: contract.name,
-      tên_khách_hàng: contract.customer,
-      số_tiền: contract.value,
-      bản_sao: contract.copies_value,
-      ghi_chú: contract.broker,
+      tenChuyenVien: contract?.created_by,
+      số_hợp_đồng: contract?.id,
+      tên_hợp_đồng: contract?.name,
+      tên_khách_hàng: contract?.customer,
+      CCCD: contract?.national_id,
+      số_tiền: contract?.value,
+      bản_sao: contract?.copies_value,
+      quan_hệ: contract?.broker,
+      ghi_chú: contract?.notes,
     };
   });
 
@@ -105,8 +107,10 @@ const History = () => {
         <TableCell>{contract.số_hợp_đồng}</TableCell>
         <TableCell>{contract.tên_hợp_đồng}</TableCell>
         <TableCell>{contract.tên_khách_hàng}</TableCell>
+        <TableCell>{contract.CCCD}</TableCell>
         <TableCell>{contract.số_tiền}</TableCell>
         <TableCell>{contract.bản_sao}</TableCell>
+        <TableCell>{contract.quan_hệ}</TableCell>
         <TableCell>{contract.ghi_chú}</TableCell>
       </TableRow>
     ));
@@ -151,9 +155,11 @@ const History = () => {
               <TableCell>Số HĐ</TableCell>
               <TableCell>Tên HĐ</TableCell>
               <TableCell>Tên KH</TableCell>
+              <TableCell>CCCD</TableCell>
               <TableCell>Số tiền</TableCell>
               <TableCell>Bản sao</TableCell>
-              <TableCell>Ghi chú (Qh.....)</TableCell>
+              <TableCell>Quan hệ</TableCell>
+              <TableCell>Ghi chú</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{renderTableContent()}</TableBody>
