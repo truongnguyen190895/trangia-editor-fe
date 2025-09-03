@@ -61,48 +61,69 @@ const SubmitContract = () => {
     setOpen(false);
   };
 
-  const { values, errors, resetForm, handleChange, handleSubmit, setFieldValue } =
-    useFormik<InitialValues>({
-      validationSchema,
-      initialValues: {
-        id: "",
-        name: "",
-        customer: "",
-        broker: "",
-        value: 0,
-        copiesValue: 0,
-        notes: "",
-        unit: "",
-        relationship: "",
-        nationalId: "",
-      },
-      onSubmit: (values) => {
-        setIsLoading(true);
-        submitContract(values)
-          .then((resp) => {
-            setOpen(true);
-            setCreatedContractNumber(resp.id);
-            resetForm();
-          })
-          .catch((err) => {
-            console.log(err);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      },
-    });
+  const {
+    values,
+    errors,
+    resetForm,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+  } = useFormik<InitialValues>({
+    validationSchema,
+    initialValues: {
+      id: "",
+      name: "",
+      customer: "",
+      broker: "",
+      value: 0,
+      copiesValue: 0,
+      notes: "",
+      unit: "",
+      relationship: "",
+      nationalId: "",
+    },
+    onSubmit: (formValues) => {
+      setIsLoading(true);
+      const payload = {
+        ...formValues,
+        value: formValues.value * 1000,
+        copiesValue: formValues.copiesValue * 1000,
+      };
+      submitContract(payload)
+        .then((resp) => {
+          setOpen(true);
+          setCreatedContractNumber(resp.id);
+          resetForm();
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    },
+  });
   return (
     <Box>
       <Typography variant="h4">Lấy số hợp đồng</Typography>
       <Box mt="2rem">
         <Typography variant="h5">Nhập thông tin</Typography>
         <Box mt="1rem">
-          <Typography variant="h5" fontWeight="600" color="green">
-            Số hợp đồng sẵn sàng để lấy: {nextAvailableId}
-          </Typography>
+          <Box>
+            <Typography variant="h5">
+              Số hợp đồng sẵn sàng để lấy: <strong style={{ color: "green" }}>{nextAvailableId}</strong>
+            </Typography>
+            <Typography color="red">
+              <strong>Lưu ý:</strong> Số tiền nhập theo dạng rút gọn, ví dụ: 500 = 500,000
+            </Typography>
+          </Box>
           <form onSubmit={handleSubmit}>
-            <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap="20px" mt="1rem">
+            <Box
+              display="grid"
+              gridTemplateColumns="repeat(4, 1fr)"
+              gap="20px"
+              mt="1rem"
+            >
               <TextField
                 label="Đơn vị"
                 name="unit"
@@ -146,7 +167,7 @@ const SubmitContract = () => {
               <TextField
                 label="Số tiền công chứng"
                 name="value"
-                placeholder="Vd: 500000"
+                placeholder="Vd: 100 = 100,000"
                 value={values.value}
                 onChange={handleChange}
                 error={!!errors.value}

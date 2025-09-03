@@ -108,8 +108,8 @@ const History = () => {
         <TableCell>{contract.tên_hợp_đồng}</TableCell>
         <TableCell>{contract.tên_khách_hàng}</TableCell>
         <TableCell>{contract.CCCD}</TableCell>
-        <TableCell>{contract.số_tiền}</TableCell>
-        <TableCell>{contract.bản_sao}</TableCell>
+        <TableCell>{contract.số_tiền?.toLocaleString()}</TableCell>
+        <TableCell>{contract.bản_sao?.toLocaleString()}</TableCell>
         <TableCell>{contract.quan_hệ}</TableCell>
         <TableCell>{contract.ghi_chú}</TableCell>
       </TableRow>
