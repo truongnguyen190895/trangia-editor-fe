@@ -41,7 +41,8 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 403) {
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      window.alert("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
       localStorage.clear();
       window.location.href = "/login";
     }

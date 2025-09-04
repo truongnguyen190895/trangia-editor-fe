@@ -44,7 +44,6 @@ export interface ContractResponse {
 }
 
 export const submitContract = (payload: SubmitContractPayload) => {
-  console.log("submitContract", payload);
   return api.put("/files/" + payload.id, payload).then((resp) => resp.data);
 };
 

@@ -1,5 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { listContracts } from "@/api/contract";
 import { SidebarMenu } from "../common/sidebar-menu";
 
 const Layout = () => {
@@ -18,6 +20,12 @@ const Layout = () => {
       return "Unknown";
     }
   };
+
+  useEffect(() => {
+    listContracts().then((resp) => {
+      console.log(resp);
+    });
+  }, []);
 
   const userName = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
