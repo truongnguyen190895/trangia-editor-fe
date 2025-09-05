@@ -71,13 +71,7 @@ export const CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT: Optio
       "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất",
     label:
       "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất",
-  },
-  {
-    value:
-      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất - Sổ mới",
-    label:
-      "Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất - Sổ mới",
-  },
+  }
 ];
 
 export const NGUỒN_GỐC_SỬ_DỤNG_ĐẤT: Option[] = [
