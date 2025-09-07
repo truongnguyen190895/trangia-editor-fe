@@ -19,6 +19,7 @@ export interface Contract {
   customer: string;
   broker: string;
   value: number;
+  unit: string;
   copies_value: number;
   notes: string;
   created_by: string | null;
@@ -46,6 +47,10 @@ export interface ContractResponse {
 export const submitContract = (payload: SubmitContractPayload) => {
   return api.put("/files/" + payload.id, payload).then((resp) => resp.data);
 };
+
+export const updateContract = (payload: SubmitContractPayload) => {
+    return api.patch("/files/" + payload.id, payload).then((resp) => resp.data);
+  };
 
 export const listContracts = (): Promise<ContractResponse> => {
   return api.get("/files").then((resp) => resp.data);
