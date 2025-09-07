@@ -24,6 +24,16 @@ import type {
 } from "@/models/hdmb-tai-san";
 import type { HdDatCocPayload } from "@/models/hd-dat-coc";
 
+export interface PhieuThuPayload {
+  d: string;
+  m: string;
+  y: string;
+  người_nộp_tiền: string;
+  lý_do_nộp: string;
+  số_tiền: string;
+  số_tiền_bằng_chữ: string;
+}
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
 });
@@ -364,3 +374,9 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
     responseType: "blob",
   });
 };
+
+export const render_phieu_thu = (payload: PhieuThuPayload) => {
+  return api.post("/templates/mau-phieu-thu-tt200", payload, {
+    responseType: "blob",
+  });
+}

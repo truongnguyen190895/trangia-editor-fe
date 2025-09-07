@@ -61,6 +61,6 @@ export const exportExcel = () => {
   });
 };
 
-export const getTheNextAvailableId = () : Promise<string> => {
-  return api.get("/files/next-id").then((resp) => resp.data);
+export const getTheNextAvailableId = (type: string): Promise<string> => {
+  return api.get("/files/next-id?type=" + type).then((resp) => resp.data);
 };

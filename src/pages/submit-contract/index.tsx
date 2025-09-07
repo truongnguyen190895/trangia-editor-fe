@@ -4,16 +4,25 @@ import {
   TextField,
   Button,
   CircularProgress,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
+import { BRANCHES } from "@/constants/branches";
+import { CONTRACT_TYPES } from "@/constants/contract-types";
 import { useFormik } from "formik";
 import { submitContract, getTheNextAvailableId } from "@/api/contract";
+import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
+import dayjs from "dayjs";
+import { numberToVietnamese } from "@/utils/number-to-words";
 
 const validationSchema = yup.object({
-  unit: yup.string().required("Đơn vị là bắt buộc"),
+  unit: yup.string(),
   id: yup.string().required("Số hợp đồng là bắt buộc"),
   name: yup.string().required("Tên hợp đồng là bắt buộc"),
   customer: yup.string().required("Tên khách hàng là bắt buộc"),
@@ -40,16 +49,27 @@ interface InitialValues {
 const SubmitContract = () => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [checkingLoading, setCheckingLoading] = useState(false);
+  const [type, setType] = useState<string>("Contract");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [nextAvailableId, setNextAvailableId] = useState<string>("");
   const [createdContractNumber, setCreatedContractNumber] =
     useState<string>("");
 
   useEffect(() => {
-    getTheNextAvailableId().then((resp) => {
-      setNextAvailableId(resp);
-      setFieldValue("id", resp);
-    });
-  }, []);
+    setCheckingLoading(true);
+    getTheNextAvailableId(type)
+      .then((resp) => {
+        setNextAvailableId(resp);
+        setFieldValue("id", resp);
+      })
+      .catch(() => {
+        setErrorMessage("Có lỗi khi kiểm tra số hợp đồng");
+      })
+      .finally(() => {
+        setCheckingLoading(false);
+      });
+  }, [type, errorMessage]);
 
   const handleClose = (
     _event: React.SyntheticEvent | Event,
@@ -59,6 +79,16 @@ const SubmitContract = () => {
       return;
     }
     setOpen(false);
+  };
+
+  const handleCloseError = (
+    _event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setErrorMessage("");
   };
 
   const {
@@ -78,7 +108,7 @@ const SubmitContract = () => {
       value: 0,
       copiesValue: 0,
       notes: "",
-      unit: "",
+      unit: "HĐ",
       relationship: "",
       nationalId: "",
     },
@@ -86,8 +116,24 @@ const SubmitContract = () => {
       setIsLoading(true);
       const payload = {
         ...formValues,
-        value: formValues.value * 1000,
-        copiesValue: formValues.copiesValue * 1000,
+        customer: formValues.customer?.trim(),
+      };
+      const phieuThuPayload: PhieuThuPayload = {
+        d: dayjs().format("DD"),
+        m: dayjs().format("MM"),
+        y: dayjs().format("YYYY"),
+        người_nộp_tiền: formValues.customer,
+        lý_do_nộp: formValues.notes,
+        số_tiền: (
+          Number(formValues.value * 1000) +
+          Number(formValues.copiesValue * 1000)
+        ).toLocaleString(),
+        số_tiền_bằng_chữ: numberToVietnamese(
+          (Number(formValues.value * 1000) + Number(formValues.copiesValue * 1000))
+            .toString()
+            .replace(/\./g, "")
+            .replace(/\,/g, ".")
+        ),
       };
       submitContract(payload)
         .then((resp) => {
@@ -96,11 +142,28 @@ const SubmitContract = () => {
           resetForm();
         })
         .catch((err) => {
-          console.log(err);
+          if (err?.status === 400) {
+            setErrorMessage(
+              "Đã có người sử dụng số hợp đồng này, vui lòng lấy số hợp đồng khác"
+            );
+          }
         })
         .finally(() => {
           setIsLoading(false);
         });
+      render_phieu_thu(phieuThuPayload).then((resp) => {
+        const blob = new Blob([resp.data], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "mau-phieu-thu-tt200.docx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      });
     },
   });
   return (
@@ -109,12 +172,27 @@ const SubmitContract = () => {
       <Box mt="2rem">
         <Typography variant="h5">Nhập thông tin</Typography>
         <Box mt="1rem">
-          <Box>
+          <Typography>Chọn loại hình công chứng</Typography>
+          <Select
+            sx={{ width: "300px", marginTop: "1rem" }}
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+          >
+            <MenuItem value="Contract">Công chứng Hợp Đồng</MenuItem>
+            <MenuItem value="Signature">Chứng thực chữ ký</MenuItem>
+          </Select>
+        </Box>
+        <Box mt="1rem">
+          <Box mb="2rem">
             <Typography variant="h5">
-              Số hợp đồng sẵn sàng để lấy: <strong style={{ color: "green" }}>{nextAvailableId}</strong>
+              Số hợp đồng sẵn sàng để lấy:{" "}
+              <strong style={{ color: "green" }}>
+                {checkingLoading ? "Đang kiểm tra..." : nextAvailableId}
+              </strong>
             </Typography>
             <Typography color="red">
-              <strong>Lưu ý:</strong> Số tiền nhập theo dạng rút gọn, ví dụ: 500 = 500,000
+              <strong>Lưu ý:</strong> Số tiền nhập theo dạng rút gọn, ví dụ: 500
+              = 500,000
             </Typography>
           </Box>
           <form onSubmit={handleSubmit}>
@@ -124,14 +202,22 @@ const SubmitContract = () => {
               gap="20px"
               mt="1rem"
             >
-              <TextField
-                label="Đơn vị"
-                name="unit"
-                value={values.unit}
-                onChange={handleChange}
-                error={!!errors.unit}
-                helperText={errors.unit}
-              />
+              <FormControl>
+                <InputLabel htmlFor="unit">Đơn vị</InputLabel>
+                <Select
+                  id="unit"
+                  name="unit"
+                  label="Đơn vị"
+                  value={values.unit}
+                  onChange={handleChange}
+                >
+                  {BRANCHES.map((branch) => (
+                    <MenuItem key={branch.id} value={branch.value}>
+                      {branch.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 label="Số hợp đồng"
                 name="id"
@@ -140,14 +226,22 @@ const SubmitContract = () => {
                 error={!!errors.id}
                 helperText={errors.id}
               />
-              <TextField
-                label="Tên hợp đồng"
-                name="name"
-                value={values.name}
-                onChange={handleChange}
-                error={!!errors.name}
-                helperText={errors.name}
-              />
+              <FormControl>
+                <InputLabel htmlFor="unit">Tên Hợp Đồng</InputLabel>
+                <Select
+                  id="ten"
+                  name="name"
+                  label="Tên Hợp Đồng"
+                  value={values.name}
+                  onChange={handleChange}
+                >
+                  {CONTRACT_TYPES.map((branch) => (
+                    <MenuItem key={branch.id} value={branch.value}>
+                      {branch.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 label="Tên khách hàng"
                 name="customer"
@@ -222,6 +316,20 @@ const SubmitContract = () => {
           sx={{ width: "100%" }}
         >
           Lưu thành công số hợp đồng {createdContractNumber}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={errorMessage !== ""}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+      >
+        <Alert
+          onClose={handleCloseError}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
         </Alert>
       </Snackbar>
     </Box>
