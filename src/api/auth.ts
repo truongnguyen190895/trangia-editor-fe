@@ -10,6 +10,11 @@ interface LoginResponse {
   authorities: Array<{
     authority: string;
   }>;
+  user: {
+    is_admin: boolean;
+    name: string;
+    role: string;
+  };
 }
 
 export const login = (loginDTO: LoginDTO): Promise<LoginResponse> => {

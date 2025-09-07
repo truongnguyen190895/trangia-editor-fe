@@ -13,7 +13,6 @@ import { login } from "@/api/auth";
 import LoginBGImage from "@/assets/images/login-bg-image.jpg";
 
 export const LoginPage = () => {
-  const [username, setUsername] = useState("");
   const [account, setAccount] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -27,7 +26,7 @@ export const LoginPage = () => {
     try {
       const response = await login({ username: account, password });
       localStorage.setItem("access_token", response.accessToken);
-      localStorage.setItem("username", username);
+      localStorage.setItem("username", response.user.name);
       localStorage.setItem("roles", JSON.stringify(response.authorities));
       navigate("/");
     } catch (error) {
@@ -67,18 +66,6 @@ export const LoginPage = () => {
               onSubmit={handleSubmit}
               sx={{ mt: 1, width: "100%" }}
             >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Tên chuyên viên"
-                name="username"
-                autoComplete="username"
-                autoFocus
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
               <TextField
                 margin="normal"
                 required
