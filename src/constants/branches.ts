@@ -11,7 +11,7 @@ export const BRANCHES = [
   },
   {
     id: 3,
-    value: "VP",
+    value: "HL",
     label: "Chi nhánh Vạn Phúc",
   },
   {
