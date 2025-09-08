@@ -53,7 +53,7 @@ export const updateContract = (payload: SubmitContractPayload) => {
   };
 
 export const listContracts = (): Promise<ContractResponse> => {
-  return api.get("/files").then((resp) => resp.data);
+  return api.get("/files?size=100000").then((resp) => resp.data); // TODO: remove size limit by using params
 };
 
 export const exportExcel = () => {
