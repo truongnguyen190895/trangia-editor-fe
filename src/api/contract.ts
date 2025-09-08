@@ -57,7 +57,7 @@ export const listContracts = (): Promise<ContractResponse> => {
 };
 
 export const exportExcel = () => {
-  return api.get("/files", {
+  return api.get("/files?size=100000", {
     headers: {
       accept:
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
