@@ -53,11 +53,11 @@ export const updateContract = (payload: SubmitContractPayload) => {
   };
 
 export const listContracts = (): Promise<ContractResponse> => {
-  return api.get("/files?size=100000").then((resp) => resp.data); // TODO: remove size limit by using params
+  return api.get("/files?size=100000&sort=audit.createdAt,desc").then((resp) => resp.data); // TODO: remove size limit by using params
 };
 
 export const exportExcel = () => {
-  return api.get("/files?size=100000", {
+  return api.get("/files?size=100000&sort=audit.createdAt,desc", {
     headers: {
       accept:
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
