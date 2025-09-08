@@ -56,6 +56,8 @@ const SubmitContract = () => {
   const [createdContractNumber, setCreatedContractNumber] =
     useState<string>("");
 
+const namedByUser = localStorage.getItem("username") || "";
+
   useEffect(() => {
     setCheckingLoading(true);
     getTheNextAvailableId(type)
@@ -123,7 +125,7 @@ const SubmitContract = () => {
         m: dayjs().format("MM"),
         y: dayjs().format("YYYY"),
         người_nộp_tiền: formValues.customer,
-        lý_do_nộp: "Phí cc theo hợp đồng số " + formValues.id,
+        số_cc: formValues.id,
         số_tiền: (
           Number(formValues.value * 1000) +
           Number(formValues.copiesValue * 1000)
@@ -134,6 +136,7 @@ const SubmitContract = () => {
             .replace(/\./g, "")
             .replace(/\,/g, ".")
         ),
+        tên_chuyên_viên: namedByUser,
       };
       submitContract(payload)
         .then((resp) => {
@@ -158,7 +161,7 @@ const SubmitContract = () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "mau-phieu-thu-tt200.docx";
+        link.download = "phieu-thu-tt200.docx";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

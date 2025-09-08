@@ -29,9 +29,10 @@ export interface PhieuThuPayload {
   m: string;
   y: string;
   người_nộp_tiền: string;
-  lý_do_nộp: string;
+  số_cc: string;
   số_tiền: string;
   số_tiền_bằng_chữ: string;
+  tên_chuyên_viên: string;
 }
 
 export const api = axios.create({
@@ -376,7 +377,7 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
 };
 
 export const render_phieu_thu = (payload: PhieuThuPayload) => {
-  return api.post("/templates/mau-phieu-thu-tt200", payload, {
+  return api.post("/templates/phieu-thu-2025", payload, {
     responseType: "blob",
   });
 }
