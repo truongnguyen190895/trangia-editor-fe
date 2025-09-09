@@ -16,10 +16,12 @@ import {
   TextField,
 } from "@mui/material";
 import { listContracts, exportExcel, updateContract } from "@/api/contract";
+import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import type { Contract } from "@/api/contract";
 import dayjs from "dayjs";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { numberToVietnamese } from "@/utils/number-to-words";
 
 interface ContractRow {
   tenChuyenVien: string | null;
@@ -171,19 +173,71 @@ const History = () => {
         <TableCell>{contract.quan_hệ}</TableCell>
         <TableCell>{contract.ghi_chú}</TableCell>
         <TableCell>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              setSelectedRow(contract);
-              setOpenUpdate(true);
-            }}
-          >
-            Sửa
-          </Button>
+          <Box display="flex" gap="1rem" alignItems="center">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                setSelectedRow(contract);
+                setOpenUpdate(true);
+              }}
+            >
+              Sửa
+            </Button>
+            <Button
+              variant="contained"
+              color="info"
+              onClick={() => handleRenderPhieuThu(contract.số_hợp_đồng)}
+            >
+              Phiếu thu
+            </Button>
+          </Box>
         </TableCell>
       </TableRow>
     ));
+  };
+
+  const handleRenderPhieuThu = (id: string) => {
+    const contract = contracts.find((contract) => contract.id === id);
+    if (contract) {
+      const payload: PhieuThuPayload = {
+        ...contract,
+        d: dayjs(contract.date).format("DD"),
+        m: dayjs(contract.date).format("MM"),
+        y: dayjs(contract.date).format("YYYY"),
+        người_nộp_tiền: contract?.customer || "",
+        số_cc: contract?.id?.toString() || "",
+        số_tiền: ((contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)).toLocaleString(),
+        số_tiền_bằng_chữ: numberToVietnamese(
+          ((contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)).toString()
+        ),
+        tên_chuyên_viên: contract?.created_by || "",
+        loại_hđ: contract?.name || "",
+      };
+      render_phieu_thu(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "phieu-thu-tt200.docx";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((err) => {
+          console.error("Error generating document:", err);
+          window.alert("Lỗi khi tạo phiếu thu");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      window.alert("Không tìm thấy hợp đồng");
+    }
   };
 
   return (
@@ -230,7 +284,7 @@ const History = () => {
               <TableCell>Bản sao</TableCell>
               <TableCell>Quan hệ</TableCell>
               <TableCell>Ghi chú</TableCell>
-              <TableCell>Sửa</TableCell>
+              <TableCell>Thao tác</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{renderTableContent()}</TableBody>
