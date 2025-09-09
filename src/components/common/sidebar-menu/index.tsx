@@ -24,7 +24,7 @@ const menuItems = [
     path: "/",
   },
   {
-    text: "Lấy số hợp đồng",
+    text: "Phiếu thu",
     icon: <Description />,
     path: "/submit-contract",
   },
