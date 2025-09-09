@@ -137,6 +137,7 @@ const namedByUser = localStorage.getItem("username") || "";
             .replace(/\,/g, ".")
         ),
         tên_chuyên_viên: namedByUser,
+        loại_hđ: formValues.name,
       };
       submitContract(payload)
         .then((resp) => {

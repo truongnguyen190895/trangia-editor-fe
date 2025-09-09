@@ -33,6 +33,7 @@ export interface PhieuThuPayload {
   số_tiền: string;
   số_tiền_bằng_chữ: string;
   tên_chuyên_viên: string;
+  loại_hđ: string;
 }
 
 export const api = axios.create({
