@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Pagination,
 } from "@mui/material";
 import { listContracts, exportExcel, updateContract } from "@/api/contract";
 import { render_phieu_thu, type PhieuThuPayload } from "@/api";
@@ -22,6 +23,7 @@ import dayjs from "dayjs";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { LoadingDialog } from "@/components/common/loading-dialog";
 
 interface ContractRow {
   tenChuyenVien: string | null;
@@ -42,6 +44,9 @@ const History = () => {
   const [loading, setLoading] = useState(false);
   const [loadingExcel, setLoadingExcel] = useState(false);
   const [selectedRow, setSelectedRow] = useState<ContractRow | null>(null);
+  const [page, setPage] = useState(1);
+  const [size, _setSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
   const isAdmin = userRoles.some(
     (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
@@ -49,12 +54,15 @@ const History = () => {
 
   useEffect(() => {
     setLoading(true);
-    listContracts()
-      .then((resp) => setContracts(resp?.content))
+    listContracts({ size, page: page - 1 })
+      .then((resp) => {
+        setContracts(resp?.content);
+        setTotalPages(resp?.page?.total_pages);
+      })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [page, size]);
 
   const cleanData = contracts.map((contract) => {
     return {
@@ -94,7 +102,7 @@ const History = () => {
 
   const handleUpdateData = () => {
     setLoading(true);
-    listContracts()
+    listContracts({ size, page })
       .then(() => {
         setOpen(true);
       })
@@ -140,7 +148,7 @@ const History = () => {
       };
       updateContract(payload)
         .then(() => {
-          listContracts()
+          listContracts({ size, page })
             .then((resp) => setContracts(resp?.content))
             .finally(() => {
               setLoading(false);
@@ -154,11 +162,14 @@ const History = () => {
   };
 
   const renderTableContent = () => {
-    if (loading) {
-      return <Typography>Đang tải dữ liệu...</Typography>;
-    }
-    if (cleanData.length === 0) {
-      return <Typography>Không có dữ liệu</Typography>;
+    if (cleanData.length === 0 && !loading) {
+      return (
+        <TableRow>
+          <TableCell colSpan={12}>
+            <Typography>Không có dữ liệu</Typography>
+          </TableCell>
+        </TableRow>
+      );
     }
     return cleanData.map((contract) => (
       <TableRow key={contract.số_hợp_đồng}>
@@ -207,9 +218,13 @@ const History = () => {
         y: dayjs(contract.date).format("YYYY"),
         người_nộp_tiền: contract?.customer || "",
         số_cc: contract?.id?.toString() || "",
-        số_tiền: ((contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)).toLocaleString(),
+        số_tiền: (
+          (contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)
+        ).toLocaleString(),
         số_tiền_bằng_chữ: numberToVietnamese(
-          ((contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)).toString()
+          (
+            (contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)
+          ).toString()
         ),
         tên_chuyên_viên: contract?.created_by || "",
         loại_hđ: contract?.name || "",
@@ -240,6 +255,13 @@ const History = () => {
     }
   };
 
+  const handleChangePage = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
   return (
     <Box>
       <Typography variant="h4">Danh sách hợp đồng</Typography>
@@ -250,6 +272,7 @@ const History = () => {
             color="primary"
             sx={{
               backgroundColor: "green",
+              width: "200px",
             }}
             onClick={handleExportExcel}
             disabled={loadingExcel}
@@ -262,7 +285,7 @@ const History = () => {
           </Button>
           <Button
             variant="contained"
-            sx={{ backgroundColor: "#33A1E0" }}
+            sx={{ backgroundColor: "#33A1E0", display: "none" }}
             onClick={handleUpdateData}
           >
             Cập nhật dữ liệu mới nhất
@@ -289,6 +312,18 @@ const History = () => {
           </TableHead>
           <TableBody>{renderTableContent()}</TableBody>
         </Table>
+        <Box
+          className="pagination-container"
+          display="flex"
+          justifyContent="center"
+          mt="2rem"
+        >
+          <Pagination
+            count={totalPages}
+            shape="rounded"
+            onChange={handleChangePage}
+          />
+        </Box>
       </Box>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert
@@ -300,6 +335,7 @@ const History = () => {
           Cập nhật dữ liệu thành công
         </Alert>
       </Snackbar>
+      <LoadingDialog open={loading} />
       <Dialog
         open={openUpdate}
         onClose={handleCloseUpdate}

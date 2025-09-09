@@ -49,11 +49,18 @@ export const submitContract = (payload: SubmitContractPayload) => {
 };
 
 export const updateContract = (payload: SubmitContractPayload) => {
-    return api.patch("/files/" + payload.id, payload).then((resp) => resp.data);
-  };
+  return api.patch("/files/" + payload.id, payload).then((resp) => resp.data);
+};
 
-export const listContracts = (): Promise<ContractResponse> => {
-  return api.get("/files?size=100000&sort=audit.createdAt,desc").then((resp) => resp.data); // TODO: remove size limit by using params
+interface ListContractsParams {
+  size?: number;
+  page?: number;
+}
+
+export const listContracts = (
+  params: ListContractsParams
+): Promise<ContractResponse> => {
+  return api.get("/files", { params }).then((resp) => resp.data); // TODO: remove size limit by using params
 };
 
 export const exportExcel = () => {
