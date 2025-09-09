@@ -120,8 +120,6 @@ const History = () => {
   };
 
   const handleUpdateContract = () => {
-    setOpenUpdate(false);
-    setSelectedRow(null);
     const targetedContract = contracts.find(
       (contract) => contract.id === selectedRow?.số_hợp_đồng
     );
@@ -138,14 +136,18 @@ const History = () => {
         relationship: selectedRow?.quan_hệ || "",
         nationalId: selectedRow?.CCCD || "",
       };
-      updateContract(payload).then(() => {
-        setOpenUpdate(true);
-        listContracts()
-          .then((resp) => setContracts(resp?.content))
-          .finally(() => {
-            setLoading(false);
-          });
-      });
+      updateContract(payload)
+        .then(() => {
+          listContracts()
+            .then((resp) => setContracts(resp?.content))
+            .finally(() => {
+              setLoading(false);
+            });
+        })
+        .finally(() => {
+          setOpenUpdate(false);
+          setSelectedRow(null);
+        });
     }
   };
 
@@ -172,7 +174,6 @@ const History = () => {
           <Button
             variant="contained"
             color="error"
-            disabled // temporary disable
             onClick={() => {
               setSelectedRow(contract);
               setOpenUpdate(true);
