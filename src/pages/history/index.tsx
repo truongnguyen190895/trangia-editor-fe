@@ -45,7 +45,7 @@ const History = () => {
   const [loadingExcel, setLoadingExcel] = useState(false);
   const [selectedRow, setSelectedRow] = useState<ContractRow | null>(null);
   const [page, setPage] = useState(1);
-  const [size, _setSize] = useState(10);
+  const [size, _setSize] = useState(20);
   const [totalPages, setTotalPages] = useState(0);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
   const isAdmin = userRoles.some(
