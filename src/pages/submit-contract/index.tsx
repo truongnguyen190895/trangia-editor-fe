@@ -20,6 +20,7 @@ import { useState, useEffect } from "react";
 import * as yup from "yup";
 import dayjs from "dayjs";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { WarningBanner } from "./warning-banner";
 
 const validationSchema = yup.object({
   unit: yup.string(),
@@ -56,7 +57,7 @@ const SubmitContract = () => {
   const [createdContractNumber, setCreatedContractNumber] =
     useState<string>("");
 
-const namedByUser = localStorage.getItem("username") || "";
+  const namedByUser = localStorage.getItem("username") || "";
 
   useEffect(() => {
     setCheckingLoading(true);
@@ -131,7 +132,10 @@ const namedByUser = localStorage.getItem("username") || "";
           Number(formValues.copiesValue * 1000)
         ).toLocaleString(),
         số_tiền_bằng_chữ: numberToVietnamese(
-          (Number(formValues.value * 1000) + Number(formValues.copiesValue * 1000))
+          (
+            Number(formValues.value * 1000) +
+            Number(formValues.copiesValue * 1000)
+          )
             .toString()
             .replace(/\./g, "")
             .replace(/\,/g, ".")
@@ -194,10 +198,7 @@ const namedByUser = localStorage.getItem("username") || "";
                 {checkingLoading ? "Đang kiểm tra..." : nextAvailableId}
               </strong>
             </Typography>
-            <Typography color="red">
-              <strong>Lưu ý:</strong> Số tiền nhập theo dạng rút gọn, ví dụ: 500
-              = 500,000
-            </Typography>
+            <WarningBanner />
           </Box>
           <form onSubmit={handleSubmit}>
             <Box
