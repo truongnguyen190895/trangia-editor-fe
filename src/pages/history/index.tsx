@@ -63,6 +63,17 @@ const History = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [brokerQuery, setBrokerQuery] = useState<string>("");
   const [debounceBrokerQuery, setDebounceBrokerQuery] = useState<string>("");
+  const [customerQuery, setCustomerQuery] = useState<string>("");
+  const [debounceCustomerQuery, setDebounceCustomerQuery] =
+    useState<string>("");
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      setCustomerQuery(debounceCustomerQuery);
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(debounce);
+  }, [debounceCustomerQuery]);
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -83,6 +94,7 @@ const History = () => {
   useEffect(() => {
     setLoading(true);
     listContracts({
+      customer: customerQuery,
       sort: "audit.createdAt,desc",
       broker: brokerQuery,
       id: searchQuery,
@@ -110,6 +122,7 @@ const History = () => {
     selectedUser,
     searchQuery,
     brokerQuery,
+    customerQuery,
   ]);
 
   useEffect(() => {
@@ -146,6 +159,8 @@ const History = () => {
   const handleExportExcel = () => {
     setLoadingExcel(true);
     exportExcel({
+      sort: "audit.createdAt,desc",
+      customer: customerQuery,
       broker: brokerQuery,
       id: searchQuery,
       type,
@@ -247,6 +262,8 @@ const History = () => {
       deleteContract(idToDelete)
         .then(() => {
           listContracts({
+            sort: "audit.createdAt,desc",
+            customer: customerQuery,
             broker: brokerQuery,
             id: searchQuery,
             size,
@@ -463,6 +480,24 @@ const History = () => {
             value={debounceBrokerQuery}
             onChange={(e) => {
               setDebounceBrokerQuery(e.target.value);
+            }}
+          />
+          <TextField
+            sx={{ width: "300px" }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            label="Tìm theo tên khách hàng"
+            placeholder="Nhập tên khách hàng"
+            value={debounceCustomerQuery}
+            onChange={(e) => {
+              setDebounceCustomerQuery(e.target.value);
             }}
           />
         </Box>

@@ -53,6 +53,7 @@ export const updateContract = (payload: SubmitContractPayload) => {
 };
 
 interface ListContractsParams {
+  customer?: string;
   broker?: string;
   id?: string;
   size?: number;
