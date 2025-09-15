@@ -184,7 +184,7 @@ const SubmitContract = () => {
   });
   return (
     <Box>
-      <Typography variant="h4">Lấy số hợp đồng</Typography>
+      <Typography variant="h4">Tổng hợp phiếu thu</Typography>
       <Box mt="2rem">
         <Typography variant="h5">Nhập thông tin</Typography>
         <Box mt="1rem">
