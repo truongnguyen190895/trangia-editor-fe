@@ -264,7 +264,7 @@ const History = () => {
 
   return (
     <Box>
-      <Typography variant="h4">Danh sách hợp đồng</Typography>
+      <Typography variant="h4">Danh sách phiếu thu</Typography>
       {isAdmin ? (
         <Box mt="1rem" display="flex" gap="1rem" alignItems="center">
           <Button

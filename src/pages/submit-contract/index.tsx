@@ -24,7 +24,7 @@ import { WarningBanner } from "./warning-banner";
 
 const validationSchema = yup.object({
   unit: yup.string(),
-  id: yup.string().required("Số hợp đồng là bắt buộc"),
+  id: yup.string().required("Số hợp đồng là bắt buộc").matches(/^\d+$/, "Số hợp đồng chỉ được chứa số"),
   name: yup.string().required("Tên hợp đồng là bắt buộc"),
   customer: yup.string().required("Tên khách hàng là bắt buộc"),
   broker: yup.string(),
@@ -53,6 +53,7 @@ const SubmitContract = () => {
   const [checkingLoading, setCheckingLoading] = useState(false);
   const [type, setType] = useState<string>("Contract");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [suffix, setSuffix] = useState<string>("");
   const [nextAvailableId, setNextAvailableId] = useState<string>("");
   const [createdContractNumber, setCreatedContractNumber] =
     useState<string>("");
@@ -64,15 +65,20 @@ const SubmitContract = () => {
     getTheNextAvailableId(type)
       .then((resp) => {
         setNextAvailableId(resp);
-        setFieldValue("id", resp);
-      })
-      .catch(() => {
-        setErrorMessage("Có lỗi khi kiểm tra số hợp đồng");
+        if (String(resp)?.includes("/")) {
+          const [id, suffix] = resp.split("/");
+          setFieldValue("id", id);
+          setSuffix(suffix);
+        } else {
+          const [id, suffix] = String(resp).split(".");
+          setFieldValue("id", id);
+          setSuffix(suffix || new Date().getFullYear().toString());
+        }
       })
       .finally(() => {
         setCheckingLoading(false);
       });
-  }, [type, errorMessage]);
+  }, [type]);
 
   const handleClose = (
     _event: React.SyntheticEvent | Event,
@@ -117,16 +123,18 @@ const SubmitContract = () => {
     },
     onSubmit: (formValues) => {
       setIsLoading(true);
+      const idToSubmit = formValues.id + (type === 'Contract' ? '/' : '.') + suffix;
       const payload = {
         ...formValues,
         customer: formValues.customer?.trim(),
+        id: idToSubmit,
       };
       const phieuThuPayload: PhieuThuPayload = {
         d: dayjs().format("DD"),
         m: dayjs().format("MM"),
         y: dayjs().format("YYYY"),
         người_nộp_tiền: formValues.customer,
-        số_cc: formValues.id,
+        số_cc: idToSubmit,
         số_tiền: (
           Number(formValues.value * 1000) +
           Number(formValues.copiesValue * 1000)
@@ -223,14 +231,28 @@ const SubmitContract = () => {
                   ))}
                 </Select>
               </FormControl>
-              <TextField
-                label="Số hợp đồng"
-                name="id"
-                value={values.id}
-                onChange={handleChange}
-                error={!!errors.id}
-                helperText={errors.id}
-              />
+              <Box display="flex" gap="10px">
+                <TextField
+                  label="Số hợp đồng"
+                  name="id"
+                  value={values.id}
+                  onChange={handleChange}
+                  error={!!errors.id}
+                  helperText={errors.id}
+                />
+                <TextField
+                  name="suffix"
+                  label=""
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                  value={suffix}
+                  onChange={(e) => setSuffix(e.target.value)}
+                />
+              </Box>
+
               <FormControl>
                 <InputLabel htmlFor="unit">Tên Hợp Đồng</InputLabel>
                 <Select
