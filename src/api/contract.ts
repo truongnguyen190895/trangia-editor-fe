@@ -55,6 +55,10 @@ export const updateContract = (payload: SubmitContractPayload) => {
 interface ListContractsParams {
   size?: number;
   page?: number;
+  type?: string;
+  dateBegin?: string;
+  dateEnd?: string;
+  createdBy?: string;
 }
 
 export const listContracts = (
@@ -63,8 +67,9 @@ export const listContracts = (
   return api.get("/files", { params }).then((resp) => resp.data); // TODO: remove size limit by using params
 };
 
-export const exportExcel = () => {
-  return api.get("/files?size=100000&sort=audit.createdAt,desc", {
+export const exportExcel = (params: ListContractsParams) => {
+  return api.get("/files", {
+    params,
     headers: {
       accept:
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

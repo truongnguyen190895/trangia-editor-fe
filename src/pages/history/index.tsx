@@ -15,15 +15,22 @@ import {
   DialogActions,
   TextField,
   Pagination,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import { listContracts, exportExcel, updateContract } from "@/api/contract";
 import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import type { Contract } from "@/api/contract";
-import dayjs from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { LoadingDialog } from "@/components/common/loading-dialog";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { listUsers, type User } from "@/api/users";
 
 interface ContractRow {
   tenChuyenVien: string | null;
@@ -47,22 +54,53 @@ const History = () => {
   const [page, setPage] = useState(1);
   const [size, _setSize] = useState(20);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
   const isAdmin = userRoles.some(
     (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
   );
+  const [type, setType] = useState<string>("");
+  const [dateBegin, setDateBegin] = useState<Dayjs>(dayjs().startOf("month"));
+  const [dateEnd, setDateEnd] = useState<Dayjs>(dayjs());
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [loadingUsers, setLoadingUsers] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    listContracts({ size, page: page - 1 })
+    listContracts({
+      size,
+      page: page - 1,
+      type,
+      dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
+      dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
+      createdBy: selectedUser?.username,
+    })
       .then((resp) => {
         setContracts(resp?.content);
         setTotalPages(resp?.page?.total_pages);
+        setTotalElements(resp?.page?.total_elements);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [page, size]);
+  }, [page, size, type, dateBegin, dateEnd, selectedUser]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      setLoadingUsers(true);
+      listUsers()
+        .then((resp) => {
+          setUsers(resp?.content?.filter((user) => user.username !== "admin"));
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoadingUsers(false);
+        });
+    }
+  }, [isAdmin]);
 
   const cleanData = contracts.map((contract) => {
     return {
@@ -81,7 +119,13 @@ const History = () => {
 
   const handleExportExcel = () => {
     setLoadingExcel(true);
-    exportExcel()
+    exportExcel({
+      type,
+      size: 1000000,
+      dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
+      dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
+      createdBy: selectedUser?.username,
+    })
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -102,7 +146,14 @@ const History = () => {
 
   const handleUpdateData = () => {
     setLoading(true);
-    listContracts({ size, page })
+    listContracts({
+      size,
+      page,
+      type,
+      dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
+      dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
+      createdBy: selectedUser?.username,
+    })
       .then(() => {
         setOpen(true);
       })
@@ -148,7 +199,14 @@ const History = () => {
       };
       updateContract(payload)
         .then(() => {
-          listContracts({ size, page })
+          listContracts({
+            size,
+            page,
+            type,
+            dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
+            dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
+            createdBy: selectedUser?.username,
+          })
             .then((resp) => setContracts(resp?.content))
             .finally(() => {
               setLoading(false);
@@ -293,7 +351,93 @@ const History = () => {
         </Box>
       ) : null}
 
+      <Box
+        mt="2rem"
+        border="1px solid #e0e0e0"
+        borderRadius="5px"
+        px="1rem"
+        py="1rem"
+      >
+        <Box display="flex" gap="0.5rem" alignItems="center">
+          <Typography variant="h6">Lọc dữ liệu</Typography>
+          <FilterAltIcon />
+        </Box>
+        <Box display="flex" gap="1rem" mt="1rem">
+          <Box display="flex" gap="1rem" alignItems="center">
+            <FormControl sx={{ minWidth: 200 }}>
+              <InputLabel>Loại hợp đồng</InputLabel>
+              <Select
+                sx={{
+                  width: "250px",
+                }}
+                value={type}
+                label="Loại hợp đồng"
+                onChange={(e) => {
+                  setPage(1);
+                  setType(e.target.value);
+                }}
+              >
+                <MenuItem value="">Tất cả</MenuItem>
+                <MenuItem value="Contract">Công chứng Hợp Đồng</MenuItem>
+                <MenuItem value="Signature">Chứng thực chữ ký</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box display="flex" gap="1rem" alignItems="center">
+            <DatePicker
+              label="Ngày bắt đầu"
+              value={dateBegin}
+              onChange={(e) => {
+                setPage(1);
+                setDateBegin(e as Dayjs);
+              }}
+              format="DD/MM/YYYY"
+            />
+            <DatePicker
+              format="DD/MM/YYYY"
+              label="Ngày kết thúc"
+              value={dateEnd}
+              onChange={(e) => {
+                setPage(1);
+                setDateEnd(e as Dayjs);
+              }}
+            />
+          </Box>
+          {isAdmin ? (
+            <FormControl sx={{ minWidth: 200 }}>
+              <InputLabel>Tên chuyên viên</InputLabel>
+              <Select
+                disabled={loadingUsers}
+                sx={{
+                  width: "250px",
+                }}
+                value={selectedUser?.username}
+                label="Tên chuyên viên"
+                onChange={(e) => {
+                  setPage(1);
+                  setSelectedUser(
+                    users.find((user) => user.username === e.target.value) ||
+                      null
+                  );
+                }}
+              >
+                <MenuItem value="">Chọn chuyên viên</MenuItem>
+                {users.map((user) => (
+                  <MenuItem key={user.username} value={user.username}>
+                    {user.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ) : null}
+        </Box>
+      </Box>
       <Box mt="2rem">
+        <Typography fontSize="1.2rem" fontWeight="bold" fontStyle="italic" color="#08CB00">
+          Tổng số: {totalElements}
+        </Typography>
+      </Box>
+      <Box mt="1rem" border="1px solid #e0e0e0" borderRadius="5px" px="1rem" py="1rem">
         <Table>
           <TableHead>
             <TableRow>
@@ -320,6 +464,7 @@ const History = () => {
         >
           <Pagination
             count={totalPages}
+            page={page}
             shape="rounded"
             onChange={handleChangePage}
           />
