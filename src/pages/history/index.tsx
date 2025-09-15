@@ -62,7 +62,7 @@ const History = () => {
   );
   const [type, setType] = useState<string>("");
   const [dateBegin, setDateBegin] = useState<Dayjs>(dayjs().startOf("month"));
-  const [dateEnd, setDateEnd] = useState<Dayjs>(dayjs());
+  const [dateEnd, setDateEnd] = useState<Dayjs>(dayjs().add(1, "day"));
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
