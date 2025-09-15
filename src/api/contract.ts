@@ -53,12 +53,15 @@ export const updateContract = (payload: SubmitContractPayload) => {
 };
 
 interface ListContractsParams {
+  broker?: string;
+  id?: string;
   size?: number;
   page?: number;
   type?: string;
   dateBegin?: string;
   dateEnd?: string;
   createdBy?: string;
+  sort?: string;
 }
 
 export const getContractById = (id: string): Promise<Contract> => {

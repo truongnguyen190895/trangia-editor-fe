@@ -14,6 +14,8 @@ import {
   FormControl,
   InputLabel,
   Select,
+  InputAdornment,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { listContracts, exportExcel, deleteContract } from "@/api/contract";
@@ -31,6 +33,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import PrintIcon from "@mui/icons-material/Print";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SearchIcon from "@mui/icons-material/Search";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { toast } from "react-toastify";
 
@@ -42,7 +45,7 @@ const History = () => {
   const [loading, setLoading] = useState(false);
   const [loadingExcel, setLoadingExcel] = useState(false);
   const [page, setPage] = useState(1);
-  const [size, _setSize] = useState(20);
+  const [size, _setSize] = useState(50);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
@@ -56,10 +59,33 @@ const History = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [idToDelete, setIdToDelete] = useState<string | null>(null);
+  const [debounceQuery, setDebounceQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [brokerQuery, setBrokerQuery] = useState<string>("");
+  const [debounceBrokerQuery, setDebounceBrokerQuery] = useState<string>("");
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      setSearchQuery(debounceQuery);
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(debounce);
+  }, [debounceQuery]);
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      setBrokerQuery(debounceBrokerQuery);
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(debounce);
+  }, [debounceBrokerQuery]);
 
   useEffect(() => {
     setLoading(true);
     listContracts({
+      sort: "audit.createdAt,desc",
+      broker: brokerQuery,
+      id: searchQuery,
       size,
       page: page - 1,
       type,
@@ -75,7 +101,16 @@ const History = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [page, size, type, dateBegin, dateEnd, selectedUser]);
+  }, [
+    page,
+    size,
+    type,
+    dateBegin,
+    dateEnd,
+    selectedUser,
+    searchQuery,
+    brokerQuery,
+  ]);
 
   useEffect(() => {
     if (isAdmin) {
@@ -111,6 +146,8 @@ const History = () => {
   const handleExportExcel = () => {
     setLoadingExcel(true);
     exportExcel({
+      broker: brokerQuery,
+      id: searchQuery,
       type,
       size: 1000000,
       dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
@@ -210,6 +247,8 @@ const History = () => {
       deleteContract(idToDelete)
         .then(() => {
           listContracts({
+            broker: brokerQuery,
+            id: searchQuery,
             size,
             page: page - 1,
             type,
@@ -376,6 +415,56 @@ const History = () => {
               </Select>
             </FormControl>
           ) : null}
+        </Box>
+      </Box>
+      <Box
+        mt="2rem"
+        border="1px solid #e0e0e0"
+        borderRadius="5px"
+        px="1rem"
+        py="1rem"
+      >
+        <Box display="flex" gap="0.5rem" alignItems="center">
+          <Typography variant="h6">Tìm kiếm</Typography>
+          <SearchIcon />
+        </Box>
+        <Box display="flex" gap="1rem" mt="1rem">
+          <TextField
+            sx={{ width: "300px" }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            label="Tìm theo số Hợp đồng"
+            placeholder="Nhập số Hợp đồng"
+            value={debounceQuery}
+            onChange={(e) => {
+              setDebounceQuery(e.target.value);
+            }}
+          />
+          <TextField
+            sx={{ width: "300px" }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            label="Tìm theo quan hệ"
+            placeholder="Nhập tên môi giới"
+            value={debounceBrokerQuery}
+            onChange={(e) => {
+              setDebounceBrokerQuery(e.target.value);
+            }}
+          />
         </Box>
       </Box>
       <Box
