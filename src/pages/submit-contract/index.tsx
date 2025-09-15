@@ -11,7 +11,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { BRANCHES } from "@/constants/branches";
 import { CONTRACT_TYPES } from "@/constants/contract-types";
 import { useFormik } from "formik";
@@ -62,6 +62,7 @@ interface SubmitContractProps {
 }
 
 const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [checkingLoading, setCheckingLoading] = useState(false);
@@ -423,7 +424,19 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 label="In phiếu thu"
               />
             </Box>
-            <Box mt="1rem">
+            <Box display="flex" gap="10px" mt="1rem">
+              {isEdit ? (
+                <Button
+                  variant="outlined"
+                  sx={{
+                    width: "100px",
+                    height: "40px",
+                  }}
+                  onClick={() => navigate("/history")}
+                >
+                  Huỷ
+                </Button>
+              ) : null}
               <Button
                 type="submit"
                 variant="contained"
