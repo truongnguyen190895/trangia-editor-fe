@@ -61,6 +61,14 @@ interface ListContractsParams {
   createdBy?: string;
 }
 
+export const getContractById = (id: string): Promise<Contract> => {
+  return api.get("/files/" + id).then((resp) => resp.data);
+};
+
+export const deleteContract = (id: string) => {
+  return api.delete("/files/" + id).then((resp) => resp.data);
+};
+
 export const listContracts = (
   params: ListContractsParams
 ): Promise<ContractResponse> => {

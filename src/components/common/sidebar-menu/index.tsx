@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   List,
@@ -11,11 +10,6 @@ import {
 } from "@mui/material";
 import { Description, Create, Timeline } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
-
-interface SidebarMenuProps {
-  open?: boolean;
-  width?: number | string;
-}
 
 const menuItems = [
   {
@@ -35,10 +29,7 @@ const menuItems = [
   },
 ];
 
-export const SidebarMenu: React.FC<SidebarMenuProps> = ({
-  open = true,
-  width = 240,
-}) => {
+export const SidebarMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,7 +40,6 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
   return (
     <Box
       sx={{
-        width: open ? width : 0,
         flexShrink: 0,
         transition: "width 0.3s ease",
         overflow: "hidden",

@@ -8,14 +8,21 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
+import { useSearchParams } from "react-router-dom";
 import { BRANCHES } from "@/constants/branches";
 import { CONTRACT_TYPES } from "@/constants/contract-types";
 import { useFormik } from "formik";
-import { submitContract, getTheNextAvailableId } from "@/api/contract";
+import {
+  submitContract,
+  getTheNextAvailableId,
+  getContractById,
+  updateContract,
+} from "@/api/contract";
 import { render_phieu_thu, type PhieuThuPayload } from "@/api";
-import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
 import dayjs from "dayjs";
@@ -24,7 +31,10 @@ import { WarningBanner } from "./warning-banner";
 
 const validationSchema = yup.object({
   unit: yup.string(),
-  id: yup.string().required("Số hợp đồng là bắt buộc").matches(/^\d+$/, "Số hợp đồng chỉ được chứa số"),
+  id: yup
+    .string()
+    .required("Số hợp đồng là bắt buộc")
+    .matches(/^\d+$/, "Số hợp đồng chỉ được chứa số"),
   name: yup.string().required("Tên hợp đồng là bắt buộc"),
   customer: yup.string().required("Tên khách hàng là bắt buộc"),
   broker: yup.string(),
@@ -47,16 +57,20 @@ interface InitialValues {
   nationalId: string;
 }
 
-const SubmitContract = () => {
-  const [open, setOpen] = useState(false);
+interface SubmitContractProps {
+  isEdit?: boolean;
+}
+
+const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
+  const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [checkingLoading, setCheckingLoading] = useState(false);
   const [type, setType] = useState<string>("Contract");
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const [suffix, setSuffix] = useState<string>("");
   const [nextAvailableId, setNextAvailableId] = useState<string>("");
-  const [createdContractNumber, setCreatedContractNumber] =
-    useState<string>("");
+  const [shouldRenderPhieuThu, setShouldRenderPhieuThu] = useState(false);
+
+  const idFromUrl = searchParams.get("id");
 
   const namedByUser = localStorage.getItem("username") || "";
 
@@ -78,131 +92,203 @@ const SubmitContract = () => {
       });
   }, [type]);
 
-  const handleClose = (
-    _event: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
-
-  const handleCloseError = (
-    _event: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setErrorMessage("");
-  };
-
-  const {
-    values,
-    errors,
-    resetForm,
-    handleChange,
-    handleSubmit,
-  } = useFormik<InitialValues>({
-    validationSchema,
-    initialValues: {
-      id: "",
-      name: "",
-      customer: "",
-      broker: "",
-      value: 0,
-      copiesValue: 0,
-      notes: "",
-      unit: "HĐ",
-      relationship: "",
-      nationalId: "",
-    },
-    onSubmit: (formValues) => {
+  useEffect(() => {
+    if (isEdit && idFromUrl) {
       setIsLoading(true);
-      const idToSubmit = formValues.id + (type === 'Contract' ? '/' : '.') + suffix;
-      const payload = {
-        ...formValues,
-        customer: formValues.customer?.trim(),
-        id: idToSubmit,
-      };
-      const phieuThuPayload: PhieuThuPayload = {
-        d: dayjs().format("DD"),
-        m: dayjs().format("MM"),
-        y: dayjs().format("YYYY"),
-        người_nộp_tiền: formValues.customer,
-        số_cc: idToSubmit,
-        số_tiền: (
-          Number(formValues.value * 1000) +
-          Number(formValues.copiesValue * 1000)
-        ).toLocaleString(),
-        số_tiền_bằng_chữ: numberToVietnamese(
-          (
-            Number(formValues.value * 1000) +
-            Number(formValues.copiesValue * 1000)
-          )
-            .toString()
-            .replace(/\./g, "")
-            .replace(/\,/g, ".")
-        ),
-        tên_chuyên_viên: namedByUser,
-        loại_hđ: formValues.name,
-      };
-      submitContract(payload)
+      getContractById(idFromUrl)
         .then((resp) => {
-          setOpen(true);
-          setCreatedContractNumber(resp.id);
-          resetForm();
-        })
-        .catch((err) => {
-          if (err?.status === 400) {
-            setErrorMessage(
-              "Đã có người sử dụng số hợp đồng này, vui lòng lấy số hợp đồng khác"
-            );
+          let id = "";
+          if (idFromUrl?.includes("/")) {
+            id = idFromUrl.split("/")[0];
+            setType("Contract");
+          } else {
+            setType("Signature");
+            id = idFromUrl.split(".")[0];
           }
+          setValues({
+            id: id,
+            name: resp.name,
+            customer: resp.customer,
+            broker: resp.broker,
+            value: resp.value,
+            copiesValue: resp.copies_value,
+            notes: resp.notes,
+            unit: resp.unit,
+            relationship: resp.broker,
+            nationalId: resp.national_id || "",
+          });
         })
         .finally(() => {
           setIsLoading(false);
         });
-      render_phieu_thu(phieuThuPayload).then((resp) => {
-        const blob = new Blob([resp.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "phieu-thu-tt200.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+    }
+  }, [isEdit, idFromUrl]);
+
+  const handleRenderPhieuThu = (phieuThuPayload: PhieuThuPayload) => {
+    render_phieu_thu(phieuThuPayload).then((resp) => {
+      const blob = new Blob([resp.data], {
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       });
-    },
-  });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "phieu-thu-tt200.docx";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    });
+  };
+
+  const { values, errors, resetForm, handleChange, handleSubmit, setValues } =
+    useFormik<InitialValues>({
+      validationSchema,
+      initialValues: {
+        id: "",
+        name: "",
+        customer: "",
+        broker: "",
+        value: 0,
+        copiesValue: 0,
+        notes: "",
+        unit: "HĐ",
+        relationship: "",
+        nationalId: "",
+      },
+      onSubmit: (formValues) => {
+        setIsLoading(true);
+        const idToSubmit =
+          formValues.id + (type === "Contract" ? "/" : ".") + suffix;
+        const payload = {
+          ...formValues,
+          customer: formValues.customer?.trim(),
+          id: idToSubmit,
+        };
+        const phieuThuPayload: PhieuThuPayload = {
+          d: dayjs().format("DD"),
+          m: dayjs().format("MM"),
+          y: dayjs().format("YYYY"),
+          người_nộp_tiền: formValues.customer,
+          số_cc: idToSubmit,
+          số_tiền: (
+            Number(formValues.value * 1000) +
+            Number(formValues.copiesValue * 1000)
+          ).toLocaleString(),
+          số_tiền_bằng_chữ: numberToVietnamese(
+            (
+              Number(formValues.value * 1000) +
+              Number(formValues.copiesValue * 1000)
+            )
+              .toString()
+              .replace(/\./g, "")
+              .replace(/\,/g, ".")
+          ),
+          tên_chuyên_viên: namedByUser,
+          loại_hđ: formValues.name,
+        };
+        if (isEdit) {
+          updateContract(payload)
+            .then(() => {
+              toast.success("Cập nhật thành công");
+              if (shouldRenderPhieuThu) {
+                handleRenderPhieuThu(phieuThuPayload);
+              }
+            })
+            .catch(() => {
+              toast.error("Có lỗi xảy ra trong quá trình cập nhật");
+            })
+            .finally(() => {
+              getTheNextAvailableId(type)
+                .then((resp) => {
+                  setNextAvailableId(resp);
+                  if (String(resp)?.includes("/")) {
+                    const [_id, suffix] = resp.split("/");
+                    setSuffix(suffix);
+                  } else {
+                    const [_id, suffix] = String(resp).split(".");
+                    setSuffix(suffix || new Date().getFullYear().toString());
+                  }
+                })
+                .finally(() => {
+                  setCheckingLoading(false);
+                });
+              setIsLoading(false);
+            });
+        } else {
+          submitContract(payload)
+            .then(() => {
+              toast.success("Tạo thành công");
+              if (shouldRenderPhieuThu) {
+                handleRenderPhieuThu(phieuThuPayload);
+              }
+              resetForm();
+            })
+            .catch((err) => {
+              if (err?.status === 400) {
+                toast.error(
+                  "Đã có người sử dụng số hợp đồng này, vui lòng lấy số hợp đồng khác"
+                );
+              }
+            })
+            .finally(() => {
+              getTheNextAvailableId(type)
+                .then((resp) => {
+                  setNextAvailableId(resp);
+                  if (String(resp)?.includes("/")) {
+                    const [_id, suffix] = resp.split("/");
+                    setSuffix(suffix);
+                  } else {
+                    const [_id, suffix] = String(resp).split(".");
+                    setSuffix(suffix || new Date().getFullYear().toString());
+                  }
+                })
+                .finally(() => {
+                  setCheckingLoading(false);
+                });
+              setIsLoading(false);
+            });
+        }
+      },
+    });
+
+  const getSubmitButtonLabel = () =>
+    shouldRenderPhieuThu ? "Lưu thông tin và in phiếu thu" : "Lưu thông tin";
+
   return (
     <Box>
-      <Typography variant="h4">Tổng hợp phiếu thu</Typography>
+      {isEdit ? (
+        <Typography fontWeight={600} variant="h3">
+          Chỉnh sửa phiếu thu số {idFromUrl}
+        </Typography>
+      ) : (
+        <Typography fontWeight={600} variant="h3">
+          Nhập phiếu thu
+        </Typography>
+      )}
       <Box mt="2rem">
-        <Typography variant="h5">Nhập thông tin</Typography>
-        <Box mt="1rem">
-          <Typography>Chọn loại hình công chứng</Typography>
-          <Select
-            sx={{ width: "300px", marginTop: "1rem" }}
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-          >
-            <MenuItem value="Contract">Công chứng Hợp Đồng</MenuItem>
-            <MenuItem value="Signature">Chứng thực chữ ký</MenuItem>
-          </Select>
-        </Box>
+        {isEdit ? null : (
+          <Box>
+            <Typography>Chọn loại hình công chứng</Typography>
+            <Select
+              sx={{ width: "300px", marginTop: "1rem" }}
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+            >
+              <MenuItem value="Contract">Công chứng Hợp Đồng</MenuItem>
+              <MenuItem value="Signature">Chứng thực chữ ký</MenuItem>
+            </Select>
+          </Box>
+        )}
         <Box mt="1rem">
           <Box mb="2rem">
-            <Typography variant="h5">
-              Số hợp đồng sẵn sàng để lấy:{" "}
-              <strong style={{ color: "green" }}>
-                {checkingLoading ? "Đang kiểm tra..." : nextAvailableId}
-              </strong>
-            </Typography>
+            {isEdit ? null : (
+              <Typography variant="h5">
+                Số hợp đồng sẵn sàng để lấy:{" "}
+                <strong style={{ color: "green" }}>
+                  {checkingLoading ? "Đang kiểm tra..." : nextAvailableId}
+                </strong>
+              </Typography>
+            )}
             <WarningBanner />
           </Box>
           <form onSubmit={handleSubmit}>
@@ -233,9 +319,14 @@ const SubmitContract = () => {
                   label="Số hợp đồng"
                   name="id"
                   value={values.id}
-                  onChange={handleChange}
+                  slotProps={{
+                    input: {
+                      readOnly: isEdit,
+                    },
+                  }}
                   error={!!errors.id}
                   helperText={errors.id}
+                  onChange={handleChange}
                 />
                 <TextField
                   name="suffix"
@@ -311,10 +402,25 @@ const SubmitContract = () => {
               <TextField
                 label="Ghi chú"
                 name="notes"
+                sx={{ gridColumn: "span 4" }}
                 value={values.notes}
                 onChange={handleChange}
                 error={!!errors.notes}
                 helperText={errors.notes}
+                multiline
+                rows={3}
+              />
+            </Box>
+            <Box>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="shouldRenderPhieuThu"
+                    checked={shouldRenderPhieuThu}
+                    onChange={(e) => setShouldRenderPhieuThu(e.target.checked)}
+                  />
+                }
+                label="In phiếu thu"
               />
             </Box>
             <Box mt="1rem">
@@ -323,40 +429,20 @@ const SubmitContract = () => {
                 variant="contained"
                 sx={{
                   backgroundColor: "green",
-                  width: "200px",
+                  width: "300px",
                   height: "40px",
                 }}
               >
-                {isLoading ? <CircularProgress size={20} /> : "Lưu thông tin"}
+                {isLoading ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  getSubmitButtonLabel()
+                )}
               </Button>
             </Box>
           </form>
         </Box>
       </Box>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          Lưu thành công số hợp đồng {createdContractNumber}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={errorMessage !== ""}
-        autoHideDuration={6000}
-        onClose={handleCloseError}
-      >
-        <Alert
-          onClose={handleCloseError}
-          severity="error"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {errorMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

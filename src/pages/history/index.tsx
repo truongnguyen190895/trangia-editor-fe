@@ -9,18 +9,14 @@ import {
   TableCell,
   Button,
   CircularProgress,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
   Pagination,
   MenuItem,
   FormControl,
   InputLabel,
   Select,
 } from "@mui/material";
-import { listContracts, exportExcel, updateContract } from "@/api/contract";
+import { useNavigate } from "react-router-dom";
+import { listContracts, exportExcel, deleteContract } from "@/api/contract";
 import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import type { Contract } from "@/api/contract";
 import dayjs, { type Dayjs } from "dayjs";
@@ -32,26 +28,19 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { listUsers, type User } from "@/api/users";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-
-interface ContractRow {
-  tenChuyenVien: string | null;
-  số_hợp_đồng: string;
-  tên_hợp_đồng: string;
-  tên_khách_hàng: string;
-  CCCD: string | null;
-  số_tiền: number;
-  bản_sao: number;
-  quan_hệ: string;
-  ghi_chú: string;
-}
+import PrintIcon from "@mui/icons-material/Print";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
+import { toast } from "react-toastify";
 
 const History = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingExcel, setLoadingExcel] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<ContractRow | null>(null);
   const [page, setPage] = useState(1);
   const [size, _setSize] = useState(20);
   const [totalPages, setTotalPages] = useState(0);
@@ -62,10 +51,11 @@ const History = () => {
   );
   const [type, setType] = useState<string>("");
   const [dateBegin, setDateBegin] = useState<Dayjs>(dayjs().startOf("month"));
-  const [dateEnd, setDateEnd] = useState<Dayjs>(dayjs().add(1, "day"));
+  const [dateEnd, setDateEnd] = useState<Dayjs>(dayjs());
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [idToDelete, setIdToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -155,50 +145,6 @@ const History = () => {
     setOpen(false);
   };
 
-  const handleCloseUpdate = () => {
-    setOpenUpdate(false);
-    setSelectedRow(null);
-  };
-
-  const handleUpdateContract = () => {
-    const targetedContract = contracts.find(
-      (contract) => contract.id === selectedRow?.số_hợp_đồng
-    );
-    if (targetedContract) {
-      const payload = {
-        id: targetedContract.id,
-        name: selectedRow?.tên_hợp_đồng || "",
-        customer: selectedRow?.tên_khách_hàng || "",
-        broker: selectedRow?.quan_hệ || "",
-        value: selectedRow?.số_tiền || 0,
-        copiesValue: selectedRow?.bản_sao || 0,
-        notes: selectedRow?.ghi_chú || "",
-        unit: targetedContract?.unit,
-        relationship: selectedRow?.quan_hệ || "",
-        nationalId: selectedRow?.CCCD || "",
-      };
-      updateContract(payload)
-        .then(() => {
-          listContracts({
-            size,
-            page,
-            type,
-            dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
-            dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
-            createdBy: selectedUser?.username,
-          })
-            .then((resp) => setContracts(resp?.content))
-            .finally(() => {
-              setLoading(false);
-            });
-        })
-        .finally(() => {
-          setOpenUpdate(false);
-          setSelectedRow(null);
-        });
-    }
-  };
-
   const renderTableContent = () => {
     if (cleanData.length === 0 && !loading) {
       return (
@@ -224,26 +170,72 @@ const History = () => {
         <TableCell>
           <Box display="flex" gap="1rem" alignItems="center">
             <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                setSelectedRow(contract);
-                setOpenUpdate(true);
-              }}
-            >
-              Sửa
-            </Button>
-            <Button
+              startIcon={<PrintIcon />}
               variant="contained"
               color="info"
               onClick={() => handleRenderPhieuThu(contract.số_hợp_đồng)}
             >
-              Phiếu thu
+              In
+            </Button>
+            {isAdmin ? (
+              <Button
+                variant="outlined"
+                color="info"
+                onClick={() => {
+                  navigate(`/edit-contract?id=${contract.số_hợp_đồng}`);
+                }}
+              >
+                <EditIcon />
+              </Button>
+            ) : null}
+
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => {
+                setIdToDelete(contract.số_hợp_đồng);
+                setOpenConfirmationDialog(true);
+              }}
+            >
+              <DeleteIcon />
             </Button>
           </Box>
         </TableCell>
       </TableRow>
     ));
+  };
+
+  const handleDeleteContract = () => {
+    if (idToDelete) {
+      deleteContract(idToDelete)
+        .then(() => {
+          listContracts({
+            size,
+            page: page - 1,
+            type,
+            dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
+            dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
+            createdBy: selectedUser?.username,
+          })
+            .then((resp) => {
+              setContracts(resp?.content);
+              setTotalPages(resp?.page?.total_pages);
+              setTotalElements(resp?.page?.total_elements);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+          toast.success("Xóa phiếu thu thành công");
+        })
+        .catch((err) => {
+          toast.error("Lỗi xoá phiếu thu");
+          console.error(err);
+        })
+        .finally(() => {
+          setOpenConfirmationDialog(false);
+          setIdToDelete(null);
+        });
+    }
   };
 
   const handleRenderPhieuThu = (id: string) => {
@@ -302,7 +294,9 @@ const History = () => {
 
   return (
     <Box>
-      <Typography variant="h4">Danh sách phiếu thu</Typography>
+      <Typography variant="h3" fontWeight={600}>
+        Danh sách phiếu thu
+      </Typography>
       <Box
         mt="2rem"
         border="1px solid #e0e0e0"
@@ -469,111 +463,13 @@ const History = () => {
         </Alert>
       </Snackbar>
       <LoadingDialog open={loading} />
-      <Dialog
-        open={openUpdate}
-        onClose={handleCloseUpdate}
-        fullWidth
-        maxWidth="xl"
-      >
-        <DialogTitle>Sửa hợp đồng</DialogTitle>
-        <DialogContent>
-          <Box
-            display="grid"
-            gridTemplateColumns="1fr 1fr"
-            gap="20px"
-            py="20px"
-          >
-            <TextField
-              label="Số hợp đồng"
-              value={selectedRow?.số_hợp_đồng}
-              onChange={(e) =>
-                setSelectedRow({
-                  ...selectedRow!,
-                  số_hợp_đồng: e.target.value as string,
-                })
-              }
-            />
-            <TextField
-              label="Tên hợp đồng"
-              value={selectedRow?.tên_hợp_đồng}
-              onChange={(e) =>
-                setSelectedRow({
-                  ...selectedRow!,
-                  tên_hợp_đồng: e.target.value as string,
-                })
-              }
-            />
-            <TextField
-              label="Tên khách hàng"
-              value={selectedRow?.tên_khách_hàng}
-              onChange={(e) =>
-                setSelectedRow({
-                  ...selectedRow!,
-                  tên_khách_hàng: e.target.value as string,
-                })
-              }
-            />
-            <TextField
-              label="CCCD"
-              value={selectedRow?.CCCD}
-              onChange={(e) =>
-                setSelectedRow({
-                  ...selectedRow!,
-                  CCCD: e.target.value as string,
-                })
-              }
-            />
-            <TextField
-              label="Số tiền"
-              type="number"
-              value={selectedRow?.số_tiền}
-              onChange={(e) =>
-                setSelectedRow({
-                  ...selectedRow!,
-                  số_tiền: Number(e.target.value),
-                })
-              }
-            />
-            <TextField
-              label="Số tiền làm bản sao"
-              type="number"
-              value={selectedRow?.bản_sao}
-              onChange={(e) =>
-                setSelectedRow({
-                  ...selectedRow!,
-                  bản_sao: Number(e.target.value),
-                })
-              }
-            />
-            <TextField
-              label="Quan hệ"
-              value={selectedRow?.quan_hệ}
-              onChange={(e) =>
-                setSelectedRow({
-                  ...selectedRow!,
-                  quan_hệ: e.target.value as string,
-                })
-              }
-            />
-            <TextField
-              label="Ghi chú"
-              value={selectedRow?.ghi_chú}
-              onChange={(e) =>
-                setSelectedRow({
-                  ...selectedRow!,
-                  ghi_chú: e.target.value as string,
-                })
-              }
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseUpdate}>Hủy</Button>
-          <Button variant="contained" onClick={handleUpdateContract}>
-            Sửa
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmationDialog
+        open={openConfirmationDialog}
+        title="Xác nhận"
+        message="Bạn có chắc chắn muốn xóa phiếu thu này không?"
+        onConfirm={handleDeleteContract}
+        onCancel={() => setOpenConfirmationDialog(false)}
+      />
     </Box>
   );
 };

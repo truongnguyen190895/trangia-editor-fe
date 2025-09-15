@@ -9,12 +9,15 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import { router } from "./router";
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider theme={theme}>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <RouterProvider router={router} />
+      <ToastContainer />
     </LocalizationProvider>
   </ThemeProvider>
 );

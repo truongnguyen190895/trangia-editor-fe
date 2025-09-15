@@ -32,11 +32,7 @@ const Layout = () => {
   }
 
   return (
-    <Box
-      position="relative"
-      sx={{ display: "flex", flexDirection: "column", height: "100vh" }}
-      className="layout-container"
-    >
+    <Box position="relative" className="layout-container">
       <Box
         className="navigator"
         bgcolor="#1C6EA4"
@@ -65,8 +61,12 @@ const Layout = () => {
           </Typography>
         </Box>
       </Box>
-      <Box className="content" display="flex" flex={1}>
-        <Box>
+      <Box
+        className="content"
+        display="grid"
+        sx={{ height: "calc(100vh - 100px)", gridTemplateColumns: "300px 1fr" }}
+      >
+        <Box height="100%">
           <SidebarMenu />
         </Box>
         <Box flex={1} p="2rem">

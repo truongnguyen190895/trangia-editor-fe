@@ -41,6 +41,10 @@ export const router = createBrowserRouter([
         element: <SubmitContract />,
       },
       {
+        path: "/edit-contract",
+        element: <SubmitContract isEdit={true} />,
+      },
+      {
         path: "/history",
         element: <History />,
       },
