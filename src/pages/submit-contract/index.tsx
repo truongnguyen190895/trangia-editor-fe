@@ -66,12 +66,10 @@ const SubmitContract = () => {
       .then((resp) => {
         setNextAvailableId(resp);
         if (String(resp)?.includes("/")) {
-          const [id, suffix] = resp.split("/");
-          setFieldValue("id", id);
+          const [_id, suffix] = resp.split("/");
           setSuffix(suffix);
         } else {
-          const [id, suffix] = String(resp).split(".");
-          setFieldValue("id", id);
+          const [_id, suffix] = String(resp).split(".");
           setSuffix(suffix || new Date().getFullYear().toString());
         }
       })
@@ -106,7 +104,6 @@ const SubmitContract = () => {
     resetForm,
     handleChange,
     handleSubmit,
-    setFieldValue,
   } = useFormik<InitialValues>({
     validationSchema,
     initialValues: {
@@ -261,6 +258,7 @@ const SubmitContract = () => {
                   label="Tên Hợp Đồng"
                   value={values.name}
                   onChange={handleChange}
+                  error={!!errors.name}
                 >
                   {CONTRACT_TYPES.map((branch) => (
                     <MenuItem key={branch.id} value={branch.value}>
