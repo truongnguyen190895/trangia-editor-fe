@@ -145,27 +145,6 @@ const History = () => {
       });
   };
 
-  const handleUpdateData = () => {
-    setLoading(true);
-    listContracts({
-      size,
-      page,
-      type,
-      dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
-      dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
-      createdBy: selectedUser?.username,
-    })
-      .then(() => {
-        setOpen(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   const handleClose = (
     _event: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
@@ -324,36 +303,6 @@ const History = () => {
   return (
     <Box>
       <Typography variant="h4">Danh sách phiếu thu</Typography>
-      {isAdmin ? (
-        <Box mt="1rem" display="flex" gap="1rem" alignItems="center">
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: "green",
-              width: "200px",
-              height: "50px",
-            }}
-            endIcon={<FileDownloadIcon sx={{ fontSize: "large" }} />}
-            onClick={handleExportExcel}
-            disabled={loadingExcel}
-          >
-            {loadingExcel ? (
-              <CircularProgress size={20} />
-            ) : (
-              <Typography>Tải file excel</Typography>
-            )}
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#33A1E0", display: "none" }}
-            onClick={handleUpdateData}
-          >
-            Cập nhật dữ liệu mới nhất
-          </Button>
-        </Box>
-      ) : null}
-
       <Box
         mt="2rem"
         border="1px solid #e0e0e0"
@@ -435,7 +384,12 @@ const History = () => {
           ) : null}
         </Box>
       </Box>
-      <Box mt="2rem">
+      <Box
+        mt="2rem"
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <Typography
           fontSize="1.2rem"
           fontWeight="bold"
@@ -444,6 +398,26 @@ const History = () => {
         >
           Tổng số: {totalElements}
         </Typography>
+        {isAdmin ? (
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              backgroundColor: "green",
+              width: "200px",
+              height: "40px",
+            }}
+            endIcon={<FileDownloadIcon sx={{ fontSize: "large" }} />}
+            onClick={handleExportExcel}
+            disabled={loadingExcel}
+          >
+            {loadingExcel ? (
+              <CircularProgress size={20} />
+            ) : (
+              <Typography>Tải file excel</Typography>
+            )}
+          </Button>
+        ) : null}
       </Box>
       <Box
         mt="1rem"
