@@ -31,6 +31,7 @@ import { LoadingDialog } from "@/components/common/loading-dialog";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { listUsers, type User } from "@/api/users";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 interface ContractRow {
   tenChuyenVien: string | null;
@@ -331,14 +332,16 @@ const History = () => {
             sx={{
               backgroundColor: "green",
               width: "200px",
+              height: "50px",
             }}
+            endIcon={<FileDownloadIcon sx={{ fontSize: "large" }} />}
             onClick={handleExportExcel}
             disabled={loadingExcel}
           >
             {loadingExcel ? (
               <CircularProgress size={20} />
             ) : (
-              "Xuất báo cáo excel"
+              <Typography>Tải file excel</Typography>
             )}
           </Button>
           <Button
@@ -433,11 +436,22 @@ const History = () => {
         </Box>
       </Box>
       <Box mt="2rem">
-        <Typography fontSize="1.2rem" fontWeight="bold" fontStyle="italic" color="#08CB00">
+        <Typography
+          fontSize="1.2rem"
+          fontWeight="bold"
+          fontStyle="italic"
+          color="#08CB00"
+        >
           Tổng số: {totalElements}
         </Typography>
       </Box>
-      <Box mt="1rem" border="1px solid #e0e0e0" borderRadius="5px" px="1rem" py="1rem">
+      <Box
+        mt="1rem"
+        border="1px solid #e0e0e0"
+        borderRadius="5px"
+        px="1rem"
+        py="1rem"
+      >
         <Table>
           <TableHead>
             <TableRow>
