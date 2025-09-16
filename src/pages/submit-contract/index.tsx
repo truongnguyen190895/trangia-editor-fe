@@ -100,11 +100,15 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         .then((resp) => {
           let id = "";
           if (idFromUrl?.includes("/")) {
-            id = idFromUrl.split("/")[0];
+            const [oldId, oldSuffix] = idFromUrl.split("/");
+            id = oldId;
+            setSuffix(oldSuffix);
             setType("Contract");
           } else {
             setType("Signature");
-            id = idFromUrl.split(".")[0];
+            const [oldId, oldSuffix] = idFromUrl.split(".");
+            id = oldId;
+            setSuffix(oldSuffix);
           }
           setValues({
             id: id,
@@ -334,7 +338,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   label=""
                   slotProps={{
                     input: {
-                      readOnly: true,
+                      readOnly: isEdit,
                     },
                   }}
                   value={suffix}
