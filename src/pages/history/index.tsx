@@ -314,6 +314,11 @@ const History = () => {
         ),
         tên_chuyên_viên: contract?.created_by || "",
         loại_hđ: contract?.name || "",
+        ghi_chú: `(Công chứng: ${(
+          contract?.value * 1000 || 0
+        )?.toLocaleString()}đ; Bản sao: ${(
+          contract?.copies_value * 1000 || 0
+        )?.toLocaleString()}đ)`,
       };
       render_phieu_thu(payload)
         .then((res) => {

@@ -190,6 +190,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           ),
           tên_chuyên_viên: namedByUser,
           loại_hđ: formValues.name,
+          ghi_chú: `(Công chứng: ${(
+            formValues.value * 1000 || 0
+          )?.toLocaleString()}đ; Bản sao: ${(
+            formValues.copiesValue * 1000 || 0
+          )?.toLocaleString()}đ)`,
         };
         if (isEdit) {
           updateContract(payload)
