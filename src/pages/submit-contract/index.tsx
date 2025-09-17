@@ -162,8 +162,12 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
       },
       onSubmit: (formValues) => {
         setIsLoading(true);
-        const idToSubmit =
-          formValues.id + (type === "Contract" ? "/" : ".") + suffix;
+        let idToSubmit = '';
+        if (type === "Contract") {
+          idToSubmit = formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
+        } else {
+          idToSubmit = formValues.id + "." + suffix;
+        }
         const payload = {
           ...formValues,
           customer: formValues.customer?.trim(),
