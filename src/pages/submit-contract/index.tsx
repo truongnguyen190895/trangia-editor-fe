@@ -163,10 +163,13 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
       onSubmit: (formValues) => {
         setIsLoading(true);
         let idToSubmit = '';
+        let idPhieuThu = ''
         if (type === "Contract") {
           idToSubmit = formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
+          idPhieuThu = formValues.id + "/" + suffix;
         } else {
           idToSubmit = formValues.id + "." + suffix;
+          idPhieuThu = formValues.id + "." + suffix;
         }
         const payload = {
           ...formValues,
@@ -178,7 +181,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           m: dayjs().format("MM"),
           y: dayjs().format("YYYY"),
           người_nộp_tiền: formValues.customer,
-          số_cc: idToSubmit,
+          số_cc: idPhieuThu,
           số_tiền: (
             Number(formValues.value * 1000) +
             Number(formValues.copiesValue * 1000)

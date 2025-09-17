@@ -297,13 +297,20 @@ const History = () => {
   const handleRenderPhieuThu = (id: string) => {
     const contract = contracts.find((contract) => contract.id === id);
     if (contract) {
+      const contractType = contract.id.includes("/") ? "Contract" : "Signature";
+      let idPhieuThu = '';
+      if (contractType === "Contract") {
+        idPhieuThu = contract.id?.slice(0, -5);
+      } else {
+        idPhieuThu = contract.id;
+      }
       const payload: PhieuThuPayload = {
         ...contract,
         d: dayjs(contract.date).format("DD"),
         m: dayjs(contract.date).format("MM"),
         y: dayjs(contract.date).format("YYYY"),
         người_nộp_tiền: contract?.customer || "",
-        số_cc: contract?.id?.toString() || "",
+        số_cc: idPhieuThu || "",
         số_tiền: (
           (contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)
         ).toLocaleString(),
