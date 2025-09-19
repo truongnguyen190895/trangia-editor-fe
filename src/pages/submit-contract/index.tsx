@@ -11,6 +11,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { BRANCHES } from "@/constants/branches";
 import { CONTRACT_TYPES } from "@/constants/contract-types";
@@ -25,7 +26,7 @@ import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { WarningBanner } from "./warning-banner";
 
@@ -55,6 +56,7 @@ interface InitialValues {
   unit: string;
   relationship: string;
   nationalId: string;
+  filedDate: Dayjs;
 }
 
 interface SubmitContractProps {
@@ -121,6 +123,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             unit: resp.unit,
             relationship: resp.broker,
             nationalId: resp.national_id || "",
+            filedDate: dayjs(resp.filed_date),
           });
         })
         .finally(() => {
@@ -145,6 +148,19 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
     });
   };
 
+  const errorHandler = (error: any) => {
+    console.log(error);
+    if (error?.status === 400) {
+      toast.error(
+        "Đã có người sử dụng số hợp đồng này, vui lòng lấy số hợp đồng khác"
+      );
+    } else if (error?.response?.data?.message?.includes("Invalid date")) {
+      toast.error("Ngày viết phiếu không hợp lệ");
+    } else {
+      toast.error("Có lỗi xảy ra");
+    }
+  };
+
   const { values, errors, resetForm, handleChange, handleSubmit, setValues } =
     useFormik<InitialValues>({
       validationSchema,
@@ -159,13 +175,15 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         unit: "HĐ",
         relationship: "",
         nationalId: "",
+        filedDate: dayjs(),
       },
       onSubmit: (formValues) => {
         setIsLoading(true);
-        let idToSubmit = '';
-        let idPhieuThu = ''
+        let idToSubmit = "";
+        let idPhieuThu = "";
         if (type === "Contract") {
-          idToSubmit = formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
+          idToSubmit =
+            formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
           idPhieuThu = formValues.id + "/" + suffix;
         } else {
           idToSubmit = formValues.id + "." + suffix;
@@ -175,11 +193,12 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           ...formValues,
           customer: formValues.customer?.trim(),
           id: idToSubmit,
+          filedDate: formValues?.filedDate?.format("YYYY-MM-DD"),
         };
         const phieuThuPayload: PhieuThuPayload = {
-          d: dayjs().format("DD"),
-          m: dayjs().format("MM"),
-          y: dayjs().format("YYYY"),
+          d: dayjs(formValues?.filedDate).format("DD"),
+          m: dayjs(formValues?.filedDate).format("MM"),
+          y: dayjs(formValues?.filedDate).format("YYYY"),
           người_nộp_tiền: formValues.customer,
           số_cc: idPhieuThu,
           số_tiền: (
@@ -211,8 +230,8 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 handleRenderPhieuThu(phieuThuPayload);
               }
             })
-            .catch(() => {
-              toast.error("Có lỗi xảy ra trong quá trình cập nhật");
+            .catch((error) => {
+              errorHandler(error);
             })
             .finally(() => {
               getTheNextAvailableId(type)
@@ -240,24 +259,13 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
               }
               resetForm();
             })
-            .catch((err) => {
-              if (err?.status === 400) {
-                toast.error(
-                  "Đã có người sử dụng số hợp đồng này, vui lòng lấy số hợp đồng khác"
-                );
-              }
+            .catch((error) => {
+              errorHandler(error);
             })
             .finally(() => {
               getTheNextAvailableId(type)
                 .then((resp) => {
                   setNextAvailableId(resp);
-                  if (String(resp)?.includes("/")) {
-                    const [_id, suffix] = resp.split("/");
-                    setSuffix(suffix);
-                  } else {
-                    const [_id, suffix] = String(resp).split(".");
-                    setSuffix(suffix || new Date().getFullYear().toString());
-                  }
                 })
                 .finally(() => {
                   setCheckingLoading(false);
@@ -415,6 +423,14 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 onChange={handleChange}
                 error={!!errors.broker}
                 helperText={errors.broker}
+              />
+              <DatePicker
+                label="Ngày viết phiếu"
+                value={values.filedDate}
+                onChange={(e) =>
+                  setValues({ ...values, filedDate: e as Dayjs })
+                }
+                format="DD/MM/YYYY"
               />
               <TextField
                 label="Ghi chú"

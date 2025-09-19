@@ -11,6 +11,7 @@ export interface SubmitContractPayload {
   unit: string;
   relationship: string;
   nationalId: string;
+  filedDate: string;
 }
 
 export interface Contract {
@@ -24,6 +25,7 @@ export interface Contract {
   notes: string;
   created_by: string | null;
   national_id: string | null;
+  filed_date: string;
   audit: {
     created_at: string;
     updated_at: string;
@@ -76,7 +78,7 @@ export const deleteContract = (id: string) => {
 export const listContracts = (
   params: ListContractsParams
 ): Promise<ContractResponse> => {
-  return api.get("/files", { params }).then((resp) => resp.data); // TODO: remove size limit by using params
+  return api.get("/files", { params }).then((resp) => resp.data);
 };
 
 export const exportExcel = (params: ListContractsParams) => {

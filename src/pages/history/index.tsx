@@ -143,7 +143,7 @@ const History = () => {
 
   const cleanData = contracts.map((contract) => {
     return {
-      ngay: dayjs(contract.date).format("DD/MM/YYYY"),
+      ngay: dayjs(contract.filed_date).format("DD/MM/YYYY"),
       tenChuyenVien: contract?.created_by,
       số_hợp_đồng: contract?.id,
       tên_hợp_đồng: contract?.name,
@@ -306,9 +306,9 @@ const History = () => {
       }
       const payload: PhieuThuPayload = {
         ...contract,
-        d: dayjs(contract.date).format("DD"),
-        m: dayjs(contract.date).format("MM"),
-        y: dayjs(contract.date).format("YYYY"),
+        d: dayjs(contract.filed_date).format("DD"),
+        m: dayjs(contract.filed_date).format("MM"),
+        y: dayjs(contract.filed_date).format("YYYY"),
         người_nộp_tiền: contract?.customer || "",
         số_cc: idPhieuThu || "",
         số_tiền: (
