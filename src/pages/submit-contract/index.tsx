@@ -15,6 +15,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { BRANCHES } from "@/constants/branches";
 import { CONTRACT_TYPES } from "@/constants/contract-types";
+import { REVIEWERS } from "@/constants/reviewer";
 import { useFormik } from "formik";
 import {
   submitContract,
@@ -57,6 +58,9 @@ interface InitialValues {
   relationship: string;
   nationalId: string;
   filedDate: Dayjs;
+  deliveredBy: string;
+  inspectedBy: string;
+  externalNotes: string;
 }
 
 interface SubmitContractProps {
@@ -124,6 +128,9 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             relationship: resp.broker,
             nationalId: resp.national_id || "",
             filedDate: dayjs(resp.filed_date),
+            deliveredBy: resp.delivered_by,
+            inspectedBy: resp.inspected_by,
+            externalNotes: resp.external_notes,
           });
         })
         .finally(() => {
@@ -176,6 +183,9 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         relationship: "",
         nationalId: "",
         filedDate: dayjs(),
+        deliveredBy: "",
+        inspectedBy: "",
+        externalNotes: "",
       },
       onSubmit: (formValues) => {
         setIsLoading(true);
@@ -431,6 +441,51 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   setValues({ ...values, filedDate: e as Dayjs })
                 }
                 format="DD/MM/YYYY"
+              />
+              <FormControl>
+                <InputLabel htmlFor="deliveredBy">Người giao</InputLabel>
+                <Select
+                  id="deliveredBy"
+                  name="deliveredBy"
+                  label="Người giao"
+                  value={values.deliveredBy}
+                  onChange={handleChange}
+                  error={!!errors.deliveredBy}
+                >
+                  {REVIEWERS.map((reviewer) => (
+                    <MenuItem key={reviewer.id} value={reviewer.value}>
+                      {reviewer.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="inspectedBy">Người kiểm tra</InputLabel>
+                <Select
+                  id="inspectedBy"
+                  name="inspectedBy"
+                  label="Người kiểm tra"
+                  value={values.inspectedBy}
+                  onChange={handleChange}
+                  error={!!errors.inspectedBy}
+                >
+                  {REVIEWERS.map((reviewer) => (
+                    <MenuItem key={reviewer.id} value={reviewer.value}>
+                      {reviewer.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                label="Ký ngoài"
+                name="externalNotes"
+                sx={{ gridColumn: "span 4" }}
+                multiline
+                rows={3}
+                value={values.externalNotes}
+                onChange={handleChange}
+                error={!!errors.externalNotes}
+                helperText={errors.externalNotes}
               />
               <TextField
                 label="Ghi chú"

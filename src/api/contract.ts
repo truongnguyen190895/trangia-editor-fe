@@ -12,6 +12,9 @@ export interface SubmitContractPayload {
   relationship: string;
   nationalId: string;
   filedDate: string;
+  deliveredBy: string;
+  inspectedBy: string;
+  externalNotes: string;
 }
 
 export interface Contract {
@@ -34,6 +37,9 @@ export interface Contract {
   };
   number: number;
   date: string;
+  delivered_by: string;
+  inspected_by: string;
+  external_notes: string;
 }
 
 export interface ContractResponse {
