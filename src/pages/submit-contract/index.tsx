@@ -469,6 +469,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   onChange={handleChange}
                   error={!!errors.deliveredBy}
                 >
+                  <MenuItem value="">Chọn người giao</MenuItem>
                   {REVIEWERS.map((reviewer) => (
                     <MenuItem key={reviewer.id} value={reviewer.value}>
                       {reviewer.label}
@@ -486,6 +487,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   onChange={handleChange}
                   error={!!errors.inspectedBy}
                 >
+                  <MenuItem value="">Chọn người kiểm tra</MenuItem>
                   {REVIEWERS.map((reviewer) => (
                     <MenuItem key={reviewer.id} value={reviewer.value}>
                       {reviewer.label}
@@ -503,6 +505,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   onChange={handleChange}
                   error={!!errors.notarizedBy}
                 >
+                  <MenuItem value="">Chọn CCV</MenuItem>
                   {CÔNG_CHỨNG_VIÊN.map((reviewer) => (
                     <MenuItem key={reviewer.id} value={reviewer.value}>
                       {reviewer.name}
