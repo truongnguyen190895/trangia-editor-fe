@@ -15,6 +15,7 @@ export interface SubmitContractPayload {
   deliveredBy: string;
   inspectedBy: string;
   externalNotes: string;
+  notarizedBy: string;
 }
 
 export interface Contract {
@@ -40,6 +41,7 @@ export interface Contract {
   delivered_by: string;
   inspected_by: string;
   external_notes: string;
+  notarized_by: string;
 }
 
 export interface ContractResponse {

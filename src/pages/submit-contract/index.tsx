@@ -30,6 +30,7 @@ import * as yup from "yup";
 import dayjs, { Dayjs } from "dayjs";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { WarningBanner } from "./warning-banner";
+import { CÔNG_CHỨNG_VIÊN } from "@/database/cong-chung-vien";
 
 const validationSchema = yup.object({
   unit: yup.string(),
@@ -61,6 +62,7 @@ interface InitialValues {
   deliveredBy: string;
   inspectedBy: string;
   externalNotes: string;
+  notarizedBy: string;
 }
 
 interface SubmitContractProps {
@@ -134,6 +136,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             deliveredBy: resp.delivered_by,
             inspectedBy: resp.inspected_by,
             externalNotes: resp.external_notes,
+            notarizedBy: resp.notarized_by,
           });
         })
         .finally(() => {
@@ -189,6 +192,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         deliveredBy: "",
         inspectedBy: "",
         externalNotes: "",
+        notarizedBy: "",
       },
       onSubmit: (formValues) => {
         setIsLoading(true);
@@ -485,6 +489,23 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   {REVIEWERS.map((reviewer) => (
                     <MenuItem key={reviewer.id} value={reviewer.value}>
                       {reviewer.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="inspectedBy">CCV</InputLabel>
+                <Select
+                  id="notarizedBy"
+                  name="notarizedBy"
+                  label="CCV"
+                  value={values.notarizedBy}
+                  onChange={handleChange}
+                  error={!!errors.notarizedBy}
+                >
+                  {CÔNG_CHỨNG_VIÊN.map((reviewer) => (
+                    <MenuItem key={reviewer.id} value={reviewer.value}>
+                      {reviewer.name}
                     </MenuItem>
                   ))}
                 </Select>
