@@ -229,18 +229,15 @@ const History = () => {
             >
               In
             </Button>
-            {isAdmin ? (
-              <Button
-                variant="outlined"
-                color="info"
-                onClick={() => {
-                  navigate(`/edit-contract?id=${contract.số_hợp_đồng}`);
-                }}
-              >
-                <EditIcon />
-              </Button>
-            ) : null}
-
+            <Button
+              variant="outlined"
+              color="info"
+              onClick={() => {
+                navigate(`/edit-contract?id=${contract.số_hợp_đồng}`);
+              }}
+            >
+              <EditIcon />
+            </Button>
             <Button
               variant="outlined"
               color="error"
@@ -298,7 +295,7 @@ const History = () => {
     const contract = contracts.find((contract) => contract.id === id);
     if (contract) {
       const contractType = contract.id.includes("/") ? "Contract" : "Signature";
-      let idPhieuThu = '';
+      let idPhieuThu = "";
       if (contractType === "Contract") {
         idPhieuThu = contract.id?.slice(0, -5);
       } else {

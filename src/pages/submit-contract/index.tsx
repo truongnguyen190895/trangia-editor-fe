@@ -76,7 +76,10 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   const [suffix, setSuffix] = useState<string>("");
   const [nextAvailableId, setNextAvailableId] = useState<string>("");
   const [shouldRenderPhieuThu, setShouldRenderPhieuThu] = useState(false);
-
+  const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
+  const isAdmin = userRoles.some(
+    (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
+  );
   const idFromUrl = searchParams.get("id");
 
   const namedByUser = localStorage.getItem("username") || "";
@@ -410,6 +413,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 helperText={errors.nationalId}
               />
               <TextField
+                slotProps={{
+                  input: {
+                    disabled: isEdit && !isAdmin,
+                  },
+                }}
                 label="Số tiền công chứng"
                 name="value"
                 placeholder="Vd: 100 = 100,000"
@@ -419,6 +427,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 helperText={errors.value}
               />
               <TextField
+                slotProps={{
+                  input: {
+                    disabled: isEdit && !isAdmin,
+                  },
+                }}
                 label="Số tiền làm bản sao"
                 name="copiesValue"
                 value={values.copiesValue}
