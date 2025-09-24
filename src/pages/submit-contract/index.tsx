@@ -477,26 +477,20 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 </Select>
               </FormControl>
               <TextField
-                label="Ký ngoài"
-                name="externalNotes"
-                sx={{ gridColumn: "span 4" }}
-                multiline
-                rows={3}
-                value={values.externalNotes}
-                onChange={handleChange}
-                error={!!errors.externalNotes}
-                helperText={errors.externalNotes}
-              />
-              <TextField
                 label="Ghi chú"
                 name="notes"
-                sx={{ gridColumn: "span 4" }}
                 value={values.notes}
                 onChange={handleChange}
                 error={!!errors.notes}
                 helperText={errors.notes}
-                multiline
-                rows={3}
+              />
+              <TextField
+                label="Ký ngoài"
+                name="externalNotes"
+                value={values.externalNotes}
+                onChange={handleChange}
+                error={!!errors.externalNotes}
+                helperText={errors.externalNotes}
               />
             </Box>
             <Box>
