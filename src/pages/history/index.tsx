@@ -37,6 +37,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { toast } from "react-toastify";
 
+
+const DEBOUNCE_TIME = 3000;
+
 const History = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -71,7 +74,7 @@ const History = () => {
     const debounce = setTimeout(() => {
       setCustomerQuery(debounceCustomerQuery);
       setPage(1);
-    }, 500);
+    }, DEBOUNCE_TIME);
     return () => clearTimeout(debounce);
   }, [debounceCustomerQuery]);
 
@@ -79,7 +82,7 @@ const History = () => {
     const debounce = setTimeout(() => {
       setSearchQuery(debounceQuery);
       setPage(1);
-    }, 500);
+    }, DEBOUNCE_TIME);
     return () => clearTimeout(debounce);
   }, [debounceQuery]);
 
@@ -87,7 +90,7 @@ const History = () => {
     const debounce = setTimeout(() => {
       setBrokerQuery(debounceBrokerQuery);
       setPage(1);
-    }, 500);
+    }, DEBOUNCE_TIME);
     return () => clearTimeout(debounce);
   }, [debounceBrokerQuery]);
 
