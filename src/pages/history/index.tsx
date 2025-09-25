@@ -38,7 +38,7 @@ import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { toast } from "react-toastify";
 
 
-const DEBOUNCE_TIME = 3000;
+const DEBOUNCE_TIME = 2000;
 
 const History = () => {
   const navigate = useNavigate();
