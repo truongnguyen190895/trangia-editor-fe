@@ -64,7 +64,7 @@ const Layout = () => {
       <Box
         className="content"
         display="grid"
-        sx={{ height: "calc(100vh - 100px)", gridTemplateColumns: "300px 1fr" }}
+        sx={{ height: "calc(100vh - 100px)", gridTemplateColumns: "250px 1fr" }}
       >
         <Box height="100%">
           <SidebarMenu />
