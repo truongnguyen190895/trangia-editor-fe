@@ -37,7 +37,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { toast } from "react-toastify";
 
-
 const DEBOUNCE_TIME = 2000;
 
 const History = () => {
@@ -217,20 +216,19 @@ const History = () => {
         <TableCell>{contract.số_hợp_đồng}</TableCell>
         <TableCell>{contract.tên_hợp_đồng}</TableCell>
         <TableCell>{contract.tên_khách_hàng}</TableCell>
-        <TableCell>{contract.CCCD}</TableCell>
         <TableCell>{contract.số_tiền?.toLocaleString()}</TableCell>
         <TableCell>{contract.bản_sao?.toLocaleString()}</TableCell>
         <TableCell>{contract.quan_hệ}</TableCell>
+        <TableCell>{contract.CCCD}</TableCell>
         <TableCell>{contract.ghi_chú}</TableCell>
         <TableCell>
-          <Box display="flex" gap="1rem" alignItems="center">
+          <Box display="flex" gap="0.2rem" alignItems="center">
             <Button
-              startIcon={<PrintIcon />}
               variant="contained"
               color="info"
               onClick={() => handleRenderPhieuThu(contract.số_hợp_đồng)}
             >
-              In
+              <PrintIcon />
             </Button>
             <Button
               variant="outlined"
@@ -564,10 +562,10 @@ const History = () => {
               <TableCell>Số HĐ</TableCell>
               <TableCell>Tên HĐ</TableCell>
               <TableCell>Tên KH</TableCell>
-              <TableCell>CCCD</TableCell>
               <TableCell>Số tiền</TableCell>
               <TableCell>Bản sao</TableCell>
               <TableCell>Quan hệ</TableCell>
+              <TableCell>CCCD</TableCell>
               <TableCell>Ghi chú</TableCell>
               <TableCell>Thao tác</TableCell>
             </TableRow>
