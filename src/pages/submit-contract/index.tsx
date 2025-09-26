@@ -409,14 +409,6 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 helperText={errors.customer}
               />
               <TextField
-                label="Số CCCD"
-                name="nationalId"
-                value={values.nationalId}
-                onChange={handleChange}
-                error={!!errors.nationalId}
-                helperText={errors.nationalId}
-              />
-              <TextField
                 slotProps={{
                   input: {
                     disabled: isEdit && !isAdmin,
@@ -450,6 +442,14 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 onChange={handleChange}
                 error={!!errors.broker}
                 helperText={errors.broker}
+              />
+              <TextField
+                label="Số CCCD"
+                name="nationalId"
+                value={values.nationalId}
+                onChange={handleChange}
+                error={!!errors.nationalId}
+                helperText={errors.nationalId}
               />
               <DatePicker
                 label="Ngày viết phiếu"
