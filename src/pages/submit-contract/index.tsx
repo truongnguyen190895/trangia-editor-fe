@@ -139,6 +139,9 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             notarizedBy: resp.notarized_by,
           });
         })
+        .catch((error) => {
+          errorHandler(error);
+        })
         .finally(() => {
           setIsLoading(false);
         });
@@ -162,11 +165,10 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   };
 
   const errorHandler = (error: any) => {
-    console.log(error);
     if (error?.status === 400) {
-      toast.error(
-        "Đã có người sử dụng số hợp đồng này, vui lòng lấy số hợp đồng khác"
-      );
+      toast.error(error?.response?.data?.message);
+    } else if (error?.status === 404) {
+      toast.error("Hợp đồng không tồn tại");
     } else if (error?.response?.data?.message?.includes("Invalid date")) {
       toast.error("Ngày viết phiếu không hợp lệ");
     } else {
@@ -240,7 +242,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           )?.toLocaleString()}đ)`,
         };
         if (isEdit) {
-          updateContract(payload)
+          updateContract({
+            ...payload,
+            id: idFromUrl as string,
+            newId: idToSubmit,
+          })
             .then(() => {
               toast.success("Cập nhật thành công");
               if (shouldRenderPhieuThu) {
@@ -251,20 +257,6 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
               errorHandler(error);
             })
             .finally(() => {
-              getTheNextAvailableId(type)
-                .then((resp) => {
-                  setNextAvailableId(resp);
-                  if (String(resp)?.includes("/")) {
-                    const [_id, suffix] = resp.split("/");
-                    setSuffix(suffix);
-                  } else {
-                    const [_id, suffix] = String(resp).split(".");
-                    setSuffix(suffix || new Date().getFullYear().toString());
-                  }
-                })
-                .finally(() => {
-                  setCheckingLoading(false);
-                });
               setIsLoading(false);
             });
         } else {
@@ -363,7 +355,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   value={values.id}
                   slotProps={{
                     input: {
-                      readOnly: isEdit,
+                      readOnly: isEdit && !isAdmin,
                     },
                   }}
                   error={!!errors.id}
@@ -375,7 +367,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   label=""
                   slotProps={{
                     input: {
-                      readOnly: isEdit,
+                      readOnly: isEdit && !isAdmin,
                     },
                   }}
                   value={suffix}

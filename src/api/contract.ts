@@ -16,6 +16,7 @@ export interface SubmitContractPayload {
   inspectedBy: string;
   externalNotes: string;
   notarizedBy: string;
+  newId?: string;
 }
 
 export interface Contract {
@@ -59,7 +60,9 @@ export const submitContract = (payload: SubmitContractPayload) => {
 };
 
 export const updateContract = (payload: SubmitContractPayload) => {
-  return api.patch("/files/" + payload.id, payload).then((resp) => resp.data);
+  return api
+    .patch("/files/" + payload.id, { ...payload, id: payload.newId })
+    .then((resp) => resp.data);
 };
 
 interface ListContractsParams {
