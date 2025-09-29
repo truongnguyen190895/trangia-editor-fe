@@ -155,3 +155,36 @@ export const CONTRACT_TYPES = [
     label: "Đơn Miễn Thuế",
   },
 ];
+
+export const INVOICE_TYPES = [
+  {
+    id: 1,
+    value: "Thu Bản sao",
+    label: "Thu Bản sao",
+  },
+  {
+    id: 2,
+    value: "Thu Thông báo",
+    label: "Thu Thông báo",
+  },
+  {
+    id: 3,
+    value: "Thu Niêm yết thông báo",
+    label: "Thu Niêm yết thông báo",
+  },
+  {
+    id: 4,
+    value: "Thu Công văn",
+    label: "Thu Công văn",
+  },
+  {
+    id: 5,
+    value: "Thu Soạn thảo",
+    label: "Thu Soạn thảo",
+  },
+  {
+    id: 6,
+    value: "Thu Bổ sung hợp đồng",
+    label: "Thu Bổ sung hợp đồng",
+  },
+];

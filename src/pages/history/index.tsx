@@ -213,7 +213,7 @@ const History = () => {
       <TableRow key={contract.số_hợp_đồng}>
         <TableCell>{contract.ngay}</TableCell>
         <TableCell>{contract.tenChuyenVien}</TableCell>
-        <TableCell>{contract.số_hợp_đồng}</TableCell>
+        <TableCell>{contract.số_hợp_đồng?.includes("!") ? 'Khác' : contract.số_hợp_đồng}</TableCell>
         <TableCell>{contract.tên_hợp_đồng}</TableCell>
         <TableCell>{contract.tên_khách_hàng}</TableCell>
         <TableCell>{contract.số_tiền?.toLocaleString()}</TableCell>
@@ -295,7 +295,15 @@ const History = () => {
   const handleRenderPhieuThu = (id: string) => {
     const contract = contracts.find((contract) => contract.id === id);
     if (contract) {
-      const contractType = contract.id.includes("/") ? "Contract" : "Signature";
+      let contractType = "";
+      if (contract.id.includes("/")) {
+        contractType = "Contract";
+      } else if (contract.id.includes(".")) {
+        contractType = "Signature";
+      } else {
+        contractType = "Invoice";
+      }
+
       let idPhieuThu = "";
       if (contractType === "Contract") {
         idPhieuThu = contract.id?.slice(0, -5);
@@ -308,7 +316,7 @@ const History = () => {
         m: dayjs(contract.filed_date).format("MM"),
         y: dayjs(contract.filed_date).format("YYYY"),
         người_nộp_tiền: contract?.customer || "",
-        số_cc: idPhieuThu || "",
+        số_cc: contractType === 'Invoice' ? null : idPhieuThu,
         số_tiền: (
           (contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)
         ).toLocaleString(),
@@ -324,6 +332,7 @@ const History = () => {
         )?.toLocaleString()}đ; Bản sao: ${(
           contract?.copies_value * 1000 || 0
         )?.toLocaleString()}đ)`,
+        lý_do_nộp: contractType === 'Invoice' ? contract?.name : `Phí, giá dịch vụ yêu cầu theo hồ sơ cc ${contract?.name} số:`,
       };
       render_phieu_thu(payload)
         .then((res) => {

@@ -29,12 +29,13 @@ export interface PhieuThuPayload {
   m: string;
   y: string;
   người_nộp_tiền: string;
-  số_cc: string;
+  số_cc: string | null;
   số_tiền: string;
   số_tiền_bằng_chữ: string;
   tên_chuyên_viên: string;
   loại_hđ: string;
   ghi_chú: string;
+  lý_do_nộp: string;
 }
 
 export const api = axios.create({

@@ -10,11 +10,12 @@ import {
   FormControl,
   Checkbox,
   FormControlLabel,
+  Autocomplete,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { BRANCHES } from "@/constants/branches";
-import { CONTRACT_TYPES } from "@/constants/contract-types";
+import { CONTRACT_TYPES, INVOICE_TYPES } from "@/constants/contract-types";
 import { REVIEWERS } from "@/constants/reviewer";
 import { useFormik } from "formik";
 import {
@@ -31,21 +32,6 @@ import dayjs, { Dayjs } from "dayjs";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { WarningBanner } from "./warning-banner";
 import { CÔNG_CHỨNG_VIÊN } from "@/database/cong-chung-vien";
-
-const validationSchema = yup.object({
-  unit: yup.string(),
-  id: yup
-    .string()
-    .required("Số hợp đồng là bắt buộc")
-    .matches(/^\d+$/, "Số hợp đồng chỉ được chứa số"),
-  name: yup.string().required("Tên hợp đồng là bắt buộc"),
-  customer: yup.string().required("Tên khách hàng là bắt buộc"),
-  broker: yup.string(),
-  value: yup.number().required("Số tiền là bắt buộc"),
-  copiesValue: yup.number(),
-  notes: yup.string(),
-  nationalId: yup.string(),
-});
 
 interface InitialValues {
   id: string;
@@ -83,7 +69,6 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
     (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
   );
   const idFromUrl = searchParams.get("id");
-
   const namedByUser = localStorage.getItem("username") || "";
 
   useEffect(() => {
@@ -94,9 +79,14 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         if (String(resp)?.includes("/")) {
           const [_id, suffix] = resp.split("/");
           setSuffix(suffix);
+          setValues({ ...values, id: "" });
+        } else if (String(resp)?.includes("!")) {
+          setValues({ ...values, id: resp });
+          setSuffix("");
         } else {
           const [_id, suffix] = String(resp).split(".");
           setSuffix(suffix || new Date().getFullYear().toString());
+          setValues({ ...values, id: "" });
         }
       })
       .finally(() => {
@@ -115,11 +105,14 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             id = oldId;
             setSuffix(oldSuffix);
             setType("Contract");
-          } else {
+          } else if (idFromUrl?.includes(".")) {
             setType("Signature");
             const [oldId, oldSuffix] = idFromUrl.split(".");
             id = oldId;
             setSuffix(oldSuffix);
+          } else {
+            setType("Invoice");
+            id = idFromUrl;
           }
           setValues({
             id: id,
@@ -176,6 +169,25 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
     }
   };
 
+  const validationSchema = yup.object({
+    unit: yup.string(),
+    id: yup.string().when([], {
+      is: () => type !== "Invoice",
+      then: (schema) =>
+        schema
+          .required("Số hợp đồng là bắt buộc")
+          .matches(/^\d+$/, "Số hợp đồng chỉ được chứa số"),
+      otherwise: (schema) => schema,
+    }),
+    name: yup.string().required("Tên hợp đồng là bắt buộc"),
+    customer: yup.string().required("Tên khách hàng là bắt buộc"),
+    broker: yup.string(),
+    value: yup.number().required("Số tiền là bắt buộc"),
+    copiesValue: yup.number(),
+    notes: yup.string(),
+    nationalId: yup.string(),
+  });
+
   const { values, errors, resetForm, handleChange, handleSubmit, setValues } =
     useFormik<InitialValues>({
       validationSchema,
@@ -204,6 +216,9 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           idToSubmit =
             formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
           idPhieuThu = formValues.id + "/" + suffix;
+        } else if (type === 'Invoice') {
+          idToSubmit = formValues.id;
+          idPhieuThu = formValues.id;
         } else {
           idToSubmit = formValues.id + "." + suffix;
           idPhieuThu = formValues.id + "." + suffix;
@@ -219,7 +234,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           m: dayjs(formValues?.filedDate).format("MM"),
           y: dayjs(formValues?.filedDate).format("YYYY"),
           người_nộp_tiền: formValues.customer,
-          số_cc: idPhieuThu,
+          số_cc: type === 'Invoice' ? null : idPhieuThu,
           số_tiền: (
             Number(formValues.value * 1000) +
             Number(formValues.copiesValue * 1000)
@@ -240,6 +255,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           )?.toLocaleString()}đ; Bản sao: ${(
             formValues.copiesValue * 1000 || 0
           )?.toLocaleString()}đ)`,
+          lý_do_nộp: type === 'Invoice' ? formValues.name : `Phí, giá dịch vụ yêu cầu theo hồ sơ cc ${formValues.name} số:`,
         };
         if (isEdit) {
           updateContract({
@@ -310,12 +326,13 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             >
               <MenuItem value="Contract">Công chứng Hợp Đồng</MenuItem>
               <MenuItem value="Signature">Chứng thực chữ ký</MenuItem>
+              <MenuItem value="Invoice">Phiếu thu khác</MenuItem>
             </Select>
           </Box>
         )}
         <Box mt="1rem">
           <Box mb="2rem">
-            {isEdit ? null : (
+            {isEdit || type === "Invoice" ? null : (
               <Typography variant="h5">
                 Số hợp đồng sẵn sàng để lấy:{" "}
                 <strong style={{ color: "green" }}>
@@ -348,7 +365,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   ))}
                 </Select>
               </FormControl>
-              <Box display="flex" gap="10px">
+              <Box display={type === "Invoice" ? "none" : "flex"} gap="10px">
                 <TextField
                   label="Số hợp đồng"
                   name="id"
@@ -374,23 +391,44 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   onChange={(e) => setSuffix(e.target.value)}
                 />
               </Box>
-
               <FormControl>
-                <InputLabel htmlFor="unit">Tên Hợp Đồng</InputLabel>
-                <Select
-                  id="ten"
-                  name="name"
-                  label="Tên Hợp Đồng"
-                  value={values.name}
-                  onChange={handleChange}
-                  error={!!errors.name}
-                >
-                  {CONTRACT_TYPES.map((branch) => (
-                    <MenuItem key={branch.id} value={branch.value}>
-                      {branch.label}
-                    </MenuItem>
-                  ))}
-                </Select>
+                {type === "Invoice" ? (
+                  <Autocomplete
+                    id="ten"
+                    freeSolo
+                    value={values.name}
+                    options={INVOICE_TYPES.map((invoice) => invoice.label)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Nội dung thu"
+                        name="name"
+                        onChange={handleChange}
+                      />
+                    )}
+                    onChange={(_e, value) =>
+                      setValues({ ...values, name: value ?? "" })
+                    }
+                  />
+                ) : (
+                  <>
+                    <InputLabel htmlFor="unit">Tên Hợp Đồng</InputLabel>
+                    <Select
+                      id="ten"
+                      name="name"
+                      label="Tên Hợp Đồng"
+                      value={values.name}
+                      onChange={handleChange}
+                      error={!!errors.name}
+                    >
+                      {CONTRACT_TYPES.map((branch) => (
+                        <MenuItem key={branch.id} value={branch.value}>
+                          {branch.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </>
+                )}
               </FormControl>
               <TextField
                 label="Tên khách hàng"
@@ -417,7 +455,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
               <TextField
                 slotProps={{
                   input: {
-                    disabled: isEdit && !isAdmin,
+                    disabled: (isEdit && !isAdmin) || type === "Invoice",
                   },
                 }}
                 label="Số tiền làm bản sao"
