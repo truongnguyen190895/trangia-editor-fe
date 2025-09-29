@@ -401,6 +401,7 @@ const History = () => {
                 <MenuItem value="">Tất cả</MenuItem>
                 <MenuItem value="Contract">Công chứng Hợp Đồng</MenuItem>
                 <MenuItem value="Signature">Chứng thực chữ ký</MenuItem>
+                <MenuItem value="Invoice">Phiếu thu khác</MenuItem>
               </Select>
             </FormControl>
           </Box>

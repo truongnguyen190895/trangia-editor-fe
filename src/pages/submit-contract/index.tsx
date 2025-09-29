@@ -216,7 +216,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           idToSubmit =
             formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
           idPhieuThu = formValues.id + "/" + suffix;
-        } else if (type === 'Invoice') {
+        } else if (type === "Invoice") {
           idToSubmit = formValues.id;
           idPhieuThu = formValues.id;
         } else {
@@ -234,7 +234,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           m: dayjs(formValues?.filedDate).format("MM"),
           y: dayjs(formValues?.filedDate).format("YYYY"),
           người_nộp_tiền: formValues.customer,
-          số_cc: type === 'Invoice' ? null : idPhieuThu,
+          số_cc: type === "Invoice" ? null : idPhieuThu,
           số_tiền: (
             Number(formValues.value * 1000) +
             Number(formValues.copiesValue * 1000)
@@ -255,7 +255,10 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           )?.toLocaleString()}đ; Bản sao: ${(
             formValues.copiesValue * 1000 || 0
           )?.toLocaleString()}đ)`,
-          lý_do_nộp: type === 'Invoice' ? formValues.name : `Phí, giá dịch vụ yêu cầu theo hồ sơ cc ${formValues.name} số:`,
+          lý_do_nộp:
+            type === "Invoice"
+              ? formValues.name
+              : `Phí, giá dịch vụ yêu cầu theo hồ sơ cc ${formValues.name} số:`,
         };
         if (isEdit) {
           updateContract({
@@ -455,7 +458,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
               <TextField
                 slotProps={{
                   input: {
-                    disabled: (isEdit && !isAdmin) || type === "Invoice",
+                    disabled: isEdit && !isAdmin,
                   },
                 }}
                 label="Số tiền làm bản sao"
