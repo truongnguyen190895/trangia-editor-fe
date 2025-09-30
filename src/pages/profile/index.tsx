@@ -42,13 +42,23 @@ const ProfilePage = () => {
         setLoading(false);
       });
   };
+
+  const extractUserNameLetter = (): string => {
+    const userNameArray = user.name.split(" ");
+    if (userNameArray.length > 1) {
+      return (
+        userNameArray[0].charAt(0).toUpperCase() +
+        userNameArray[userNameArray.length - 1].charAt(0).toUpperCase()
+      );
+    }
+    return userNameArray[0].charAt(0).toUpperCase();
+  };
   return (
     <Box maxWidth={800} mx="auto">
       <Paper elevation={3} sx={{ p: 4, mt: 4, textAlign: "center" }}>
         <Avatar sx={{ width: 80, height: 80, mx: "auto", mb: 2 }}>
           {user.name
-            ? user.name.split(" ")[0].charAt(0) +
-              user.name.split(" ")[1].charAt(0)
+            ? extractUserNameLetter()
             : "U"}
         </Avatar>
         <Typography variant="h4" gutterBottom>
