@@ -28,6 +28,7 @@ export const LoginPage = () => {
       localStorage.setItem("access_token", response.accessToken);
       localStorage.setItem("username", response.user.name);
       localStorage.setItem("roles", JSON.stringify(response.authorities));
+      localStorage.setItem("user_info", JSON.stringify(response.user));
       navigate("/");
     } catch (error) {
       setError("Tài khoản/Mật khẩu không đúng");

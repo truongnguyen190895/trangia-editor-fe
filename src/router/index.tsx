@@ -10,6 +10,7 @@ import SubmitContract from "@/pages/submit-contract";
 import History from "@/pages/history";
 import Accounting from "@/pages/accounting";
 import NotFound from "@/pages/not-found";
+import ProfilePage from "@/pages/profile";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
       {
         path: "/accounting",
         element: <Accounting />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
       },
     ],
   },

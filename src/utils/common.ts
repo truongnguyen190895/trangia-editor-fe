@@ -20,3 +20,7 @@ export const generateThoiHanSuDung = (
 
     return result;
 };
+
+export const getFirstLetter = (name: string) => {
+  return name.charAt(0).toUpperCase();
+};

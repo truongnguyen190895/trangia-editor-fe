@@ -1,6 +1,8 @@
 import { Box, Button, Typography } from "@mui/material";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { SidebarMenu } from "../common/sidebar-menu";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Avatar from "@mui/material/Avatar";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ const Layout = () => {
     }
   };
 
-  const userName = localStorage.getItem("username");
+  const fullName = localStorage.getItem("username");
   const access_token = localStorage.getItem("access_token");
 
   const handleLogOut = () => {
@@ -27,7 +29,7 @@ const Layout = () => {
     navigate("/login");
   };
 
-  if (!userName || !access_token) {
+  if (!fullName || !access_token) {
     return <Navigate to="/login" />;
   }
 
@@ -45,20 +47,17 @@ const Layout = () => {
       >
         <Typography variant="h3">Công chứng Trần Gia</Typography>
         <Box display="flex" alignItems="center" gap="1rem">
-          <Typography variant="h5">Xin chào: {userName}</Typography>
-          <Button variant="contained" color="error" onClick={handleLogOut}>
+          <Link to="/profile" style={{ textDecoration: "none" }}>
+            <Avatar sx={{ width: 50, height: 50, bgcolor: "#78C841" }} />
+          </Link>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleLogOut}
+            startIcon={<LogoutIcon />}
+          >
             Đăng xuất
           </Button>
-          <Typography
-            variant="caption"
-            sx={{
-              ml: "auto",
-              opacity: 0.7,
-              fontSize: "0.75rem",
-            }}
-          >
-            Deployed: {formatBuildTime(__BUILD_TIME__)}
-          </Typography>
         </Box>
       </Box>
       <Box
@@ -72,6 +71,22 @@ const Layout = () => {
         <Box flex={1} p="2rem">
           <Outlet />
         </Box>
+      </Box>
+      <Box
+        position="fixed"
+        bottom="0"
+        right="0"
+        px="1rem"
+        bgcolor="#F5F5F0"
+        width="100%"
+        sx={{
+          borderRadius: "5px 5px 0 0",
+          textAlign: "right",
+        }}
+      >
+        <Typography variant="caption">
+          {formatBuildTime(__BUILD_TIME__)}
+        </Typography>
       </Box>
     </Box>
   );
