@@ -72,27 +72,29 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   const namedByUser = localStorage.getItem("username") || "";
 
   useEffect(() => {
-    setCheckingLoading(true);
-    getTheNextAvailableId(type)
-      .then((resp) => {
-        setNextAvailableId(resp);
-        if (String(resp)?.includes("/")) {
-          const [_id, suffix] = resp.split("/");
-          setSuffix(suffix);
-          setValues({ ...values, id: "" });
-        } else if (String(resp)?.includes("!")) {
-          setValues({ ...values, id: resp });
-          setSuffix("");
-        } else {
-          const [_id, suffix] = String(resp).split(".");
-          setSuffix(suffix || new Date().getFullYear().toString());
-          setValues({ ...values, id: "" });
-        }
-      })
-      .finally(() => {
-        setCheckingLoading(false);
-      });
-  }, [type]);
+    if (!isEdit) {
+      setCheckingLoading(true);
+      getTheNextAvailableId(type)
+        .then((resp) => {
+          setNextAvailableId(resp);
+          if (String(resp)?.includes("/")) {
+            const [_id, suffix] = resp.split("/");
+            setSuffix(suffix);
+            setValues({ ...values, id: "" });
+          } else if (String(resp)?.includes("!")) {
+            setValues({ ...values, id: resp });
+            setSuffix("");
+          } else {
+            const [_id, suffix] = String(resp).split(".");
+            setSuffix(suffix || new Date().getFullYear().toString());
+            setValues({ ...values, id: "" });
+          }
+        })
+        .finally(() => {
+          setCheckingLoading(false);
+        });
+    }
+  }, [type, isEdit]);
 
   useEffect(() => {
     if (isEdit && idFromUrl) {
