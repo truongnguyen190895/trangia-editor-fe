@@ -147,6 +147,16 @@ export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (
   );
 };
 
+export const render_hdcn_mot_phan_dat_va_tsglvd_de_dong_su_dung = async (
+  payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload
+) => {
+  return api.post(
+    "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung",
+    payload,
+    { responseType: "blob" }
+  );
+};
+
 export const render_hdtc_can_ho_toan_bo = async (payload: HDMBCanHoPayload) => {
   return api.post(
     "/templates/nhom-tang-cho/hd-tang-cho-can-ho-toan-bo",

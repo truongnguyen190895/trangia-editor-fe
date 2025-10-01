@@ -24,7 +24,9 @@ export interface ThongTinThuaDat {
   số_tờ_bản_đồ: string | null;
   địa_chỉ_nhà_đất: string;
   diện_tích_đất_bằng_số: string;
+  một_phần_diện_tích_đất_bằng_số?: string;
   diện_tích_đất_bằng_chữ: string;
+  một_phần_diện_tích_đất_bằng_chữ?: string;
   hình_thức_sở_hữu_đất: string;
   mục_đích_sở_hữu_đất: string;
   thời_hạn_sử_dụng_đất: string;
@@ -38,6 +40,7 @@ export interface ThongTinThuaDat {
 
 export interface ThongTinTaiSan {
   thông_tin_tài_sản: string;
+  một_phần_diện_tích_xây_dựng?: string;
   diện_tích_xây_dựng: string;
   số_tiền: string;
   số_tiền_bằng_chữ: string;

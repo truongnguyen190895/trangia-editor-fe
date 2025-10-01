@@ -17,6 +17,7 @@ import type {
 import dayjs from "dayjs";
 import {
   render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo,
+  render_hdcn_mot_phan_dat_va_tsglvd_de_dong_su_dung,
   render_khai_thue_hdcn_dat_va_tsglvd_toan_bo,
 } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
@@ -29,14 +30,22 @@ import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 
-export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
+interface Props {
+  isMotPhan?: boolean;
+  scope?: "partial" | "full";
+}
+
+export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
+  isMotPhan = false,
+  scope = "full",
+}: Props) => {
   const { agreementObject, taiSan } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
+  console.log(isMotPhan, scope);
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
@@ -170,28 +179,53 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
     );
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo(payload)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
+    if (isMotPhan) {
+      render_hdcn_mot_phan_dat_va_tsglvd_de_dong_su_dung(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
 
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `HDCN qsdd và tsglvd (toàn bộ) - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `HDCN qsdd và tsglvd (toàn bộ) - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng " + error?.message);
+        })
+        .finally(() => {
+          setIsGenerating(false);
+        });
+    } else {
+      render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `HDCN qsdd và tsglvd (toàn bộ) - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng " + error?.message);
+        })
+        .finally(() => {
+          setIsGenerating(false);
+        });
+    }
   };
 
   const getPayloadToKhaiChung =

@@ -72,18 +72,11 @@ export const templates = [
     path: "hdcn-quyen-su-dung-dat-toan-bo",
   },
   {
-    id: 2,
-    name: "HĐMB Căn hộ toàn bộ.docx",
+    id: 23,
+    name: "HĐCN một phần đất và TSGLVD (để đồng sử dụng).docx",
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
-    path: "hdmb-can-ho-toan-bo",
-  },
-  {
-    id: 3,
-    name: "HĐMB nhà đất toàn bộ.docx",
-    type: "agreement",
-    subCategory: "chuyen-nhuong-mua-ban",
-    path: "hdmb-nha-dat-toan-bo",
+    path: "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung",
   },
   {
     id: 4,
@@ -98,6 +91,20 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo",
+  },
+  {
+    id: 2,
+    name: "HĐMB Căn hộ toàn bộ.docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdmb-can-ho-toan-bo",
+  },
+  {
+    id: 3,
+    name: "HĐMB nhà đất toàn bộ.docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdmb-nha-dat-toan-bo",
   },
   {
     id: 6,
