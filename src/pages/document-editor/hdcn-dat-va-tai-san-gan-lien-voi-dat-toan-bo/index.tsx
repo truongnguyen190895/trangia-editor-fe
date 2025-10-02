@@ -136,6 +136,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       số_tiền: taiSan.số_tiền,
       số_tiền_bằng_chữ: taiSan.số_tiền_bằng_chữ,
       diện_tích_xây_dựng: taiSan.diện_tích_xây_dựng,
+      một_phần_diện_tích_xây_dựng: taiSan.một_phần_diện_tích_xây_dựng,
     };
   };
 
@@ -166,6 +167,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
     };
+
+    console.log(payload);
 
     return payload;
   };
@@ -408,7 +411,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       >
         <ThemChuThe title="Bên A" side="partyA" />
         <ThemChuThe title="Bên B" side="partyB" />
-        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
+        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" isMotPhan={isMotPhan} scope={scope} />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"

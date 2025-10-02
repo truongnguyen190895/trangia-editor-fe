@@ -17,6 +17,8 @@ import { numberToVietnamese } from "@/utils/number-to-words";
 interface ThongTinTaiSanProps {
   open: boolean;
   handleClose: () => void;
+  isMotPhan?: boolean;
+  scope?: "partial" | "full";
 }
 
 const validationSchema = Yup.object({
@@ -29,6 +31,8 @@ const validationSchema = Yup.object({
 export const ThongTinTaiSanDialog = ({
   open,
   handleClose,
+  isMotPhan = false,
+  scope = "full",
 }: ThongTinTaiSanProps) => {
   const { taiSan, addTaiSan } = useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
 
@@ -45,6 +49,7 @@ export const ThongTinTaiSanDialog = ({
           số_tiền: "",
           số_tiền_bằng_chữ: "",
           diện_tích_xây_dựng: "",
+          một_phần_diện_tích_xây_dựng: "",
         };
   };
 
@@ -58,30 +63,53 @@ export const ThongTinTaiSanDialog = ({
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle>Thêm thông tin tài sản gắn liền với đất</DialogTitle>
+        <DialogTitle variant="h4">
+          Thêm thông tin tài sản gắn liền với đất
+        </DialogTitle>
         <DialogContent>
-          <Box sx={{ py: "20px" }}>
-            <TextField
-              fullWidth
-              label="Tên tài sản"
-              name="thông_tin_tài_sản"
-              id="thông_tin_tài_sản"
-              value={values.thông_tin_tài_sản}
-              onChange={handleChange}
-              error={!!errors.thông_tin_tài_sản}
-              helperText={errors.thông_tin_tài_sản}
-            />
-            <TextField
-              sx={{ mt: "20px" }}
-              fullWidth
-              label="Diện tích xây dựng (m2)"
-              name="diện_tích_xây_dựng"
-              id="diện_tích_xây_dựng"
-              onChange={handleChange}
-              value={values.diện_tích_xây_dựng}
-              error={!!errors.diện_tích_xây_dựng}
-              helperText={errors.diện_tích_xây_dựng}
-            />
+          <Box>
+            <Typography
+              variant="body1"
+              fontSize="1.5rem"
+              fontWeight="600"
+              mt="20px"
+            >
+              Thông tin tài sản
+            </Typography>
+            <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" gap="20px">
+              <TextField
+                fullWidth
+                label="Tên tài sản"
+                name="thông_tin_tài_sản"
+                id="thông_tin_tài_sản"
+                value={values.thông_tin_tài_sản}
+                onChange={handleChange}
+                error={!!errors.thông_tin_tài_sản}
+                helperText={errors.thông_tin_tài_sản}
+              />
+              <TextField
+                fullWidth
+                label="Diện tích xây dựng (m2)"
+                name="diện_tích_xây_dựng"
+                id="diện_tích_xây_dựng"
+                onChange={handleChange}
+                value={values.diện_tích_xây_dựng}
+                error={!!errors.diện_tích_xây_dựng}
+                helperText={errors.diện_tích_xây_dựng}
+              />
+              {isMotPhan && (
+                <TextField
+                  fullWidth
+                  label="Diện tích xây dựng một phần (m2)"
+                  name="một_phần_diện_tích_xây_dựng"
+                  id="một_phần_diện_tích_xây_dựng"
+                  onChange={handleChange}
+                  value={values.một_phần_diện_tích_xây_dựng}
+                  error={!!errors.một_phần_diện_tích_xây_dựng}
+                  helperText={errors.một_phần_diện_tích_xây_dựng}
+                />
+              )}
+            </Box>
             <Typography
               variant="body1"
               fontSize="1.5rem"

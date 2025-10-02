@@ -19,9 +19,15 @@ import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat
 
 interface ObjectEntityProps {
   title: string;
+  isMotPhan?: boolean;
+  scope?: "partial" | "full";
 }
 
-export const ObjectEntity = ({ title }: ObjectEntityProps) => {
+export const ObjectEntity = ({
+  title,
+  isMotPhan = false,
+  scope = "full",
+}: ObjectEntityProps) => {
   const { agreementObject, taiSan, deleteAgreementObject, deleteTaiSan } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
   const [open, setOpen] = useState(false);
@@ -55,7 +61,12 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
         <Typography variant="h6">{title}</Typography>
       </Box>
       <Box padding="10px">
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px" marginBottom="10px">
+        <Box
+          display="grid"
+          gridTemplateColumns="1fr 1fr"
+          gap="10px"
+          marginBottom="10px"
+        >
           <Button
             variant="outlined"
             color="secondary"
@@ -79,12 +90,26 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
             <Typography variant="h4" color="#B12C00" my="1rem">
               Thông tin tài sản
             </Typography>
-            <Box mb="20px" border="1px solid #BCCCDC" borderRadius="5px" padding="10px">
+            <Box
+              mb="20px"
+              border="1px solid #BCCCDC"
+              borderRadius="5px"
+              padding="10px"
+            >
               {taiSan?.["thông_tin_tài_sản"].split(";").map((item, index) => (
                 <Typography key={index}>Tên tài sản: {item}</Typography>
               ))}
-              <Typography>Diện tích xây dựng: {taiSan?.["diện_tích_xây_dựng"]} m2</Typography>
-              <Typography variant="body1" fontSize="1.3rem" fontWeight="600" mt="20px">Giá trị hợp đồng: {taiSan?.["số_tiền"]}</Typography>
+              <Typography>
+                Diện tích xây dựng: {taiSan?.["diện_tích_xây_dựng"]} m2
+              </Typography>
+              <Typography
+                variant="body1"
+                fontSize="1.3rem"
+                fontWeight="600"
+                mt="20px"
+              >
+                Giá trị hợp đồng: {taiSan?.["số_tiền"]}
+              </Typography>
             </Box>
             {taiSan ? (
               <Box display="flex" gap="10px">
@@ -242,12 +267,19 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
         </Box>
       </Box>
       {open ? (
-        <ThemThongTinDat open={open} handleClose={() => setOpen(false)} />
+        <ThemThongTinDat
+          open={open}
+          handleClose={() => setOpen(false)}
+          isMotPhan={isMotPhan}
+          scope={scope}
+        />
       ) : null}
       {openThongTinTaiSan ? (
         <ThongTinTaiSanDialog
           open={openThongTinTaiSan}
           handleClose={() => setOpenThongTinTaiSan(false)}
+          isMotPhan={isMotPhan}
+          scope={scope}
         />
       ) : null}
     </Box>
