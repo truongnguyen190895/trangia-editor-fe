@@ -22,6 +22,8 @@ import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat
 interface ThemThongTinDatProps {
   open: boolean;
   handleClose: () => void;
+  isMotPhan?: boolean;
+  scope?: "partial" | "full";
 }
 
 const validationSchema = Yup.object({
@@ -31,10 +33,12 @@ const validationSchema = Yup.object({
 export const ThemThongTinDat = ({
   open,
   handleClose,
+  isMotPhan = false,
+  scope = "full",
 }: ThemThongTinDatProps) => {
   const { agreementObject, addAgreementObject } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
-
+  console.log(scope);
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
     handleClose();
@@ -48,6 +52,8 @@ export const ThemThongTinDat = ({
           số_tờ_bản_đồ: "",
           diện_tích_đất_bằng_số: "",
           diện_tích_đất_bằng_chữ: "",
+          một_phần_diện_tích_đất_bằng_số: "",
+          một_phần_diện_tích_đất_bằng_chữ: "",
           hình_thức_sở_hữu_đất: "",
           mục_đích_sở_hữu_đất: "",
           thời_hạn_sử_dụng_đất: "",
@@ -71,7 +77,7 @@ export const ThemThongTinDat = ({
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle>Thêm thông tin đất</DialogTitle>
+        <DialogTitle variant="h4">Thêm thông tin đất</DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
@@ -128,10 +134,49 @@ export const ThemThongTinDat = ({
                 }
                 helperText={
                   errors["diện_tích_đất_bằng_chữ"] &&
-                  touched["diện_tích_đất_bằng_chữ"] &&
-                  errors["diện_tích_đất_bằng_chữ"]
+                  touched["diện_tích_đất_bằng_chữ"]
                 }
               />
+              {isMotPhan && (
+                <>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="một_phần_diện_tích_đất_bằng_số"
+                    name="một_phần_diện_tích_đất_bằng_số"
+                    label="Diện tích một phần (m2) *"
+                    value={values["một_phần_diện_tích_đất_bằng_số"]}
+                    onChange={(event) => {
+                      handleChange(event);
+                      setFieldValue(
+                        "một_phần_diện_tích_đất_bằng_chữ",
+                        numberToVietnamese(
+                          event.target.value
+                            ?.replace(/\./g, "")
+                            .replace(/\,/g, ".")
+                        )
+                      );
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="một_phần_diện_tích_đất_bằng_chữ"
+                    name="một_phần_diện_tích_đất_bằng_chữ"
+                    label="Diện tích một phần bằng chữ *"
+                    value={values["một_phần_diện_tích_đất_bằng_chữ"]}
+                    onChange={handleChange}
+                    error={
+                      !!errors["một_phần_diện_tích_đất_bằng_chữ"] &&
+                      touched["một_phần_diện_tích_đất_bằng_chữ"]
+                    }
+                    helperText={
+                      errors["một_phần_diện_tích_đất_bằng_chữ"] &&
+                      touched["một_phần_diện_tích_đất_bằng_chữ"]
+                    }
+                  />
+                </>
+              )}
               <Box sx={{ gridColumn: "span 2" }}>
                 <TextField
                   fullWidth

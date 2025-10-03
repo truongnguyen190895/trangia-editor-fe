@@ -17,6 +17,7 @@ import type {
 import dayjs from "dayjs";
 import {
   render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo,
+  render_hdcn_mot_phan_dat_va_tsglvd_de_dong_su_dung,
   render_khai_thue_hdcn_dat_va_tsglvd_toan_bo,
 } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
@@ -29,14 +30,22 @@ import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 
-export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
+interface Props {
+  isMotPhan?: boolean;
+  scope?: "partial" | "full";
+}
+
+export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
+  isMotPhan = false,
+  scope = "full",
+}: Props) => {
   const { agreementObject, taiSan } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
+  console.log(isMotPhan, scope);
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
@@ -127,6 +136,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
       số_tiền: taiSan.số_tiền,
       số_tiền_bằng_chữ: taiSan.số_tiền_bằng_chữ,
       diện_tích_xây_dựng: taiSan.diện_tích_xây_dựng,
+      một_phần_diện_tích_xây_dựng: taiSan.một_phần_diện_tích_xây_dựng,
     };
   };
 
@@ -158,6 +168,8 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
       công_chứng_viên: côngChứngViên,
     };
 
+    console.log(payload);
+
     return payload;
   };
 
@@ -170,28 +182,52 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
     );
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo(payload)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    if (isMotPhan) {
+      render_hdcn_mot_phan_dat_va_tsglvd_de_dong_su_dung(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `HDCN qsdd và tsglvd một phần (đồng sử dụng).docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng " + error?.message);
+        })
+        .finally(() => {
+          setIsGenerating(false);
         });
+    } else {
+      render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo(payload)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
 
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `HDCN qsdd và tsglvd (toàn bộ) - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `HDCN qsdd và tsglvd (toàn bộ) - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng " + error?.message);
+        })
+        .finally(() => {
+          setIsGenerating(false);
+        });
+    }
   };
 
   const getPayloadToKhaiChung =
@@ -288,18 +324,18 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
         ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
         đặc_điểm_thửa_đất: {
           diện_tích: {
-            số: agreementObject["diện_tích_đất_bằng_số"],
+            số: isMotPhan ? agreementObject["một_phần_diện_tích_đất_bằng_số"] as string : agreementObject["diện_tích_đất_bằng_số"],
           },
           mục_đích_và_thời_hạn_sử_dụng: [
             {
               phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
-              diện_tích: agreementObject["diện_tích_đất_bằng_số"],
+              diện_tích: isMotPhan ? agreementObject["một_phần_diện_tích_đất_bằng_số"] as string : agreementObject["diện_tích_đất_bằng_số"],
             },
           ],
           nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
         },
         số_tiền: taiSan["số_tiền"],
-        diện_tích_xây_dựng: taiSan["diện_tích_xây_dựng"],
+        diện_tích_xây_dựng: isMotPhan ? (taiSan["một_phần_diện_tích_xây_dựng"] || taiSan["diện_tích_xây_dựng"]) : taiSan["diện_tích_xây_dựng"],
         ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
         tài_sản: taiSan.thông_tin_tài_sản,
         nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
@@ -335,6 +371,10 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
       .finally(() => {
         setIsGenerating(false);
       });
+  };
+
+  const getPhieuThuLyType = () => {
+    return isMotPhan ? "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung" : "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo";
   };
 
   return (
@@ -374,7 +414,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
       >
         <ThemChuThe title="Bên A" side="partyA" />
         <ThemChuThe title="Bên B" side="partyB" />
-        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" />
+        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" isMotPhan={isMotPhan} scope={scope} />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
@@ -412,7 +452,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = () => {
                 ? { ...getBenABenB(), ...getTaiSan() }
                 : null
             }
-            type="hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo"
+            type={getPhieuThuLyType()}
           />
         </Box>
       </Box>

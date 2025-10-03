@@ -147,6 +147,16 @@ export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (
   );
 };
 
+export const render_hdcn_mot_phan_dat_va_tsglvd_de_dong_su_dung = async (
+  payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload
+) => {
+  return api.post(
+    "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung",
+    payload,
+    { responseType: "blob" }
+  );
+};
+
 export const render_hdtc_can_ho_toan_bo = async (payload: HDMBCanHoPayload) => {
   return api.post(
     "/templates/nhom-tang-cho/hd-tang-cho-can-ho-toan-bo",
@@ -339,6 +349,9 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
     case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
       documentName = "ptl-hdcn-dat-va-tsglvd-toan-bo";
       break;
+    case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
+      documentName = "ptl-hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung";
+      break;
     case "hdcn-quyen-sd-dat-toan-bo":
     case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
       documentName = "ptl-hdcn-quyen-su-dung-dat-toan-bo";
@@ -383,4 +396,4 @@ export const render_phieu_thu = (payload: PhieuThuPayload) => {
   return api.post("/templates/phieu-thu-2025", payload, {
     responseType: "blob",
   });
-}
+};

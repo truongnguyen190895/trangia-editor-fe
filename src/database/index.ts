@@ -13,14 +13,6 @@ interface DanhMucCon {
   description: string;
 }
 
-interface CacLoaiVanBan {
-  id: number;
-  fk_danh_muc_con_id: number;
-  name: string;
-  type: string;
-  description: string;
-}
-
 export const DANH_MUC_VAN_BAN: DanhMucVanBan[] = [
   {
     id: 1,
@@ -53,16 +45,6 @@ export const DANH_MUC_CON: DanhMucCon[] = [
   },
 ];
 
-export const CAC_LOAI_VAN_BAN: CacLoaiVanBan[] = [
-  {
-    id: 1,
-    fk_danh_muc_con_id: 1,
-    name: "HĐCN Quyền sử dụng đất toàn bộ.docx",
-    type: "hợp_đồng_mua_ban",
-    description: "Hợp đồng mua bán",
-  },
-];
-
 export const templates = [
   {
     id: 1,
@@ -72,18 +54,11 @@ export const templates = [
     path: "hdcn-quyen-su-dung-dat-toan-bo",
   },
   {
-    id: 2,
-    name: "HĐMB Căn hộ toàn bộ.docx",
+    id: 23,
+    name: "HĐCN một phần đất và TSGLVD (để đồng sử dụng).docx",
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
-    path: "hdmb-can-ho-toan-bo",
-  },
-  {
-    id: 3,
-    name: "HĐMB nhà đất toàn bộ.docx",
-    type: "agreement",
-    subCategory: "chuyen-nhuong-mua-ban",
-    path: "hdmb-nha-dat-toan-bo",
+    path: "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung",
   },
   {
     id: 4,
@@ -98,6 +73,20 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo",
+  },
+  {
+    id: 2,
+    name: "HĐMB Căn hộ toàn bộ.docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdmb-can-ho-toan-bo",
+  },
+  {
+    id: 3,
+    name: "HĐMB nhà đất toàn bộ.docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdmb-nha-dat-toan-bo",
   },
   {
     id: 6,

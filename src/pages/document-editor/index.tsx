@@ -57,9 +57,13 @@ export const DocumentEditor = () => {
           </HDMBNhaDatProvider>
         );
       case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
+      case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
         return (
           <HDCNDatVaTaiSanGanLienVoiDatToanBoProvider>
-            <HDCNDatVaTaiSanGanLienVoiDatToanBo />
+            <HDCNDatVaTaiSanGanLienVoiDatToanBo
+              isMotPhan={/mot-phan/.test(name ?? "")}
+              scope={/dong-su-dung/.test(name ?? "") ? "partial" : "full"}
+            />
           </HDCNDatVaTaiSanGanLienVoiDatToanBoProvider>
         );
       case "hd-tang-cho-can-ho-toan-bo":
@@ -165,6 +169,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng đặt cọc chưa xoá chấp";
       case "hd-tang-cho-nha-dat-toan-bo":
         return "Hợp đồng tặng cho nhà đất toàn bộ";
+      case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
+        return "HĐCN một phần đất và TSGLVĐ (đồng sử dụng)";
       default:
         return "";
     }
@@ -180,9 +186,7 @@ export const DocumentEditor = () => {
         display="flex"
         alignItems="center"
       >
-        <Typography variant="h4">
-          Chỉnh sửa văn bản: {getTemplateName()}
-        </Typography>
+        <Typography variant="h4">Tên văn bản: {getTemplateName()}</Typography>
       </Box>
       <Box className="content" py="1rem">
         <Button
