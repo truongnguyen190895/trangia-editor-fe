@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,16 +13,20 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import type { SingleAgreementParty } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
 import { useThemChuTheContext } from "@/context/them-chu-the";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH,
   NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
 } from "@/constants";
+import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
 
 interface ThemCaNhanDialogProps {
   open: boolean;
@@ -46,6 +51,10 @@ export const ThemCaNhanDialog = ({
     setSinglePartyAEntityIndex,
     setSinglePartyBEntityIndex,
   } = useThemChuTheContext();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [notExisted, setNotExisted] = useState<boolean>(false);
+  const [searchNumber, setSearchNumber] = useState<string>("");
+
   const singleParty = side === "partyA" ? partyA : partyB;
   const singlePartyEntities = singleParty["cá_nhân"];
   const addPartyEntity =
@@ -75,7 +84,7 @@ export const ThemCaNhanDialog = ({
 
   const isEdit = partyEntityIndex !== null;
 
-  const { values, errors, touched, handleChange, handleSubmit } =
+  const { values, errors, touched, handleChange, handleSubmit, setValues } =
     useFormik<SingleAgreementParty>({
       initialValues: getInitialValues(),
       validationSchema: Yup.object({
@@ -98,7 +107,9 @@ export const ThemCaNhanDialog = ({
         } else {
           addPartyEntity(values);
         }
-        handleClose();
+        saveContractEntity(values.số_giấy_tờ, values).finally(() =>
+          handleClose()
+        );
       },
     });
 
@@ -106,6 +117,30 @@ export const ThemCaNhanDialog = ({
     setSinglePartyAEntityIndex(null);
     setSinglePartyBEntityIndex(null);
     onClose();
+  };
+
+  const handleSearch = () => {
+    if (searchNumber !== "") {
+      setLoading(true);
+      getContractEntity(searchNumber)
+        .then((res) => {
+          setNotExisted(false);
+          handleFillForm(res);
+        })
+        .catch(() => {
+          setNotExisted(true);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
+
+  const handleFillForm = (reponse: any) => {
+    setValues({
+      ...values,
+      ...reponse,
+    });
   };
 
   return (
@@ -116,8 +151,54 @@ export const ThemCaNhanDialog = ({
         </Typography>
       </DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="10px"
+          border="1px solid #e0e0e0"
+          p="1rem"
+          borderRadius="5px"
+          bgcolor="#f5f5f5"
+        >
+          <Typography fontSize="1.2rem" fontWeight="500">
+            Tìm theo số giấy tờ <em>(nhấn vào biểu tượng kính lúp để bắt đầu tìm kiếm)</em>
+          </Typography>
+          <TextField
+            sx={{ width: "400px" }}
+            value={searchNumber}
+            onChange={(e) => setSearchNumber(e.target.value)}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    sx={{ cursor: "pointer" }}
+                    onClick={handleSearch}
+                  >
+                    {loading ? <CircularProgress size={20} /> : <SearchIcon />}
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </Box>
+        {notExisted ? (
+          <Typography
+            variant="body1"
+            fontSize="1.2rem"
+            fontWeight="600"
+            color="warning.main"
+          >
+            Số này không tồn tại trong hệ thống và sẽ được lưu lại
+          </Typography>
+        ) : null}
         <form onSubmit={handleSubmit}>
-          <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" gap="10px">
+          <Box
+            display="grid"
+            gridTemplateColumns="1fr 1fr 1fr"
+            gap="10px"
+            mt="1rem"
+          >
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Giới tính *</FormLabel>
               <Select
@@ -152,6 +233,17 @@ export const ThemCaNhanDialog = ({
               />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
+              <FormLabel>Số giấy tờ *</FormLabel>
+              <TextField
+                value={values["số_giấy_tờ"]}
+                name="số_giấy_tờ"
+                onChange={handleChange}
+                fullWidth
+                error={!!errors["số_giấy_tờ"] && touched["số_giấy_tờ"]}
+                helperText={errors["số_giấy_tờ"]}
+              />
+            </FormControl>
+            <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Loại giấy tờ *</FormLabel>
               <Select
                 value={values["loại_giấy_tờ"]}
@@ -169,17 +261,6 @@ export const ThemCaNhanDialog = ({
               {errors["loại_giấy_tờ"] && touched["loại_giấy_tờ"] && (
                 <FormHelperText error>{errors["loại_giấy_tờ"]}</FormHelperText>
               )}
-            </FormControl>
-            <FormControl sx={{ marginBottom: "10px" }}>
-              <FormLabel>Số giấy tờ *</FormLabel>
-              <TextField
-                value={values["số_giấy_tờ"]}
-                name="số_giấy_tờ"
-                onChange={handleChange}
-                fullWidth
-                error={!!errors["số_giấy_tờ"] && touched["số_giấy_tờ"]}
-                helperText={errors["số_giấy_tờ"]}
-              />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Ngày cấp *</FormLabel>
@@ -244,7 +325,11 @@ export const ThemCaNhanDialog = ({
         <Button onClick={() => handleClose()} variant="outlined">
           Hủy
         </Button>
-        <Button variant="contained" onClick={() => handleSubmit()}>
+        <Button
+          variant="contained"
+          disabled={loading}
+          onClick={() => handleSubmit()}
+        >
           Thêm
         </Button>
       </DialogActions>
