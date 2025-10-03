@@ -349,6 +349,9 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
     case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
       documentName = "ptl-hdcn-dat-va-tsglvd-toan-bo";
       break;
+    case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
+      documentName = "ptl-hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung";
+      break;
     case "hdcn-quyen-sd-dat-toan-bo":
     case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
       documentName = "ptl-hdcn-quyen-su-dung-dat-toan-bo";
@@ -393,4 +396,4 @@ export const render_phieu_thu = (payload: PhieuThuPayload) => {
   return api.post("/templates/phieu-thu-2025", payload, {
     responseType: "blob",
   });
-}
+};

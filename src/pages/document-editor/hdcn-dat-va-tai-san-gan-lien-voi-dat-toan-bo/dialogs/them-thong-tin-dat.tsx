@@ -38,7 +38,7 @@ export const ThemThongTinDat = ({
 }: ThemThongTinDatProps) => {
   const { agreementObject, addAgreementObject } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
-
+  console.log(scope);
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
     handleClose();

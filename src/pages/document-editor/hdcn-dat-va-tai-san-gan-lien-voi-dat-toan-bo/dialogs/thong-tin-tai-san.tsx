@@ -35,7 +35,7 @@ export const ThongTinTaiSanDialog = ({
   scope = "full",
 }: ThongTinTaiSanProps) => {
   const { taiSan, addTaiSan } = useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
-
+  console.log(scope);
   const submitForm = (values: ThongTinTaiSan) => {
     addTaiSan(values);
     handleClose();

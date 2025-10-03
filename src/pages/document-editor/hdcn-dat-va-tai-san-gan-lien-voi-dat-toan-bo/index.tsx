@@ -188,11 +188,10 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
           const blob = new Blob([res.data], {
             type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
           });
-
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = url;
-          link.download = `HDCN qsdd và tsglvd (toàn bộ) - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          link.download = `HDCN qsdd và tsglvd một phần (đồng sử dụng).docx`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -325,18 +324,18 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
         ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
         đặc_điểm_thửa_đất: {
           diện_tích: {
-            số: agreementObject["diện_tích_đất_bằng_số"],
+            số: isMotPhan ? agreementObject["một_phần_diện_tích_đất_bằng_số"] as string : agreementObject["diện_tích_đất_bằng_số"],
           },
           mục_đích_và_thời_hạn_sử_dụng: [
             {
               phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
-              diện_tích: agreementObject["diện_tích_đất_bằng_số"],
+              diện_tích: isMotPhan ? agreementObject["một_phần_diện_tích_đất_bằng_số"] as string : agreementObject["diện_tích_đất_bằng_số"],
             },
           ],
           nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
         },
         số_tiền: taiSan["số_tiền"],
-        diện_tích_xây_dựng: taiSan["diện_tích_xây_dựng"],
+        diện_tích_xây_dựng: isMotPhan ? (taiSan["một_phần_diện_tích_xây_dựng"] || taiSan["diện_tích_xây_dựng"]) : taiSan["diện_tích_xây_dựng"],
         ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
         tài_sản: taiSan.thông_tin_tài_sản,
         nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
@@ -372,6 +371,10 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       .finally(() => {
         setIsGenerating(false);
       });
+  };
+
+  const getPhieuThuLyType = () => {
+    return isMotPhan ? "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung" : "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo";
   };
 
   return (
@@ -449,7 +452,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
                 ? { ...getBenABenB(), ...getTaiSan() }
                 : null
             }
-            type="hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo"
+            type={getPhieuThuLyType()}
           />
         </Box>
       </Box>
