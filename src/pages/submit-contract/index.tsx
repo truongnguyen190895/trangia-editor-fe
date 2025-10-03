@@ -178,7 +178,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
       then: (schema) =>
         schema
           .required("Số hợp đồng là bắt buộc")
-          .matches(/^\d+$/, "Số hợp đồng chỉ được chứa số"),
+          .matches(/^\d+-?\d*$/, "Số hợp đồng chỉ được chứa số và một dấu gạch ngang"),
       otherwise: (schema) => schema,
     }),
     name: yup.string().required("Tên hợp đồng là bắt buộc"),
