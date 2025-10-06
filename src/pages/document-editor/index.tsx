@@ -58,6 +58,7 @@ export const DocumentEditor = () => {
         );
       case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
       case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
+      case "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo":
         return (
           <HDCNDatVaTaiSanGanLienVoiDatToanBoProvider>
             <HDCNDatVaTaiSanGanLienVoiDatToanBo
@@ -171,6 +172,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng tặng cho nhà đất toàn bộ";
       case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
         return "HĐCN một phần đất và TSGLVĐ (đồng sử dụng)";
+      case "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo":
+        return "HĐCN một phần đất và TSGLVĐ (để sử dụng toàn bộ)";
       default:
         return "";
     }

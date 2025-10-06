@@ -177,7 +177,7 @@ export const ThemThongTinDat = ({
                   />
                 </>
               )}
-              <Box sx={{ gridColumn: "span 2" }}>
+              <Box sx={{ gridColumn: "span 3" }}>
                 <TextField
                   fullWidth
                   id="địa_chỉ_nhà_đất"

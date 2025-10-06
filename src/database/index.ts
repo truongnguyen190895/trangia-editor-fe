@@ -61,6 +61,13 @@ export const templates = [
     path: "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung",
   },
   {
+    id: 24,
+    name: "HĐCN một phần đất và TSGLVD (để sử dụng toàn bộ).docx",
+    type: "agreement",
+    subCategory: "chuyen-nhuong-mua-ban",
+    path: "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo",
+  },
+  {
     id: 4,
     name: "HĐCN Quyền sử dụng đất nông nghiệp toàn bộ.docx",
     type: "agreement",
