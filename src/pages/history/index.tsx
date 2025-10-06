@@ -155,6 +155,9 @@ const History = () => {
       bản_sao: contract?.copies_value,
       quan_hệ: contract?.broker,
       ghi_chú: contract?.notes,
+      người_giao: contract?.delivered_by,
+      người_kiểm_tra: contract?.inspected_by,
+      ký_ngoài: contract?.external_notes
     };
   });
 
@@ -221,13 +224,15 @@ const History = () => {
         <TableCell>{contract.số_tiền?.toLocaleString()}</TableCell>
         <TableCell>{contract.bản_sao?.toLocaleString()}</TableCell>
         <TableCell>{contract.quan_hệ}</TableCell>
-        <TableCell>{contract.CCCD}</TableCell>
-        <TableCell>{contract.ghi_chú}</TableCell>
+        <TableCell>{contract.người_giao}</TableCell>
+        <TableCell>{contract.người_kiểm_tra}</TableCell>
+        <TableCell>{contract.ký_ngoài}</TableCell>
         <TableCell>
           <Box display="flex" gap="0.2rem" alignItems="center">
             <Button
               variant="contained"
               color="info"
+              size="small"
               onClick={() => handleRenderPhieuThu(contract.số_hợp_đồng)}
             >
               <PrintIcon />
@@ -235,6 +240,7 @@ const History = () => {
             <Button
               variant="outlined"
               color="info"
+              size="small"
               onClick={() => {
                 navigate(`/edit-contract?id=${contract.số_hợp_đồng}`);
               }}
@@ -245,6 +251,7 @@ const History = () => {
               <Button
                 variant="outlined"
                 color="error"
+                size="small"
                 onClick={() => {
                   setIdToDelete(contract.số_hợp_đồng);
                   setOpenConfirmationDialog(true);
@@ -582,8 +589,9 @@ const History = () => {
               <TableCell>Số tiền</TableCell>
               <TableCell>Bản sao</TableCell>
               <TableCell>Quan hệ</TableCell>
-              <TableCell>CCCD</TableCell>
-              <TableCell>Ghi chú</TableCell>
+              <TableCell>Người giao</TableCell>
+              <TableCell>Người kiểm tra</TableCell>
+              <TableCell>Ký ngoài</TableCell>
               <TableCell>Thao tác</TableCell>
             </TableRow>
           </TableHead>
