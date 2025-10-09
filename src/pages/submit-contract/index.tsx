@@ -203,7 +203,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         value: 0,
         copiesValue: 0,
         notes: "",
-        unit: userBranch,
+        unit: userBranch || "",
         relationship: "",
         nationalId: "",
         filedDate: dayjs(),
