@@ -70,6 +70,8 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   );
   const idFromUrl = searchParams.get("id");
   const namedByUser = localStorage.getItem("username") || "";
+  const user = JSON.parse(localStorage.getItem("user_info") || "{}");
+  const userBranch = user?.branches[0]?.id;
 
   useEffect(() => {
     if (!isEdit) {
@@ -201,7 +203,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         value: 0,
         copiesValue: 0,
         notes: "",
-        unit: "HĐ",
+        unit: userBranch,
         relationship: "",
         nationalId: "",
         filedDate: dayjs(),
