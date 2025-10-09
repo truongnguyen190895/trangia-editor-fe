@@ -78,6 +78,7 @@ interface ListContractsParams {
   dateEnd?: string;
   createdBy?: string;
   sort?: string;
+  unit?: string;
 }
 
 export const getContractById = (id: string): Promise<Contract> => {

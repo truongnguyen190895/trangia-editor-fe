@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { listContracts, exportExcel, deleteContract } from "@/api/contract";
+import { listBranches, type Branch } from "@/api/branchs";
 import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import type { Contract } from "@/api/contract";
 import dayjs, { type Dayjs } from "dayjs";
@@ -53,6 +54,8 @@ const History = () => {
   const [type, setType] = useState<string>("");
   const [dateBegin, setDateBegin] = useState<Dayjs>(dayjs().startOf("month"));
   const [dateEnd, setDateEnd] = useState<Dayjs>(dayjs());
+  const [branchs, setBranchs] = useState<Branch[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
@@ -71,6 +74,12 @@ const History = () => {
   const isAdmin = userRoles.some(
     (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
   );
+
+  useEffect(() => {
+    listBranches().then((resp) => {
+      setBranchs(resp);
+    });
+  }, []);
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -109,6 +118,7 @@ const History = () => {
       dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
       dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
       createdBy: selectedUser?.username,
+      unit: selectedBranch?.id,
     })
       .then((resp) => {
         setContracts(resp?.content);
@@ -130,6 +140,7 @@ const History = () => {
     searchQuery,
     brokerQuery,
     customerQuery,
+    selectedBranch?.id,
   ]);
 
   useEffect(() => {
@@ -178,6 +189,7 @@ const History = () => {
       dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
       dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
       createdBy: selectedUser?.username,
+      unit: selectedBranch?.id,
     })
       .then((res) => {
         const blob = new Blob([res.data], {
@@ -286,11 +298,14 @@ const History = () => {
             dateBegin: dayjs(dateBegin).format("YYYY-MM-DD"),
             dateEnd: dayjs(dateEnd).format("YYYY-MM-DD"),
             createdBy: selectedUser?.username,
+            unit: selectedBranch?.id,
           })
             .then((resp) => {
               setContracts(resp?.content);
               setTotalPages(resp?.page?.total_pages);
               setTotalElements(resp?.page?.total_elements);
+              setTotalCopiesValue(resp?.total_copies_value);
+              setTotalValue(resp?.total_value);
             })
             .finally(() => {
               setLoading(false);
@@ -403,73 +418,97 @@ const History = () => {
           <FilterAltIcon />
         </Box>
         <Box display="flex" gap="1rem" mt="1rem">
-          <Box display="flex" gap="1rem" alignItems="center">
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel>Loại hợp đồng</InputLabel>
-              <Select
-                sx={{
-                  width: "250px",
-                }}
-                value={type}
-                label="Loại hợp đồng"
-                onChange={(e) => {
-                  setPage(1);
-                  setType(e.target.value);
-                }}
-              >
-                <MenuItem value="">Tất cả</MenuItem>
-                <MenuItem value="Contract">Công chứng Hợp Đồng</MenuItem>
-                <MenuItem value="Signature">Chứng thực chữ ký</MenuItem>
-                <MenuItem value="Invoice">Phiếu thu khác</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box display="flex" gap="1rem" alignItems="center">
-            <DatePicker
-              label="Ngày bắt đầu"
-              value={dateBegin}
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Loại hợp đồng</InputLabel>
+            <Select
+              sx={{
+                width: "220px",
+              }}
+              value={type}
+              label="Loại hợp đồng"
               onChange={(e) => {
                 setPage(1);
-                setDateBegin(e as Dayjs);
+                setType(e.target.value);
               }}
-              format="DD/MM/YYYY"
-            />
-            <DatePicker
-              format="DD/MM/YYYY"
-              label="Ngày kết thúc"
-              value={dateEnd}
-              onChange={(e) => {
-                setPage(1);
-                setDateEnd(e as Dayjs);
-              }}
-            />
-          </Box>
+            >
+              <MenuItem value="">Tất cả</MenuItem>
+              <MenuItem value="Contract">CC Hợp Đồng</MenuItem>
+              <MenuItem value="Signature">Chứng thực chữ ký</MenuItem>
+              <MenuItem value="Invoice">Phiếu thu khác</MenuItem>
+            </Select>
+          </FormControl>
+          <DatePicker
+            label="Ngày bắt đầu"
+            format="DD/MM/YYYY"
+            sx={{ width: "200px" }}
+            value={dateBegin}
+            onChange={(e) => {
+              setPage(1);
+              setDateBegin(e as Dayjs);
+            }}
+          />
+          <DatePicker
+            label="Ngày kết thúc"
+            format="DD/MM/YYYY"
+            sx={{ width: "200px" }}
+            value={dateEnd}
+            onChange={(e) => {
+              setPage(1);
+              setDateEnd(e as Dayjs);
+            }}
+          />
           {isAdmin ? (
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel>Tên chuyên viên</InputLabel>
-              <Select
-                disabled={loadingUsers}
-                sx={{
-                  width: "250px",
-                }}
-                value={selectedUser?.username}
-                label="Tên chuyên viên"
-                onChange={(e) => {
-                  setPage(1);
-                  setSelectedUser(
-                    users.find((user) => user.username === e.target.value) ||
-                      null
-                  );
-                }}
-              >
-                <MenuItem value="">Chọn chuyên viên</MenuItem>
-                {users.map((user) => (
-                  <MenuItem key={user.username} value={user.username}>
-                    {user.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <>
+              <FormControl sx={{ minWidth: 200 }}>
+                <InputLabel>Tên chuyên viên</InputLabel>
+                <Select
+                  disabled={loadingUsers}
+                  sx={{
+                    width: "230px",
+                  }}
+                  value={selectedUser?.username}
+                  label="Tên chuyên viên"
+                  onChange={(e) => {
+                    setPage(1);
+                    setSelectedUser(
+                      users.find((user) => user.username === e.target.value) ||
+                        null
+                    );
+                  }}
+                >
+                  <MenuItem value="">Chọn chuyên viên</MenuItem>
+                  {users.map((user) => (
+                    <MenuItem key={user.username} value={user.username}>
+                      {user.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ minWidth: 200 }}>
+                <InputLabel>Đơn vị</InputLabel>
+                <Select
+                  sx={{
+                    width: "230px",
+                  }}
+                  label="Đơn vị"
+                  value={selectedBranch?.id}
+                  onChange={(e) => {
+                    setPage(1);
+                    setSelectedBranch(
+                      branchs.find((branch) => branch.id === e.target.value) ||
+                        null
+                    );
+                  }}
+                >
+                  <MenuItem value="">Chọn đơn vị</MenuItem>
+                  {branchs.map((branch) => (
+                    <MenuItem key={branch.id} value={branch.id}>
+                      {branch.friendly_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </>
           ) : null}
         </Box>
       </Box>
