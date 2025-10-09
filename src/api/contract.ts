@@ -53,6 +53,8 @@ export interface ContractResponse {
     total_elements: number;
     total_pages: number;
   };
+  total_copies_value: number;
+  total_value: number;
 }
 
 export const submitContract = (payload: SubmitContractPayload) => {

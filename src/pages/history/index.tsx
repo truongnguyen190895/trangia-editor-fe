@@ -50,10 +50,6 @@ const History = () => {
   const [size, _setSize] = useState(50);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
-  const isAdmin = userRoles.some(
-    (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
-  );
   const [type, setType] = useState<string>("");
   const [dateBegin, setDateBegin] = useState<Dayjs>(dayjs().startOf("month"));
   const [dateEnd, setDateEnd] = useState<Dayjs>(dayjs());
@@ -68,6 +64,13 @@ const History = () => {
   const [customerQuery, setCustomerQuery] = useState<string>("");
   const [debounceCustomerQuery, setDebounceCustomerQuery] =
     useState<string>("");
+  const [totalCopiesValue, setTotalCopiesValue] = useState(0);
+  const [totalValue, setTotalValue] = useState(0);
+
+  const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
+  const isAdmin = userRoles.some(
+    (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
+  );
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -111,6 +114,8 @@ const History = () => {
         setContracts(resp?.content);
         setTotalPages(resp?.page?.total_pages);
         setTotalElements(resp?.page?.total_elements);
+        setTotalCopiesValue(resp?.total_copies_value);
+        setTotalValue(resp?.total_value);
       })
       .finally(() => {
         setLoading(false);
@@ -157,7 +162,7 @@ const History = () => {
       ghi_chú: contract?.notes,
       người_giao: contract?.delivered_by,
       người_kiểm_tra: contract?.inspected_by,
-      ký_ngoài: contract?.external_notes
+      ký_ngoài: contract?.external_notes,
     };
   });
 
@@ -550,6 +555,17 @@ const History = () => {
         >
           Tổng số: {totalElements}
         </Typography>
+        {isAdmin ? (
+          <Typography
+            fontSize="1.2rem"
+            fontWeight="bold"
+            fontStyle="italic"
+            color="#08CB00"
+          >
+            Tổng tiền:{" "}
+            {((totalValue + totalCopiesValue) * 1000).toLocaleString()}
+          </Typography>
+        ) : null}
         {isAdmin ? (
           <Button
             variant="contained"
