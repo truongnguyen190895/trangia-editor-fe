@@ -42,7 +42,7 @@ export const ThemLoiChungDialog = ({
     const data: MetaData = {
       sốBảnGốc,
       isOutSide,
-      côngChứngViên: côngChứngViên || "_______________________",
+      côngChứngViên: côngChứngViên || "                              ",
       ngày,
     };
     handleGenerateDocument(data);
