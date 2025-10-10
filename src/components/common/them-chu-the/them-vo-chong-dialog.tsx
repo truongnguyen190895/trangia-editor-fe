@@ -154,6 +154,7 @@ export const ThemVoChongDialog = ({
 
   const handleSearchHusband = () => {
     if (searchNumberHusband !== "") {
+        setLoadingHusband(true)
       getContractEntity(searchNumberHusband)
         .then((res) => {
           setIsNotExistedHusband(false);
@@ -173,6 +174,7 @@ export const ThemVoChongDialog = ({
 
   const handleSearchWife = () => {
     if (searchNumberWife !== "") {
+      setLoadingWife(true);
       getContractEntity(searchNumberWife)
         .then((res) => {
           setIsNotExistedWife(false);
