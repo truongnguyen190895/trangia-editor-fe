@@ -55,7 +55,9 @@ const ChooseSubDocument = () => {
 
   return (
     <Box>
-      <Typography variant="h4">Chọn loại văn bản</Typography>
+      <Typography fontWeight={600} variant="h3">
+        Chọn loại văn bản
+      </Typography>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }} mt="20px">
         {mockData
           .filter((item) => item.category === category)
