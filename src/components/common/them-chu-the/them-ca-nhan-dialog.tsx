@@ -13,7 +13,6 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
-  InputAdornment,
   CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
@@ -161,26 +160,25 @@ export const ThemCaNhanDialog = ({
           bgcolor="#f5f5f5"
         >
           <Typography fontSize="1.2rem" fontWeight="500">
-            Tìm theo số giấy tờ <em>(nhấn vào biểu tượng kính lúp để bắt đầu tìm kiếm)</em>
+            Tìm theo số giấy tờ
           </Typography>
           <TextField
             sx={{ width: "400px" }}
             value={searchNumber}
-            onChange={(e) => setSearchNumber(e.target.value)}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <InputAdornment
-                    position="end"
-                    sx={{ cursor: "pointer" }}
-                    onClick={handleSearch}
-                  >
-                    {loading ? <CircularProgress size={20} /> : <SearchIcon />}
-                  </InputAdornment>
-                ),
-              },
+            onChange={(e) => {
+              setNotExisted(false);
+              setSearchNumber(e.target.value);
             }}
+            placeholder="nhập số giấy tờ"
           />
+          <Button
+            onClick={handleSearch}
+            disabled={loading}
+            variant="contained"
+            color="success"
+          >
+            {loading ? <CircularProgress size={20} /> : <SearchIcon />}
+          </Button>
         </Box>
         {notExisted ? (
           <Typography
