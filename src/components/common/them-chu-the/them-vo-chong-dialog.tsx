@@ -12,7 +12,10 @@ import {
   Button,
   DialogActions,
   FormHelperText,
+  CircularProgress,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { useState } from "react";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import type { Couple } from "@/models/chu-the-hop-dong";
 import { GENDER } from "@/models/chu-the-hop-dong";
@@ -22,6 +25,7 @@ import {
   NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
 } from "@/constants";
 import * as Yup from "yup";
+import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
 
 interface ThemVoChongDialogProps {
   open: boolean;
@@ -61,6 +65,12 @@ export const ThemVoChongDialog = ({
   side,
   onClose,
 }: ThemVoChongDialogProps) => {
+  const [loadingHusband, setLoadingHusband] = useState(false);
+  const [loadingWife, setLoadingWife] = useState(false);
+  const [searchNumberHusband, setSearchNumberHusband] = useState("");
+  const [searchNumberWife, setSearchNumberWife] = useState("");
+  const [isNotExistedHusband, setIsNotExistedHusband] = useState(false);
+  const [isNotExistedWife, setIsNotExistedWife] = useState(false);
   const {
     partyA,
     partyB,
@@ -115,21 +125,69 @@ export const ThemVoChongDialog = ({
     }
   };
 
-  const { values, errors, handleChange, handleSubmit } = useFormik<Couple>({
-    initialValues: getInitialValues(),
-    validationSchema,
-    onSubmit: (values) => {
-      handleSubmitCouple(values);
-    },
-  });
+  const { values, errors, handleChange, handleSubmit, setValues } =
+    useFormik<Couple>({
+      initialValues: getInitialValues(),
+      validationSchema,
+      onSubmit: (values) => {
+        handleSubmitCouple(values);
+      },
+    });
 
-  const handleSubmitCouple = (values: Couple) => {
+  const handleSubmitCouple = async (values: Couple) => {
     if (isEdit) {
       editPartyEntity(values, partyEntityIndex as number);
     } else {
       addPartyEntity(values);
     }
-    onClose();
+    try {
+      const husband = values.chồng;
+      const wife = values.vợ;
+      await saveContractEntity(husband.số_giấy_tờ, husband);
+      await saveContractEntity(wife.số_giấy_tờ, wife);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onClose();
+    }
+  };
+
+  const handleSearchHusband = () => {
+    if (searchNumberHusband !== "") {
+      getContractEntity(searchNumberHusband)
+        .then((res) => {
+          setIsNotExistedHusband(false);
+          setValues({
+            ...values,
+            chồng: res,
+          });
+        })
+        .catch(() => {
+          setIsNotExistedHusband(true);
+        })
+        .finally(() => {
+          setLoadingHusband(false);
+        });
+    }
+  };
+
+  const handleSearchWife = () => {
+    if (searchNumberWife !== "") {
+      getContractEntity(searchNumberWife)
+        .then((res) => {
+          setIsNotExistedWife(false);
+          setValues({
+            ...values,
+            vợ: res,
+          });
+        })
+        .catch(() => {
+          setIsNotExistedWife(true);
+        })
+        .finally(() => {
+          setLoadingWife(false);
+        });
+    }
   };
 
   return (
@@ -141,7 +199,7 @@ export const ThemVoChongDialog = ({
       </DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
         <form>
-          <Box display="grid" gridTemplateColumns="1fr 1fr" gap="4rem">
+          <Box display="grid" gridTemplateColumns="1fr 1fr" gap="2rem">
             <Box>
               <Typography
                 variant="body1"
@@ -151,6 +209,47 @@ export const ThemVoChongDialog = ({
               >
                 Thông tin chồng
               </Typography>
+              <Box
+                display="flex"
+                alignItems="center"
+                gap="10px"
+                border="1px solid #e0e0e0"
+                p="1rem"
+                borderRadius="5px"
+                bgcolor="#f5f5f5"
+              >
+                <TextField
+                  sx={{ width: "400px" }}
+                  value={searchNumberHusband}
+                  onChange={(e) => {
+                    setIsNotExistedHusband(false);
+                    setSearchNumberHusband(e.target.value);
+                  }}
+                  placeholder="nhập số giấy tờ chồng"
+                />
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleSearchHusband}
+                  disabled={loadingHusband}
+                >
+                  {loadingHusband ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    <SearchIcon />
+                  )}
+                </Button>
+              </Box>
+              {isNotExistedHusband ? (
+                <Typography
+                  variant="body1"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                  color="warning.main"
+                >
+                  Số này không tồn tại trong hệ thống và sẽ được lưu lại
+                </Typography>
+              ) : null}
               <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
                 <Box
                   display="grid"
@@ -279,6 +378,47 @@ export const ThemVoChongDialog = ({
               >
                 Thông tin vợ
               </Typography>
+              <Box
+                display="flex"
+                alignItems="center"
+                gap="10px"
+                border="1px solid #e0e0e0"
+                p="1rem"
+                borderRadius="5px"
+                bgcolor="#f5f5f5"
+              >
+                <TextField
+                  sx={{ width: "400px" }}
+                  value={searchNumberWife}
+                  onChange={(e) => {
+                    setIsNotExistedWife(false);
+                    setSearchNumberWife(e.target.value);
+                  }}
+                  placeholder="nhập số giấy tờ vợ"
+                />
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleSearchWife}
+                  disabled={loadingWife}
+                >
+                  {loadingWife ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    <SearchIcon />
+                  )}
+                </Button>
+              </Box>
+              {isNotExistedWife ? (
+                <Typography
+                  variant="body1"
+                  fontSize="1.2rem"
+                  fontWeight="600"
+                  color="warning.main"
+                >
+                  Số này không tồn tại trong hệ thống và sẽ được lưu lại
+                </Typography>
+              ) : null}
               <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
                 <Box
                   display="grid"
