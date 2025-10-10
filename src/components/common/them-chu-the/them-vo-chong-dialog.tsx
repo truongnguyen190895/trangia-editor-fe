@@ -198,7 +198,12 @@ export const ThemVoChongDialog = ({
         </Typography>
       </DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
-        <form>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
           <Box display="grid" gridTemplateColumns="1fr 1fr" gap="2rem">
             <Box>
               <Typography
