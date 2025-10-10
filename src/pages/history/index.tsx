@@ -16,6 +16,7 @@ import {
   Select,
   InputAdornment,
   TextField,
+  Autocomplete,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { listContracts, exportExcel, deleteContract } from "@/api/contract";
@@ -440,7 +441,7 @@ const History = () => {
           <DatePicker
             label="Ngày bắt đầu"
             format="DD/MM/YYYY"
-            sx={{ width: "200px" }}
+            sx={{ width: "180px" }}
             value={dateBegin}
             onChange={(e) => {
               setPage(1);
@@ -450,7 +451,7 @@ const History = () => {
           <DatePicker
             label="Ngày kết thúc"
             format="DD/MM/YYYY"
-            sx={{ width: "200px" }}
+            sx={{ width: "180px" }}
             value={dateEnd}
             onChange={(e) => {
               setPage(1);
@@ -459,31 +460,23 @@ const History = () => {
           />
           {isAdmin ? (
             <>
-              <FormControl sx={{ minWidth: 200 }}>
-                <InputLabel>Tên chuyên viên</InputLabel>
-                <Select
-                  disabled={loadingUsers}
-                  sx={{
-                    width: "230px",
-                  }}
-                  value={selectedUser?.username}
-                  label="Tên chuyên viên"
-                  onChange={(e) => {
-                    setPage(1);
-                    setSelectedUser(
-                      users.find((user) => user.username === e.target.value) ||
-                        null
-                    );
-                  }}
-                >
-                  <MenuItem value="">Chọn chuyên viên</MenuItem>
-                  {users.map((user) => (
-                    <MenuItem key={user.username} value={user.username}>
-                      {user.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                disabled={loadingUsers}
+                options={users}
+                getOptionLabel={(option) => option.name}
+                value={selectedUser}
+                isOptionEqualToValue={(option, value) =>
+                  option.username === value?.username
+                }
+                onChange={(_, newValue) => {
+                  setPage(1);
+                  setSelectedUser(newValue || null);
+                }}
+                sx={{ minWidth: 200, width: "250px" }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Tên chuyên viên" />
+                )}
+              />
               <FormControl sx={{ minWidth: 200 }}>
                 <InputLabel>Đơn vị</InputLabel>
                 <Select
