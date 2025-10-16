@@ -7,6 +7,7 @@ import {
   Typography,
   FormControl,
   FormLabel,
+  Autocomplete,
   Select,
   MenuItem,
   Button,
@@ -125,14 +126,20 @@ export const ThemVoChongDialog = ({
     }
   };
 
-  const { values, errors, handleChange, handleSubmit, setValues } =
-    useFormik<Couple>({
-      initialValues: getInitialValues(),
-      validationSchema,
-      onSubmit: (values) => {
-        handleSubmitCouple(values);
-      },
-    });
+  const {
+    values,
+    errors,
+    handleChange,
+    handleSubmit,
+    setValues,
+    setFieldValue,
+  } = useFormik<Couple>({
+    initialValues: getInitialValues(),
+    validationSchema,
+    onSubmit: (values) => {
+      handleSubmitCouple(values);
+    },
+  });
 
   const handleSubmitCouple = async (values: Couple) => {
     if (isEdit) {
@@ -154,7 +161,7 @@ export const ThemVoChongDialog = ({
 
   const handleSearchHusband = () => {
     if (searchNumberHusband !== "") {
-        setLoadingHusband(true)
+      setLoadingHusband(true);
       getContractEntity(searchNumberHusband)
         .then((res) => {
           setIsNotExistedHusband(false);
@@ -298,24 +305,28 @@ export const ThemVoChongDialog = ({
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Loại giấy tờ *</FormLabel>
-                    <Select
-                      value={values["chồng"]["loại_giấy_tờ"]}
-                      name="chồng.loại_giấy_tờ"
-                      onChange={handleChange}
-                      fullWidth
-                      error={!!errors["chồng"]?.["loại_giấy_tờ"]}
-                    >
-                      {CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
-                        <MenuItem key={item.value} value={item.value}>
-                          {item.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors["chồng"]?.["loại_giấy_tờ"] && (
-                      <FormHelperText error>
-                        {errors["chồng"]?.["loại_giấy_tờ"]}
-                      </FormHelperText>
-                    )}
+                    <Autocomplete
+                      freeSolo
+                      options={CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((o) => o.value)}
+                      value={values["chồng"]["loại_giấy_tờ"] || ""}
+                      onChange={(_, newValue) =>
+                        setFieldValue(
+                          "chồng.loại_giấy_tờ",
+                          (newValue as string) || ""
+                        )
+                      }
+                      onInputChange={(_, newInputValue) =>
+                        setFieldValue("chồng.loại_giấy_tờ", newInputValue)
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          error={!!errors["chồng"]?.["loại_giấy_tờ"]}
+                          helperText={errors["chồng"]?.["loại_giấy_tờ"] || ""}
+                        />
+                      )}
+                    />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Số giấy tờ *</FormLabel>
@@ -467,24 +478,28 @@ export const ThemVoChongDialog = ({
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Loại giấy tờ *</FormLabel>
-                    <Select
-                      value={values["vợ"]["loại_giấy_tờ"]}
-                      name="vợ.loại_giấy_tờ"
-                      onChange={handleChange}
-                      fullWidth
-                      error={!!errors["vợ"]?.["loại_giấy_tờ"]}
-                    >
-                      {CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
-                        <MenuItem key={item.value} value={item.value}>
-                          {item.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors["vợ"]?.["loại_giấy_tờ"] && (
-                      <FormHelperText error>
-                        {errors["vợ"]?.["loại_giấy_tờ"]}
-                      </FormHelperText>
-                    )}
+                    <Autocomplete
+                      freeSolo
+                      options={CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((o) => o.value)}
+                      value={values["vợ"]["loại_giấy_tờ"] || ""}
+                      onChange={(_, newValue) =>
+                        setFieldValue(
+                          "vợ.loại_giấy_tờ",
+                          (newValue as string) || ""
+                        )
+                      }
+                      onInputChange={(_, newInputValue) =>
+                        setFieldValue("vợ.loại_giấy_tờ", newInputValue)
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          error={!!errors["vợ"]?.["loại_giấy_tờ"]}
+                          helperText={errors["vợ"]?.["loại_giấy_tờ"] || ""}
+                        />
+                      )}
+                    />
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Số giấy tờ *</FormLabel>
@@ -571,8 +586,16 @@ export const ThemVoChongDialog = ({
         <Button onClick={onClose} variant="outlined">
           Hủy
         </Button>
-        <Button onClick={() => handleSubmit()} variant="contained">
-          Lưu
+        <Button
+          disabled={loadingHusband || loadingWife}
+          onClick={() => handleSubmit()}
+          variant="contained"
+        >
+          {loadingHusband || loadingWife ? (
+            <CircularProgress size={20} />
+          ) : (
+            "Lưu"
+          )}
         </Button>
       </DialogActions>
     </Dialog>

@@ -8,6 +8,7 @@ import {
   TextField,
   Box,
   Typography,
+  Autocomplete,
   Select,
   MenuItem,
   FormControl,
@@ -83,34 +84,44 @@ export const ThemCaNhanDialog = ({
 
   const isEdit = partyEntityIndex !== null;
 
-  const { values, errors, touched, handleChange, handleSubmit, setValues } =
-    useFormik<SingleAgreementParty>({
-      initialValues: getInitialValues(),
-      validationSchema: Yup.object({
-        giới_tính: Yup.string().required("Giới tính là bắt buộc"),
-        tên: Yup.string().required("Tên là bắt buộc"),
-        ngày_sinh: Yup.string().required("Ngày sinh là bắt buộc"),
-        loại_giấy_tờ: Yup.string().required("Loại giấy tờ là bắt buộc"),
-        số_giấy_tờ: Yup.string()
-          .required("Số giấy tờ là bắt buộc")
-          .max(12, "Số giấy tờ không được vượt quá 12 ký tự"),
-        ngày_cấp: Yup.string().required("Ngày cấp là bắt buộc"),
-        nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
-        địa_chỉ_thường_trú: Yup.string().required(
-          "Địa chỉ thường trú là bắt buộc"
-        ),
-      }),
-      onSubmit: (values) => {
-        if (isEdit) {
-          editPartyEntity(values, partyEntityIndex as number);
-        } else {
-          addPartyEntity(values);
-        }
-        saveContractEntity(values.số_giấy_tờ, values).finally(() =>
-          handleClose()
-        );
-      },
-    });
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleSubmit,
+    setValues,
+    setFieldValue,
+  } = useFormik<SingleAgreementParty>({
+    initialValues: getInitialValues(),
+    validationSchema: Yup.object({
+      giới_tính: Yup.string().required("Giới tính là bắt buộc"),
+      tên: Yup.string().required("Tên là bắt buộc"),
+      ngày_sinh: Yup.string().required("Ngày sinh là bắt buộc"),
+      loại_giấy_tờ: Yup.string().required("Loại giấy tờ là bắt buộc"),
+      số_giấy_tờ: Yup.string()
+        .required("Số giấy tờ là bắt buộc")
+        .max(12, "Số giấy tờ không được vượt quá 12 ký tự"),
+      ngày_cấp: Yup.string().required("Ngày cấp là bắt buộc"),
+      nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
+      địa_chỉ_thường_trú: Yup.string().required(
+        "Địa chỉ thường trú là bắt buộc"
+      ),
+    }),
+    onSubmit: (values) => {
+      if (isEdit) {
+        editPartyEntity(values, partyEntityIndex as number);
+      } else {
+        addPartyEntity(values);
+      }
+      setLoading(true);
+      saveContractEntity(values.số_giấy_tờ, values)
+        .finally(() => handleClose())
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+  });
 
   const handleClose = () => {
     setSinglePartyAEntityIndex(null);
@@ -243,22 +254,27 @@ export const ThemCaNhanDialog = ({
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Loại giấy tờ *</FormLabel>
-              <Select
-                value={values["loại_giấy_tờ"]}
-                name="loại_giấy_tờ"
-                onChange={handleChange}
-                fullWidth
-                error={!!errors["loại_giấy_tờ"] && touched["loại_giấy_tờ"]}
-              >
-                {CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-              {errors["loại_giấy_tờ"] && touched["loại_giấy_tờ"] && (
-                <FormHelperText error>{errors["loại_giấy_tờ"]}</FormHelperText>
-              )}
+              <Autocomplete
+                freeSolo
+                options={CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH.map((o) => o.value)}
+                value={values["loại_giấy_tờ"] || ""}
+                onChange={(_, newValue) =>
+                  setFieldValue("loại_giấy_tờ", (newValue as string) || "")
+                }
+                onInputChange={(_, newInputValue) =>
+                  setFieldValue("loại_giấy_tờ", newInputValue)
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    error={!!errors["loại_giấy_tờ"] && touched["loại_giấy_tờ"]}
+                    helperText={
+                      (touched["loại_giấy_tờ"] && errors["loại_giấy_tờ"]) || ""
+                    }
+                  />
+                )}
+              />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Ngày cấp *</FormLabel>
