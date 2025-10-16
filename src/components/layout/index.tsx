@@ -1,12 +1,27 @@
+import { useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { SidebarMenu } from "../common/sidebar-menu";
 import { SidebarMenuMobile } from "../common/side-bar-menu-mobile";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Avatar from "@mui/material/Avatar";
+import { getUser } from "@/api/users";
 
 const Layout = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const userInforJson = localStorage.getItem("user_info");
+    const userInfor = userInforJson ? JSON.parse(userInforJson) : null;
+
+    if (userInfor) {
+      getUser(userInfor.username).then((res) => {
+        // get the latest user info
+        localStorage.setItem("user_info", JSON.stringify(res));
+      });
+    }
+  }, []);
+
   const formatBuildTime = (buildTime: string) => {
     try {
       const date = new Date(buildTime);
