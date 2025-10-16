@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { SidebarMenu } from "../common/sidebar-menu";
+import { SidebarMenuMobile } from "../common/side-bar-menu-mobile";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Avatar from "@mui/material/Avatar";
 
@@ -43,9 +44,11 @@ const Layout = () => {
         alignItems="center"
         px="1rem"
         justifyContent="space-between"
-        sx={{ height: "100px" }}
+        sx={{ height: { xs: "60px", md: "100px" } }}
       >
-        <Typography variant="h3">Công chứng Trần Gia</Typography>
+        <Typography sx={{ display: { xs: "none", md: "block" } }} variant="h3">
+          Công chứng Trần Gia
+        </Typography>
         <Box display="flex" alignItems="center" gap="1rem">
           <Link to="/profile" style={{ textDecoration: "none" }}>
             <Avatar sx={{ width: 50, height: 50, bgcolor: "#78C841" }} />
@@ -63,14 +66,30 @@ const Layout = () => {
       <Box
         className="content"
         display="grid"
-        sx={{ height: "calc(100vh - 100px)", gridTemplateColumns: "250px 1fr" }}
+        gridTemplateColumns={{ xs: "1fr", md: "250px 1fr" }}
+        sx={{ height: "calc(100vh - 100px)" }}
       >
-        <Box height="100%">
+        <Box height="100%" sx={{ display: { xs: "none", md: "block" } }}>
           <SidebarMenu />
         </Box>
-        <Box flex={1} p="2rem">
+        <Box flex={1} sx={{ p: { xs: "1rem", md: "2rem" } }}>
           <Outlet />
         </Box>
+      </Box>
+      <Box
+        sx={{
+          display: {
+            xs: "block",
+            md: "none",
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+          },
+        }}
+      >
+        <SidebarMenuMobile />
       </Box>
       <Box
         position="fixed"
@@ -82,6 +101,7 @@ const Layout = () => {
         sx={{
           borderRadius: "5px 5px 0 0",
           textAlign: "right",
+          display: { xs: "none", md: "block" },
         }}
       >
         <Typography variant="caption">

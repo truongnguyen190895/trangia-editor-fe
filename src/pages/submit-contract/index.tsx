@@ -180,7 +180,10 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
       then: (schema) =>
         schema
           .required("Số hợp đồng là bắt buộc")
-          .matches(/^\d+-?\d*$/, "Số hợp đồng chỉ được chứa số và một dấu gạch ngang"),
+          .matches(
+            /^\d+-?\d*$/,
+            "Số hợp đồng chỉ được chứa số và một dấu gạch ngang"
+          ),
       otherwise: (schema) => schema,
     }),
     name: yup.string().required("Tên hợp đồng là bắt buộc"),
@@ -312,7 +315,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
     shouldRenderPhieuThu ? "Lưu thông tin và in phiếu thu" : "Lưu thông tin";
 
   return (
-    <Box>
+    <Box pb="3rem">
       {isEdit ? (
         <Typography fontWeight={600} variant="h3">
           Chỉnh sửa phiếu thu số {idFromUrl}
@@ -347,12 +350,14 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                 </strong>
               </Typography>
             )}
-            <WarningBanner />
+            <Box sx={{ display: { xs: "none", md: "block" } }}>
+              <WarningBanner />
+            </Box>
           </Box>
           <form onSubmit={handleSubmit}>
             <Box
               display="grid"
-              gridTemplateColumns="repeat(4, 1fr)"
+              sx={{ gridTemplateColumns: { xs: "1fr", md: "repeat(4, 1fr)" } }}
               gap="20px"
               mt="1rem"
             >

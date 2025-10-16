@@ -17,6 +17,7 @@ import {
   InputAdornment,
   TextField,
   Autocomplete,
+  TableContainer,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { listContracts, exportExcel, deleteContract } from "@/api/contract";
@@ -403,8 +404,11 @@ const History = () => {
   };
 
   return (
-    <Box>
-      <Typography variant="h3" fontWeight={600}>
+    <Box sx={{ width: { xs: "100%", md: "auto" } }}>
+      <Typography
+        sx={{ fontSize: { xs: "1.2rem", md: "2rem" } }}
+        fontWeight={600}
+      >
         Danh sách phiếu thu
       </Typography>
       <Box
@@ -418,13 +422,18 @@ const History = () => {
           <Typography variant="h6">Lọc dữ liệu</Typography>
           <FilterAltIcon />
         </Box>
-        <Box display="flex" gap="1rem" mt="1rem">
-          <FormControl sx={{ minWidth: 200 }}>
+        <Box
+          display="flex"
+          gap="1rem"
+          mt="1rem"
+          flexWrap="wrap"
+          width={{ xs: "100%", md: "auto" }}
+        >
+          <FormControl
+            sx={{ minWidth: 200, width: { xs: "100%", md: "220px" } }}
+          >
             <InputLabel>Loại hợp đồng</InputLabel>
             <Select
-              sx={{
-                width: "220px",
-              }}
               value={type}
               label="Loại hợp đồng"
               onChange={(e) => {
@@ -441,7 +450,7 @@ const History = () => {
           <DatePicker
             label="Ngày bắt đầu"
             format="DD/MM/YYYY"
-            sx={{ width: "180px" }}
+            sx={{ width: { xs: "100%", md: "180px" } }}
             value={dateBegin}
             onChange={(e) => {
               setPage(1);
@@ -451,7 +460,7 @@ const History = () => {
           <DatePicker
             label="Ngày kết thúc"
             format="DD/MM/YYYY"
-            sx={{ width: "180px" }}
+            sx={{ width: { xs: "100%", md: "180px" } }}
             value={dateEnd}
             onChange={(e) => {
               setPage(1);
@@ -472,17 +481,16 @@ const History = () => {
                   setPage(1);
                   setSelectedUser(newValue || null);
                 }}
-                sx={{ minWidth: 200, width: "250px" }}
+                sx={{ minWidth: 200, width: { xs: "100%", md: "250px" } }}
                 renderInput={(params) => (
                   <TextField {...params} label="Tên chuyên viên" />
                 )}
               />
-              <FormControl sx={{ minWidth: 200 }}>
+              <FormControl
+                sx={{ minWidth: 200, width: { xs: "100%", md: "230px" } }}
+              >
                 <InputLabel>Đơn vị</InputLabel>
                 <Select
-                  sx={{
-                    width: "230px",
-                  }}
                   label="Đơn vị"
                   value={selectedBranch?.id}
                   onChange={(e) => {
@@ -516,9 +524,15 @@ const History = () => {
           <Typography variant="h6">Tìm kiếm</Typography>
           <SearchIcon />
         </Box>
-        <Box display="flex" gap="1rem" mt="1rem">
+        <Box
+          display="flex"
+          gap="1rem"
+          mt="1rem"
+          flexWrap="wrap"
+          width={{ xs: "100%", md: "auto" }}
+        >
           <TextField
-            sx={{ width: "300px" }}
+            sx={{ width: { xs: "100%", md: "300px" } }}
             slotProps={{
               input: {
                 startAdornment: (
@@ -536,7 +550,7 @@ const History = () => {
             }}
           />
           <TextField
-            sx={{ width: "300px" }}
+            sx={{ width: { xs: "100%", md: "300px" } }}
             slotProps={{
               input: {
                 startAdornment: (
@@ -554,7 +568,7 @@ const History = () => {
             }}
           />
           <TextField
-            sx={{ width: "300px" }}
+            sx={{ width: { xs: "100%", md: "300px" } }}
             slotProps={{
               input: {
                 startAdornment: (
@@ -580,7 +594,7 @@ const History = () => {
         justifyContent="space-between"
       >
         <Typography
-          fontSize="1.2rem"
+          sx={{ fontSize: { xs: "1rem", md: "1.2rem" }}}
           fontWeight="bold"
           fontStyle="italic"
           color="#08CB00"
@@ -589,7 +603,7 @@ const History = () => {
         </Typography>
         {isAdmin ? (
           <Typography
-            fontSize="1.2rem"
+          sx={{ fontSize: { xs: "1rem", md: "1.2rem" }}}
             fontWeight="bold"
             fontStyle="italic"
             color="#08CB00"
@@ -614,17 +628,21 @@ const History = () => {
             {loadingExcel ? (
               <CircularProgress size={20} />
             ) : (
-              <Typography>Tải file excel</Typography>
+              <Typography sx={{ fontSize: { xs: "0.8rem", md: "1rem" }}}>Tải file excel</Typography>
             )}
           </Button>
         ) : null}
       </Box>
-      <Box
-        mt="1rem"
-        border="1px solid #e0e0e0"
-        borderRadius="5px"
-        px="1rem"
-        py="1rem"
+      <TableContainer
+        sx={{
+          mt: "1rem",
+          maxWidth: { xs: "90vw", md: "auto" },
+          overflowX: "auto",
+          border: "1px solid #e0e0e0",
+          borderRadius: "5px",
+          px: "1rem",
+          py: "1rem",
+        }}
       >
         <Table>
           <TableHead>
@@ -658,7 +676,7 @@ const History = () => {
             onChange={handleChangePage}
           />
         </Box>
-      </Box>
+      </TableContainer>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
