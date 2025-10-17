@@ -1,28 +1,28 @@
-import { Box, ListItemIcon } from "@mui/material";
+import { Box } from "@mui/material";
 import { Description, Create, Timeline } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const menuItems = [
   {
     text: "Trình soạn thảo",
-    icon: <Create />,
+    icon: <Create fontSize="large" />,
     path: "/",
   },
   {
     text: "Phiếu thu",
-    icon: <Description />,
+    icon: <Description fontSize="large" />,
     path: "/submit-contract",
   },
   {
     text: "Tổng hợp",
-    icon: <Timeline />,
+    icon: <Timeline fontSize="large" />,
     path: "/history",
   },
 ];
 
 export const SidebarMenuMobile = () => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   const handleItemClick = (path: string) => {
     navigate(path);
   };
@@ -31,22 +31,25 @@ export const SidebarMenuMobile = () => {
     <Box
       bgcolor="#1C6EA4"
       height="50px"
-      display="flex"
+      display="grid"
       alignItems="center"
-      justifyContent="space-around"
+      gridTemplateColumns="repeat(3, 1fr)"
     >
       {menuItems.map((item) => (
         <Box
+          className={location.pathname === item.path ? "active" : ""}
           key={item.text}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
           onClick={() => handleItemClick(item.path)}
           sx={{
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            '&.active': {
+              color: '#fff',
+            },
           }}
         >
-          <ListItemIcon sx={{ color: "#fff" }}>{item.icon}</ListItemIcon>
+          <Box>{item.icon}</Box>
         </Box>
       ))}
     </Box>
