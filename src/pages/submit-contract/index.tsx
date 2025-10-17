@@ -18,6 +18,7 @@ import { BRANCHES } from "@/constants/branches";
 import { CONTRACT_TYPES, INVOICE_TYPES } from "@/constants/contract-types";
 import { REVIEWERS } from "@/constants/reviewer";
 import { useFormik } from "formik";
+import { WarningDialog } from "@/components/common/warning-dialog";
 import {
   submitContract,
   getTheNextAvailableId,
@@ -64,6 +65,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   const [suffix, setSuffix] = useState<string>("");
   const [nextAvailableId, setNextAvailableId] = useState<string>("");
   const [shouldRenderPhieuThu, setShouldRenderPhieuThu] = useState(false);
+  const [warningDialogOpen, setWarningDialogOpen] = useState(false);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
   const isAdmin = userRoles.some(
     (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
@@ -220,6 +222,14 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         let idToSubmit = "";
         let idPhieuThu = "";
         if (type === "Contract") {
+          if (
+            Number(formValues.id) - Number(nextAvailableId?.split("/")[0]) >
+            100
+          ) {
+            setWarningDialogOpen(true);
+            setIsLoading(false);
+            return;
+          }
           idToSubmit =
             formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
           idPhieuThu = formValues.id + "/" + suffix;
@@ -227,6 +237,14 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           idToSubmit = formValues.id;
           idPhieuThu = formValues.id;
         } else {
+          if (
+            Number(formValues.id) - Math.trunc(Number(nextAvailableId)) >
+            100
+          ) {
+            setWarningDialogOpen(true);
+            setIsLoading(false);
+            return;
+          }
           idToSubmit = formValues.id + "." + suffix;
           idPhieuThu = formValues.id + "." + suffix;
         }
@@ -616,6 +634,12 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           </form>
         </Box>
       </Box>
+      <WarningDialog
+        open={warningDialogOpen}
+        title="Cảnh báo"
+        message="Vui lòng kiểm tra lại số Hợp đồng vừa nhập."
+        onConfirm={() => setWarningDialogOpen(false)}
+      />
     </Box>
   );
 };
