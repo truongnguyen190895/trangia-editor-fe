@@ -13,7 +13,6 @@ import {
   MenuItem,
   FormControl,
   FormLabel,
-  FormHelperText,
   CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
@@ -289,22 +288,27 @@ export const ThemCaNhanDialog = ({
             </FormControl>
             <FormControl sx={{ marginBottom: "10px" }}>
               <FormLabel>Nơi cấp *</FormLabel>
-              <Select
-                value={values["nơi_cấp"]}
-                name="nơi_cấp"
-                onChange={handleChange}
-                fullWidth
-                error={!!errors["nơi_cấp"] && touched["nơi_cấp"]}
-              >
-                {NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-              {errors["nơi_cấp"] && touched["nơi_cấp"] && (
-                <FormHelperText error>{errors["nơi_cấp"]}</FormHelperText>
-              )}
+              <Autocomplete
+                freeSolo
+                options={NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((o) => o.value)}
+                value={values["nơi_cấp"] || ""}
+                onChange={(_, newValue) =>
+                  setFieldValue("nơi_cấp", (newValue as string) || "")
+                }
+                onInputChange={(_, newInputValue) =>
+                  setFieldValue("nơi_cấp", newInputValue)
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    error={!!errors["nơi_cấp"] && touched["nơi_cấp"]}
+                    helperText={
+                      (touched["nơi_cấp"] && errors["nơi_cấp"]) || ""
+                    }
+                  />
+                )}
+              />
             </FormControl>
             <FormControl sx={{ marginBottom: "10px", gridColumn: "span 2" }}>
               <FormLabel>Địa chỉ thường trú *</FormLabel>

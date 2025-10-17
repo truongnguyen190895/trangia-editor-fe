@@ -12,7 +12,6 @@ import {
   MenuItem,
   Button,
   DialogActions,
-  FormHelperText,
   CircularProgress,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -352,24 +351,25 @@ export const ThemVoChongDialog = ({
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Nơi cấp *</FormLabel>
-                    <Select
-                      value={values["chồng"]["nơi_cấp"]}
-                      name="chồng.nơi_cấp"
-                      onChange={handleChange}
-                      fullWidth
-                      error={!!errors["chồng"]?.["nơi_cấp"]}
-                    >
-                      {NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
-                        <MenuItem key={item.value} value={item.value}>
-                          {item.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors["chồng"]?.["nơi_cấp"] && (
-                      <FormHelperText error>
-                        {errors["chồng"]?.["nơi_cấp"]}
-                      </FormHelperText>
-                    )}
+                    <Autocomplete
+                      freeSolo
+                      options={NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((o) => o.value)}
+                      value={values["chồng"]["nơi_cấp"] || ""}
+                      onChange={(_, newValue) =>
+                        setFieldValue("chồng.nơi_cấp", (newValue as string) || "")
+                      }
+                      onInputChange={(_, newInputValue) =>
+                        setFieldValue("chồng.nơi_cấp", newInputValue)
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          error={!!errors["chồng"]?.["nơi_cấp"]}
+                          helperText={errors["chồng"]?.["nơi_cấp"] || ""}
+                        />
+                      )}
+                    />
                   </FormControl>
                   <FormControl
                     sx={{ marginBottom: "10px", gridColumn: "span 2" }}
@@ -525,24 +525,25 @@ export const ThemVoChongDialog = ({
                   </FormControl>
                   <FormControl sx={{ marginBottom: "10px" }}>
                     <FormLabel>Nơi cấp *</FormLabel>
-                    <Select
-                      value={values["vợ"]["nơi_cấp"]}
-                      name="vợ.nơi_cấp"
-                      onChange={handleChange}
-                      fullWidth
-                      error={!!errors["vợ"]?.["nơi_cấp"]}
-                    >
-                      {NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((item) => (
-                        <MenuItem key={item.value} value={item.value}>
-                          {item.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors["vợ"]?.["nơi_cấp"] && (
-                      <FormHelperText error>
-                        {errors["vợ"]?.["nơi_cấp"]}
-                      </FormHelperText>
-                    )}
+                    <Autocomplete
+                      freeSolo
+                      options={NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((o) => o.value)}
+                      value={values["vợ"]["nơi_cấp"] || ""}
+                      onChange={(_, newValue) =>
+                        setFieldValue("vợ.nơi_cấp", (newValue as string) || "")
+                      }
+                      onInputChange={(_, newInputValue) =>
+                        setFieldValue("vợ.nơi_cấp", newInputValue)
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          error={!!errors["vợ"]?.["nơi_cấp"]}
+                          helperText={errors["vợ"]?.["nơi_cấp"] || ""}
+                        />
+                      )}
+                    />
                   </FormControl>
                   <FormControl
                     sx={{ marginBottom: "10px", gridColumn: "span 2" }}
