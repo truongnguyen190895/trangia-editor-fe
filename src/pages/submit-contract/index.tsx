@@ -223,8 +223,8 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         let idPhieuThu = "";
         if (type === "Contract") {
           if (
-            Number(formValues.id) - Number(nextAvailableId?.split("/")[0]) >
-            100
+            !isEdit &&
+            Number(formValues.id) - Number(nextAvailableId?.split("/")[0]) > 100
           ) {
             setWarningDialogOpen(true);
             setIsLoading(false);
@@ -238,8 +238,8 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           idPhieuThu = formValues.id;
         } else {
           if (
-            Number(formValues.id) - Math.trunc(Number(nextAvailableId)) >
-            100
+            !isEdit &&
+            Number(formValues.id) - Math.trunc(Number(nextAvailableId)) > 100
           ) {
             setWarningDialogOpen(true);
             setIsLoading(false);
