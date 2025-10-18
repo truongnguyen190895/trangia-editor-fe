@@ -8,6 +8,7 @@ import {
   Button,
   Autocomplete,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -15,6 +16,9 @@ import { CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT } from "@/
 import { numberToVietnamese } from "@/utils/number-to-words";
 import type { ThongTinCanHo } from "@/models/hdmb-can-ho";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
+import { saveContractEntity } from "@/api/contract_entity";
+import { useState } from "react";
+import { SearchEntity } from "@/components/common/search-entity";
 
 interface ThongTinCanHoProps {
   open: boolean;
@@ -28,6 +32,7 @@ export const ThongTinCanHoDialog = ({
   isUyQuyen,
 }: ThongTinCanHoProps) => {
   const { canHo, addCanHo } = useHDMBCanHoContext();
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const validationSchema = Yup.object({
     số_căn_hộ: Yup.string().required("Số căn hộ là bắt buộc"),
@@ -53,7 +58,11 @@ export const ThongTinCanHoDialog = ({
 
   const submitForm = (values: ThongTinCanHo) => {
     addCanHo(values);
-    handleClose();
+    setSaveLoading(true);
+    saveContractEntity(values.số_gcn, values).finally(() => {
+      setSaveLoading(false);
+      handleClose();
+    });
   };
 
   const getInitialValue = (): ThongTinCanHo => {
@@ -84,18 +93,38 @@ export const ThongTinCanHoDialog = ({
         };
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinCanHo>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinCanHo>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
+
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        ...response,
+      });
+    }
+  };
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin căn hộ</DialogTitle>
         <DialogContent>
+          <SearchEntity
+            placeholder="Nhập số giấy tờ (số sổ)"
+            onSearch={handleSearch}
+          />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
@@ -438,9 +467,16 @@ export const ThongTinCanHoDialog = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button variant="contained" type="submit">
-            Thêm
+          <Button variant="outlined" color="secondary" onClick={handleClose}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            type="submit"
+            color="success"
+            disabled={saveLoading}
+          >
+            {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>
       </Box>
