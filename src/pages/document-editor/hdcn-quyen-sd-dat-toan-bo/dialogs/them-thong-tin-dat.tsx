@@ -15,6 +15,7 @@ import {
   Table,
   TableContainer,
   TableBody,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -29,6 +30,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -83,13 +86,21 @@ export const ThemThongTinDat = ({
     thời_hạn_sử_dụng: "",
   });
   const [indexEdit, setIndexEdit] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchNumber, setSearchNumber] = useState<string>("");
+  const [isNotExisted, setIsNotExisted] = useState<boolean>(false);
 
   const submitForm = (values: ThongTinThuaDat) => {
-    addAgreementObject({
+    const payload = {
       ...values,
       mục_đích_và_thời_hạn_sử_dụng: mụcđíchVàThờiHạnSửDụng,
+    };
+    addAgreementObject(payload);
+    setLoading(true);
+    saveContractEntity(values.số_giấy_chứng_nhận, payload).finally(() => {
+      setLoading(false);
+      handleClose();
     });
-    handleClose();
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
@@ -118,12 +129,19 @@ export const ThemThongTinDat = ({
     );
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinThuaDat>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinThuaDat>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
 
   const handleAddMụcĐíchVàThờiHạnSửDụng = (indexEdit: number | null) => {
     if (indexEdit !== null) {
@@ -146,11 +164,66 @@ export const ThemThongTinDat = ({
     });
   };
 
+  const handleSearch = () => {
+    setLoading(true);
+    getContractEntity(searchNumber)
+      .then((response) => {
+        setIsNotExisted(false);
+        setValues({
+          ...values,
+          ...response,
+        });
+        setMụcĐíchVàThờiHạnSửDụng(response.mục_đích_và_thời_hạn_sử_dụng ?? []);
+      })
+      .catch(() => {
+        setIsNotExisted(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle>Thêm thông tin đất</DialogTitle>
+        <DialogTitle>
+          <Typography variant="body1" fontSize="2rem" fontWeight="600">
+            Thêm thông tin đất
+          </Typography>
+        </DialogTitle>
         <DialogContent>
+          <Box
+            className="search"
+            display="flex"
+            alignItems="center"
+            gap="10px"
+            mb="0.5rem"
+          >
+            <TextField
+              value={searchNumber}
+              onChange={(event) => setSearchNumber(event.target.value)}
+              placeholder="Nhập số thửa đất"
+              sx={{ width: "400px" }}
+            />
+            <Button
+              onClick={handleSearch}
+              disabled={loading}
+              variant="contained"
+              color="success"
+            >
+              {loading ? <CircularProgress size={20} /> : <SearchIcon />}
+            </Button>
+          </Box>
+          {isNotExisted ? (
+            <Typography
+              variant="body1"
+              fontSize="1.2rem"
+              fontWeight="600"
+              color="warning.main"
+            >
+              Số thửa đất này không tồn tại trong hệ thống và sẽ được lưu lại
+            </Typography>
+          ) : null}
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
@@ -393,8 +466,8 @@ export const ThemThongTinDat = ({
                     freeSolo
                     id="mục đích sử dụng"
                     options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
-                    getOptionLabel={(option) => 
-                      typeof option === 'string' ? option : option.label
+                    getOptionLabel={(option) =>
+                      typeof option === "string" ? option : option.label
                     }
                     value={
                       MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
@@ -403,7 +476,8 @@ export const ThemThongTinDat = ({
                       ) ?? mụcđíchVàThờiHạnSửDụngEdit["phân_loại"]
                     }
                     onChange={(_event, value) => {
-                      const newValue = typeof value === 'string' ? value : value?.value ?? "";
+                      const newValue =
+                        typeof value === "string" ? value : value?.value ?? "";
                       setMụcĐíchVàThờiHạnSửDụngEdit({
                         ...mụcđíchVàThờiHạnSửDụngEdit,
                         phân_loại: newValue,
@@ -620,7 +694,7 @@ export const ThemThongTinDat = ({
           <Button
             variant="contained"
             type="submit"
-            disabled={mụcđíchVàThờiHạnSửDụng.length === 0}
+            disabled={mụcđíchVàThờiHạnSửDụng.length === 0 || loading}
           >
             Thêm
           </Button>
