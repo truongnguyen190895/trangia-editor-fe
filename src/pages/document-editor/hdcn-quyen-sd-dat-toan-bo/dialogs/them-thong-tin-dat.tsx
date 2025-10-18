@@ -86,7 +86,8 @@ export const ThemThongTinDat = ({
     thời_hạn_sử_dụng: "",
   });
   const [indexEdit, setIndexEdit] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [searchNumber, setSearchNumber] = useState<string>("");
   const [isNotExisted, setIsNotExisted] = useState<boolean>(false);
 
@@ -96,9 +97,9 @@ export const ThemThongTinDat = ({
       mục_đích_và_thời_hạn_sử_dụng: mụcđíchVàThờiHạnSửDụng,
     };
     addAgreementObject(payload);
-    setLoading(true);
+    setSaveLoading(true);
     saveContractEntity(values.số_giấy_chứng_nhận, payload).finally(() => {
-      setLoading(false);
+      setSaveLoading(false);
       handleClose();
     });
   };
@@ -165,7 +166,7 @@ export const ThemThongTinDat = ({
   };
 
   const handleSearch = () => {
-    setLoading(true);
+    setSearchLoading(true);
     getContractEntity(searchNumber)
       .then((response) => {
         setIsNotExisted(false);
@@ -179,7 +180,7 @@ export const ThemThongTinDat = ({
         setIsNotExisted(true);
       })
       .finally(() => {
-        setLoading(false);
+        setSearchLoading(false);
       });
   };
 
@@ -207,11 +208,11 @@ export const ThemThongTinDat = ({
             />
             <Button
               onClick={handleSearch}
-              disabled={loading}
+              disabled={searchLoading}
               variant="contained"
               color="success"
             >
-              {loading ? <CircularProgress size={20} /> : <SearchIcon />}
+              {searchLoading ? <CircularProgress size={20} /> : <SearchIcon />}
             </Button>
           </Box>
           {isNotExisted ? (
@@ -694,9 +695,9 @@ export const ThemThongTinDat = ({
           <Button
             variant="contained"
             type="submit"
-            disabled={mụcđíchVàThờiHạnSửDụng.length === 0 || loading}
+            disabled={mụcđíchVàThờiHạnSửDụng.length === 0 || saveLoading}
           >
-            Thêm
+            {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>
       </Box>
