@@ -203,7 +203,7 @@ export const ThemThongTinDat = ({
             <TextField
               value={searchNumber}
               onChange={(event) => setSearchNumber(event.target.value)}
-              placeholder="Nhập số thửa đất"
+              placeholder="Nhập số giấy tờ (số sổ)"
               sx={{ width: "400px" }}
             />
             <Button
