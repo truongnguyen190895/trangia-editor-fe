@@ -1,14 +1,6 @@
 import { useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  InputAdornment,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
 import { ObjectEntity } from "./components/object";
-import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type {
   HDMBCanHoPayload,
@@ -361,29 +353,6 @@ export const HDTangChoCanHoToanBo = () => {
 
   return (
     <Box display="flex" gap="2rem">
-      <Box
-        border="1px solid #BCCCDC"
-        borderRadius="5px"
-        padding="1rem"
-        display="none" // TODO: temporary hide search
-        flex={1}
-      >
-        <Typography variant="h6">Tìm kiếm</Typography>
-        <TextField
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            },
-          }}
-          fullWidth
-          placeholder="Tên hoặc CCCD/CMND/Hộ chiếu"
-          sx={{ mt: 2 }}
-        />
-      </Box>
       <Box
         className="full-land-transfer"
         display="flex"
