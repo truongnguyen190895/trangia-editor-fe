@@ -11,11 +11,13 @@ import History from "@/pages/history";
 import Accounting from "@/pages/accounting";
 import NotFound from "@/pages/not-found";
 import ProfilePage from "@/pages/profile";
+import { ErrorBoundary } from "@/components/common/error-boundary";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         path: "/",
