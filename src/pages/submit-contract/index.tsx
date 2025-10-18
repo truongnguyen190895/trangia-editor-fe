@@ -222,14 +222,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         let idToSubmit = "";
         let idPhieuThu = "";
         if (type === "Contract") {
-        //   if (
-        //     !isEdit &&
-        //     Number(formValues.id) - Number(nextAvailableId?.split("/")[0]) > 100
-        //   ) {
-        //     setWarningDialogOpen(true);
-        //     setIsLoading(false);
-        //     return;
-        //   }
+          if (!isEdit && Number(formValues.id) > 9999) {
+            setWarningDialogOpen(true);
+            setIsLoading(false);
+            return;
+          }
           idToSubmit =
             formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
           idPhieuThu = formValues.id + "/" + suffix;
@@ -237,14 +234,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           idToSubmit = formValues.id;
           idPhieuThu = formValues.id;
         } else {
-        //   if (
-        //     !isEdit &&
-        //     Number(formValues.id) - Math.trunc(Number(nextAvailableId)) > 100
-        //   ) {
-        //     setWarningDialogOpen(true);
-        //     setIsLoading(false);
-        //     return;
-        //   }
+          if (!isEdit && Number(formValues.id) > 30000) {
+            setWarningDialogOpen(true);
+            setIsLoading(false);
+            return;
+          }
           idToSubmit = formValues.id + "." + suffix;
           idPhieuThu = formValues.id + "." + suffix;
         }
