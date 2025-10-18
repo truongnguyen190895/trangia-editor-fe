@@ -7,6 +7,7 @@ import {
   DialogActions,
   Button,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -15,6 +16,9 @@ import { numberToVietnamese } from "@/utils/number-to-words";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
 import type { ThongTinThuaDat } from "@/models/hdmb-can-ho";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
+import { SearchEntity } from "@/components/common/search-entity";
+import { saveContractEntity } from "@/api/contract_entity";
+import { useState } from "react";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -30,10 +34,15 @@ export const ThemThongTinDat = ({
   handleClose,
 }: ThemThongTinDatProps) => {
   const { agreementObject, addAgreementObject } = useHDMBCanHoContext();
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
-    handleClose();
+    setSaveLoading(true);
+    saveContractEntity(values.số_thửa_đất, values).finally(() => {
+      setSaveLoading(false);
+      handleClose();
+    });
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
@@ -51,18 +60,37 @@ export const ThemThongTinDat = ({
         };
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinThuaDat>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinThuaDat>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
 
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        ...response,
+      });
+    }
+  };
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
+          <SearchEntity
+            placeholder="Nhập số giấy tờ (số sổ)"
+            onSearch={handleSearch}
+          />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
@@ -139,22 +167,35 @@ export const ThemThongTinDat = ({
                   errors["hình_thức_sở_hữu_đất"]
                 }
               />
-
               <Autocomplete
                 fullWidth
+                freeSolo
                 id="mục đích sử dụng"
                 options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
-                getOptionLabel={(option) => option.label}
-                value={
-                  MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
-                    (item) => item.value === values["mục_đích_sở_hữu_đất"]
-                  ) ?? null
-                }
+                value={values["mục_đích_sở_hữu_đất"]}
                 onChange={(_event, value) => {
-                  setFieldValue("mục_đích_sở_hữu_đất", value?.value ?? "");
+                  setFieldValue("mục_đích_sở_hữu_đất", value ?? "");
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Mục đích sử dụng *" />
+                  <TextField
+                    {...params}
+                    label="Mục đích sử dụng *"
+                    onChange={(event) => {
+                      setFieldValue(
+                        "mục_đích_sở_hữu_đất",
+                        event.target.value ?? ""
+                      );
+                    }}
+                    error={
+                      !!errors["mục_đích_sở_hữu_đất"] &&
+                      touched["mục_đích_sở_hữu_đất"]
+                    }
+                    helperText={
+                      errors["mục_đích_sở_hữu_đất"] &&
+                      touched["mục_đích_sở_hữu_đất"] &&
+                      errors["mục_đích_sở_hữu_đất"]
+                    }
+                  />
                 )}
               />
               <TextField
@@ -201,9 +242,16 @@ export const ThemThongTinDat = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button variant="contained" type="submit">
-            Thêm
+          <Button variant="outlined" color="secondary" onClick={handleClose}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            type="submit"
+            color="success"
+            disabled={saveLoading}
+          >
+            {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>
       </Box>
