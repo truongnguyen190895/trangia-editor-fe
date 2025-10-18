@@ -1,4 +1,5 @@
 import { api } from ".";
+import type { Branch } from "./branchs";
 
 export interface User {
   username: string;
@@ -10,6 +11,7 @@ export interface User {
   account_non_expired: boolean;
   account_non_locked: boolean;
   credentials_non_expired: boolean;
+  branches: Branch[];
 }
 
 export interface ListUsersResponse {

@@ -53,16 +53,24 @@ const ProfilePage = () => {
     }
     return userNameArray[0].charAt(0).toUpperCase();
   };
+
+  const getUserBranch = () => {
+    if (user) {
+      return user.branches[0].friendly_name;
+    }
+    return "";
+  };
   return (
     <Box maxWidth={800} mx="auto">
       <Paper elevation={3} sx={{ p: 4, mt: 4, textAlign: "center" }}>
         <Avatar sx={{ width: 80, height: 80, mx: "auto", mb: 2 }}>
-          {user.name
-            ? extractUserNameLetter()
-            : "U"}
+          {user.name ? extractUserNameLetter() : "U"}
         </Avatar>
         <Typography variant="h4" gutterBottom>
           {user.name || "Người dùng"}
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          {getUserBranch()}
         </Typography>
         <Divider sx={{ my: 2 }} />
         <Typography variant="h6" gutterBottom>
