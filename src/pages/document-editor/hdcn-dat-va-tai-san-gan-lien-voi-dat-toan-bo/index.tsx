@@ -167,9 +167,6 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
     };
-
-    console.log(payload);
-
     return payload;
   };
 
@@ -191,7 +188,9 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = url;
-          link.download = `HDCN qsdd và tsglvd một phần (${scope === "partial" ? "đồng sử dụng" : "sử dụng toàn bộ"}).docx`;
+          link.download = `HDCN qsdd và tsglvd một phần (${
+            scope === "partial" ? "đồng sử dụng" : "sử dụng toàn bộ"
+          }).docx`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -324,18 +323,25 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
         ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
         đặc_điểm_thửa_đất: {
           diện_tích: {
-            số: isMotPhan ? agreementObject["một_phần_diện_tích_đất_bằng_số"] as string : agreementObject["diện_tích_đất_bằng_số"],
+            số: isMotPhan
+              ? (agreementObject["một_phần_diện_tích_đất_bằng_số"] as string)
+              : agreementObject["diện_tích_đất_bằng_số"],
           },
           mục_đích_và_thời_hạn_sử_dụng: [
             {
               phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
-              diện_tích: isMotPhan ? agreementObject["một_phần_diện_tích_đất_bằng_số"] as string : agreementObject["diện_tích_đất_bằng_số"],
+              diện_tích: isMotPhan
+                ? (agreementObject["một_phần_diện_tích_đất_bằng_số"] as string)
+                : agreementObject["diện_tích_đất_bằng_số"],
             },
           ],
           nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
         },
         số_tiền: taiSan["số_tiền"],
-        diện_tích_xây_dựng: isMotPhan ? (taiSan["một_phần_diện_tích_xây_dựng"] || taiSan["diện_tích_xây_dựng"]) : taiSan["diện_tích_xây_dựng"],
+        diện_tích_xây_dựng: isMotPhan
+          ? taiSan["một_phần_diện_tích_xây_dựng"] ||
+            taiSan["diện_tích_xây_dựng"]
+          : taiSan["diện_tích_xây_dựng"],
         ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
         tài_sản: taiSan.thông_tin_tài_sản,
         nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
@@ -374,7 +380,9 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
   };
 
   const getPhieuThuLyType = () => {
-    return isMotPhan ? "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung" : "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo";
+    return isMotPhan
+      ? "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung"
+      : "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo";
   };
 
   return (
@@ -414,7 +422,11 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       >
         <ThemChuThe title="Bên A" side="partyA" />
         <ThemChuThe title="Bên B" side="partyB" />
-        <ObjectEntity title="Đối tượng chuyển nhượng của hợp đồng" isMotPhan={isMotPhan} scope={scope} />
+        <ObjectEntity
+          title="Đối tượng chuyển nhượng của hợp đồng"
+          isMotPhan={isMotPhan}
+          scope={scope}
+        />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"

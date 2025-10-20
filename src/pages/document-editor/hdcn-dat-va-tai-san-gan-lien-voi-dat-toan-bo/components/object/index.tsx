@@ -85,7 +85,7 @@ export const ObjectEntity = ({
             Thêm thông tin mảnh đất
           </Button>
         </Box>
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px">
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px" >
           <Box>
             <Typography variant="h4" color="#B12C00" my="1rem">
               Thông tin tài sản

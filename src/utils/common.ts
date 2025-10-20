@@ -24,3 +24,38 @@ export const generateThoiHanSuDung = (
 export const getFirstLetter = (name: string) => {
   return name.charAt(0).toUpperCase();
 };
+
+/**
+ * Converts all empty string properties in an object to null.
+ * Recursively handles nested objects and arrays.
+ * 
+ * @param obj - The object to process
+ * @returns A new object with empty strings converted to null
+ * 
+ * @example
+ * convertEmptyStringsToNull({name: "", age: 25, address: {street: "", city: "Hanoi"}})
+ * // Returns {name: null, age: 25, address: {street: null, city: "Hanoi"}}
+ */
+export const convertEmptyStringsToNull = <T>(obj: T): T => {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+
+  if (typeof obj === 'string') {
+    return (obj === '' ? null : obj) as T;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(item => convertEmptyStringsToNull(item)) as T;
+  }
+
+  if (typeof obj === 'object') {
+    const result = {} as T;
+    for (const [key, value] of Object.entries(obj)) {
+      (result as any)[key] = convertEmptyStringsToNull(value);
+    }
+    return result;
+  }
+
+  return obj;
+};

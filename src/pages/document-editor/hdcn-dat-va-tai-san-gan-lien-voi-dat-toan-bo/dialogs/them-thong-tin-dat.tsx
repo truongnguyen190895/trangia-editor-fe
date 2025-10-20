@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -18,6 +19,8 @@ import { numberToVietnamese } from "@/utils/number-to-words";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
 import type { ThongTinThuaDat } from "@/models/hdcn-dat-va-tsglvd";
 import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat-va-tai-san-glvd";
+import { SearchEntity } from "@/components/common/search-entity";
+import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -36,12 +39,28 @@ export const ThemThongTinDat = ({
   isMotPhan = false,
   scope = "full",
 }: ThemThongTinDatProps) => {
-  const { agreementObject, addAgreementObject } =
+  const { taiSan, agreementObject, addAgreementObject } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
-  console.log(scope);
+  console.log(scope); // TODO: WIP
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
-    handleClose();
+    setSaveLoading(true);
+    getContractEntity(values?.số_gcn).then((response) => {
+      const payload = {
+        ...response,
+        số_thửa_đất: values?.số_thửa_đất,
+        số_tờ_bản_đồ: values?.số_tờ_bản_đồ,
+        diện_tích: values.diện_tích_đất_bằng_số,
+        diện_tích_bằng_chữ: values.diện_tích_đất_bằng_chữ,
+        
+      };
+    });
+
+    saveContractEntity(values?.số_gcn, values).finally(() => {
+      setSaveLoading(false);
+      handleClose();
+    });
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
@@ -67,18 +86,53 @@ export const ThemThongTinDat = ({
         };
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinThuaDat>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinThuaDat>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
+
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        số_thửa_đất: response?.số_thửa_đất,
+        số_tờ_bản_đồ: response?.số_tờ_bản_đồ,
+        diện_tích_đất_bằng_số: response?.diện_tích,
+        diện_tích_đất_bằng_chữ: response?.diện_tích_bằng_chữ,
+        một_phần_diện_tích_đất_bằng_số: "",
+        một_phần_diện_tích_đất_bằng_chữ: "",
+        hình_thức_sở_hữu_đất: response?.hình_thức_sử_dụng,
+        mục_đích_sở_hữu_đất: "",
+        thời_hạn_sử_dụng_đất: "",
+        nguồn_gốc_sử_dụng_đất: response?.nguồn_gốc_sử_dụng,
+        địa_chỉ_nhà_đất: response?.địa_chỉ_mới,
+        loại_gcn: response?.loại_giấy_chứng_nhận,
+        số_gcn: response?.số_giấy_chứng_nhận,
+        số_vào_sổ_cấp_gcn: response?.số_vào_sổ_cấp_giấy_chứng_nhận,
+        nơi_cấp_gcn: response?.nơi_cấp_giấy_chứng_nhận,
+        ngày_cấp_gcn: response?.ngày_cấp_giấy_chứng_nhận,
+      });
+    }
+  };
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle variant="h4">Thêm thông tin đất</DialogTitle>
         <DialogContent>
+          <SearchEntity
+            placeholder="Nhập số giấy tờ (số sổ)"
+            onSearch={handleSearch}
+          />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
