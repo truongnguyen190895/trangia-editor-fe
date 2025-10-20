@@ -60,7 +60,7 @@ export const ThemThongTinXe = ({
       ...values,
     });
     setSaveLoading(true);
-    saveContractEntity(values.số_đăng_ký, values).finally(() => {
+    saveContractEntity(values.số_khung, values).finally(() => {
       setSaveLoading(false);
       handleClose();
     });
@@ -118,7 +118,7 @@ export const ThemThongTinXe = ({
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin xe {isXeMay ? "máy" : "ô tô"}</DialogTitle>
         <DialogContent>
-          <SearchEntity placeholder="Nhập số đăng ký" onSearch={handleSearch} />
+          <SearchEntity placeholder="Nhập số khung" onSearch={handleSearch} />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
