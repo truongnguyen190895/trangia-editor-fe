@@ -41,7 +41,7 @@ export const ThemThongTinDat = ({
     setSaveLoading(true);
     saveContractEntity(values.số_thửa_đất, values).finally(() => {
       setSaveLoading(false);
-        handleClose();
+      handleClose();
     });
   };
 
@@ -79,9 +79,13 @@ export const ThemThongTinDat = ({
       setValues({
         ...values,
         ...response,
+        mục_đích_sở_hữu_đất:
+          response?.mục_đích_sở_hữu_đất?.value ?? response?.mục_đích_sở_hữu_đất,
       });
     }
   };
+
+  console.log("values", values);
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
