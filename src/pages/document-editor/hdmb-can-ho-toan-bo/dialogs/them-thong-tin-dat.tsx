@@ -85,8 +85,6 @@ export const ThemThongTinDat = ({
     }
   };
 
-  console.log("values", values);
-
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
