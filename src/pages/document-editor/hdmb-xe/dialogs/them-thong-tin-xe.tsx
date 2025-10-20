@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -8,15 +9,15 @@ import {
   Button,
   Divider,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
 import type { ThongTinXeOto } from "@/models/hdmb-xe";
-
 import { numberToVietnamese } from "@/utils/number-to-words";
-
 import { useHDMBXeContext } from "@/context/hdmb-xe";
+import { saveContractEntity } from "@/api/contract_entity";
+import { SearchEntity } from "@/components/common/search-entity";
 
 interface ThemThongTinXeProps {
   open: boolean;
@@ -34,6 +35,7 @@ export const ThemThongTinXe = ({
   handleClose,
 }: ThemThongTinXeProps) => {
   const { agreementObject, addAgreementObject } = useHDMBXeContext();
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const validationSchema = Yup.object({
     nhãn_hiệu: Yup.string().required("Nhãn hiệu là bắt buộc"),
@@ -57,7 +59,11 @@ export const ThemThongTinXe = ({
     addAgreementObject({
       ...values,
     });
-    handleClose();
+    setSaveLoading(true);
+    saveContractEntity(values.số_đăng_ký, values).finally(() => {
+      setSaveLoading(false);
+      handleClose();
+    });
   };
 
   const getInitialValue = (): ThongTinXeOto => {
@@ -71,32 +77,48 @@ export const ThemThongTinXe = ({
         biển_số: "",
         số_đăng_ký: "",
         nơi_cấp: "",
-        ngày_đăng_ký_lần_đầu: null,
+        ngày_đăng_ký_lần_đầu: "",
         ngày_đăng_ký: "",
         số_tiền: "",
         số_tiền_bằng_chữ: "",
         số_loại: null,
-        số_bằng_chứng_trúng_đấu_giá: null,
-        nơi_cấp_đấu_giá: null,
-        ngày_trúng_đấu_giá: null,
-        thời_hạn: null,
-        thời_hạn_bằng_chữ: null,
+        số_bằng_chứng_trúng_đấu_giá: "",
+        nơi_cấp_đấu_giá: "",
+        ngày_trúng_đấu_giá: "",
+        thời_hạn: "",
+        thời_hạn_bằng_chữ: "",
       }
     );
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinXeOto>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinXeOto>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
 
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        ...response,
+      });
+    }
+  };
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin xe {isXeMay ? "máy" : "ô tô"}</DialogTitle>
         <DialogContent>
+          <SearchEntity placeholder="Nhập số đăng ký" onSearch={handleSearch} />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
@@ -383,9 +405,16 @@ export const ThemThongTinXe = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button variant="contained" type="submit">
-            Thêm
+          <Button variant="outlined" color="secondary" onClick={handleClose}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            type="submit"
+            color="success"
+            disabled={saveLoading}
+          >
+            {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>
       </Box>
