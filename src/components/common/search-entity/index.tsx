@@ -51,7 +51,7 @@ export const SearchEntity = ({ placeholder, onSearch }: SearchEntityProps) => {
         <Button
           variant="contained"
           color="success"
-          disabled={searchLoading}
+          disabled={searchLoading || !searchNumber}
           onClick={handleSearch}
         >
           {searchLoading ? <CircularProgress size={20} /> : <SearchIcon />}
