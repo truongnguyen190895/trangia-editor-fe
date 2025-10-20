@@ -23,6 +23,7 @@ import type {
   KhaiThueHDMBTaiSanPayload,
 } from "@/models/hdmb-tai-san";
 import type { HdDatCocPayload } from "@/models/hd-dat-coc";
+import { convertEmptyStringsToNull } from "@/utils/common";
 
 export interface PhieuThuPayload {
   d: string;
@@ -159,7 +160,7 @@ export const render_hdcn_mot_phan_dat_va_tsglvd = async (
     url =
       "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo";
   }
-  return api.post(url, payload, { responseType: "blob" });
+  return api.post(url, convertEmptyStringsToNull(payload), { responseType: "blob" });
 };
 
 export const render_hdtc_can_ho_toan_bo = async (payload: HDMBCanHoPayload) => {

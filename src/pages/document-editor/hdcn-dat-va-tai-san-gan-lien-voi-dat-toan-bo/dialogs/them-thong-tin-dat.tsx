@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -7,6 +8,7 @@ import {
   DialogActions,
   Button,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -18,6 +20,8 @@ import { numberToVietnamese } from "@/utils/number-to-words";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
 import type { ThongTinThuaDat } from "@/models/hdcn-dat-va-tsglvd";
 import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat-va-tai-san-glvd";
+import { SearchEntity } from "@/components/common/search-entity";
+import { saveContractEntity } from "@/api/contract_entity";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -36,12 +40,19 @@ export const ThemThongTinDat = ({
   isMotPhan = false,
   scope = "full",
 }: ThemThongTinDatProps) => {
-  const { agreementObject, addAgreementObject } =
+  const { taiSan, agreementObject, addAgreementObject } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
-  console.log(scope);
+  console.log(scope); // TODO: WIP
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
-    handleClose();
+    setSaveLoading(true);
+    const payload = { ...values, ...taiSan };
+    setSaveLoading(true);
+    saveContractEntity(values?.số_gcn, payload).finally(() => {
+      setSaveLoading(false);
+      handleClose();
+    });
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
@@ -67,18 +78,38 @@ export const ThemThongTinDat = ({
         };
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinThuaDat>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinThuaDat>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
+
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        ...response,
+      });
+    }
+  };
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle variant="h4">Thêm thông tin đất</DialogTitle>
         <DialogContent>
+          <SearchEntity
+            placeholder="Nhập số giấy tờ (số sổ)"
+            onSearch={handleSearch}
+          />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
@@ -354,8 +385,13 @@ export const ThemThongTinDat = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Hủy</Button>
-          <Button variant="contained" type="submit">
-            Thêm
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={saveLoading}
+            color={saveLoading ? "info" : "success"}
+          >
+            {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>
       </Box>

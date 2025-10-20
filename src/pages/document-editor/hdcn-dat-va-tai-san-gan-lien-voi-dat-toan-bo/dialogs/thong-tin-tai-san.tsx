@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import type { ThongTinTaiSan } from "@/models/hdcn-dat-va-tsglvd";
 import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat-va-tai-san-glvd";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { SearchEntity } from "@/components/common/search-entity";
 
 interface ThongTinTaiSanProps {
   open: boolean;
@@ -30,9 +31,9 @@ const validationSchema = Yup.object({
 
 export const ThongTinTaiSanDialog = ({
   open,
-  handleClose,
   isMotPhan = false,
   scope = "full",
+  handleClose,
 }: ThongTinTaiSanProps) => {
   const { taiSan, addTaiSan } = useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
   console.log(scope);
@@ -53,13 +54,21 @@ export const ThongTinTaiSanDialog = ({
         };
   };
 
-  const { values, errors, handleChange, handleSubmit, setFieldValue } =
+  const { values, errors, handleChange, handleSubmit, setFieldValue, setValues } =
     useFormik<ThongTinTaiSan>({
       initialValues: getInitialValue(),
       validationSchema,
       onSubmit: submitForm,
     });
 
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        ...response,
+      });
+    }
+  };
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
@@ -67,6 +76,10 @@ export const ThongTinTaiSanDialog = ({
           Thêm thông tin tài sản gắn liền với đất
         </DialogTitle>
         <DialogContent>
+            <SearchEntity
+              placeholder="Nhập số sổ"
+              onSearch={handleSearch}
+            />
           <Box>
             <Typography
               variant="body1"
