@@ -90,7 +90,7 @@ export const ThemThongTinDat = ({
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle>Thêm thông tin đất 1</DialogTitle>
+        <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
           <SearchEntity
             placeholder="Nhập số thửa đất"
