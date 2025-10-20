@@ -41,7 +41,7 @@ export const ThemThongTinDat = ({
     setSaveLoading(true);
     saveContractEntity(values.số_thửa_đất, values).finally(() => {
       setSaveLoading(false);
-      handleClose();
+        handleClose();
     });
   };
 
@@ -82,10 +82,11 @@ export const ThemThongTinDat = ({
       });
     }
   };
+
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle>Thêm thông tin đất</DialogTitle>
+        <DialogTitle>Thêm thông tin đất 1</DialogTitle>
         <DialogContent>
           <SearchEntity
             placeholder="Nhập số thửa đất"
@@ -174,7 +175,12 @@ export const ThemThongTinDat = ({
                 options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
                 value={values["mục_đích_sở_hữu_đất"]}
                 onChange={(_event, value) => {
-                  setFieldValue("mục_đích_sở_hữu_đất", value ?? "");
+                  setFieldValue(
+                    "mục_đích_sở_hữu_đất",
+                    typeof value === "string"
+                      ? value
+                      : (value as { value: string })?.value ?? ""
+                  );
                 }}
                 renderInput={(params) => (
                   <TextField
