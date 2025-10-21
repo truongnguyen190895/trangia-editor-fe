@@ -7,7 +7,6 @@ import {
   DialogActions,
   Button,
   Autocomplete,
-  Typography,
   CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
@@ -268,9 +267,6 @@ export const ThongTinCanHoDialog = ({
               />
               {isUyQuyen ? (
                 <Box>
-                  <Typography variant="body1" mb="20px">
-                    Thời hạn uỷ quyền (năm):
-                  </Typography>
                   <TextField
                     fullWidth
                     type="text"
