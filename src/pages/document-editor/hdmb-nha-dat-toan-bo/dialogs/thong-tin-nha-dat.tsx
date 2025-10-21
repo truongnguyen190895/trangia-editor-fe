@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import type { ThongTinNhaDat } from "@/models/hdmb-nha-dat";
 import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
+import { SearchEntity } from "@/components/common/search-entity";
 
 interface ThongTinNhaDatProps {
   open: boolean;
@@ -46,9 +47,9 @@ export const ThongTinNhaDatDialog = ({
           diện_tích_xây_dựng: "",
           diện_tích_sàn: "",
           số_tầng: "",
-          kết_cấu: null,
-          cấp_hạng: null,
-          năm_hoàn_thành_xây_dựng: null,
+          kết_cấu: "",
+          cấp_hạng: "",
+          năm_hoàn_thành_xây_dựng: "",
           số_tiền: "",
           số_tiền_bằng_chữ: "",
           ghi_chú: "",
@@ -57,18 +58,47 @@ export const ThongTinNhaDatDialog = ({
         };
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinNhaDat>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinNhaDat>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
 
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        diện_tích_xây_dựng: response?.diện_tích_xây_dựng ?? "",
+        diện_tích_sàn: response?.diện_tích_sàn ?? "",
+        số_tầng: response?.số_tầng ?? "",
+        kết_cấu: response?.kết_cấu ?? "",
+        cấp_hạng: response?.cấp_hạng ?? "",
+        năm_hoàn_thành_xây_dựng: response?.năm_hoàn_thành_xây_dựng ?? "",
+        số_tiền: response?.số_tiền ?? "",
+        số_tiền_bằng_chữ: response?.số_tiền_bằng_chữ ?? "",
+        ghi_chú: response?.ghi_chú ?? "",
+        loại_nhà_ở: response?.loại_nhà_ở ?? "",
+        hình_thức_sở_hữu: response?.hình_thức_sở_hữu ?? "",
+      });
+    }
+  };
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin nhà đất</DialogTitle>
         <DialogContent>
+          <SearchEntity
+            placeholder="Nhập số giấy tờ (số sổ)"
+            onSearch={handleSearch}
+          />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
@@ -193,7 +223,9 @@ export const ThongTinNhaDatDialog = ({
                 label="Hình thức sở hữu"
                 value={values["hình_thức_sở_hữu"]}
                 onChange={handleChange}
-                error={!!errors["hình_thức_sở_hữu"] && touched["hình_thức_sở_hữu"]}
+                error={
+                  !!errors["hình_thức_sở_hữu"] && touched["hình_thức_sở_hữu"]
+                }
                 helperText={
                   errors["hình_thức_sở_hữu"] &&
                   touched["hình_thức_sở_hữu"] &&

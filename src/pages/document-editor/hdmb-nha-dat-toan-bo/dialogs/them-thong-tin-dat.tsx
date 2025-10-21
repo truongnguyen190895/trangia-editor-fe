@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -8,6 +9,7 @@ import {
   Button,
   Autocomplete,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -19,6 +21,8 @@ import { numberToVietnamese } from "@/utils/number-to-words";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
 import type { ThongTinThuaDat } from "@/models/hdmb-nha-dat";
 import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
+import { SearchEntity } from "@/components/common/search-entity";
+import { saveContractEntity } from "@/api/contract_entity";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -31,7 +35,9 @@ export const ThemThongTinDat = ({
   isUyQuyen,
   handleClose,
 }: ThemThongTinDatProps) => {
-  const { agreementObject, addAgreementObject } = useHDMBNhaDatContext();
+  const { nhaDat, agreementObject, addAgreementObject } =
+    useHDMBNhaDatContext();
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const validationSchema = Yup.object({
     số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
@@ -44,7 +50,12 @@ export const ThemThongTinDat = ({
 
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
-    handleClose();
+    setSaveLoading(true);
+    const payload = { ...values, ...nhaDat };
+    saveContractEntity(values.số_gcn, payload).finally(() => {
+      setSaveLoading(false);
+      handleClose();
+    });
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
@@ -71,18 +82,38 @@ export const ThemThongTinDat = ({
         };
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinThuaDat>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinThuaDat>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
+
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        ...response,
+      });
+    }
+  };
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
+          <SearchEntity
+            placeholder="Nhập số giấy tờ (số sổ)"
+            onSearch={handleSearch}
+          />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
@@ -279,22 +310,36 @@ export const ThemThongTinDat = ({
                       errors["hình_thức_sở_hữu_đất"]
                     }
                   />
-
                   <Autocomplete
                     fullWidth
+                    freeSolo
                     id="mục đích sử dụng"
                     options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
-                    getOptionLabel={(option) => option.label}
+                    getOptionLabel={(option) =>
+                      typeof option === "string" ? option : option.label
+                    }
                     value={
                       MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
                         (item) => item.value === values["mục_đích_sở_hữu_đất"]
                       ) ?? null
                     }
                     onChange={(_event, value) => {
-                      setFieldValue("mục_đích_sở_hữu_đất", value?.value ?? "");
+                      setFieldValue(
+                        "mục_đích_sở_hữu_đất",
+                        typeof value === "string" ? value : value?.value ?? ""
+                      );
                     }}
                     renderInput={(params) => (
-                      <TextField {...params} label="Mục đích sử dụng *" />
+                      <TextField
+                        {...params}
+                        label="Mục đích sử dụng *"
+                        onChange={(event) => {
+                          setFieldValue(
+                            "mục_đích_sở_hữu_đất",
+                            event.target.value ?? ""
+                          );
+                        }}
+                      />
                     )}
                   />
                   <TextField
@@ -371,9 +416,16 @@ export const ThemThongTinDat = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button variant="contained" type="submit">
-            Thêm
+          <Button variant="outlined" color="secondary" onClick={handleClose}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            type="submit"
+            color="success"
+            disabled={saveLoading}
+          >
+            {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>
       </Box>

@@ -117,7 +117,7 @@ export const render_uy_quyen_toan_bo_can_ho = async (
 export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
   return api.post(
     "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-toan-bo",
-    payload,
+    convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
     }
@@ -129,7 +129,7 @@ export const render_hdtc_nha_dat_toan_bo = async (
 ) => {
   return api.post(
     "/templates/nhom-tang-cho/hd-tang-cho-nha-dat-toan-bo",
-    payload,
+    convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
     }
@@ -160,7 +160,9 @@ export const render_hdcn_mot_phan_dat_va_tsglvd = async (
     url =
       "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo";
   }
-  return api.post(url, convertEmptyStringsToNull(payload), { responseType: "blob" });
+  return api.post(url, convertEmptyStringsToNull(payload), {
+    responseType: "blob",
+  });
 };
 
 export const render_hdtc_can_ho_toan_bo = async (payload: HDMBCanHoPayload) => {

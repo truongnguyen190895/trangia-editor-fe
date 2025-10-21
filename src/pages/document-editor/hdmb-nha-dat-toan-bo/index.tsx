@@ -155,7 +155,7 @@ export const HDMBNhaDatToanBo = ({
         throw new Error("Agreement object or nha dat is null");
       }
     }
-
+debugger;
     const payload: HDMBNhaDatPayload = {
       ...getBenABenB(),
       ...agreementObject,
