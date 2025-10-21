@@ -8,7 +8,6 @@ import { ThemChuTheProvider } from "@/context/them-chu-the";
 import LoginPage from "@/pages/login";
 import SubmitContract from "@/pages/submit-contract";
 import History from "@/pages/history";
-import Accounting from "@/pages/accounting";
 import NotFound from "@/pages/not-found";
 import ProfilePage from "@/pages/profile";
 import { ErrorBoundary } from "@/components/common/error-boundary";
@@ -50,10 +49,6 @@ export const router = createBrowserRouter([
       {
         path: "/history",
         element: <History />,
-      },
-      {
-        path: "/accounting",
-        element: <Accounting />,
       },
       {
         path: "/profile",
