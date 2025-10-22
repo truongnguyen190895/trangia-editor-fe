@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import type { ThongTinTaiSan } from "@/models/hdmb-tai-san";
 import { useHDMBTaiSanContext } from "@/context/hdmb-tai-san";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { SearchEntity } from "@/components/common/search-entity";
 
 interface ThongTinTaiSanProps {
   open: boolean;
@@ -23,8 +24,8 @@ const validationSchema = Yup.object({
   tên_tài_sản: Yup.string().required("Tên tài sản là bắt buộc"),
   diện_tích_sử_dụng: Yup.string().required("Diện tích sử dụng là bắt buộc"),
   hình_thức_sở_hữu: Yup.string().required("Hình thức sở hữu là bắt buộc"),
-  số_tiền: Yup.string().required("Số tiền là bắt buộc"),
-  số_tiền_bằng_chữ: Yup.string().required("Số tiền bằng chữ là bắt buộc"),
+  số_tiền: Yup.string(),
+  số_tiền_bằng_chữ: Yup.string(),
 });
 
 export const ThongTinTaiSanDialog = ({
@@ -50,18 +51,40 @@ export const ThongTinTaiSanDialog = ({
         };
   };
 
-  const { values, errors, handleChange, handleSubmit, setFieldValue } =
-    useFormik<ThongTinTaiSan>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+    setValues,
+  } = useFormik<ThongTinTaiSan>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
 
+  const handleSearch = (response: any) => {
+    if (response) {
+      setValues({
+        ...values,
+        tên_tài_sản: response?.tên_tài_sản,
+        diện_tích_sử_dụng: response?.diện_tích_sử_dụng,
+        hình_thức_sở_hữu: response?.hình_thức_sở_hữu,
+        số_tiền: response?.số_tiền,
+        số_tiền_bằng_chữ: response?.số_tiền_bằng_chữ,
+      });
+    }
+  };
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin tài sản gắn liền với đất</DialogTitle>
         <DialogContent>
+          <SearchEntity
+            placeholder="Nhập số giấy tờ (số sổ)"
+            onSearch={handleSearch}
+          />
           <Box
             sx={{
               display: "grid",
@@ -120,8 +143,6 @@ export const ThongTinTaiSanDialog = ({
                       )?.toLocaleLowerCase()
                     );
                   }}
-                  error={!!errors.số_tiền}
-                  helperText={errors.số_tiền}
                 />
                 <Typography sx={{ fontStyle: "italic" }} color="text.secondary">
                   Bằng chữ: {values.số_tiền_bằng_chữ} VND

@@ -297,7 +297,7 @@ export const render_uy_quyen_toan_bo_xe_oto = async (
 export const render_hdmb_tai_san = async (payload: HDMBTaiSanPayload) => {
   return api.post(
     "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-tai-san",
-    payload,
+    convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
     }
