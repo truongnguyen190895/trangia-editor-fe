@@ -168,7 +168,7 @@ export const render_hdcn_mot_phan_dat_va_tsglvd = async (
 export const render_hdtc_can_ho_toan_bo = async (payload: HDMBCanHoPayload) => {
   return api.post(
     "/templates/nhom-tang-cho/hd-tang-cho-can-ho-toan-bo",
-    payload,
+    convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
     }

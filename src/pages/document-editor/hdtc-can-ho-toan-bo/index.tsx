@@ -324,7 +324,6 @@ export const HDTangChoCanHoToanBo = () => {
 
   const handleGenerateKhaiThue = () => {
     const payload = getPayloadKhaiThue();
-
     setOpenDialog(false);
     setIsGenerating(true);
     render_khai_thue_hdtc_can_ho_toan_bo(payload)
