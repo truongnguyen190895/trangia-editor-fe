@@ -8,6 +8,7 @@ import {
   Button,
   Autocomplete,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -15,10 +16,12 @@ import type { ThongTinThuaDat } from "@/models/agreement-object";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import { CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT } from "@/constants";
 import { numberToVietnamese } from "@/utils/number-to-words";
+import { SearchEntity } from "@/components/common/search-entity";
+import { saveContractEntity } from "@/api/contract_entity";
+import { useState } from "react";
 
 interface ThemThongTinDatProps {
   open: boolean;
-  isTangCho?: boolean;
   handleClose: () => void;
 }
 
@@ -44,15 +47,21 @@ const validationSchema = Yup.object({
 export const ThemThongTinDat = ({
   open,
   handleClose,
-  isTangCho = false,
 }: ThemThongTinDatProps) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
+  const [currentStatus, setCurrentStatus] = useState<any>(null);
 
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject({
       ...values,
     });
-    handleClose();
+    setSaveLoading(true);
+    const payload = { ...values, ...currentStatus };
+    saveContractEntity(values.số_giấy_chứng_nhận, payload).finally(() => {
+      setSaveLoading(false);
+      handleClose();
+    });
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
@@ -70,29 +79,50 @@ export const ThemThongTinDat = ({
         diện_tích: "",
         diện_tích_bằng_chữ: "",
         hình_thức_sử_dụng: "",
-        nguồn_gốc_sử_dụng: null,
-        giá_tiền: isTangCho ? "0" : "",
-        giá_tiền_bằng_chữ: isTangCho ? "Không" : "",
+        nguồn_gốc_sử_dụng: "",
+        giá_tiền: "",
+        giá_tiền_bằng_chữ: "",
         ghi_chú: "",
         mục_đích_và_thời_hạn_sử_dụng: [],
-        thời_hạn: null,
-        thời_hạn_bằng_chữ: null,
+        thời_hạn: "",
+        thời_hạn_bằng_chữ: "",
       }
     );
   };
 
-  const { values, errors, touched, setFieldValue, handleChange, handleSubmit } =
-    useFormik<ThongTinThuaDat>({
-      initialValues: getInitialValue(),
-      validationSchema,
-      onSubmit: submitForm,
-    });
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    setValues,
+  } = useFormik<ThongTinThuaDat>({
+    initialValues: getInitialValue(),
+    validationSchema,
+    onSubmit: submitForm,
+  });
+
+  const handleSearch = (response: any) => {
+    if (response) {
+      setCurrentStatus(response);
+      setValues({
+        ...values,
+        ...response,
+      });
+    }
+  };
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
         <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
+          <SearchEntity
+            placeholder="Nhập số giấy tờ (số sổ)"
+            onSearch={handleSearch}
+          />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
               <TextField
@@ -153,20 +183,13 @@ export const ThemThongTinDat = ({
               />
               <Autocomplete
                 sx={{ gridColumn: "span 2" }}
-                options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
-                value={
-                  CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
-                    (item) => item.value === values["loại_giấy_chứng_nhận"]
-                  ) ?? null
-                }
-                getOptionLabel={(option) => option.label}
+                freeSolo
+                options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.map(
+                  (item) => item.value
+                )}
+                value={values["loại_giấy_chứng_nhận"]}
                 onChange={(_event, value) => {
-                  handleChange({
-                    target: {
-                      name: "loại_giấy_chứng_nhận",
-                      value: value?.value,
-                    },
-                  });
+                  setFieldValue("loại_giấy_chứng_nhận", value ?? "");
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -181,7 +204,12 @@ export const ThemThongTinDat = ({
                       errors["loại_giấy_chứng_nhận"]
                     }
                     label="Loại giấy chứng nhận *"
-                    name="loại_giấy_chứng_nhận"
+                    onChange={(event) => {
+                      setFieldValue(
+                        "loại_giấy_chứng_nhận",
+                        event.target.value ?? ""
+                      );
+                    }}
                   />
                 )}
               />
@@ -241,12 +269,6 @@ export const ThemThongTinDat = ({
                 id="ngày_cấp_giấy_chứng_nhận"
                 name="ngày_cấp_giấy_chứng_nhận"
                 label="Ngày cấp giấy chứng nhận *"
-                inputProps={{
-                  max: new Date().toISOString().split("T")[0],
-                }}
-                slotProps={{
-                  inputLabel: { shrink: true },
-                }}
                 value={values["ngày_cấp_giấy_chứng_nhận"]}
                 onChange={handleChange}
                 error={
@@ -293,9 +315,16 @@ export const ThemThongTinDat = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button variant="contained" type="submit">
-            Thêm
+          <Button variant="outlined" color="secondary" onClick={handleClose}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={saveLoading}
+            color="success"
+          >
+            {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>
       </Box>

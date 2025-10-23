@@ -8,7 +8,6 @@ import {
   DialogActions,
   Button,
   Autocomplete,
-  Typography,
   CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
@@ -385,9 +384,6 @@ export const ThemThongTinDat = ({
                 </>
               ) : (
                 <Box>
-                  <Typography variant="h5" mb="10px">
-                    Thời hạn uỷ quyền
-                  </Typography>
                   <TextField
                     fullWidth
                     id="thời_hạn"

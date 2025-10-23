@@ -18,13 +18,11 @@ import { ThemThongTinDat } from "../../dialogs/them-thong-tin-dat";
 
 interface ObjectEntityProps {
   title: string;
-  isTangCho?: boolean;
   isNongNghiep?: boolean;
 }
 
 export const ObjectEntity = ({
   title,
-  isTangCho = false,
 }: ObjectEntityProps) => {
   const { agreementObject, deleteAgreementObject } = useHdcnQuyenSdDatContext();
   const [open, setOpen] = useState(false);
@@ -135,9 +133,7 @@ export const ObjectEntity = ({
                         Thời hạn uỷ quyền (năm)
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      {agreementObject["thời_hạn"]}
-                    </TableCell>
+                    <TableCell>{agreementObject["thời_hạn"]}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th">
@@ -163,11 +159,7 @@ export const ObjectEntity = ({
         ) : null}
       </Box>
       {open ? (
-        <ThemThongTinDat
-          open={open}
-          handleClose={() => setOpen(false)}
-          isTangCho={isTangCho}
-        />
+        <ThemThongTinDat open={open} handleClose={() => setOpen(false)} />
       ) : null}
     </Box>
   );
