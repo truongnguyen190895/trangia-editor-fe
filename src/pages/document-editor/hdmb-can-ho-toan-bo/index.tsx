@@ -282,7 +282,7 @@ export const HDMBCanHoToanBo = ({
       nơi_cấp_giấy_chứng_nhận: canHo["nơi_cấp_gcn"],
       đặc_điểm_thửa_đất: {
         diện_tích: {
-          số: canHo["diện_tích_sàn_bằng_số"],
+          số: agreementObject["diện_tích_đất_bằng_số"],
         },
         mục_đích_và_thời_hạn_sử_dụng: [],
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
@@ -290,7 +290,9 @@ export const HDMBCanHoToanBo = ({
       số_tiền: canHo["giá_căn_hộ_bằng_số"],
       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
-      diện_tích_sàn_bằng_số: canHo["diện_tích_sàn_bằng_số"],
+      diện_tích_sàn_bằng_số: isMotPhan
+        ? canHo["diện_tích_sàn_một_phần_bằng_số"] ?? ""
+        : canHo["diện_tích_sàn_bằng_số"],
       kết_cấu: canHo["kết_cấu"],
       tầng_có_căn_hộ: canHo["tầng_có_căn_hộ"],
       năm_hoàn_thành_xây_dựng: canHo["năm_hoàn_thành_xây_dựng"],

@@ -112,7 +112,7 @@ export const render_hdmb_can_ho = async (
   } else {
     url = "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-can-ho-toan-bo";
   }
-  return api.post(url, payload, {
+  return api.post(url, convertEmptyStringsToNull(payload), {
     responseType: "blob",
   });
 };
@@ -380,7 +380,7 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
       break;
     case "hdmb-can-ho-mot-phan-so-huu-toan-bo":
       documentName = "ptl-hdmb-can-ho-mot-phan-su-dung-toan-bo";
-    break;
+      break;
     case "hdmb-nha-dat-toan-bo":
       documentName = "ptl-hdmb-nha-dat-toan-bo";
       break;
