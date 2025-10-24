@@ -79,6 +79,8 @@ export const ThongTinCanHoDialog = ({
           ngày_cấp_gcn: "",
           diện_tích_sàn_bằng_số: "",
           diện_tích_sàn_bằng_chữ: "",
+          diện_tích_sàn_một_phần_bằng_số: "",
+          diện_tích_sàn_một_phần_bằng_chữ: "",
           cấp_hạng: "",
           tầng_có_căn_hộ: "",
           kết_cấu: "",
@@ -336,6 +338,30 @@ export const ThongTinCanHoDialog = ({
                       touched["diện_tích_sàn_bằng_chữ"] &&
                       errors["diện_tích_sàn_bằng_chữ"]
                     }
+                  />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="diện_tích_sàn_một_phần_bằng_số"
+                    name="diện_tích_sàn_một_phần_bằng_số"
+                    label="Diện tích sàn một phần bằng số"
+                    value={values["diện_tích_sàn_một_phần_bằng_số"]}
+                    onChange={(event) => {
+                      handleChange(event);
+                      setFieldValue(
+                        "diện_tích_sàn_một_phần_bằng_chữ",
+                        numberToVietnamese(event.target.value?.replace(/\./g, "").replace(/\,/g, "."))
+                      );
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="diện_tích_sàn_một_phần_bằng_chữ"
+                    name="diện_tích_sàn_một_phần_bằng_chữ"
+                    label="Diện tích sàn một phần bằng chữ"
+                    value={values["diện_tích_sàn_một_phần_bằng_chữ"]}
+                    onChange={handleChange}
                   />
                   <TextField
                     fullWidth

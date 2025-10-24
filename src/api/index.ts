@@ -96,14 +96,25 @@ export const render_hdcn_quyen_sd_dat_toan_bo = async (
   );
 };
 
-export const render_hdmb_can_ho = async (payload: HDMBCanHoPayload) => {
-  return api.post(
-    "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-can-ho-toan-bo",
-    payload,
-    {
-      responseType: "blob",
+export const render_hdmb_can_ho = async (
+  payload: HDMBCanHoPayload,
+  metadata: { isMotPhan?: boolean; scope?: "partial" | "full" }
+) => {
+  let url = "";
+  if (metadata.isMotPhan) {
+    if (metadata.scope === "full") {
+      url =
+        "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-can-ho-mot-phan-so-huu-toan-bo";
+    } else {
+      url =
+        "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-can-ho-mot-phan-de-tro-thanh-dong-so-huu";
     }
-  );
+  } else {
+    url = "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-can-ho-toan-bo";
+  }
+  return api.post(url, payload, {
+    responseType: "blob",
+  });
 };
 
 export const render_uy_quyen_toan_bo_can_ho = async (
@@ -367,6 +378,9 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
     case "hdmb-can-ho-toan-bo":
       documentName = "ptl-hdmb-can-ho-toan-bo";
       break;
+    case "hdmb-can-ho-mot-phan-so-huu-toan-bo":
+      documentName = "ptl-hdmb-can-ho-mot-phan-su-dung-toan-bo";
+    break;
     case "hdmb-nha-dat-toan-bo":
       documentName = "ptl-hdmb-nha-dat-toan-bo";
       break;

@@ -33,16 +33,22 @@ export const ThemThongTinDat = ({
   open,
   handleClose,
 }: ThemThongTinDatProps) => {
-  const { agreementObject, addAgreementObject } = useHDMBCanHoContext();
+  const { canHo, agreementObject, addAgreementObject } = useHDMBCanHoContext();
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
     setSaveLoading(true);
-    saveContractEntity(values.số_thửa_đất, values).finally(() => {
-      setSaveLoading(false);
+    if (canHo && canHo?.số_gcn) {
+      const payload = { ...values, ...canHo };
+      saveContractEntity(canHo?.số_gcn, payload).finally(() => {
+        setSaveLoading(false);
+        handleClose();
+      });
+    } else {
+      // no saving
       handleClose();
-    });
+    }
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
@@ -91,7 +97,7 @@ export const ThemThongTinDat = ({
         <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
           <SearchEntity
-            placeholder="Nhập số thửa đất"
+            placeholder="Nhập số giấy tờ (số sổ)"
             onSearch={handleSearch}
           />
           <Box sx={{ pt: 2 }}>
