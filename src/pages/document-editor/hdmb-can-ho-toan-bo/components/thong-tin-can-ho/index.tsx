@@ -23,9 +23,14 @@ import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 interface ObjectEntityProps {
   title: string;
   isUyQuyen?: boolean;
+  isMotPhan?: boolean;
 }
 
-export const ThongTinCanHo = ({ title, isUyQuyen }: ObjectEntityProps) => {
+export const ThongTinCanHo = ({
+  title,
+  isUyQuyen,
+  isMotPhan,
+}: ObjectEntityProps) => {
   const { agreementObject, canHo, deleteAgreementObject, deleteCanHo } =
     useHDMBCanHoContext();
   const [open, setOpen] = useState(false);
@@ -163,6 +168,21 @@ export const ThongTinCanHo = ({ title, isUyQuyen }: ObjectEntityProps) => {
                     {agreementObject?.["diện_tích_đất_bằng_chữ"]}
                   </TableCell>
                 </TableRow>
+                {isMotPhan ? (
+                  <TableRow>
+                    <TableCell component="th">
+                      <Typography variant="body1">
+                        Diện tích sàn một phần (m2)
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      {canHo?.["diện_tích_sàn_một_phần_bằng_số"]} (
+                      {canHo?.["diện_tích_sàn_một_phần_bằng_chữ"]})
+                    </TableCell>
+                    <TableCell component="th" />
+                    <TableCell />
+                  </TableRow>
+                ) : null}
                 <TableRow>
                   <TableCell component="th">
                     <Typography variant="body1">Cấp hạng</Typography>

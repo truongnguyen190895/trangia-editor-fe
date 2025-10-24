@@ -21,17 +21,27 @@ import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
+import { extractCoupleFromParty } from "@/utils/common";
 
 interface Props {
   isUyQuyen?: boolean;
+  isMotPhan?: boolean;
+  scope?: "partial" | "full";
 }
 
-export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
+export const HDMBCanHoToanBo = ({
+  isUyQuyen,
+  isMotPhan = false,
+  scope = "full",
+}: Props) => {
   const { agreementObject, canHo } = useHDMBCanHoContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+
+  console.log(scope);
+  console.log("mot phan", isMotPhan);
 
   const isFormValid = isUyQuyen
     ? Boolean(canHo)
@@ -41,50 +51,8 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       canHo !== null;
 
   const getBenABenB = () => {
-    const couplesA = partyA["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng:
-          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-      }))
-      .concat(
-        partyA["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: "vợ",
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng:
-            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-        }))
-      );
-    const couplesB = partyB["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng:
-          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-      }))
-      .concat(
-        partyB["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: "vợ",
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng:
-            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-        }))
-      );
+    const couplesA = extractCoupleFromParty(partyA);
+    const couplesB = extractCoupleFromParty(partyB);
 
     return {
       bên_A: {
@@ -160,6 +128,8 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       ngày_cấp_gcn: canHo["ngày_cấp_gcn"],
       diện_tích_sàn_bằng_số: canHo["diện_tích_sàn_bằng_số"],
       diện_tích_sàn_bằng_chữ: canHo["diện_tích_sàn_bằng_chữ"],
+      diện_tích_sàn_một_phần_bằng_số: canHo["diện_tích_sàn_một_phần_bằng_số"],
+      diện_tích_sàn_một_phần_bằng_chữ: canHo["diện_tích_sàn_một_phần_bằng_chữ"],
       cấp_hạng: canHo["cấp_hạng"],
       tầng_có_căn_hộ: canHo["tầng_có_căn_hộ"],
       kết_cấu: canHo["kết_cấu"],
@@ -229,7 +199,7 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
           setIsGenerating(false);
         });
     } else {
-      render_hdmb_can_ho(payload)
+      render_hdmb_can_ho(payload, { isMotPhan, scope })
         .then((res) => {
           const blob = new Blob([res.data], {
             type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -259,44 +229,8 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       throw new Error("Agreement object is null");
     }
 
-    const couplesA = partyA["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        quan_hệ: null,
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-      }))
-      .concat(
-        partyA["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: null,
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-        }))
-      );
-    const couplesB = partyB["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-      }))
-      .concat(
-        partyB["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: null,
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-        }))
-      );
-
+    const couplesA = extractCoupleFromParty(partyA, true);
+    const couplesB = extractCoupleFromParty(partyB, true);
     const các_cá_thể_bên_A = [
       ...partyA["cá_nhân"].map((person) => ({
         ...person,
@@ -348,7 +282,7 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       nơi_cấp_giấy_chứng_nhận: canHo["nơi_cấp_gcn"],
       đặc_điểm_thửa_đất: {
         diện_tích: {
-          số: canHo["diện_tích_sàn_bằng_số"],
+          số: agreementObject["diện_tích_đất_bằng_số"],
         },
         mục_đích_và_thời_hạn_sử_dụng: [],
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
@@ -356,7 +290,9 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       số_tiền: canHo["giá_căn_hộ_bằng_số"],
       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
-      diện_tích_sàn_bằng_số: canHo["diện_tích_sàn_bằng_số"],
+      diện_tích_sàn_bằng_số: isMotPhan
+        ? canHo["diện_tích_sàn_một_phần_bằng_số"] ?? ""
+        : canHo["diện_tích_sàn_bằng_số"],
       kết_cấu: canHo["kết_cấu"],
       tầng_có_căn_hộ: canHo["tầng_có_căn_hộ"],
       năm_hoàn_thành_xây_dựng: canHo["năm_hoàn_thành_xây_dựng"],
@@ -396,6 +332,12 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       });
   };
 
+  const getPhieuThuLyType = () => {
+    return isMotPhan
+      ? "hdmb-can-ho-mot-phan-so-huu-toan-bo"
+      : "hdmb-can-ho-toan-bo";
+  };
+
   return (
     <Box display="flex" gap="2rem">
       <Box
@@ -410,7 +352,11 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
       >
         <ThemChuThe title="Bên A" side="partyA" />
         <ThemChuThe title="Bên B" side="partyB" />
-        <ThongTinCanHo title="Đối tượng của hợp đồng" isUyQuyen={isUyQuyen} />
+        <ThongTinCanHo
+          title="Đối tượng của hợp đồng"
+          isUyQuyen={isUyQuyen}
+          isMotPhan={isMotPhan}
+        />
         <Box display="flex" gap="1rem">
           <Button
             variant="contained"
@@ -450,7 +396,7 @@ export const HDMBCanHoToanBo = ({ isUyQuyen }: Props) => {
                 ? { ...getBenABenB(), ...getAdditionalForThuLy() }
                 : null
             }
-            type="hdmb-can-ho-toan-bo"
+            type={getPhieuThuLyType()}
           />
         </Box>
       </Box>

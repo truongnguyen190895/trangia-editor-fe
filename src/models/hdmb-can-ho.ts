@@ -14,6 +14,8 @@ export interface HDMBCanHoPayload {
   ngày_cấp_gcn: string;
   diện_tích_sàn_bằng_số: string;
   diện_tích_sàn_bằng_chữ: string;
+  diện_tích_sàn_một_phần_bằng_số?: string;
+  diện_tích_sàn_một_phần_bằng_chữ?: string;
   cấp_hạng: string;
   tầng_có_căn_hộ: string;
   kết_cấu: string;
@@ -64,6 +66,8 @@ export interface ThongTinCanHo {
   nơi_cấp_gcn: string; //
   ngày_cấp_gcn: string; //
   diện_tích_sàn_bằng_số: string; //
+  diện_tích_sàn_một_phần_bằng_số?: string; //
+  diện_tích_sàn_một_phần_bằng_chữ?: string; //
   diện_tích_sàn_bằng_chữ: string; //
   cấp_hạng: string; //
   tầng_có_căn_hộ: string; //
@@ -75,6 +79,7 @@ export interface ThongTinCanHo {
   giá_căn_hộ_bằng_chữ: string; //
   thời_hạn: string | null;
   thời_hạn_bằng_chữ: string | null;
+
 }
 
 export interface KhaiThueHDMBCanHoToanBoPayload {

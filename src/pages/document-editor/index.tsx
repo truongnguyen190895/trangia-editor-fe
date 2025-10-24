@@ -39,10 +39,15 @@ export const DocumentEditor = () => {
           </HdcnQuyenSdDatProvider>
         );
       case "hdmb-can-ho-toan-bo":
+      case "hdmb-can-ho-mot-phan-de-so-huu-toan-bo":
       case "uy-quyen-toan-bo-can-ho":
         return (
           <HDMBCanHoProvider>
-            <HDMBCanHoToanBo isUyQuyen={/uy-quyen/.test(name ?? "")} />
+            <HDMBCanHoToanBo
+              isUyQuyen={/uy-quyen/.test(name ?? "")}
+              isMotPhan={/mot-phan/.test(name ?? "")}
+              scope={/de-so-huu-toan-bo/.test(name ?? "") ? "full" : "partial"}
+            />
           </HDMBCanHoProvider>
         );
       case "hdmb-nha-dat-toan-bo":
@@ -130,6 +135,8 @@ export const DocumentEditor = () => {
         return "Hợp đồng chuyển nhượng quyền sử dụng đất (toàn bộ)";
       case "hdmb-can-ho-toan-bo":
         return "Hợp đồng mua bán căn hộ toàn bộ";
+      case "hdmb-can-ho-mot-phan-de-so-huu-toan-bo":
+        return "Hợp đồng mua bán căn hộ một phần (để sở hữu toàn bộ)";
       case "hdmb-nha-dat-toan-bo":
         return "Hợp đồng mua bán nhà đất toàn bộ";
       case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
