@@ -1,6 +1,12 @@
 import type { Party } from "./party";
 import type { Gender } from "./agreement-entity";
 
+export interface BienDong {
+  ngày: string;
+  chi_nhánh: string;
+  cá_thể: string;
+}
+
 export interface HDCNDatVaTaiSanGanLienVoiDatToanBoPayload
   extends ThongTinThuaDat {
   bên_A: Party;
@@ -36,6 +42,7 @@ export interface ThongTinThuaDat {
   số_vào_sổ_cấp_gcn: string;
   nơi_cấp_gcn: string;
   ngày_cấp_gcn: string;
+  biến_động: BienDong | null;
 }
 
 export interface ThongTinTaiSan {

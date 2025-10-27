@@ -63,7 +63,10 @@ export const convertEmptyStringsToNull = <T>(obj: T): T => {
   return obj;
 };
 
-export const extractCoupleFromParty = (party: AgreementParty, isKhaiThue = false) => {
+export const extractCoupleFromParty = (
+  party: AgreementParty,
+  isKhaiThue = false
+) => {
   let flattenArray = [];
 
   for (const couple of party["vợ_chồng"]) {
@@ -81,4 +84,14 @@ export const extractCoupleFromParty = (party: AgreementParty, isKhaiThue = false
   }));
 
   return couples;
+};
+
+export const getPeopleNameFromParty = (party: AgreementParty) => {
+  const people = party["cá_nhân"].map(
+    (person) => `${person?.giới_tính?.toLocaleLowerCase()} ${person?.tên}`
+  );
+  const couples = extractCoupleFromParty(party).map(
+    (couple) => `${couple?.giới_tính?.toLocaleLowerCase()} ${couple?.tên}`
+  );
+  return [...people, ...couples].join(", ");
 };

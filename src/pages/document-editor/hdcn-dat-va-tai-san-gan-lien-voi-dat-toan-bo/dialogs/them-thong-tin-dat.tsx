@@ -9,6 +9,7 @@ import {
   Button,
   Autocomplete,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -19,9 +20,11 @@ import {
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
 import type { ThongTinThuaDat } from "@/models/hdcn-dat-va-tsglvd";
+import { useThemChuTheContext } from "@/context/them-chu-the";
 import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat-va-tai-san-glvd";
 import { SearchEntity } from "@/components/common/search-entity";
 import { saveContractEntity } from "@/api/contract_entity";
+import { getPeopleNameFromParty } from "@/utils/common";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -42,12 +45,25 @@ export const ThemThongTinDat = ({
 }: ThemThongTinDatProps) => {
   const { taiSan, agreementObject, addAgreementObject } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
+  const { partyA } = useThemChuTheContext();
   console.log(scope); // TODO: WIP
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const submitForm = (values: ThongTinThuaDat) => {
-    addAgreementObject(values);
+    const biendong =
+      values?.biến_động?.ngày !== ""
+        ? {
+            ngày: values.biến_động?.ngày ?? "",
+            chi_nhánh: values.biến_động?.chi_nhánh ?? "",
+            cá_thể: getPeopleNameFromParty(partyA),
+          }
+        : null;
+    addAgreementObject({ ...values, biến_động: biendong });
     setSaveLoading(true);
-    const payload = { ...values, ...taiSan };
+    const payload = {
+      ...values,
+      ...taiSan,
+      biến_động: biendong,
+    };
     setSaveLoading(true);
     saveContractEntity(values?.số_gcn, payload).finally(() => {
       setSaveLoading(false);
@@ -75,6 +91,11 @@ export const ThemThongTinDat = ({
           số_vào_sổ_cấp_gcn: "",
           nơi_cấp_gcn: "",
           ngày_cấp_gcn: "",
+          biến_động: {
+            ngày: "",
+            chi_nhánh: "",
+            cá_thể: "",
+          },
         };
   };
 
@@ -380,6 +401,34 @@ export const ThemThongTinDat = ({
                   />
                 )}
               />
+            </Box>
+            <Box py="1rem">
+              <Typography variant="body1">
+                Thông tin đăng ký biến động đất (nếu có)
+              </Typography>
+              <Box
+                display="grid"
+                gridTemplateColumns="repeat(2, 1fr)"
+                gap={2}
+                mt="1rem"
+              >
+                <TextField
+                  fullWidth
+                  id="ngày_đăng_ký_biến_động"
+                  name="biến_động.ngày"
+                  label="Ngày đăng ký"
+                  value={values?.biến_động?.ngày}
+                  onChange={handleChange}
+                />
+                <TextField
+                  fullWidth
+                  id="chi_nhánh_đăng_ký_biến_động"
+                  name="biến_động.chi_nhánh"
+                  label="Chi nhánh đăng ký"
+                  value={values?.biến_động?.chi_nhánh}
+                  onChange={handleChange}
+                />
+              </Box>
             </Box>
           </Box>
         </DialogContent>

@@ -40,9 +40,6 @@ export const HDMBCanHoToanBo = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  console.log(scope);
-  console.log("mot phan", isMotPhan);
-
   const isFormValid = isUyQuyen
     ? Boolean(canHo)
     : (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&

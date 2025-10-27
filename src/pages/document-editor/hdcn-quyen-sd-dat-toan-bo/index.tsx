@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -31,6 +32,8 @@ import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
+import { uchiTemporarySave } from "@/api/uchi";
+import { toast } from "react-toastify";
 
 interface Props {
   isNongNghiep?: boolean;
@@ -46,6 +49,12 @@ export const ChuyenNhuongDatToanBo = ({
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [searchParams] = useSearchParams();
+  const templateId = searchParams.get("templateId");
+
+  const userInfo = localStorage.getItem("user_info");
+  const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
+  const uchiId = userInfoObject?.uchi_id;
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -53,7 +62,7 @@ export const ChuyenNhuongDatToanBo = ({
     agreementObject !== null;
 
   const getBenABenB = () => {
-    let flattenArrayA = []
+    let flattenArrayA = [];
 
     for (const couple of partyA["vợ_chồng"]) {
       flattenArrayA.push(couple.chồng);
@@ -65,10 +74,10 @@ export const ChuyenNhuongDatToanBo = ({
       ngày_sinh: person["ngày_sinh"],
       ngày_cấp: person["ngày_cấp"],
       tình_trạng_hôn_nhân: null,
-      quan_hệ: person.giới_tính === "Bà" ? 'vợ' : null,
+      quan_hệ: person.giới_tính === "Bà" ? "vợ" : null,
       ...extractAddress(person["địa_chỉ_thường_trú"]),
     }));
-    let flattenArrayB = []
+    let flattenArrayB = [];
 
     for (const couple of partyB["vợ_chồng"]) {
       flattenArrayB.push(couple.chồng);
@@ -80,7 +89,7 @@ export const ChuyenNhuongDatToanBo = ({
       ngày_sinh: person["ngày_sinh"],
       ngày_cấp: person["ngày_cấp"],
       tình_trạng_hôn_nhân: null,
-      quan_hệ: person.giới_tính === "Bà" ? 'vợ' : null,
+      quan_hệ: person.giới_tính === "Bà" ? "vợ" : null,
       ...extractAddress(person["địa_chỉ_thường_trú"]),
     }));
 
@@ -134,7 +143,9 @@ export const ChuyenNhuongDatToanBo = ({
     sốBảnGốc: number,
     isOutSide: boolean,
     côngChứngViên: string,
-    ngày: string
+    isUchi: boolean,
+    ngày: string,
+    sốHợpĐồng?: string
   ): HDCNQuyenSDDatPayload => {
     if (!agreementObject) {
       throw new Error("Agreement object is null");
@@ -189,6 +200,10 @@ export const ChuyenNhuongDatToanBo = ({
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
+      template_id: templateId ? templateId : undefined,
+      số_hợp_đồng: sốHợpĐồng || undefined,
+      isUchi: isUchi,
+      uchi_id: uchiId ? String(uchiId) : "",
     };
 
     return payload;
@@ -199,7 +214,9 @@ export const ChuyenNhuongDatToanBo = ({
       metaData.sốBảnGốc,
       metaData.isOutSide,
       metaData.côngChứngViên,
-      metaData.ngày
+      metaData.isUchi,
+      metaData.ngày,
+      metaData.sốHợpĐồng
     );
     setOpenDialog(false);
     setIsGenerating(true);
@@ -243,6 +260,18 @@ export const ChuyenNhuongDatToanBo = ({
           link.click();
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
+          if (metaData.isUchi && templateId && Number(templateId) > 0) {
+            uchiTemporarySave(payload)
+              .then(() =>
+                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                  position: "top-left",
+                })
+              )
+              .catch((error) => {
+                console.error("Error sending to Uchi:", error);
+                toast.error("Lỗi khi gửi thông tin lên Uchi");
+              });
+          }
         })
         .catch((error) => {
           console.error("Error generating document:", error);
@@ -259,8 +288,8 @@ export const ChuyenNhuongDatToanBo = ({
       throw new Error("Agreement object is null");
     }
 
-    let flattenArrayA = []
-    let flattenArrayB = []
+    let flattenArrayA = [];
+    let flattenArrayB = [];
 
     for (const couple of partyA["vợ_chồng"]) {
       flattenArrayA.push(couple.chồng);

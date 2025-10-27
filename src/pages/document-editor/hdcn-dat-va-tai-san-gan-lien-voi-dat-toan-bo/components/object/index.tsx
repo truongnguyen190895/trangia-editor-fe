@@ -130,7 +130,7 @@ export const ObjectEntity = ({
               </Box>
             ) : null}
           </Box>
-          <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
+          <TableContainer component={Paper}>
             <Typography variant="h4" color="#B12C00" my="1rem">
               Thông tin mảnh đất
             </Typography>

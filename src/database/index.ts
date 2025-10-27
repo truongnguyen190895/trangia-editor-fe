@@ -53,6 +53,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdcn-quyen-su-dung-dat-toan-bo",
+    templateId: 5,
   },
   {
     id: uuidv4(),
@@ -60,6 +61,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -67,6 +69,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -74,6 +77,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -81,6 +85,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -88,6 +93,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-can-ho-toan-bo",
+    templateId: 1,
   },
   {
     id: uuidv4(),
@@ -95,6 +101,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-can-ho-mot-phan-de-so-huu-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -102,6 +109,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-nha-dat-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -109,6 +117,7 @@ export const templates = [
     type: "agreement",
     subCategory: "tang-cho",
     path: "hd-tang-cho-can-ho-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -116,6 +125,7 @@ export const templates = [
     type: "agreement",
     subCategory: "tang-cho",
     path: "hd-tang-cho-dat-nong-nghiep-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -123,6 +133,7 @@ export const templates = [
     type: "agreement",
     subCategory: "tang-cho",
     path: "hd-tang-cho-dat-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -130,6 +141,7 @@ export const templates = [
     type: "agreement",
     subCategory: "tang-cho",
     path: "hd-tang-cho-nha-dat-toan-bo",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -137,6 +149,7 @@ export const templates = [
     type: "agreement",
     subCategory: "uy-quyen",
     path: "uy-quyen-toan-bo-quyen-su-dung-dat",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -144,6 +157,7 @@ export const templates = [
     type: "agreement",
     subCategory: "uy-quyen",
     path: "uy-quyen-toan-bo-nha-dat",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -151,6 +165,7 @@ export const templates = [
     type: "agreement",
     subCategory: "uy-quyen",
     path: "uy-quyen-toan-bo-can-ho",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -158,6 +173,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-xe-oto",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -165,6 +181,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-xe-may",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -172,6 +189,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-xe-oto-bien-so-xe",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -179,6 +197,7 @@ export const templates = [
     type: "agreement",
     subCategory: "uy-quyen",
     path: "uy-quyen-xe-oto",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -186,6 +205,7 @@ export const templates = [
     type: "agreement",
     subCategory: "chuyen-nhuong-mua-ban",
     path: "hdmb-tai-san",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -193,6 +213,7 @@ export const templates = [
     type: "agreement",
     subCategory: "huy-sua-doi-bo-sung-cham-dut",
     path: "vb-huy",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -200,6 +221,7 @@ export const templates = [
     type: "agreement",
     subCategory: "huy-sua-doi-bo-sung-cham-dut",
     path: "vb-cham-dut-hd",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -207,6 +229,7 @@ export const templates = [
     type: "agreement",
     subCategory: "huy-sua-doi-bo-sung-cham-dut",
     path: "vb-cham-dut-hq-uy-quyen",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -214,6 +237,7 @@ export const templates = [
     type: "agreement",
     subCategory: "thue-muon-dat-coc",
     path: "hd-dat-coc",
+    templateId: 0,
   },
   {
     id: uuidv4(),
@@ -221,5 +245,6 @@ export const templates = [
     type: "agreement",
     subCategory: "thue-muon-dat-coc",
     path: "hd-dat-coc-chua-xoa-chap",
+    templateId: 0,
   },
 ];

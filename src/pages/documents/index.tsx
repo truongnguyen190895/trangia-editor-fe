@@ -22,7 +22,7 @@ export const Documents = () => {
             key={document.id}
             title={document.name}
             onClick={() =>
-              navigate(`/editor?type=${document.type}&name=${document.path}`)
+              navigate(`/editor?type=${document.type}&name=${document.path}&templateId=${document.templateId}`)
             }
           />
         ))}
