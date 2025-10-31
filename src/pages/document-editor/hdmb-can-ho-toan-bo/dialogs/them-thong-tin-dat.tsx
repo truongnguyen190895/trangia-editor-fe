@@ -10,7 +10,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { NGUỒN_GỐC_SỬ_DỤNG_ĐẤT } from "@/constants";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
@@ -25,10 +24,6 @@ interface ThemThongTinDatProps {
   handleClose: () => void;
 }
 
-const validationSchema = Yup.object({
-  số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
-});
-
 export const ThemThongTinDat = ({
   open,
   handleClose,
@@ -37,6 +32,13 @@ export const ThemThongTinDat = ({
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const submitForm = (values: ThongTinThuaDat) => {
+    const allEmpty = Object.values(values).every((v) =>
+      typeof v === "string" ? v.trim() === "" : v == null
+    );
+    if (allEmpty) {
+      handleClose();
+      return;
+    }
     addAgreementObject(values);
     setSaveLoading(true);
     if (canHo && canHo?.số_gcn) {
@@ -76,7 +78,6 @@ export const ThemThongTinDat = ({
     setValues,
   } = useFormik<ThongTinThuaDat>({
     initialValues: getInitialValue(),
-    validationSchema,
     onSubmit: submitForm,
   });
 
@@ -106,7 +107,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="số_thửa_đất"
                 name="số_thửa_đất"
-                label="Số thửa đất *"
+                label="Số thửa đất"
                 value={values["số_thửa_đất"]}
                 onChange={handleChange}
                 error={!!errors["số_thửa_đất"] && touched["số_thửa_đất"]}
@@ -129,7 +130,7 @@ export const ThemThongTinDat = ({
                 type="text"
                 id="diện_tích_đất_bằng_số"
                 name="diện_tích_đất_bằng_số"
-                label="Diện tích (m2) *"
+                label="Diện tích (m2)"
                 value={values["diện_tích_đất_bằng_số"]}
                 onChange={(event) => {
                   handleChange(event);
@@ -146,7 +147,7 @@ export const ThemThongTinDat = ({
                 type="text"
                 id="diện_tích_đất_bằng_chữ"
                 name="diện_tích_đất_bằng_chữ"
-                label="Diện tích bằng chữ *"
+                label="Diện tích bằng chữ"
                 value={values["diện_tích_đất_bằng_chữ"]}
                 onChange={handleChange}
                 error={
@@ -163,7 +164,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="hình_thức_sở_hữu_đất"
                 name="hình_thức_sở_hữu_đất"
-                label="Hình thức sử dụng *"
+                label="Hình thức sử dụng"
                 value={values["hình_thức_sở_hữu_đất"]}
                 onChange={handleChange}
                 error={
@@ -193,7 +194,7 @@ export const ThemThongTinDat = ({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Mục đích sử dụng *"
+                    label="Mục đích sử dụng"
                     onChange={(event) => {
                       setFieldValue(
                         "mục_đích_sở_hữu_đất",
@@ -216,7 +217,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="thời_hạn_sử_dụng"
                 name="thời_hạn_sử_dụng"
-                label="Thời hạn sử dụng *"
+                label="Thời hạn sử dụng"
                 value={values["thời_hạn_sử_dụng_đất"]}
                 onChange={(event) => {
                   setFieldValue("thời_hạn_sử_dụng_đất", event.target.value);
@@ -239,7 +240,7 @@ export const ThemThongTinDat = ({
                         event.target.value ?? ""
                       );
                     }}
-                    label="Nguồn gốc sử dụng *"
+                    label="Nguồn gốc sử dụng"
                     error={
                       !!errors["nguồn_gốc_sử_dụng_đất"] &&
                       touched["nguồn_gốc_sử_dụng_đất"]
