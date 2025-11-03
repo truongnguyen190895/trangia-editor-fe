@@ -10,7 +10,9 @@ import SubmitContract from "@/pages/submit-contract";
 import History from "@/pages/history";
 import NotFound from "@/pages/not-found";
 import ProfilePage from "@/pages/profile";
+import Employee from "@/pages/employee";
 import { ErrorBoundary } from "@/components/common/error-boundary";
+import AddEmployee from "@/pages/employee/add";
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +56,18 @@ export const router = createBrowserRouter([
         path: "/profile",
         element: <ProfilePage />,
       },
+      {
+        path: "/staff",
+        element: <Employee />,
+      },
+      {
+        path: "/staff/add",
+        element: <AddEmployee />,
+      },
+      {
+        path: "/staff/edit/:username",
+        element: <AddEmployee />,
+      }
     ],
   },
   {
