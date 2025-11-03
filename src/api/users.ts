@@ -44,6 +44,8 @@ export interface UpdateUserPayload {
 interface ListUsersParams {
   employee?: boolean;
   search?: string;
+  page?: number;
+  size?: number;
 }
 
 export const listUsers = (

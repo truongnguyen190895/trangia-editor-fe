@@ -13,6 +13,8 @@ import {
   Chip,
   TextField,
   InputAdornment,
+  Pagination,
+  IconButton,
 } from "@mui/material";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { listUsers, type User, toggleUserActive } from "@/api/users";
@@ -22,6 +24,7 @@ import StopIcon from "@mui/icons-material/Stop";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { toast } from "react-toastify";
 import { LoadingDialog } from "@/components/common/loading-dialog";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const DEBOUNCE_TIME = 500;
 
@@ -29,6 +32,9 @@ const Employee = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [search, setSearch] = useState<string>("");
   const [debounceSearch, setDebounceSearch] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [totalElements, setTotalElements] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [openWarningDialog, setOpenWarningDialog] = useState<boolean>(false);
   const [userToToggleActive, setUserToToggleActive] = useState<User | null>(
@@ -38,28 +44,43 @@ const Employee = () => {
 
   useEffect(() => {
     setLoading(true);
-    listUsers({ employee: true, search: debounceSearch })
+    listUsers({
+      employee: true,
+      search: debounceSearch,
+      page: page - 1,
+      size: 50,
+    })
       .then((res) => {
         setUsers(res.content);
+        setTotalPages(res.page.total_pages);
+        setTotalElements(res.page.total_elements);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [debounceSearch]);
+  }, [debounceSearch, page]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebounceSearch(search);
+      setPage(1);
     }, DEBOUNCE_TIME);
     return () => clearTimeout(timeout);
   }, [search]);
 
   const getUserStatus = (active: boolean) => {
     return active ? (
-      <Chip label="Hoạt động" color="success" />
+      <Chip label="Đang hoạt động" color="success" />
     ) : (
       <Chip label="Không hoạt động" color="error" />
     );
+  };
+
+  const handleChangePage = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
   };
 
   const getUserRole = (role: string) => {
@@ -106,7 +127,9 @@ const Employee = () => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h4">Danh sách nhân viên</Typography>
+        <Typography variant="h4">
+          Danh sách nhân viên ({totalElements})
+        </Typography>
         <Button
           variant="contained"
           color="success"
@@ -130,6 +153,13 @@ const Employee = () => {
                   <SearchIcon />
                 </InputAdornment>
               ),
+              endAdornment: search ? (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setSearch("")}>
+                    <ClearIcon sx={{ fontSize: "1rem" }} />
+                  </IconButton>
+                </InputAdornment>
+              ) : null,
             },
           }}
         />
@@ -152,7 +182,7 @@ const Employee = () => {
                 <TableRow
                   key={user.username}
                   sx={{
-                    cursor: "pointer",
+                    cursor: user?.active ? "pointer" : "not-allowed",
                     "&:hover": {
                       backgroundColor: "#f0f0f0",
                       transition: "scale 0.3s ease",
@@ -161,7 +191,11 @@ const Employee = () => {
                       },
                     },
                   }}
-                  onClick={() => navigate(`/staff/edit/${user.username}`)}
+                  onClick={() =>
+                    user?.active
+                      ? navigate(`/staff/edit/${user.username}`)
+                      : undefined
+                  }
                 >
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{getUserRole(user.role)}</TableCell>
@@ -184,10 +218,25 @@ const Employee = () => {
               ))}
             </TableBody>
           </Table>
+          <Box
+            className="pagination-container"
+            display="flex"
+            justifyContent="center"
+            mt="2rem"
+          >
+            <Pagination
+              count={totalPages}
+              page={page}
+              shape="rounded"
+              onChange={handleChangePage}
+            />
+          </Box>
         </TableContainer>
       ) : (
         <Box py="2rem">
-          <Typography variant="h6" sx={{ fontStyle: "italic" }}>Không có kết quả</Typography>
+          <Typography variant="h6" sx={{ fontStyle: "italic" }}>
+            Không có kết quả
+          </Typography>
         </Box>
       )}
 
