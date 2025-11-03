@@ -43,7 +43,7 @@ export const SidebarMenu = () => {
   const location = useLocation();
 
   const userInfo = JSON.parse(localStorage.getItem("user_info") || "{}");
-  const isAdmin = userInfo.is_admin;
+  const isAdmin = userInfo.is_admin || userInfo.role === "Manager";
 
   const handleItemClick = (path: string) => {
     navigate(path);
