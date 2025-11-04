@@ -38,21 +38,7 @@ export const ThemThongTinXe = ({
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const validationSchema = Yup.object({
-    nhãn_hiệu: Yup.string().required("Nhãn hiệu là bắt buộc"),
-    màu_sơn: Yup.string().required("Màu sơn là bắt buộc"),
-    loại_xe: Yup.string().required("Loại xe là bắt buộc"),
-    số_máy: Yup.string().required("Số máy là bắt buộc"),
     số_khung: Yup.string().required("Số khung là bắt buộc"),
-    biển_số: Yup.string().required("Biển số là bắt buộc"),
-    số_đăng_ký: Yup.string().required("Số đăng ký là bắt buộc"),
-    nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
-    ngày_đăng_ký: Yup.string().required("Ngày đăng ký là bắt buộc"),
-    số_tiền: isUyQuyen
-      ? Yup.string()
-      : Yup.string().required("Số tiền là bắt buộc"),
-    thời_hạn: isUyQuyen
-      ? Yup.string().required("Thời hạn là bắt buộc")
-      : Yup.string().nullable(),
   });
 
   const submitForm = (values: ThongTinXeOto) => {
@@ -125,51 +111,33 @@ export const ThemThongTinXe = ({
                 fullWidth
                 id="nhãn_hiệu"
                 name="nhãn_hiệu"
-                label="Nhãn hiệu *"
+                label="Nhãn hiệu"
                 value={values["nhãn_hiệu"]}
                 onChange={handleChange}
-                error={!!errors["nhãn_hiệu"] && touched["nhãn_hiệu"]}
-                helperText={
-                  errors["nhãn_hiệu"] &&
-                  touched["nhãn_hiệu"] &&
-                  errors["nhãn_hiệu"]
-                }
               />
               <TextField
                 fullWidth
                 id="màu_sơn"
                 name="màu_sơn"
-                label="Màu sơn *"
+                label="Màu sơn"
                 value={values["màu_sơn"]}
                 onChange={handleChange}
-                error={!!errors["màu_sơn"] && touched["màu_sơn"]}
-                helperText={
-                  errors["màu_sơn"] && touched["màu_sơn"] && errors["màu_sơn"]
-                }
               />
               <TextField
                 fullWidth
                 id="loại_xe"
                 name="loại_xe"
-                label="Loại xe *"
+                label="Loại xe"
                 value={values["loại_xe"]}
                 onChange={handleChange}
-                error={!!errors["loại_xe"] && touched["loại_xe"]}
-                helperText={
-                  errors["loại_xe"] && touched["loại_xe"] && errors["loại_xe"]
-                }
               />
               <TextField
                 fullWidth
                 id="số_máy"
                 name="số_máy"
-                label="Số máy *"
+                label="Số máy"
                 value={values["số_máy"]}
                 onChange={handleChange}
-                error={!!errors["số_máy"] && touched["số_máy"]}
-                helperText={
-                  errors["số_máy"] && touched["số_máy"] && errors["số_máy"]
-                }
               />
 
               <TextField
@@ -190,39 +158,25 @@ export const ThemThongTinXe = ({
                 fullWidth
                 id="biển_số"
                 name="biển_số"
-                label="Biển số *"
+                label="Biển số"
                 value={values["biển_số"]}
                 onChange={handleChange}
-                error={!!errors["biển_số"] && touched["biển_số"]}
-                helperText={
-                  errors["biển_số"] && touched["biển_số"] && errors["biển_số"]
-                }
               />
               <TextField
                 fullWidth
                 id="số_đăng_ký"
                 name="số_đăng_ký"
-                label="Số đăng ký *"
+                label="Số đăng ký"
                 value={values["số_đăng_ký"]}
                 onChange={handleChange}
-                error={!!errors["số_đăng_ký"] && touched["số_đăng_ký"]}
-                helperText={
-                  errors["số_đăng_ký"] &&
-                  touched["số_đăng_ký"] &&
-                  errors["số_đăng_ký"]
-                }
               />
               <TextField
                 fullWidth
                 id="nơi_cấp"
                 name="nơi_cấp"
-                label="Nơi cấp *"
+                label="Nơi cấp"
                 value={values["nơi_cấp"]}
                 onChange={handleChange}
-                error={!!errors["nơi_cấp"] && touched["nơi_cấp"]}
-                helperText={
-                  errors["nơi_cấp"] && touched["nơi_cấp"] && errors["nơi_cấp"]
-                }
               />
               <TextField
                 fullWidth
@@ -247,15 +201,9 @@ export const ThemThongTinXe = ({
                 type="text"
                 id="ngày_đăng_ký"
                 name="ngày_đăng_ký"
-                label="Ngày đăng ký *"
+                label="Ngày đăng ký"
                 value={values["ngày_đăng_ký"]}
                 onChange={handleChange}
-                error={!!errors["ngày_đăng_ký"] && touched["ngày_đăng_ký"]}
-                helperText={
-                  errors["ngày_đăng_ký"] &&
-                  touched["ngày_đăng_ký"] &&
-                  errors["ngày_đăng_ký"]
-                }
               />
               {isXeMay ? (
                 <TextField
@@ -266,10 +214,6 @@ export const ThemThongTinXe = ({
                   label="Số loại"
                   value={values["số_loại"]}
                   onChange={handleChange}
-                  error={!!errors["số_loại"] && touched["số_loại"]}
-                  helperText={
-                    errors["số_loại"] && touched["số_loại"] && errors["số_loại"]
-                  }
                 />
               ) : null}
               {isDauGia ? (
@@ -282,15 +226,6 @@ export const ThemThongTinXe = ({
                     label="Số giấy chứng nhận/quyết định"
                     value={values["số_bằng_chứng_trúng_đấu_giá"]}
                     onChange={handleChange}
-                    error={
-                      !!errors["số_bằng_chứng_trúng_đấu_giá"] &&
-                      touched["số_bằng_chứng_trúng_đấu_giá"]
-                    }
-                    helperText={
-                      errors["số_bằng_chứng_trúng_đấu_giá"] &&
-                      touched["số_bằng_chứng_trúng_đấu_giá"] &&
-                      errors["số_bằng_chứng_trúng_đấu_giá"]
-                    }
                   />
                   <TextField
                     fullWidth
@@ -300,9 +235,6 @@ export const ThemThongTinXe = ({
                     label="Nơi cấp đấu giá"
                     value={values["nơi_cấp_đấu_giá"]}
                     onChange={handleChange}
-                    error={
-                      !!errors["nơi_cấp_đấu_giá"] && touched["nơi_cấp_đấu_giá"]
-                    }
                   />
                   <TextField
                     fullWidth
@@ -312,15 +244,6 @@ export const ThemThongTinXe = ({
                     label="Ngày trúng đấu giá"
                     value={values["ngày_trúng_đấu_giá"]}
                     onChange={handleChange}
-                    error={
-                      !!errors["ngày_trúng_đấu_giá"] &&
-                      touched["ngày_trúng_đấu_giá"]
-                    }
-                    helperText={
-                      errors["ngày_trúng_đấu_giá"] &&
-                      touched["ngày_trúng_đấu_giá"] &&
-                      errors["ngày_trúng_đấu_giá"]
-                    }
                   />
                 </>
               ) : null}
@@ -338,7 +261,7 @@ export const ThemThongTinXe = ({
                       fullWidth
                       id="thời_hạn"
                       name="thời_hạn"
-                      label="Thời hạn *"
+                      label="Thời hạn"
                       value={values["thời_hạn"]}
                       onChange={(event) => {
                         handleChange(event);
@@ -351,12 +274,6 @@ export const ThemThongTinXe = ({
                           )?.toLocaleLowerCase()
                         );
                       }}
-                      error={!!errors["thời_hạn"] && touched["thời_hạn"]}
-                      helperText={
-                        errors["thời_hạn"] &&
-                        touched["thời_hạn"] &&
-                        errors["thời_hạn"]
-                      }
                     />
                     <Typography
                       sx={{ fontStyle: "italic" }}
@@ -372,7 +289,7 @@ export const ThemThongTinXe = ({
                       fullWidth
                       id="số_tiền"
                       name="số_tiền"
-                      label="Số tiền *"
+                      label="Số tiền"
                       value={values["số_tiền"]}
                       onChange={(event) => {
                         handleChange(event);
@@ -385,12 +302,6 @@ export const ThemThongTinXe = ({
                           )
                         );
                       }}
-                      error={!!errors["số_tiền"] && touched["số_tiền"]}
-                      helperText={
-                        errors["số_tiền"] &&
-                        touched["số_tiền"] &&
-                        errors["số_tiền"]
-                      }
                     />
                     <Typography
                       sx={{ fontStyle: "italic" }}

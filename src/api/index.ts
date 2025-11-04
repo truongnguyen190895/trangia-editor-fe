@@ -78,7 +78,9 @@ export const render_hdmb_xe_oto = async (
       ? "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-oto-va-bien-so"
       : "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-xe-oto";
   }
-  return api.post(url, payload, { responseType: "blob" });
+  return api.post(url, convertEmptyStringsToNull(payload), {
+    responseType: "blob",
+  });
 };
 
 export const render_hdcn_quyen_sd_dat_toan_bo = async (
@@ -284,9 +286,13 @@ export const render_khai_thue_hdtc_can_ho_toan_bo = async (
 export const render_uy_quyen_toan_bo_quyen_su_dung_dat = async (
   payload: UyQuyenToanBoQuyenSdDatPayload
 ) => {
-  return api.post("/templates/nhom-uy-quyen/uq-toan-bo-quyen-sd-dat", payload, {
-    responseType: "blob",
-  });
+  return api.post(
+    "/templates/nhom-uy-quyen/uq-toan-bo-quyen-sd-dat",
+    convertEmptyStringsToNull(payload),
+    {
+      responseType: "blob",
+    }
+  );
 };
 
 export const render_uy_quyen_toan_bo_nha_dat = async (
@@ -304,9 +310,13 @@ export const render_uy_quyen_toan_bo_nha_dat = async (
 export const render_uy_quyen_toan_bo_xe_oto = async (
   payload: HDMBXeOtoPayload
 ) => {
-  return api.post("/templates/nhom-uy-quyen/uq-xe-oto", payload, {
-    responseType: "blob",
-  });
+  return api.post(
+    "/templates/nhom-uy-quyen/uq-xe-oto",
+    convertEmptyStringsToNull(payload),
+    {
+      responseType: "blob",
+    }
+  );
 };
 
 export const render_hdmb_tai_san = async (payload: HDMBTaiSanPayload) => {

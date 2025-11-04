@@ -15,11 +15,11 @@ import type { UyQuyenToanBoQuyenSdDatPayload } from "@/models/uy-quyen";
 import { render_uy_quyen_toan_bo_quyen_su_dung_dat } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
-import { extractAddress } from "@/utils/extract-address";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
+import { extractCoupleFromParty } from "@/utils/common";
 
 export const UyQuyenToanBoQuyenSdDat = () => {
   const { agreementObject } = useHdcnQuyenSdDatContext();
@@ -43,54 +43,8 @@ export const UyQuyenToanBoQuyenSdDat = () => {
       throw new Error("Agreement object is null");
     }
 
-    const couplesA = partyA["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-        tình_trạng_hôn_nhân_vợ_chồng:
-          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
-      }))
-      .concat(
-        partyA["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: "vợ",
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-          tình_trạng_hôn_nhân_vợ_chồng:
-            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
-        }))
-      );
-    const couplesB = partyB["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng:
-          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
-        thành_phố: null,
-        phường: null,
-        thôn: null,
-      }))
-      .concat(
-        partyB["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: "vợ",
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng:
-            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
-          thành_phố: null,
-          phường: null,
-          thôn: null,
-        }))
-      );
+    const couplesA = extractCoupleFromParty(partyA)
+    const couplesB = extractCoupleFromParty(partyB)
 
     const payload: UyQuyenToanBoQuyenSdDatPayload = {
       bên_A: {

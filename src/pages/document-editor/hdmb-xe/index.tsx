@@ -20,6 +20,7 @@ import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
+import { extractCoupleFromParty } from "@/utils/common";
 
 interface HDMBXeProps {
   isXeMay?: boolean;
@@ -44,46 +45,8 @@ export const HDMBXe = ({
     agreementObject !== null;
 
   const getBenABenB = () => {
-    const couplesA = partyA["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng:
-          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
-      }))
-      .concat(
-        partyA["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: "vợ",
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng:
-            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
-        }))
-      );
-    const couplesB = partyB["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng:
-          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
-      }))
-      .concat(
-        partyB["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: "vợ",
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng:
-            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
-        }))
-      );
+    const couplesA = extractCoupleFromParty(partyA);
+    const couplesB = extractCoupleFromParty(partyB);
 
     return {
       bên_A: {

@@ -21,9 +21,7 @@ interface ObjectEntityProps {
   isNongNghiep?: boolean;
 }
 
-export const ObjectEntity = ({
-  title,
-}: ObjectEntityProps) => {
+export const ObjectEntity = ({ title }: ObjectEntityProps) => {
   const { agreementObject, deleteAgreementObject } = useHdcnQuyenSdDatContext();
   const [open, setOpen] = useState(false);
 
