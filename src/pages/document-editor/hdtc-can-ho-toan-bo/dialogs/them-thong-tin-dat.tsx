@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Dialog,
@@ -10,7 +11,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { NGUỒN_GỐC_SỬ_DỤNG_ĐẤT } from "@/constants";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT } from "@/constants";
@@ -18,16 +18,12 @@ import type { ThongTinThuaDat } from "@/models/hdmb-can-ho";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 import { SearchEntity } from "@/components/common/search-entity";
 import { saveContractEntity } from "@/api/contract_entity";
-import { useState } from "react";
+import { checkIsObjectEmpty } from "@/utils/common";
 
 interface ThemThongTinDatProps {
   open: boolean;
   handleClose: () => void;
 }
-
-const validationSchema = Yup.object({
-  số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
-});
 
 export const ThemThongTinDat = ({
   open,
@@ -37,6 +33,11 @@ export const ThemThongTinDat = ({
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const submitForm = (values: ThongTinThuaDat) => {
+    const allEmpty = checkIsObjectEmpty(values);
+    if (allEmpty) {
+      handleClose();
+      return;
+    }
     addAgreementObject(values);
     setSaveLoading(true);
     saveContractEntity(values.số_thửa_đất, values).finally(() => {
@@ -60,19 +61,11 @@ export const ThemThongTinDat = ({
         };
   };
 
-  const {
-    values,
-    errors,
-    touched,
-    setFieldValue,
-    handleChange,
-    handleSubmit,
-    setValues,
-  } = useFormik<ThongTinThuaDat>({
-    initialValues: getInitialValue(),
-    validationSchema,
-    onSubmit: submitForm,
-  });
+  const { values, setFieldValue, handleChange, handleSubmit, setValues } =
+    useFormik<ThongTinThuaDat>({
+      initialValues: getInitialValue(),
+      onSubmit: submitForm,
+    });
 
   const handleSearch = (response: any) => {
     if (response) {
@@ -97,15 +90,9 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="số_thửa_đất"
                 name="số_thửa_đất"
-                label="Số thửa đất *"
+                label="Số thửa đất"
                 value={values["số_thửa_đất"]}
                 onChange={handleChange}
-                error={!!errors["số_thửa_đất"] && touched["số_thửa_đất"]}
-                helperText={
-                  errors["số_thửa_đất"] &&
-                  touched["số_thửa_đất"] &&
-                  errors["số_thửa_đất"]
-                }
               />
               <TextField
                 fullWidth
@@ -120,7 +107,7 @@ export const ThemThongTinDat = ({
                 type="text"
                 id="diện_tích_đất_bằng_số"
                 name="diện_tích_đất_bằng_số"
-                label="Diện tích (m2) *"
+                label="Diện tích (m2)"
                 value={values["diện_tích_đất_bằng_số"]}
                 onChange={(event) => {
                   handleChange(event);
@@ -137,35 +124,17 @@ export const ThemThongTinDat = ({
                 type="text"
                 id="diện_tích_đất_bằng_chữ"
                 name="diện_tích_đất_bằng_chữ"
-                label="Diện tích bằng chữ *"
+                label="Diện tích bằng chữ"
                 value={values["diện_tích_đất_bằng_chữ"]}
                 onChange={handleChange}
-                error={
-                  !!errors["diện_tích_đất_bằng_chữ"] &&
-                  touched["diện_tích_đất_bằng_chữ"]
-                }
-                helperText={
-                  errors["diện_tích_đất_bằng_chữ"] &&
-                  touched["diện_tích_đất_bằng_chữ"] &&
-                  errors["diện_tích_đất_bằng_chữ"]
-                }
               />
               <TextField
                 fullWidth
                 id="hình_thức_sở_hữu_đất"
                 name="hình_thức_sở_hữu_đất"
-                label="Hình thức sử dụng *"
+                label="Hình thức sử dụng"
                 value={values["hình_thức_sở_hữu_đất"]}
                 onChange={handleChange}
-                error={
-                  !!errors["hình_thức_sở_hữu_đất"] &&
-                  touched["hình_thức_sở_hữu_đất"]
-                }
-                helperText={
-                  errors["hình_thức_sở_hữu_đất"] &&
-                  touched["hình_thức_sở_hữu_đất"] &&
-                  errors["hình_thức_sở_hữu_đất"]
-                }
               />
               <Autocomplete
                 fullWidth
@@ -179,7 +148,7 @@ export const ThemThongTinDat = ({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Mục đích sử dụng *"
+                    label="Mục đích sử dụng"
                     onChange={(event) => {
                       setFieldValue(
                         "mục_đích_sở_hữu_đất",
@@ -193,7 +162,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="thời_hạn_sử_dụng"
                 name="thời_hạn_sử_dụng"
-                label="Thời hạn sử dụng *"
+                label="Thời hạn sử dụng"
                 value={values["thời_hạn_sử_dụng_đất"]}
                 onChange={(event) => {
                   setFieldValue("thời_hạn_sử_dụng_đất", event.target.value);
@@ -216,16 +185,7 @@ export const ThemThongTinDat = ({
                         event.target.value ?? ""
                       );
                     }}
-                    label="Nguồn gốc sử dụng *"
-                    error={
-                      !!errors["nguồn_gốc_sử_dụng_đất"] &&
-                      touched["nguồn_gốc_sử_dụng_đất"]
-                    }
-                    helperText={
-                      errors["nguồn_gốc_sử_dụng_đất"] &&
-                      touched["nguồn_gốc_sử_dụng_đất"] &&
-                      errors["nguồn_gốc_sử_dụng_đất"]
-                    }
+                    label="Nguồn gốc sử dụng"
                   />
                 )}
               />
