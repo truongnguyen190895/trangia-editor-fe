@@ -40,23 +40,17 @@ interface ThemThongTinDatProps {
 }
 
 const validationSchema = Yup.object({
-  số_thửa_đất: Yup.string().required("Số thửa đất là bắt buộc"),
-  số_tờ_bản_đồ: Yup.string().required("Tờ bản đồ số là bắt buộc"),
+  số_thửa_đất: Yup.string(),
+  số_tờ_bản_đồ: Yup.string(),
   địa_chỉ_cũ: Yup.string().optional(),
-  địa_chỉ_mới: Yup.string().required("Địa chỉ là bắt buộc"),
-  loại_giấy_chứng_nhận: Yup.string().required("Loại giấy tờ là bắt buộc"),
+  địa_chỉ_mới: Yup.string(),
+  loại_giấy_chứng_nhận: Yup.string(),
   số_giấy_chứng_nhận: Yup.string().required("Số giấy tờ là bắt buộc"),
-  số_vào_sổ_cấp_giấy_chứng_nhận: Yup.string().required(
-    "Số vào sổ cấp GCN là bắt buộc"
-  ),
-  nơi_cấp_giấy_chứng_nhận: Yup.string().required(
-    "Nơi cấp giấy chứng nhận là bắt buộc"
-  ),
-  ngày_cấp_giấy_chứng_nhận: Yup.string().required(
-    "Ngày cấp giấy chứng nhận là bắt buộc"
-  ),
-  diện_tích: Yup.string().required("Diện tích là bắt buộc"),
-  hình_thức_sử_dụng: Yup.string().required("Hình thức sử dụng là bắt buộc"),
+  số_vào_sổ_cấp_giấy_chứng_nhận: Yup.string(),
+  nơi_cấp_giấy_chứng_nhận: Yup.string(),
+  ngày_cấp_giấy_chứng_nhận: Yup.string(),
+  diện_tích: Yup.string(),
+  hình_thức_sử_dụng: Yup.string(),
   nguồn_gốc_sử_dụng: Yup.string().nullable(),
   giá_tiền: Yup.string().nullable(),
   giá_tiền_bằng_chữ: Yup.string().nullable(),
@@ -231,7 +225,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="số_thửa_đất"
                 name="số_thửa_đất"
-                label="Số thửa đất *"
+                label="Số thửa đất"
                 value={values["số_thửa_đất"]}
                 onChange={handleChange}
                 error={!!errors["số_thửa_đất"] && touched["số_thửa_đất"]}
@@ -245,7 +239,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="số_tờ_bản_đồ"
                 name="số_tờ_bản_đồ"
-                label="Tờ bản đồ số *"
+                label="Tờ bản đồ số"
                 value={values["số_tờ_bản_đồ"]}
                 onChange={handleChange}
                 error={!!errors["số_tờ_bản_đồ"] && touched["số_tờ_bản_đồ"]}
@@ -273,7 +267,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="địa_chỉ_mới"
                 name="địa_chỉ_mới"
-                label="Địa chỉ mới *"
+                label="Địa chỉ mới"
                 value={values["địa_chỉ_mới"]}
                 onChange={handleChange}
                 error={!!errors["địa_chỉ_mới"] && touched["địa_chỉ_mới"]}
@@ -312,7 +306,7 @@ export const ThemThongTinDat = ({
                       touched["loại_giấy_chứng_nhận"] &&
                       errors["loại_giấy_chứng_nhận"]
                     }
-                    label="Loại giấy chứng nhận *"
+                    label="Loại giấy chứng nhận"
                     name="loại_giấy_chứng_nhận"
                   />
                 )}
@@ -321,7 +315,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="số_giấy_chứng_nhận"
                 name="số_giấy_chứng_nhận"
-                label="Số giấy tờ *"
+                label="Số giấy tờ"
                 value={values["số_giấy_chứng_nhận"]}
                 onChange={handleChange}
                 error={
@@ -338,7 +332,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="số_vào_sổ_cấp_giấy_chứng_nhận"
                 name="số_vào_sổ_cấp_giấy_chứng_nhận"
-                label="Số vào sổ cấp GCN *"
+                label="Số vào sổ cấp GCN"
                 value={values["số_vào_sổ_cấp_giấy_chứng_nhận"]}
                 onChange={handleChange}
                 error={
@@ -355,7 +349,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="nơi_cấp_giấy_chứng_nhận"
                 name="nơi_cấp_giấy_chứng_nhận"
-                label="Nơi cấp giấy chứng nhận *"
+                label="Nơi cấp giấy chứng nhận"
                 value={values["nơi_cấp_giấy_chứng_nhận"]}
                 onChange={handleChange}
                 error={
@@ -372,7 +366,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="ngày_cấp_giấy_chứng_nhận"
                 name="ngày_cấp_giấy_chứng_nhận"
-                label="Ngày cấp giấy chứng nhận *"
+                label="Ngày cấp giấy chứng nhận"
                 value={values["ngày_cấp_giấy_chứng_nhận"]}
                 onChange={handleChange}
                 error={
@@ -390,7 +384,7 @@ export const ThemThongTinDat = ({
                 type="text"
                 id="diện_tích"
                 name="diện_tích"
-                label="Diện tích (m2) *"
+                label="Diện tích (m2)"
                 value={values["diện_tích"]}
                 onChange={(event) => {
                   handleChange(event);
@@ -413,7 +407,7 @@ export const ThemThongTinDat = ({
                 type="text"
                 id="diện_tích_bằng_chữ"
                 name="diện_tích_bằng_chữ"
-                label="Diện tích bằng chữ *"
+                label="Diện tích bằng chữ"
                 value={values["diện_tích_bằng_chữ"]}
                 onChange={handleChange}
                 error={
@@ -430,7 +424,7 @@ export const ThemThongTinDat = ({
                 fullWidth
                 id="hình_thức_sử_dụng"
                 name="hình_thức_sử_dụng"
-                label="Hình thức sử dụng *"
+                label="Hình thức sử dụng"
                 value={values["hình_thức_sử_dụng"]}
                 onChange={handleChange}
                 error={
@@ -491,7 +485,7 @@ export const ThemThongTinDat = ({
                       });
                     }}
                     renderInput={(params) => (
-                      <TextField {...params} label="Mục đích sử dụng *" />
+                      <TextField {...params} label="Mục đích sử dụng" />
                     )}
                   />
                   <TextField
@@ -511,7 +505,7 @@ export const ThemThongTinDat = ({
                     fullWidth
                     id="thời_hạn_sử_dụng"
                     name="thời_hạn_sử_dụng"
-                    label="Thời hạn sử dụng *"
+                    label="Thời hạn sử dụng"
                     value={mụcđíchVàThờiHạnSửDụngEdit["thời_hạn_sử_dụng"]}
                     onChange={(event) => {
                       setMụcĐíchVàThờiHạnSửDụngEdit({

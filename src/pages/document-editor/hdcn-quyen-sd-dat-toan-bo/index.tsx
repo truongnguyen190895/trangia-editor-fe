@@ -27,7 +27,7 @@ import {
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { extractAddress } from "@/utils/extract-address";
-import { generateThoiHanSuDung } from "@/utils/common";
+import { extractCoupleFromParty, generateThoiHanSuDung } from "@/utils/common";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
@@ -62,36 +62,8 @@ export const ChuyenNhuongDatToanBo = ({
     agreementObject !== null;
 
   const getBenABenB = () => {
-    let flattenArrayA = [];
-
-    for (const couple of partyA["vợ_chồng"]) {
-      flattenArrayA.push(couple.chồng);
-      flattenArrayA.push(couple.vợ);
-    }
-
-    const couplesA = flattenArrayA.map((person) => ({
-      ...person,
-      ngày_sinh: person["ngày_sinh"],
-      ngày_cấp: person["ngày_cấp"],
-      tình_trạng_hôn_nhân: null,
-      quan_hệ: person.giới_tính === "Bà" ? "vợ" : null,
-      ...extractAddress(person["địa_chỉ_thường_trú"]),
-    }));
-    let flattenArrayB = [];
-
-    for (const couple of partyB["vợ_chồng"]) {
-      flattenArrayB.push(couple.chồng);
-      flattenArrayB.push(couple.vợ);
-    }
-
-    const couplesB = flattenArrayB.map((person) => ({
-      ...person,
-      ngày_sinh: person["ngày_sinh"],
-      ngày_cấp: person["ngày_cấp"],
-      tình_trạng_hôn_nhân: null,
-      quan_hệ: person.giới_tính === "Bà" ? "vợ" : null,
-      ...extractAddress(person["địa_chỉ_thường_trú"]),
-    }));
+    const couplesA = extractCoupleFromParty(partyA);
+    const couplesB = extractCoupleFromParty(partyB);
 
     return {
       bên_A: {
@@ -288,36 +260,8 @@ export const ChuyenNhuongDatToanBo = ({
       throw new Error("Agreement object is null");
     }
 
-    let flattenArrayA = [];
-    let flattenArrayB = [];
-
-    for (const couple of partyA["vợ_chồng"]) {
-      flattenArrayA.push(couple.chồng);
-      flattenArrayA.push(couple.vợ);
-    }
-
-    for (const couple of partyB["vợ_chồng"]) {
-      flattenArrayB.push(couple.chồng);
-      flattenArrayB.push(couple.vợ);
-    }
-
-    const couplesA = flattenArrayA.map((person) => ({
-      ...person,
-      ngày_sinh: person["ngày_sinh"],
-      ngày_cấp: person["ngày_cấp"],
-      tình_trạng_hôn_nhân: null,
-      quan_hệ: null,
-      ...extractAddress(person["địa_chỉ_thường_trú"]),
-    }));
-
-    const couplesB = flattenArrayB.map((person) => ({
-      ...person,
-      ngày_sinh: person["ngày_sinh"],
-      ngày_cấp: person["ngày_cấp"],
-      tình_trạng_hôn_nhân: null,
-      quan_hệ: null,
-      ...extractAddress(person["địa_chỉ_thường_trú"]),
-    }));
+    const couplesA = extractCoupleFromParty(partyA, true);
+    const couplesB = extractCoupleFromParty(partyB, true);
 
     const các_cá_thể_bên_A = [
       ...partyA["cá_nhân"].map((person) => ({
