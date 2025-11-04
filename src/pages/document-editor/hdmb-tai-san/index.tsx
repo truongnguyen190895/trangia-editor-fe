@@ -25,6 +25,7 @@ import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
+import { extractCoupleFromParty } from "@/utils/common";
 
 export const HDMBTaiSan = () => {
   const { agreementObject, taiSan } = useHDMBTaiSanContext();
@@ -40,46 +41,8 @@ export const HDMBTaiSan = () => {
     taiSan !== null;
 
   const getBenABenB = () => {
-    const couplesA = partyA["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        tình_trạng_hôn_nhân_vợ_chồng:
-          couple.chồng["tình_trạng_hôn_nhân_vợ_chồng"],
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-      }))
-      .concat(
-        partyA["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: "vợ",
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          tình_trạng_hôn_nhân_vợ_chồng:
-            couple.vợ["tình_trạng_hôn_nhân_vợ_chồng"],
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-        }))
-      );
-    const couplesB = partyB["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-      }))
-      .concat(
-        partyB["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: "vợ",
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-        }))
-      );
+    const couplesA = extractCoupleFromParty(partyA);
+    const couplesB = extractCoupleFromParty(partyB);
 
     return {
       bên_A: {
@@ -192,43 +155,8 @@ export const HDMBTaiSan = () => {
       throw new Error("Agreement object is null");
     }
 
-    const couplesA = partyA["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        quan_hệ: null,
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-      }))
-      .concat(
-        partyA["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: null,
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-        }))
-      );
-    const couplesB = partyB["vợ_chồng"]
-      .map((couple) => ({
-        ...couple.chồng,
-        ngày_sinh: couple.chồng["ngày_sinh"],
-        ngày_cấp: couple.chồng["ngày_cấp"],
-        tình_trạng_hôn_nhân: null,
-        ...extractAddress(couple.chồng["địa_chỉ_thường_trú"]),
-      }))
-      .concat(
-        partyB["vợ_chồng"].map((couple) => ({
-          ...couple.vợ,
-          quan_hệ: null,
-          ngày_sinh: couple.vợ["ngày_sinh"],
-          ngày_cấp: couple.vợ["ngày_cấp"],
-          tình_trạng_hôn_nhân: null,
-          ...extractAddress(couple.vợ["địa_chỉ_thường_trú"]),
-        }))
-      );
+    const couplesA = extractCoupleFromParty(partyA, true);
+    const couplesB = extractCoupleFromParty(partyB, true);
 
     const các_cá_thể_bên_A = [
       ...partyA["cá_nhân"].map((person) => ({

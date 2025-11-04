@@ -9,24 +9,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import type { ThongTinTaiSan } from "@/models/hdmb-tai-san";
 import { useHDMBTaiSanContext } from "@/context/hdmb-tai-san";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { SearchEntity } from "@/components/common/search-entity";
+import { checkIsObjectEmpty } from "@/utils/common";
 
 interface ThongTinTaiSanProps {
   open: boolean;
   handleClose: () => void;
 }
-
-const validationSchema = Yup.object({
-  tên_tài_sản: Yup.string().required("Tên tài sản là bắt buộc"),
-  diện_tích_sử_dụng: Yup.string().required("Diện tích sử dụng là bắt buộc"),
-  hình_thức_sở_hữu: Yup.string().required("Hình thức sở hữu là bắt buộc"),
-  số_tiền: Yup.string(),
-  số_tiền_bằng_chữ: Yup.string(),
-});
 
 export const ThongTinTaiSanDialog = ({
   open,
@@ -35,6 +27,11 @@ export const ThongTinTaiSanDialog = ({
   const { taiSan, addTaiSan } = useHDMBTaiSanContext();
 
   const submitForm = (values: ThongTinTaiSan) => {
+    const allEmpty = checkIsObjectEmpty(values);
+    if (allEmpty) {
+      handleClose();
+      return;
+    }
     addTaiSan(values);
     handleClose();
   };
@@ -60,7 +57,6 @@ export const ThongTinTaiSanDialog = ({
     setValues,
   } = useFormik<ThongTinTaiSan>({
     initialValues: getInitialValue(),
-    validationSchema,
     onSubmit: submitForm,
   });
 
