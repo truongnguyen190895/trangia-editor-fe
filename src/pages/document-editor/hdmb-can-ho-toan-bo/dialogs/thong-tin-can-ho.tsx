@@ -34,25 +34,7 @@ export const ThongTinCanHoDialog = ({
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const validationSchema = Yup.object({
-    số_căn_hộ: Yup.string().required("Số căn hộ là bắt buộc"),
-    tên_toà_nhà: Yup.string().required("Tên toà nhà là bắt buộc"),
-    địa_chỉ_toà_nhà: Yup.string().required("Địa chỉ toà nhà là bắt buộc"),
-    địa_chỉ_cũ: Yup.string(),
-    loại_gcn: Yup.string().required("Loại giấy chứng nhận là bắt buộc"),
     số_gcn: Yup.string().required("Số giấy chứng nhận là bắt buộc"),
-    số_vào_sổ_cấp_gcn: Yup.string().required(
-      "Số vào sổ cấp giấy chứng nhận là bắt buộc"
-    ),
-    nơi_cấp_gcn: Yup.string().required("Nơi cấp giấy chứng nhận là bắt buộc"),
-    ngày_cấp_gcn: Yup.string().required("Ngày cấp giấy chứng nhận là bắt buộc"),
-    giá_căn_hộ_bằng_số: Yup.string().nullable(),
-    giá_căn_hộ_bằng_chữ: Yup.string().nullable(),
-    hình_thức_sở_hữu_căn_hộ: isUyQuyen
-      ? Yup.string().nullable()
-      : Yup.string().required("Hình thức sở hữu căn hộ là bắt buộc"),
-    thời_hạn: isUyQuyen
-      ? Yup.string().required("Thời hạn là bắt buộc")
-      : Yup.string().nullable(),
   });
 
   const submitForm = (values: ThongTinCanHo) => {
@@ -89,8 +71,8 @@ export const ThongTinCanHoDialog = ({
           ghi_chú_căn_hộ: "",
           giá_căn_hộ_bằng_số: "",
           giá_căn_hộ_bằng_chữ: "",
-          thời_hạn: null,
-          thời_hạn_bằng_chữ: null,
+          thời_hạn: "",
+          thời_hạn_bằng_chữ: "",
         };
   };
 
@@ -132,7 +114,7 @@ export const ThongTinCanHoDialog = ({
                 fullWidth
                 id="số_căn_hộ"
                 name="số_căn_hộ"
-                label="Số căn hộ *"
+                label="Số căn hộ"
                 value={values["số_căn_hộ"]}
                 onChange={handleChange}
                 error={!!errors["số_căn_hộ"] && touched["số_căn_hộ"]}
@@ -146,7 +128,7 @@ export const ThongTinCanHoDialog = ({
                 fullWidth
                 id="tên_toà_nhà"
                 name="tên_toà_nhà"
-                label="Tên toà nhà *"
+                label="Tên toà nhà"
                 value={values["tên_toà_nhà"]}
                 onChange={handleChange}
                 error={!!errors["tên_toà_nhà"] && touched["tên_toà_nhà"]}
@@ -161,7 +143,7 @@ export const ThongTinCanHoDialog = ({
                 type="text"
                 id="địa_chỉ_toà_nhà"
                 name="địa_chỉ_toà_nhà"
-                label="Địa chỉ toà nhà *"
+                label="Địa chỉ toà nhà"
                 value={values["địa_chỉ_toà_nhà"]}
                 onChange={handleChange}
                 error={
@@ -197,7 +179,7 @@ export const ThongTinCanHoDialog = ({
                     onChange={(event) => {
                       setFieldValue("loại_gcn", event.target.value ?? "");
                     }}
-                    label="Loại giấy chứng nhận *"
+                    label="Loại giấy chứng nhận"
                     error={!!errors["loại_gcn"] && touched["loại_gcn"]}
                     helperText={
                       errors["loại_gcn"] &&
@@ -225,47 +207,27 @@ export const ThongTinCanHoDialog = ({
                 type="text"
                 id="số_vào_sổ_cấp_gcn"
                 name="số_vào_sổ_cấp_gcn"
-                label="Số vào sổ cấp giấy chứng nhận *"
+                label="Số vào sổ cấp giấy chứng nhận"
                 value={values["số_vào_sổ_cấp_gcn"]}
                 onChange={handleChange}
-                error={
-                  !!errors["số_vào_sổ_cấp_gcn"] && touched["số_vào_sổ_cấp_gcn"]
-                }
-                helperText={
-                  errors["số_vào_sổ_cấp_gcn"] &&
-                  touched["số_vào_sổ_cấp_gcn"] &&
-                  errors["số_vào_sổ_cấp_gcn"]
-                }
               />
               <TextField
                 fullWidth
                 type="text"
                 id="nơi_cấp_gcn"
                 name="nơi_cấp_gcn"
-                label="Nơi cấp giấy chứng nhận *"
+                label="Nơi cấp giấy chứng nhận"
                 value={values["nơi_cấp_gcn"]}
                 onChange={handleChange}
-                error={!!errors["nơi_cấp_gcn"] && touched["nơi_cấp_gcn"]}
-                helperText={
-                  errors["nơi_cấp_gcn"] &&
-                  touched["nơi_cấp_gcn"] &&
-                  errors["nơi_cấp_gcn"]
-                }
               />
               <TextField
                 fullWidth
                 type="text"
-                label="Ngày cấp giấy chứng nhận (DD/MM/YYYY)*"
+                label="Ngày cấp giấy chứng nhận (DD/MM/YYYY)"
                 id="ngày_cấp_gcn"
                 name="ngày_cấp_gcn"
                 value={values["ngày_cấp_gcn"]}
                 onChange={handleChange}
-                error={!!errors["ngày_cấp_gcn"] && touched["ngày_cấp_gcn"]}
-                helperText={
-                  errors["ngày_cấp_gcn"] &&
-                  touched["ngày_cấp_gcn"] &&
-                  errors["ngày_cấp_gcn"]
-                }
               />
               {isUyQuyen ? (
                 <Box>
@@ -298,7 +260,7 @@ export const ThongTinCanHoDialog = ({
                     type="text"
                     id="diện_tích_sàn_bằng_số"
                     name="diện_tích_sàn_bằng_số"
-                    label="Diện tích sàn bằng số *"
+                    label="Diện tích sàn bằng số"
                     value={values["diện_tích_sàn_bằng_số"]}
                     onChange={(event) => {
                       handleChange(event);
@@ -311,33 +273,15 @@ export const ThongTinCanHoDialog = ({
                         )
                       );
                     }}
-                    error={
-                      !!errors["diện_tích_sàn_bằng_chữ"] &&
-                      touched["diện_tích_sàn_bằng_chữ"]
-                    }
-                    helperText={
-                      errors["diện_tích_sàn_bằng_chữ"] &&
-                      touched["diện_tích_sàn_bằng_chữ"] &&
-                      errors["diện_tích_sàn_bằng_chữ"]
-                    }
                   />
                   <TextField
                     fullWidth
                     type="text"
                     id="diện_tích_sàn_bằng_chữ"
                     name="diện_tích_sàn_bằng_chữ"
-                    label="Diện tích bằng chữ *"
+                    label="Diện tích bằng chữ"
                     value={values["diện_tích_sàn_bằng_chữ"]}
                     onChange={handleChange}
-                    error={
-                      !!errors["diện_tích_sàn_bằng_chữ"] &&
-                      touched["diện_tích_sàn_bằng_chữ"]
-                    }
-                    helperText={
-                      errors["diện_tích_sàn_bằng_chữ"] &&
-                      touched["diện_tích_sàn_bằng_chữ"] &&
-                      errors["diện_tích_sàn_bằng_chữ"]
-                    }
                   />
                   <TextField
                     fullWidth
@@ -350,7 +294,11 @@ export const ThongTinCanHoDialog = ({
                       handleChange(event);
                       setFieldValue(
                         "diện_tích_sàn_một_phần_bằng_chữ",
-                        numberToVietnamese(event.target.value?.replace(/\./g, "").replace(/\,/g, "."))
+                        numberToVietnamese(
+                          event.target.value
+                            ?.replace(/\./g, "")
+                            .replace(/\,/g, ".")
+                        )
                       );
                     }}
                   />
@@ -395,18 +343,9 @@ export const ThongTinCanHoDialog = ({
                     type="text"
                     id="hình_thức_sở_hữu_căn_hộ"
                     name="hình_thức_sở_hữu_căn_hộ"
-                    label="Hình thức sở hữu căn hộ *"
+                    label="Hình thức sở hữu căn hộ"
                     value={values["hình_thức_sở_hữu_căn_hộ"]}
                     onChange={handleChange}
-                    error={
-                      !!errors["hình_thức_sở_hữu_căn_hộ"] &&
-                      touched["hình_thức_sở_hữu_căn_hộ"]
-                    }
-                    helperText={
-                      errors["hình_thức_sở_hữu_căn_hộ"] &&
-                      touched["hình_thức_sở_hữu_căn_hộ"] &&
-                      errors["hình_thức_sở_hữu_căn_hộ"]
-                    }
                   />
                   <TextField
                     fullWidth
@@ -435,15 +374,6 @@ export const ThongTinCanHoDialog = ({
                         )
                       );
                     }}
-                    error={
-                      !!errors["giá_căn_hộ_bằng_số"] &&
-                      touched["giá_căn_hộ_bằng_số"]
-                    }
-                    helperText={
-                      errors["giá_căn_hộ_bằng_số"] &&
-                      touched["giá_căn_hộ_bằng_số"] &&
-                      errors["giá_căn_hộ_bằng_số"]
-                    }
                   />
                   <TextField
                     fullWidth
@@ -453,15 +383,6 @@ export const ThongTinCanHoDialog = ({
                     label="Giá căn hộ bằng chữ"
                     value={values["giá_căn_hộ_bằng_chữ"]}
                     onChange={handleChange}
-                    error={
-                      !!errors["giá_căn_hộ_bằng_chữ"] &&
-                      touched["giá_căn_hộ_bằng_chữ"]
-                    }
-                    helperText={
-                      errors["giá_căn_hộ_bằng_chữ"] &&
-                      touched["giá_căn_hộ_bằng_chữ"] &&
-                      errors["giá_căn_hộ_bằng_chữ"]
-                    }
                   />
                   <TextField
                     sx={{ gridColumn: "span 3" }}
@@ -474,14 +395,6 @@ export const ThongTinCanHoDialog = ({
                     label="Ghi chú căn hộ"
                     value={values["ghi_chú_căn_hộ"]}
                     onChange={handleChange}
-                    error={
-                      !!errors["ghi_chú_căn_hộ"] && touched["ghi_chú_căn_hộ"]
-                    }
-                    helperText={
-                      errors["ghi_chú_căn_hộ"] &&
-                      touched["ghi_chú_căn_hộ"] &&
-                      errors["ghi_chú_căn_hộ"]
-                    }
                   />
                 </>
               )}
