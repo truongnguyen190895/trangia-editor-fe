@@ -35,6 +35,7 @@ const WorkHistory = () => {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Ngày</TableCell>
               <TableCell>Tên</TableCell>
             </TableRow>
@@ -42,6 +43,7 @@ const WorkHistory = () => {
           <TableBody>
             {workHistory.map((item) => (
               <TableRow key={item.id}>
+                <TableCell>{item.id}</TableCell>
                 <TableCell>
                   {dayjs(item.audit.created_at).format("DD/MM/YYYY HH:mm:ss")}
                 </TableCell>
