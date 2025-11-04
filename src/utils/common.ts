@@ -95,3 +95,15 @@ export const getPeopleNameFromParty = (party: AgreementParty) => {
   );
   return [...people, ...couples].join(", ");
 };
+
+export const checkIsObjectEmpty = (obj: Record<string, any>) => {
+  return Object.values(obj).every((value) => {
+    if (typeof value === "string") {
+      return value.trim() === "";
+    }
+    if (typeof value === "number") {
+      return value === 0;
+    }
+    return value == null;
+  });
+};

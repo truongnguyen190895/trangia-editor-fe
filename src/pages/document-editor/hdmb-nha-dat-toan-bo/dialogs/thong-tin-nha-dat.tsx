@@ -8,26 +8,17 @@ import {
   Button,
 } from "@mui/material";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import type { ThongTinNhaDat } from "@/models/hdmb-nha-dat";
 import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
 import { SearchEntity } from "@/components/common/search-entity";
+import { checkIsObjectEmpty } from "@/utils/common";
 
 interface ThongTinNhaDatProps {
   open: boolean;
   isUyQuyen?: boolean;
   handleClose: () => void;
 }
-
-const validationSchema = Yup.object({
-  diện_tích_xây_dựng: Yup.string().required("Diện tích xây dựng là bắt buộc"),
-  diện_tích_sàn: Yup.string().required("Diện tích sàn là bắt buộc"),
-  số_tiền: Yup.string(),
-  số_tiền_bằng_chữ: Yup.string(),
-  ghi_chú: Yup.string().nullable(),
-  hình_thức_sở_hữu: Yup.string().required("Hình thức sở hữu là bắt buộc"),
-});
 
 export const ThongTinNhaDatDialog = ({
   open,
@@ -36,6 +27,11 @@ export const ThongTinNhaDatDialog = ({
   const { nhaDat, addNhaDat } = useHDMBNhaDatContext();
 
   const submitForm = (values: ThongTinNhaDat) => {
+    const allEmpty = checkIsObjectEmpty(values);
+    if (allEmpty) {
+      handleClose();
+      return;
+    }
     addNhaDat(values);
     handleClose();
   };
@@ -58,19 +54,11 @@ export const ThongTinNhaDatDialog = ({
         };
   };
 
-  const {
-    values,
-    errors,
-    touched,
-    setFieldValue,
-    handleChange,
-    handleSubmit,
-    setValues,
-  } = useFormik<ThongTinNhaDat>({
-    initialValues: getInitialValue(),
-    validationSchema,
-    onSubmit: submitForm,
-  });
+  const { values, setFieldValue, handleChange, handleSubmit, setValues } =
+    useFormik<ThongTinNhaDat>({
+      initialValues: getInitialValue(),
+      onSubmit: submitForm,
+    });
 
   const handleSearch = (response: any) => {
     if (response) {
@@ -105,32 +93,17 @@ export const ThongTinNhaDatDialog = ({
                 fullWidth
                 id="diện_tích_xây_dựng"
                 name="diện_tích_xây_dựng"
-                label="Diện tích xây dựng (m2)*"
+                label="Diện tích xây dựng (m2)"
                 value={values["diện_tích_xây_dựng"]}
                 onChange={handleChange}
-                error={
-                  !!errors["diện_tích_xây_dựng"] &&
-                  touched["diện_tích_xây_dựng"]
-                }
-                helperText={
-                  errors["diện_tích_xây_dựng"] &&
-                  touched["diện_tích_xây_dựng"] &&
-                  errors["diện_tích_xây_dựng"]
-                }
               />
               <TextField
                 fullWidth
                 id="diện_tích_sàn"
                 name="diện_tích_sàn"
-                label="Diện tích sàn (m2)*"
+                label="Diện tích sàn (m2)"
                 value={values["diện_tích_sàn"]}
                 onChange={handleChange}
-                error={!!errors["diện_tích_sàn"] && touched["diện_tích_sàn"]}
-                helperText={
-                  errors["diện_tích_sàn"] &&
-                  touched["diện_tích_sàn"] &&
-                  errors["diện_tích_sàn"]
-                }
               />
               <TextField
                 fullWidth
@@ -184,10 +157,6 @@ export const ThongTinNhaDatDialog = ({
                     )
                   );
                 }}
-                error={!!errors["số_tiền"] && touched["số_tiền"]}
-                helperText={
-                  errors["số_tiền"] && touched["số_tiền"] && errors["số_tiền"]
-                }
               />
               <TextField
                 fullWidth
@@ -197,14 +166,6 @@ export const ThongTinNhaDatDialog = ({
                 label="Số tiền bằng chữ"
                 value={values["số_tiền_bằng_chữ"]}
                 onChange={handleChange}
-                error={
-                  !!errors["số_tiền_bằng_chữ"] && touched["số_tiền_bằng_chữ"]
-                }
-                helperText={
-                  errors["số_tiền_bằng_chữ"] &&
-                  touched["số_tiền_bằng_chữ"] &&
-                  errors["số_tiền_bằng_chữ"]
-                }
               />
               <TextField
                 fullWidth
@@ -223,14 +184,6 @@ export const ThongTinNhaDatDialog = ({
                 label="Hình thức sở hữu"
                 value={values["hình_thức_sở_hữu"]}
                 onChange={handleChange}
-                error={
-                  !!errors["hình_thức_sở_hữu"] && touched["hình_thức_sở_hữu"]
-                }
-                helperText={
-                  errors["hình_thức_sở_hữu"] &&
-                  touched["hình_thức_sở_hữu"] &&
-                  errors["hình_thức_sở_hữu"]
-                }
               />
               <TextField
                 sx={{ gridColumn: "span 3" }}
@@ -243,10 +196,6 @@ export const ThongTinNhaDatDialog = ({
                 label="Ghi chú"
                 value={values["ghi_chú"]}
                 onChange={handleChange}
-                error={!!errors["ghi_chú"] && touched["ghi_chú"]}
-                helperText={
-                  errors["ghi_chú"] && touched["ghi_chú"] && errors["ghi_chú"]
-                }
               />
             </Box>
           </Box>

@@ -18,6 +18,7 @@ import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 import { SearchEntity } from "@/components/common/search-entity";
 import { saveContractEntity } from "@/api/contract_entity";
 import { useState } from "react";
+import { checkIsObjectEmpty } from "@/utils/common";
 
 interface ThemThongTinDatProps {
   open: boolean;
@@ -32,9 +33,7 @@ export const ThemThongTinDat = ({
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const submitForm = (values: ThongTinThuaDat) => {
-    const allEmpty = Object.values(values).every((v) =>
-      typeof v === "string" ? v.trim() === "" : v == null
-    );
+    const allEmpty = checkIsObjectEmpty(values);
     if (allEmpty) {
       handleClose();
       return;

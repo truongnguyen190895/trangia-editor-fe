@@ -292,9 +292,13 @@ export const render_uy_quyen_toan_bo_quyen_su_dung_dat = async (
 export const render_uy_quyen_toan_bo_nha_dat = async (
   payload: HDMBNhaDatPayload
 ) => {
-  return api.post("/templates/nhom-uy-quyen/uq-toan-bo-nha-dat", payload, {
-    responseType: "blob",
-  });
+  return api.post(
+    "/templates/nhom-uy-quyen/uq-toan-bo-nha-dat",
+    convertEmptyStringsToNull(payload),
+    {
+      responseType: "blob",
+    }
+  );
 };
 
 export const render_uy_quyen_toan_bo_xe_oto = async (
