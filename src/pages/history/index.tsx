@@ -148,7 +148,7 @@ const History = () => {
   useEffect(() => {
     if (isAdmin) {
       setLoadingUsers(true);
-      listUsers()
+      listUsers({ size: 1000 })
         .then((resp) => {
           setUsers(resp?.content?.filter((user) => user.username !== "admin"));
         })
@@ -594,7 +594,7 @@ const History = () => {
         justifyContent="space-between"
       >
         <Typography
-          sx={{ fontSize: { xs: "1rem", md: "1.2rem" }}}
+          sx={{ fontSize: { xs: "1rem", md: "1.2rem" } }}
           fontWeight="bold"
           fontStyle="italic"
           color="#08CB00"
@@ -603,7 +603,7 @@ const History = () => {
         </Typography>
         {isAdmin ? (
           <Typography
-          sx={{ fontSize: { xs: "1rem", md: "1.2rem" }}}
+            sx={{ fontSize: { xs: "1rem", md: "1.2rem" } }}
             fontWeight="bold"
             fontStyle="italic"
             color="#08CB00"
@@ -628,7 +628,9 @@ const History = () => {
             {loadingExcel ? (
               <CircularProgress size={20} />
             ) : (
-              <Typography sx={{ fontSize: { xs: "0.8rem", md: "1rem" }}}>Tải file excel</Typography>
+              <Typography sx={{ fontSize: { xs: "0.8rem", md: "1rem" } }}>
+                Tải file excel
+              </Typography>
             )}
           </Button>
         ) : null}
