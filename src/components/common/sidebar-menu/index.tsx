@@ -9,6 +9,7 @@ import {
   Divider,
 } from "@mui/material";
 import { Description, Create, Timeline, People } from "@mui/icons-material";
+import HistoryIcon from '@mui/icons-material/History';
 import { useNavigate, useLocation } from "react-router-dom";
 
 const menuItems = [
@@ -16,6 +17,12 @@ const menuItems = [
     text: "Trình soạn thảo",
     icon: <Create />,
     path: "/",
+    adminRequired: false,
+  },
+  {
+    text: "Lịch sử soạn thảo",
+    icon: <HistoryIcon />,
+    path: "/work-history",
     adminRequired: false,
   },
   {

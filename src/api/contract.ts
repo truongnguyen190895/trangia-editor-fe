@@ -109,3 +109,7 @@ export const exportExcel = (params: ListContractsParams) => {
 export const getTheNextAvailableId = (type: string): Promise<string> => {
   return api.get("/files/next-id?type=" + type).then((resp) => resp.data);
 };
+
+export const listWorkHistory = () => {
+  return api.get("/contracts").then((resp) => resp.data);
+};
