@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -30,6 +30,8 @@ import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
+import { useSearchParams } from "react-router-dom";
+import { getWorkHistoryById } from "@/api/contract";
 
 interface Props {
   isMotPhan?: boolean;
@@ -47,6 +49,17 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+  console.log("id", id);
+
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        console.log(res);
+      });
+    }
+  }, [id]);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&

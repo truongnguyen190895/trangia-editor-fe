@@ -111,5 +111,11 @@ export const getTheNextAvailableId = (type: string): Promise<string> => {
 };
 
 export const listWorkHistory = () => {
-  return api.get("/contracts?sort=audit.createdAt,desc").then((resp) => resp.data);
+  return api
+    .get("/contracts?sort=audit.createdAt,desc")
+    .then((resp) => resp.data);
+};
+
+export const getWorkHistoryById = (id: string) => {
+  return api.get("/contracts/" + id).then((resp) => resp.data);
 };
