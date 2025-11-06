@@ -12,6 +12,7 @@ import {
   Select,
   MenuItem,
   Typography,
+  type SelectChangeEvent,
 } from "@mui/material";
 import { CÔNG_CHỨNG_VIÊN } from "@/database/cong-chung-vien";
 import dayjs from "dayjs";
@@ -22,8 +23,9 @@ export interface MetaData {
   isOutSide: boolean;
   côngChứngViên: string;
   ngày: string;
-  sốHợpĐồng?: string;
   isUchi: boolean;
+  notaryId: number;
+  sốHợpĐồng?: string;
 }
 
 interface ThemLoiChungDialogProps {
@@ -41,6 +43,7 @@ export const ThemLoiChungDialog = ({
   const [isOutSide, setIsOutSide] = useState(false);
   const [isUchi, setIsUchi] = useState(false);
   const [côngChứngViên, setCôngChứngViên] = useState<string>("");
+  const [notaryId, setNotaryId] = useState<number>(13);
   const [sốHợpĐồng, setSốHợpĐồng] = useState<string>("");
   const [ngày, setNgày] = useState<string>(dayjs().format("DD/MM/YYYY"));
   const [searchParams] = useSearchParams();
@@ -55,8 +58,19 @@ export const ThemLoiChungDialog = ({
       ngày,
       sốHợpĐồng,
       isUchi,
+      notaryId,
     };
     handleGenerateDocument(data);
+  };
+
+  const handleChangeNotary = (e: SelectChangeEvent<string>) => {
+    setCôngChứngViên(e.target.value);
+    const uchiId = CÔNG_CHỨNG_VIÊN.find(
+      (item) => item.name === e.target.value
+    )?.uchiId;
+    if (uchiId) {
+      setNotaryId(uchiId);
+    }
   };
 
   return (
@@ -105,7 +119,7 @@ export const ThemLoiChungDialog = ({
               </InputLabel>
               <Select
                 value={côngChứngViên}
-                onChange={(e) => setCôngChứngViên(e.target.value)}
+                onChange={handleChangeNotary}
                 fullWidth
               >
                 <MenuItem value="">Chọn công chứng viên</MenuItem>

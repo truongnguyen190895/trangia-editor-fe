@@ -117,7 +117,8 @@ export const ChuyenNhuongDatToanBo = ({
     côngChứngViên: string,
     isUchi: boolean,
     ngày: string,
-    sốHợpĐồng?: string
+    sốHợpĐồng?: string,
+    notaryId?: number
   ): HDCNQuyenSDDatPayload => {
     if (!agreementObject) {
       throw new Error("Agreement object is null");
@@ -176,6 +177,7 @@ export const ChuyenNhuongDatToanBo = ({
       số_hợp_đồng: sốHợpĐồng || undefined,
       isUchi: isUchi,
       uchi_id: uchiId ? String(uchiId) : "",
+      notary_id: notaryId ? String(notaryId) : "13",
     };
 
     return payload;
@@ -188,7 +190,8 @@ export const ChuyenNhuongDatToanBo = ({
       metaData.côngChứngViên,
       metaData.isUchi,
       metaData.ngày,
-      metaData.sốHợpĐồng
+      metaData.sốHợpĐồng,
+      metaData.notaryId
     );
     setOpenDialog(false);
     setIsGenerating(true);
@@ -479,11 +482,13 @@ export const ChuyenNhuongDatToanBo = ({
           />
         </Box>
       </Box>
-      <ThemLoiChungDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        handleGenerateDocument={handleGenerateDocument}
-      />
+      {openDialog ? (
+        <ThemLoiChungDialog
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          handleGenerateDocument={handleGenerateDocument}
+        />
+      ) : null}
     </Box>
   );
 };

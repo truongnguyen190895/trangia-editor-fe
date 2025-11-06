@@ -109,6 +109,7 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
   số_hợp_đồng?: string;
   isUchi: boolean;
   uchi_id?: string;
+  notary_id?: string;
 }
 
 export type SampleToKhaiChungPayload = {
