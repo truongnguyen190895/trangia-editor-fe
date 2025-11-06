@@ -40,7 +40,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { toast } from "react-toastify";
 
-const DEBOUNCE_TIME = 2000;
+const DEBOUNCE_TIME = 1000;
 
 const History = () => {
   const navigate = useNavigate();
@@ -87,6 +87,11 @@ const History = () => {
     const debounce = setTimeout(() => {
       setCustomerQuery(debounceCustomerQuery);
       setPage(1);
+      setDateBegin(
+        debounceCustomerQuery !== ""
+          ? dayjs(dateBegin).startOf("year")
+          : dayjs().startOf("month")
+      );
     }, DEBOUNCE_TIME);
     return () => clearTimeout(debounce);
   }, [debounceCustomerQuery]);
@@ -95,6 +100,11 @@ const History = () => {
     const debounce = setTimeout(() => {
       setSearchQuery(debounceQuery);
       setPage(1);
+      setDateBegin(
+        debounceQuery !== ""
+          ? dayjs(dateBegin).startOf("year")
+          : dayjs().startOf("month")
+      );
     }, DEBOUNCE_TIME);
     return () => clearTimeout(debounce);
   }, [debounceQuery]);
@@ -103,6 +113,11 @@ const History = () => {
     const debounce = setTimeout(() => {
       setBrokerQuery(debounceBrokerQuery);
       setPage(1);
+      setDateBegin(
+        debounceBrokerQuery !== ""
+          ? dayjs(dateBegin).startOf("year")
+          : dayjs().startOf("month")
+      );
     }, DEBOUNCE_TIME);
     return () => clearTimeout(debounce);
   }, [debounceBrokerQuery]);
