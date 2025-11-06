@@ -18,6 +18,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemCaNhanDialog } from "./them-ca-nhan-dialog";
 import { ThemVoChongDialog } from "./them-vo-chong-dialog";
+import { v4 as uuidv4 } from "uuid";
 
 interface ThemChuTheProps {
   title: string;
@@ -43,7 +44,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
   const partyEntities = side === "partyA" ? partyA : partyB;
   const individualParty = partyEntities["cá_nhân"];
   const coupleParty = partyEntities["vợ_chồng"];
-  console.log(isUyQuyen);
+  console.log("isUyQuyen", isUyQuyen);
 
   const handleDeleteSingleParty = (arrayIndex: number) => {
     if (side === "partyA") {
@@ -133,7 +134,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                 <TableBody>
                   {individualParty.map((entity, index) => (
                     <TableRow
-                      key={entity["số_giấy_tờ"]}
+                      key={uuidv4()}
                       sx={{
                         "& .icon-action": {
                           cursor: "pointer",
@@ -241,7 +242,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                   {coupleParty.map((entity, index) => (
                     <>
                       <TableRow
-                        key={entity.chồng["số_giấy_tờ"]}
+                        key={uuidv4()}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",
@@ -280,7 +281,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                         </TableCell>
                       </TableRow>
                       <TableRow
-                        key={entity.vợ["số_giấy_tờ"]}
+                        key={uuidv4()}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",

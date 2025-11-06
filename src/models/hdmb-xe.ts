@@ -1,4 +1,5 @@
 import type { Party } from "./party";
+import type { AgreementParty } from "./agreement-entity";
 
 export interface ThongTinXeOto {
   nhãn_hiệu: string;
@@ -33,4 +34,10 @@ export interface HDMBXeOtoPayload extends ThongTinXeOto {
   số_bản_công_chứng_bằng_chữ: string;
   ký_bên_ngoài: boolean;
   công_chứng_viên: string;
+  original_payload?: {
+    partyA: AgreementParty;
+    partyB: AgreementParty;
+    agreementObject: ThongTinXeOto;
+  };
+  id?: string;
 }

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, useTheme } from "@mui/material";
 import { ObjectEntity } from "./components/object";
 import { CircularProgress } from "@mui/material";
 import type {
   HDMBCanHoPayload,
   KhaiThueHDMBCanHoToanBoPayload,
+  ThongTinCanHo as ThongTinCanHoType,
+  ThongTinThuaDat,
 } from "@/models/hdmb-can-ho";
 import dayjs from "dayjs";
 import {
@@ -21,13 +23,33 @@ import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
+import { useSearchParams } from "react-router-dom";
+import { getWorkHistoryById } from "@/api/contract";
 
 export const HDTangChoCanHoToanBo = () => {
-  const { agreementObject, canHo } = useHDMBCanHoContext();
+  const { agreementObject, canHo, addAgreementObject, addCanHo } =
+    useHDMBCanHoContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          addAgreementObject(
+            originalPayload?.agreementObject as ThongTinThuaDat
+          );
+          addCanHo(originalPayload?.canHo as ThongTinCanHoType);
+        }
+      });
+    }
+  }, [id]);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -134,6 +156,13 @@ export const HDTangChoCanHoToanBo = () => {
       thời_hạn: null,
       thời_hạn_bằng_chữ: null,
       công_chứng_viên: côngChứngViên,
+      original_payload: {
+        partyA,
+        partyB,
+        agreementObject,
+        canHo,
+      },
+      id: id ? id : undefined,
     };
 
     return payload;

@@ -13,8 +13,8 @@ interface ThemChuTheContextType {
   couplePartyAEntityIndex: number | null;
   couplePartyBEntityIndex: number | null;
   //   Single section
-  addSinglePartyAEntity: (entity: SingleAgreementParty, index?: number) => void;
-  addSinglePartyBEntity: (entity: SingleAgreementParty, index?: number) => void;
+  addSinglePartyAEntity: (entity: SingleAgreementParty) => void;
+  addSinglePartyBEntity: (entity: SingleAgreementParty) => void;
   deleteSinglePartyAEntity: (arrayIndex: number) => void;
   deleteSinglePartyBEntity: (arrayIndex: number) => void;
   deleteCouplePartyAEntity: (arrayIndex: number) => void;
@@ -34,8 +34,8 @@ interface ThemChuTheContextType {
   editCouplePartyAEntity: (entity: Couple, arrayIndex: number) => void;
   editCouplePartyBEntity: (entity: Couple, arrayIndex: number) => void;
   //   Couple section
-  addCouplePartyAEntity: (entity: Couple, index?: number) => void;
-  addCouplePartyBEntity: (entity: Couple, index?: number) => void;
+  addCouplePartyAEntity: (entity: Couple) => void;
+  addCouplePartyBEntity: (entity: Couple) => void;
 }
 
 export const ThemChuTheContext = createContext<ThemChuTheContextType>({
@@ -98,70 +98,32 @@ export const ThemChuTheProvider = ({
     number | null
   >(null);
 
-  const addSinglePartyAEntity = (
-    entity: SingleAgreementParty,
-    index?: number
-  ) => {
-    if (index !== undefined) {
-      setPartyA({
-        ...partyA,
-        cá_nhân: [
-          ...partyA["cá_nhân"].slice(0, index),
-          entity,
-          ...partyA["cá_nhân"].slice(index + 1),
-        ],
-      });
-    } else {
-      setPartyA({
-        ...partyA,
-        cá_nhân: [...partyA["cá_nhân"], entity],
-      });
-    }
+  const addSinglePartyAEntity = (entity: SingleAgreementParty) => {
+    setPartyA((prev) => ({
+      ...prev,
+      cá_nhân: [...prev["cá_nhân"], entity],
+    }));
   };
 
-  const addCouplePartyAEntity = (entity: Couple, index?: number) => {
-    if (index !== undefined) {
-      setPartyA({
-        ...partyA,
-        vợ_chồng: [...partyA["vợ_chồng"], entity],
-      });
-    } else {
-      setPartyA({
-        ...partyA,
-        vợ_chồng: [...partyA["vợ_chồng"], entity],
-      });
-    }
+  const addCouplePartyAEntity = (entity: Couple) => {
+    setPartyA((prev) => ({
+      ...prev,
+      vợ_chồng: [...prev["vợ_chồng"], entity],
+    }));
   };
 
-  const addSinglePartyBEntity = (
-    entity: SingleAgreementParty,
-    index?: number
-  ) => {
-    if (index !== undefined) {
-      setPartyB({
-        ...partyB,
-        cá_nhân: [...partyB["cá_nhân"], entity],
-      });
-    } else {
-      setPartyB({
-        ...partyB,
-        cá_nhân: [...partyB["cá_nhân"], entity],
-      });
-    }
+  const addSinglePartyBEntity = (entity: SingleAgreementParty) => {
+    setPartyB((prev) => ({
+      ...prev,
+      cá_nhân: [...prev["cá_nhân"], entity],
+    }));
   };
 
-  const addCouplePartyBEntity = (entity: Couple, index?: number) => {
-    if (index !== undefined) {
-      setPartyB({
-        ...partyB,
-        vợ_chồng: [...partyB["vợ_chồng"], entity],
-      });
-    } else {
-      setPartyB({
-        ...partyB,
-        vợ_chồng: [...partyB["vợ_chồng"], entity],
-      });
-    }
+  const addCouplePartyBEntity = (entity: Couple) => {
+    setPartyB((prev) => ({
+      ...prev,
+      vợ_chồng: [...prev["vợ_chồng"], entity],
+    }));
   };
 
   const deleteSinglePartyAEntity = (arrayIndex: number) => {

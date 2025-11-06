@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   Box,
@@ -34,6 +34,8 @@ import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { uchiTemporarySave } from "@/api/uchi";
 import { toast } from "react-toastify";
+import { getWorkHistoryById } from "@/api/contract";
+import type { ThongTinThuaDat } from "@/models/agreement-object";
 
 interface Props {
   isNongNghiep?: boolean;
@@ -44,13 +46,27 @@ export const ChuyenNhuongDatToanBo = ({
   isNongNghiep = false,
   isTangCho = false,
 }: Props) => {
-  const { agreementObject } = useHdcnQuyenSdDatContext();
+  const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get("templateId");
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          addAgreementObject(
+            originalPayload?.agreementObject as ThongTinThuaDat
+          );
+        }
+      });
+    }
+  }, [id]);
 
   const userInfo = localStorage.getItem("user_info");
   const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
@@ -178,6 +194,12 @@ export const ChuyenNhuongDatToanBo = ({
       isUchi: isUchi,
       uchi_id: uchiId ? String(uchiId) : "",
       notary_id: notaryId ? String(notaryId) : "13",
+      original_payload: {
+        partyA: partyA,
+        partyB: partyB,
+        agreementObject: agreementObject,
+      },
+      id: id ? id : undefined,
     };
 
     return payload;

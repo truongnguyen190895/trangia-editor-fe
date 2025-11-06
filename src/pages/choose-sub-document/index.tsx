@@ -8,7 +8,7 @@ const mockData = [
     name: "Nhóm chuyển nhượng, mua bán",
     description: "Chuyển nhượng, mua bán",
     category: "hop-dong",
-    subCategory: "chuyen-nhuong-mua-ban",
+    subCategory: "nhom-chuyen-nhuong-mua-ban",
     active: true,
   },
   {
@@ -16,7 +16,7 @@ const mockData = [
     name: "Nhóm Tặng Cho",
     description: "Tặng cho",
     category: "hop-dong",
-    subCategory: "tang-cho",
+    subCategory: "nhom-tang-cho",
     active: true,
   },
   {
@@ -24,7 +24,7 @@ const mockData = [
     name: "Nhóm Uỷ Quyền",
     description: "Uỷ quyền",
     category: "hop-dong",
-    subCategory: "uy-quyen",
+    subCategory: "nhom-uy-quyen",
     active: true,
   },
   {
@@ -32,7 +32,7 @@ const mockData = [
     name: "Nhóm Thuê, mượn, đặt cọc",
     description: "Thuê, mượn, đặt cọc",
     category: "hop-dong",
-    subCategory: "thue-muon-dat-coc",
+    subCategory: "nhom-thue-muon-dat-coc",
     active: true,
   },
   {
@@ -40,7 +40,7 @@ const mockData = [
     name: "Huỷ, sửa đổi, bổ sung, chấm dứt",
     description: "Huỷ, sửa đổi, bổ sung, chấm dứt",
     category: "hop-dong",
-    subCategory: "huy-sua-doi-bo-sung-cham-dut",
+    subCategory: "nhom-huy-sua-doi",
     active: true,
   },
 ];

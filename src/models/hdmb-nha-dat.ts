@@ -1,5 +1,5 @@
 import type { Party } from "./party";
-import type { Gender } from "./agreement-entity";
+import type { AgreementParty, Gender } from "./agreement-entity";
 
 export interface HDMBNhaDatPayload extends ThongTinThuaDat, ThongTinNhaDat {
   bên_A: Party;
@@ -13,6 +13,13 @@ export interface HDMBNhaDatPayload extends ThongTinThuaDat, ThongTinNhaDat {
   ký_bên_ngoài: boolean;
   công_chứng_viên: string;
   địa_chỉ_hiển_thị: string;
+  original_payload?: {
+    partyA: AgreementParty;
+    partyB: AgreementParty;
+    agreementObject: ThongTinThuaDat;
+    nhaDat: ThongTinNhaDat;
+  };
+  id?: string;
 }
 
 export interface ThongTinThuaDat {

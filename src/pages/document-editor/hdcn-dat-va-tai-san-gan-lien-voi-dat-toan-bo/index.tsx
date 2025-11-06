@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,8 @@ import { CircularProgress } from "@mui/material";
 import type {
   HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
   KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
+  ThongTinTaiSan,
+  ThongTinThuaDat,
 } from "@/models/hdcn-dat-va-tsglvd";
 import dayjs from "dayjs";
 import {
@@ -30,6 +32,8 @@ import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
+import { useSearchParams } from "react-router-dom";
+import { getWorkHistoryById } from "@/api/contract";
 
 interface Props {
   isMotPhan?: boolean;
@@ -40,13 +44,29 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
   isMotPhan = false,
   scope = "full",
 }: Props) => {
-  const { agreementObject, taiSan } =
+  const { agreementObject, taiSan, addAgreementObject, addTaiSan } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
   const { partyA, partyB } = useThemChuTheContext();
 
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          addAgreementObject(
+            originalPayload?.agreementObject as ThongTinThuaDat
+          );
+          addTaiSan(originalPayload?.taiSan as ThongTinTaiSan);
+        }
+      });
+    }
+  }, [id]);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -130,6 +150,13 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
+      original_payload: {
+        partyA: partyA,
+        partyB: partyB,
+        agreementObject: agreementObject,
+        taiSan: taiSan,
+      },
+      id: id ? id : undefined,
     };
     return payload;
   };

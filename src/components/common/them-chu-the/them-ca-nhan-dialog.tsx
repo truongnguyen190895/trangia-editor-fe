@@ -303,9 +303,7 @@ export const ThemCaNhanDialog = ({
                     {...params}
                     fullWidth
                     error={!!errors["nơi_cấp"] && touched["nơi_cấp"]}
-                    helperText={
-                      (touched["nơi_cấp"] && errors["nơi_cấp"]) || ""
-                    }
+                    helperText={(touched["nơi_cấp"] && errors["nơi_cấp"]) || ""}
                   />
                 )}
               />

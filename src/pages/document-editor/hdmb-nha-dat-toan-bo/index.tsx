@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,8 @@ import { CircularProgress } from "@mui/material";
 import type {
   HDMBNhaDatPayload,
   KhaiThueHDMBNhaDatToanBoPayload,
+  ThongTinNhaDat,
+  ThongTinThuaDat,
 } from "@/models/hdmb-nha-dat";
 import {
   render_hdmb_nha_dat,
@@ -31,6 +33,8 @@ import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
+import { getWorkHistoryById } from "@/api/contract";
+import { useSearchParams } from "react-router-dom";
 
 interface Props {
   isTangCho?: boolean;
@@ -41,11 +45,28 @@ export const HDMBNhaDatToanBo = ({
   isTangCho = false,
   isUyQuyen = false,
 }: Props) => {
-  const { agreementObject, nhaDat } = useHDMBNhaDatContext();
+  const { agreementObject, nhaDat, addAgreementObject, addNhaDat } =
+    useHDMBNhaDatContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          addAgreementObject(
+            originalPayload?.agreementObject as ThongTinThuaDat
+          );
+          addNhaDat(originalPayload?.nhaDat as ThongTinNhaDat);
+        }
+      });
+    }
+  }, [id]);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -139,6 +160,13 @@ export const HDMBNhaDatToanBo = ({
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
+      original_payload: {
+        partyA: partyA,
+        partyB: partyB,
+        agreementObject: agreementObject,
+        nhaDat: nhaDat as ThongTinNhaDat,
+      },
+      id: id ? id : undefined,
     };
 
     return payload;
@@ -229,7 +257,7 @@ export const HDMBNhaDatToanBo = ({
       throw new Error("Agreement object is null");
     }
 
-    const couplesA = extractCoupleFromParty(partyA, true)
+    const couplesA = extractCoupleFromParty(partyA, true);
     const couplesB = extractCoupleFromParty(partyB, true);
 
     const các_cá_thể_bên_A = [
