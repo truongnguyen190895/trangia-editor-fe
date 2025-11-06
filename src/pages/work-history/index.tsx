@@ -6,6 +6,7 @@ import {
   TableHead,
   Typography,
   TableBody,
+  Pagination,
 } from "@mui/material";
 import { listWorkHistory } from "@/api/contract";
 import { useEffect, useState } from "react";
@@ -13,16 +14,28 @@ import dayjs from "dayjs";
 import { templates } from "@/database";
 import { useNavigate } from "react-router-dom";
 import { getTemplateName } from "@/utils/common";
+import { LoadingDialog } from "@/components/common/loading-dialog";
 
 const WorkHistory = () => {
+  const [loading, setLoading] = useState(false);
   const [workHistory, setWorkHistory] = useState<any[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
-    listWorkHistory().then((resp) => {
-      setWorkHistory(resp.content);
-    });
-  }, []);
+    setLoading(true);
+    listWorkHistory({ size: 20, page: page - 1 })
+      .then((resp) => {
+        setWorkHistory(resp.content);
+        setTotalPages(resp.page.total_pages);
+        setTotalElements(resp.page.total_elements);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [page]);
 
   const handleClick = (templatePath: string, id: string) => {
     const [group, subGroup] = templatePath.split("/");
@@ -39,24 +52,17 @@ const WorkHistory = () => {
     }
   };
 
+  const handleChangePage = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
   return (
     <Box>
-      <Typography variant="h3">Lịch sử soạn thảo</Typography>
-      <Box
-        py="4rem"
-        bgcolor="#FFC50F"
-        mt="2rem"
-        borderRadius="1rem"
-        height="300px"
-      >
-        <Typography textAlign="center" variant="h3">
-          Functionality is under development
-        </Typography>
-        <Typography textAlign="center" variant="h5" mt="1rem">
-          We will update this page soon
-        </Typography>
-      </Box>
-      <Box>
+      <Typography variant="h3">Lịch sử soạn thảo ({totalElements})</Typography>
+      <Box mt="2rem">
         <Table>
           <TableHead sx={{ backgroundColor: "#f0f0f0" }}>
             <TableRow>
@@ -91,7 +97,21 @@ const WorkHistory = () => {
             ))}
           </TableBody>
         </Table>
+        <Box
+          className="pagination-container"
+          display="flex"
+          justifyContent="center"
+          mt="2rem"
+        >
+          <Pagination
+            count={totalPages}
+            page={page}
+            shape="rounded"
+            onChange={handleChangePage}
+          />
+        </Box>
       </Box>
+      <LoadingDialog open={loading} />
     </Box>
   );
 };

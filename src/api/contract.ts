@@ -110,9 +110,15 @@ export const getTheNextAvailableId = (type: string): Promise<string> => {
   return api.get("/files/next-id?type=" + type).then((resp) => resp.data);
 };
 
-export const listWorkHistory = (): Promise<{content: WorkHistoryResponse[]}> => {
+interface ListWorkHistoryParams {
+  size?: number;
+  page?: number;
+}
+export const listWorkHistory = (
+  params: ListWorkHistoryParams
+): Promise<WorkHistoryResponse> => {
   return api
-    .get("/contracts?sort=audit.createdAt,desc")
+    .get("/contracts?sort=audit.createdAt,desc", { params })
     .then((resp) => resp.data);
 };
 
@@ -126,6 +132,12 @@ export interface WorkHistoryResponse {
     updated_by_username: string;
   };
   content: any;
+  page: {
+    number: number;
+    size: number;
+    total_elements: number;
+    total_pages: number;
+  };
 }
 export const getWorkHistoryById = (
   id: string
