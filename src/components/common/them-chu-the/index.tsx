@@ -43,7 +43,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
   const partyEntities = side === "partyA" ? partyA : partyB;
   const individualParty = partyEntities["cá_nhân"];
   const coupleParty = partyEntities["vợ_chồng"];
-  console.log(isUyQuyen);
+  console.log("isUyQuyen", isUyQuyen);
 
   const handleDeleteSingleParty = (arrayIndex: number) => {
     if (side === "partyA") {

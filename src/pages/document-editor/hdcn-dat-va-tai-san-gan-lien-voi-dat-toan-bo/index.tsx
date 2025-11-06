@@ -51,7 +51,6 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
   const [openDialog, setOpenDialog] = useState(false);
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
-  console.log("id", id);
 
   useEffect(() => {
     if (id) {
