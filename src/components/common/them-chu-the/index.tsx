@@ -133,7 +133,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                 <TableBody>
                   {individualParty.map((entity, index) => (
                     <TableRow
-                      key={entity["số_giấy_tờ"]}
+                      key={index}
                       sx={{
                         "& .icon-action": {
                           cursor: "pointer",
@@ -241,7 +241,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                   {coupleParty.map((entity, index) => (
                     <>
                       <TableRow
-                        key={entity.chồng["số_giấy_tờ"]}
+                        key={index}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",
@@ -280,7 +280,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                         </TableCell>
                       </TableRow>
                       <TableRow
-                        key={entity.vợ["số_giấy_tờ"]}
+                        key={index}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",

@@ -16,6 +16,8 @@ import { useThemChuTheContext } from "@/context/them-chu-the";
 import type {
   HDCNQuyenSDDatPayload,
   SampleToKhaiChungPayload,
+  SingleAgreementParty,
+  Couple,
 } from "@/models/agreement-entity";
 import dayjs from "dayjs";
 import {
@@ -35,6 +37,7 @@ import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { uchiTemporarySave } from "@/api/uchi";
 import { toast } from "react-toastify";
 import { getWorkHistoryById } from "@/api/contract";
+import type { ThongTinThuaDat } from "@/models/agreement-object";
 
 interface Props {
   isNongNghiep?: boolean;
@@ -46,40 +49,50 @@ export const ChuyenNhuongDatToanBo = ({
   isTangCho = false,
 }: Props) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
-  const { partyA, partyB } = useThemChuTheContext();
+  const {
+    partyA,
+    partyB,
+    addSinglePartyAEntity,
+    addSinglePartyBEntity,
+    addCouplePartyAEntity,
+    addCouplePartyBEntity,
+  } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get("templateId");
   const id = searchParams.get("id");
-  console.log("id", id);
 
   useEffect(() => {
     if (id) {
       getWorkHistoryById(id).then((res) => {
-        console.log(res.content);
-        addAgreementObject({
-            số_thửa_đất: res.content.số_thửa_đất,
-            số_tờ_bản_đồ: res.content.số_tờ_bản_đồ,
-            địa_chỉ_cũ: res.content.địa_chỉ_cũ,
-            địa_chỉ_mới: res.content.địa_chỉ_mới,
-            loại_giấy_chứng_nhận: res.content.loại_giấy_chứng_nhận,
-            số_giấy_chứng_nhận: res.content.số_giấy_chứng_nhận,
-            số_vào_sổ_cấp_giấy_chứng_nhận: res.content.số_vào_sổ_cấp_giấy_chứng_nhận,
-            nơi_cấp_giấy_chứng_nhận: res.content.nơi_cấp_giấy_chứng_nhận,
-            ngày_cấp_giấy_chứng_nhận: res.content.ngày_cấp_giấy_chứng_nhận,
-            diện_tích: res.content.đặc_điểm_thửa_đất.diện_tích.số,
-            diện_tích_bằng_chữ: res.content.đặc_điểm_thửa_đất.diện_tích.chữ,
-            hình_thức_sử_dụng: res.content.đặc_điểm_thửa_đất.hình_thức_sử_dụng,
-            nguồn_gốc_sử_dụng: res.content.đặc_điểm_thửa_đất.nguồn_gốc_sử_dụng,
-            giá_tiền: res.content.số_tiền,
-            giá_tiền_bằng_chữ: res.content.số_tiền_bằng_chữ,
-            ghi_chú: res.content.ghi_chú,
-            mục_đích_và_thời_hạn_sử_dụng: res.content.đặc_điểm_thửa_đất.mục_đích_và_thời_hạn_sử_dụng,
-            thời_hạn: "",
-            thời_hạn_bằng_chữ: "",
-        });
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          originalPayload.partyA["cá_nhân"].forEach(
+            (entity: SingleAgreementParty) => {
+              addSinglePartyAEntity(entity);
+            }
+          );
+
+          originalPayload.partyA["vợ_chồng"].forEach((entity: Couple) => {
+            addCouplePartyAEntity(entity);
+          });
+
+          originalPayload.partyB["cá_nhân"].forEach(
+            (entity: SingleAgreementParty) => {
+              addSinglePartyBEntity(entity);
+            }
+          );
+
+          originalPayload.partyB["vợ_chồng"].forEach((entity: Couple) => {
+            addCouplePartyBEntity(entity);
+          });
+
+          addAgreementObject(
+            originalPayload?.agreementObject as ThongTinThuaDat
+          );
+        }
       });
     }
   }, [id]);
@@ -210,6 +223,12 @@ export const ChuyenNhuongDatToanBo = ({
       isUchi: isUchi,
       uchi_id: uchiId ? String(uchiId) : "",
       notary_id: notaryId ? String(notaryId) : "13",
+      original_payload: {
+        partyA: partyA,
+        partyB: partyB,
+        agreementObject: agreementObject,
+      },
+      id: id ? id : undefined,
     };
 
     return payload;

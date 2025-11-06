@@ -116,6 +116,19 @@ export const listWorkHistory = () => {
     .then((resp) => resp.data);
 };
 
-export const getWorkHistoryById = (id: string) => {
+export interface WorkHistoryResponse {
+  id: string;
+  template: string;
+  audit: {
+    created_at: string;
+    updated_at: string;
+    created_by_username: string;
+    updated_by_username: string;
+  };
+  content: any;
+}
+export const getWorkHistoryById = (
+  id: string
+): Promise<WorkHistoryResponse> => {
   return api.get("/contracts/" + id).then((resp) => resp.data);
 };
