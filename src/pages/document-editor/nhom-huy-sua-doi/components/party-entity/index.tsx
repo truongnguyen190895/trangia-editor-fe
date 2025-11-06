@@ -131,7 +131,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                 <TableBody>
                   {individualParty.map((entity, index) => (
                     <TableRow
-                      key={entity["số_giấy_tờ"]}
+                      key={index}
                       sx={{
                         "& .icon-action": {
                           cursor: "pointer",
@@ -241,7 +241,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                   {coupleParty.map((entity, index) => (
                     <>
                       <TableRow
-                        key={entity.chồng["số_giấy_tờ"]}
+                        key={`husband-${index}`}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",
@@ -282,7 +282,7 @@ export const PartyEntity = ({ title, side }: PartyEntityProps) => {
                         </TableCell>
                       </TableRow>
                       <TableRow
-                        key={entity.vợ["số_giấy_tờ"]}
+                        key={`wife-${index}`}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",

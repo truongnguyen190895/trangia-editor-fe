@@ -18,11 +18,49 @@ import { HDMBXe } from "@/pages/document-editor/hdmb-xe";
 import { HDMBTaiSan } from "@/pages/document-editor/hdmb-tai-san";
 import { NhomHuySuaDoi } from "@/pages/document-editor/nhom-huy-sua-doi";
 import { NhomThueMuonDatCoc } from "@/pages/document-editor/nhom-thue-muon-dat-coc";
+import { getTemplateName } from "@/utils/common";
+import { getWorkHistoryById } from "@/api/contract";
+import { useEffect } from "react";
+import type { Couple, SingleAgreementParty } from "@/models/agreement-entity";
+import { useThemChuTheContext } from "@/context/them-chu-the";
 
 export const DocumentEditor = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const name = searchParams.get("name");
+  const id = searchParams.get("id");
+  const {
+    addSinglePartyAEntity,
+    addCouplePartyAEntity,
+    addSinglePartyBEntity,
+    addCouplePartyBEntity,
+  } = useThemChuTheContext();
+
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          originalPayload.partyA["cá_nhân"].forEach(
+            (entity: SingleAgreementParty) => {
+              addSinglePartyAEntity(entity);
+            }
+          );
+          originalPayload.partyA["vợ_chồng"].forEach((entity: Couple) => {
+            addCouplePartyAEntity(entity);
+          });
+          originalPayload.partyB["cá_nhân"].forEach(
+            (entity: SingleAgreementParty) => {
+              addSinglePartyBEntity(entity);
+            }
+          );
+          originalPayload.partyB["vợ_chồng"].forEach((entity: Couple) => {
+            addCouplePartyBEntity(entity);
+          });
+        }
+      });
+    }
+  }, [id]);
 
   const renderContent = () => {
     switch (name) {
@@ -129,63 +167,6 @@ export const DocumentEditor = () => {
     }
   };
 
-  const getTemplateName = () => {
-    switch (name) {
-      case "hdcn-quyen-su-dung-dat-toan-bo":
-        return "Hợp đồng chuyển nhượng quyền sử dụng đất (toàn bộ)";
-      case "hdmb-can-ho-toan-bo":
-        return "Hợp đồng mua bán căn hộ toàn bộ";
-      case "hdmb-can-ho-mot-phan-de-so-huu-toan-bo":
-        return "Hợp đồng mua bán căn hộ một phần (để sở hữu toàn bộ)";
-      case "hdmb-nha-dat-toan-bo":
-        return "Hợp đồng mua bán nhà đất toàn bộ";
-      case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
-        return "Hợp đồng chuyển nhượng quyền sử dụng đất nông nghiệp (toàn bộ)";
-      case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
-        return "Hợp đồng chuyển nhượng quyền sử dụng đất và tài sản gắn liền với đất (toàn bộ)";
-      case "hd-tang-cho-can-ho-toan-bo":
-        return "Hợp đồng tặng cho căn hộ (toàn bộ)";
-      case "hd-tang-cho-dat-nong-nghiep-toan-bo":
-        return "Hợp đồng tặng cho đất nông nghiệp (toàn bộ)";
-      case "hd-tang-cho-dat-toan-bo":
-        return "Hợp đồng tặng cho đất (toàn bộ)";
-      case "uy-quyen-toan-bo-quyen-su-dung-dat":
-        return "Uỷ quyền toàn bộ quyền sử dụng đất";
-      case "uy-quyen-toan-bo-nha-dat":
-        return "Uỷ quyền toàn bộ nhà + đất";
-      case "uy-quyen-toan-bo-can-ho":
-        return "Uỷ quyền toàn bộ căn hộ";
-      case "hdmb-xe-oto":
-        return "Hợp đồng mua bán xe ô tô";
-      case "hdmb-xe-may":
-        return "Hợp đồng mua bán xe máy";
-      case "hdmb-xe-oto-bien-so-xe":
-        return "Hợp đồng mua bán xe ô tô + biển số xe";
-      case "uy-quyen-xe-oto":
-        return "Uỷ quyền xe ô tô";
-      case "hdmb-tai-san":
-        return "Hợp đồng mua bán tài sản";
-      case "vb-huy":
-        return "Văn bản huỷ";
-      case "vb-cham-dut-hq-uy-quyen":
-        return "Văn bản chấm dứt hợp đồng uỷ quyền";
-      case "vb-cham-dut-hd":
-        return "Văn bản chấm dứt hợp đồng";
-      case "hd-dat-coc":
-        return "Hợp đồng đặt cọc";
-      case "hd-dat-coc-chua-xoa-chap":
-        return "Hợp đồng đặt cọc chưa xoá chấp";
-      case "hd-tang-cho-nha-dat-toan-bo":
-        return "Hợp đồng tặng cho nhà đất toàn bộ";
-      case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
-        return "HĐCN một phần đất và TSGLVĐ (đồng sử dụng)";
-      case "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo":
-        return "HĐCN một phần đất và TSGLVĐ (để sử dụng toàn bộ)";
-      default:
-        return "";
-    }
-  };
-
   return (
     <Box className="editor-container">
       <Box
@@ -196,16 +177,13 @@ export const DocumentEditor = () => {
         display="flex"
         alignItems="center"
       >
-        <Typography variant="h4">Tên văn bản: {getTemplateName()}</Typography>
+        <Typography variant="h4">
+          Tên văn bản: {getTemplateName(name ?? "")}
+        </Typography>
       </Box>
       <Box className="content" py="1rem">
-        <Button
-          variant="contained"
-          onClick={() => navigate("/")}
-          sx={{ mb: 2 }}
-          startIcon={<BackIcon />}
-        >
-          Quay lại trang chủ
+        <Button variant="contained" onClick={() => navigate(-1)} sx={{ mb: 2 }}>
+          <BackIcon />
         </Button>
         {renderContent()}
       </Box>

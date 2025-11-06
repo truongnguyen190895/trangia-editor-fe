@@ -110,7 +110,7 @@ export const getTheNextAvailableId = (type: string): Promise<string> => {
   return api.get("/files/next-id?type=" + type).then((resp) => resp.data);
 };
 
-export const listWorkHistory = () => {
+export const listWorkHistory = (): Promise<{content: WorkHistoryResponse[]}> => {
   return api
     .get("/contracts?sort=audit.createdAt,desc")
     .then((resp) => resp.data);

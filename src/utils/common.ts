@@ -107,3 +107,60 @@ export const checkIsObjectEmpty = (obj: Record<string, any>) => {
     return value == null;
   });
 };
+
+export const getTemplateName = (name: string) => {
+  switch (name) {
+    case "hdcn-quyen-su-dung-dat-toan-bo":
+      return "Hợp đồng chuyển nhượng quyền sử dụng đất (toàn bộ)";
+    case "hdmb-can-ho-toan-bo":
+      return "Hợp đồng mua bán căn hộ toàn bộ";
+    case "hdmb-can-ho-mot-phan-de-so-huu-toan-bo":
+      return "Hợp đồng mua bán căn hộ một phần (để sở hữu toàn bộ)";
+    case "hdmb-nha-dat-toan-bo":
+      return "Hợp đồng mua bán nhà đất toàn bộ";
+    case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
+      return "Hợp đồng chuyển nhượng quyền sử dụng đất nông nghiệp (toàn bộ)";
+    case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
+      return "Hợp đồng chuyển nhượng quyền sử dụng đất và tài sản gắn liền với đất (toàn bộ)";
+    case "hd-tang-cho-can-ho-toan-bo":
+      return "Hợp đồng tặng cho căn hộ (toàn bộ)";
+    case "hd-tang-cho-dat-nong-nghiep-toan-bo":
+      return "Hợp đồng tặng cho đất nông nghiệp (toàn bộ)";
+    case "hd-tang-cho-dat-toan-bo":
+      return "Hợp đồng tặng cho đất (toàn bộ)";
+    case "uy-quyen-toan-bo-quyen-su-dung-dat":
+      return "Uỷ quyền toàn bộ quyền sử dụng đất";
+    case "uy-quyen-toan-bo-nha-dat":
+      return "Uỷ quyền toàn bộ nhà + đất";
+    case "uy-quyen-toan-bo-can-ho":
+      return "Uỷ quyền toàn bộ căn hộ";
+    case "hdmb-xe-oto":
+      return "Hợp đồng mua bán xe ô tô";
+    case "hdmb-xe-may":
+      return "Hợp đồng mua bán xe máy";
+    case "hdmb-xe-oto-bien-so-xe":
+      return "Hợp đồng mua bán xe ô tô + biển số xe";
+    case "uy-quyen-xe-oto":
+      return "Uỷ quyền xe ô tô";
+    case "hdmb-tai-san":
+      return "Hợp đồng mua bán tài sản";
+    case "vb-huy":
+      return "Văn bản huỷ";
+    case "vb-cham-dut-hq-uy-quyen":
+      return "Văn bản chấm dứt hợp đồng uỷ quyền";
+    case "vb-cham-dut-hd":
+      return "Văn bản chấm dứt hợp đồng";
+    case "hd-dat-coc":
+      return "Hợp đồng đặt cọc";
+    case "hd-dat-coc-chua-xoa-chap":
+      return "Hợp đồng đặt cọc chưa xoá chấp";
+    case "hd-tang-cho-nha-dat-toan-bo":
+      return "Hợp đồng tặng cho nhà đất toàn bộ";
+    case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
+      return "HĐCN một phần đất và TSGLVĐ (đồng sử dụng)";
+    case "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo":
+      return "HĐCN một phần đất và TSGLVĐ (để sử dụng toàn bộ)";
+    default:
+      return "";
+  }
+};

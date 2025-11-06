@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, useTheme } from "@mui/material";
 import { ThongTinCanHo } from "./components/thong-tin-can-ho";
 import { CircularProgress } from "@mui/material";
 import type {
   HDMBCanHoPayload,
   KhaiThueHDMBCanHoToanBoPayload,
+  ThongTinCanHo as ThongTinCanHoType,
+  ThongTinThuaDat,
 } from "@/models/hdmb-can-ho";
 import dayjs from "dayjs";
 import {
@@ -22,6 +24,8 @@ import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
+import { useSearchParams } from "react-router-dom";
+import { getWorkHistoryById } from "@/api/contract";
 
 interface Props {
   isUyQuyen?: boolean;
@@ -34,11 +38,28 @@ export const HDMBCanHoToanBo = ({
   isMotPhan = false,
   scope = "full",
 }: Props) => {
-  const { agreementObject, canHo } = useHDMBCanHoContext();
+  const { agreementObject, canHo, addAgreementObject, addCanHo } =
+    useHDMBCanHoContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          addAgreementObject(
+            originalPayload?.agreementObject as ThongTinThuaDat
+          );
+          addCanHo(originalPayload?.canHo as ThongTinCanHoType);
+        }
+      });
+    }
+  }, [id]);
 
   const isFormValid = isUyQuyen
     ? Boolean(canHo)
@@ -158,6 +179,13 @@ export const HDMBCanHoToanBo = ({
       thời_hạn: canHo?.["thời_hạn"] ?? null,
       thời_hạn_bằng_chữ: canHo?.["thời_hạn_bằng_chữ"] ?? null,
       công_chứng_viên: côngChứngViên,
+      original_payload: {
+        partyA: partyA,
+        partyB: partyB,
+        agreementObject: agreementObject as ThongTinThuaDat,
+        canHo: canHo,
+      },
+      id: id ? id : undefined,
     };
 
     return payload;

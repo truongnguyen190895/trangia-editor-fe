@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -10,7 +10,7 @@ import {
 import { ObjectEntity } from "./components/object";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
-import type { HDMBXeOtoPayload } from "@/models/hdmb-xe";
+import type { HDMBXeOtoPayload, ThongTinXeOto } from "@/models/hdmb-xe";
 import { render_hdmb_xe_oto, render_uy_quyen_toan_bo_xe_oto } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
@@ -21,6 +21,8 @@ import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
+import { getWorkHistoryById } from "@/api/contract";
+import { useSearchParams } from "react-router-dom";
 
 interface HDMBXeProps {
   isXeMay?: boolean;
@@ -33,11 +35,23 @@ export const HDMBXe = ({
   isDauGia = false,
   isUyQuyen = false,
 }: HDMBXeProps) => {
-  const { agreementObject } = useHDMBXeContext();
+  const { agreementObject, addAgreementObject } = useHDMBXeContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          addAgreementObject(originalPayload?.agreementObject as ThongTinXeOto);
+        }
+      });
+    }
+  }, [id]);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -121,6 +135,12 @@ export const HDMBXe = ({
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
+      original_payload: {
+        partyA: partyA,
+        partyB: partyB,
+        agreementObject: agreementObject,
+      },
+      id: id ? id : undefined,
     };
 
     return payload;

@@ -11,6 +11,14 @@ export const templates = [
   },
   {
     id: uuidv4(),
+    name: "HĐCN Quyền sử dụng đất nông nghiệp toàn bộ.docx",
+    type: "agreement",
+    subCategory: "nhom-chuyen-nhuong-mua-ban",
+    path: "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo",
+    templateId: 0,
+  },
+  {
+    id: uuidv4(),
     name: "HĐCN một phần đất và TSGLVD (để đồng sử dụng).docx",
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
@@ -23,14 +31,6 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo",
-    templateId: 0,
-  },
-  {
-    id: uuidv4(),
-    name: "HĐCN Quyền sử dụng đất nông nghiệp toàn bộ.docx",
-    type: "agreement",
-    subCategory: "nhom-chuyen-nhuong-mua-ban",
-    path: "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo",
     templateId: 0,
   },
   {
@@ -61,7 +61,7 @@ export const templates = [
     id: uuidv4(),
     name: "HĐMB nhà đất toàn bộ.docx",
     type: "agreement",
-    subCategory: "nhom-nhom-chuyen-nhuong-mua-ban",
+    subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdmb-nha-dat-toan-bo",
     templateId: 0,
   },

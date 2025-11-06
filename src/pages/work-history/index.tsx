@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { templates } from "@/database";
 import { useNavigate } from "react-router-dom";
+import { getTemplateName } from "@/utils/common";
 
 const WorkHistory = () => {
   const [workHistory, setWorkHistory] = useState<any[]>([]);
@@ -57,11 +58,12 @@ const WorkHistory = () => {
       </Box>
       <Box>
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: "#f0f0f0" }}>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Ngày</TableCell>
-              <TableCell>Tên</TableCell>
+              <TableCell width="15%">Ngày tạo</TableCell>
+              <TableCell width="45%">Tên văn bản</TableCell>
+              <TableCell width="20%">Bên A</TableCell>
+              <TableCell width="20%">Bên B</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -69,12 +71,22 @@ const WorkHistory = () => {
               <TableRow
                 key={item.id}
                 onClick={() => handleClick(item.template, item.id)}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                    cursor: "pointer",
+                    transition: "background-color 0.3s ease",
+                  },
+                }}
               >
-                <TableCell>{item.id}</TableCell>
                 <TableCell>
                   {dayjs(item.audit.created_at).format("DD/MM/YYYY HH:mm:ss")}
                 </TableCell>
-                <TableCell>{item.template}</TableCell>
+                <TableCell>
+                  {getTemplateName(item?.template?.split("/")?.[1] ?? "")}
+                </TableCell>
+                <TableCell>{item.content.bên_A["cá_thể"][0].tên}</TableCell>
+                <TableCell>{item.content.bên_B["cá_thể"][0].tên}</TableCell>
               </TableRow>
             ))}
           </TableBody>

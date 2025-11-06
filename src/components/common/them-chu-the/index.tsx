@@ -18,6 +18,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemCaNhanDialog } from "./them-ca-nhan-dialog";
 import { ThemVoChongDialog } from "./them-vo-chong-dialog";
+import { v4 as uuidv4 } from "uuid";
 
 interface ThemChuTheProps {
   title: string;
@@ -133,7 +134,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                 <TableBody>
                   {individualParty.map((entity, index) => (
                     <TableRow
-                      key={index}
+                      key={uuidv4()}
                       sx={{
                         "& .icon-action": {
                           cursor: "pointer",
@@ -241,7 +242,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                   {coupleParty.map((entity, index) => (
                     <>
                       <TableRow
-                        key={index}
+                        key={uuidv4()}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",
@@ -280,7 +281,7 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
                         </TableCell>
                       </TableRow>
                       <TableRow
-                        key={index}
+                        key={uuidv4()}
                         sx={{
                           "& .icon-action": {
                             cursor: "pointer",

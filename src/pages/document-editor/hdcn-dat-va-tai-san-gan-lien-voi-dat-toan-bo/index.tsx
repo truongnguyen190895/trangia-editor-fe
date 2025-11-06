@@ -13,6 +13,8 @@ import { CircularProgress } from "@mui/material";
 import type {
   HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
   KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
+  ThongTinTaiSan,
+  ThongTinThuaDat,
 } from "@/models/hdcn-dat-va-tsglvd";
 import dayjs from "dayjs";
 import {
@@ -42,7 +44,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
   isMotPhan = false,
   scope = "full",
 }: Props) => {
-  const { agreementObject, taiSan } =
+  const { agreementObject, taiSan, addAgreementObject, addTaiSan } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
   const { partyA, partyB } = useThemChuTheContext();
 
@@ -55,7 +57,13 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
   useEffect(() => {
     if (id) {
       getWorkHistoryById(id).then((res) => {
-        console.log(res);
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          addAgreementObject(
+            originalPayload?.agreementObject as ThongTinThuaDat
+          );
+          addTaiSan(originalPayload?.taiSan as ThongTinTaiSan);
+        }
       });
     }
   }, [id]);
@@ -142,6 +150,13 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
+      original_payload: {
+        partyA: partyA,
+        partyB: partyB,
+        agreementObject: agreementObject,
+        taiSan: taiSan,
+      },
+      id: id ? id : undefined,
     };
     return payload;
   };

@@ -16,8 +16,6 @@ import { useThemChuTheContext } from "@/context/them-chu-the";
 import type {
   HDCNQuyenSDDatPayload,
   SampleToKhaiChungPayload,
-  SingleAgreementParty,
-  Couple,
 } from "@/models/agreement-entity";
 import dayjs from "dayjs";
 import {
@@ -49,14 +47,7 @@ export const ChuyenNhuongDatToanBo = ({
   isTangCho = false,
 }: Props) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
-  const {
-    partyA,
-    partyB,
-    addSinglePartyAEntity,
-    addSinglePartyBEntity,
-    addCouplePartyAEntity,
-    addCouplePartyBEntity,
-  } = useThemChuTheContext();
+  const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -69,26 +60,6 @@ export const ChuyenNhuongDatToanBo = ({
       getWorkHistoryById(id).then((res) => {
         const originalPayload = res.content.original_payload;
         if (originalPayload) {
-          originalPayload.partyA["cá_nhân"].forEach(
-            (entity: SingleAgreementParty) => {
-              addSinglePartyAEntity(entity);
-            }
-          );
-
-          originalPayload.partyA["vợ_chồng"].forEach((entity: Couple) => {
-            addCouplePartyAEntity(entity);
-          });
-
-          originalPayload.partyB["cá_nhân"].forEach(
-            (entity: SingleAgreementParty) => {
-              addSinglePartyBEntity(entity);
-            }
-          );
-
-          originalPayload.partyB["vợ_chồng"].forEach((entity: Couple) => {
-            addCouplePartyBEntity(entity);
-          });
-
           addAgreementObject(
             originalPayload?.agreementObject as ThongTinThuaDat
           );

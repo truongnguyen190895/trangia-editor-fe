@@ -1,4 +1,4 @@
-import type { Gender } from "./agreement-entity";
+import type { AgreementParty, Gender } from "./agreement-entity";
 
 interface BaseParty {
   giới_tính: Gender;
@@ -42,6 +42,12 @@ export interface UyQuyenToanBoQuyenSdDatPayload {
   nơi_cấp_giấy_chứng_nhận: string;
   ngày_cấp_giấy_chứng_nhận: string;
   công_chứng_viên: string;
+  original_payload?: {
+    partyA: AgreementParty;
+    partyB: AgreementParty;
+    agreementObject: ThongTinThuaDat;
+  };
+  id?: string;
 }
 
 export interface ThongTinThuaDat {
