@@ -416,7 +416,7 @@ export const ChuyenNhuongDatToanBo = ({
     } else if (isTangCho) {
       return "hd-tang-cho-dat-toan-bo";
     } else if (isNongNghiep) {
-      return "hd-tang-cho-dat-nong-nghiep-toan-bo";
+      return "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo";
     } else {
       return "hdcn-quyen-sd-dat-toan-bo";
     }
