@@ -120,7 +120,7 @@ export const getTemplateName = (name: string) => {
       return "Hợp đồng mua bán nhà đất toàn bộ";
     case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
       return "Hợp đồng chuyển nhượng quyền sử dụng đất nông nghiệp (toàn bộ)";
-    case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
+    case "hdcn-dat-va-tsglvd-toan-bo":
       return "Hợp đồng chuyển nhượng quyền sử dụng đất và tài sản gắn liền với đất (toàn bộ)";
     case "hd-tang-cho-can-ho-toan-bo":
       return "Hợp đồng tặng cho căn hộ (toàn bộ)";

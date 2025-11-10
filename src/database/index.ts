@@ -38,7 +38,7 @@ export const templates = [
     name: "HĐCN đất và tài sản gắn liền với đất toàn bộ.docx",
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
-    path: "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo",
+    path: "hdcn-dat-va-tsglvd-toan-bo",
     templateId: 0,
   },
   {

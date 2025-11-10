@@ -107,7 +107,7 @@ export const DocumentEditor = () => {
             />
           </HDMBNhaDatProvider>
         );
-      case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
+      case "hdcn-dat-va-tsglvd-toan-bo":
       case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
       case "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo":
         return (
