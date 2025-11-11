@@ -361,8 +361,8 @@ export const ThongTinCanHoDialog = ({
                   <TextField
                     fullWidth
                     type="text"
-                    id="giá_căn_hộ_bằng_số"
-                    name="giá_căn_hộ_bằng_số"
+                    id="số_tiền"
+                    name="số_tiền"
                     label="Giá căn hộ bằng số"
                     value={values["số_tiền"]}
                     onChange={(event) => {
