@@ -142,6 +142,7 @@ export const DocumentEditor = () => {
               isXeMay={/hdmb-xe-may/.test(name ?? "")}
               isDauGia={/bien-so-xe/.test(name ?? "")}
               isUyQuyen={/uy-quyen/.test(name ?? "")}
+              templateName={getTemplateName(name ?? "")}
             />
           </HDMBXeProvider>
         );

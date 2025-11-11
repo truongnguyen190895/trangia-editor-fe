@@ -127,7 +127,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdmb-xe-oto",
-    templateId: 0,
+    templateId: 2,
   },
   {
     id: uuidv4(),

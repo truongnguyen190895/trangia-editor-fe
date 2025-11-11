@@ -23,17 +23,21 @@ import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
 import { getWorkHistoryById } from "@/api/contract";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { uchiTemporarySave } from "@/api/uchi";
 
 interface HDMBXeProps {
   isXeMay?: boolean;
   isDauGia?: boolean;
   isUyQuyen?: boolean;
+  templateName?: string;
 }
 
 export const HDMBXe = ({
   isXeMay = false,
   isDauGia = false,
   isUyQuyen = false,
+  templateName,
 }: HDMBXeProps) => {
   const { agreementObject, addAgreementObject } = useHDMBXeContext();
   const { partyA, partyB } = useThemChuTheContext();
@@ -41,7 +45,9 @@ export const HDMBXe = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [searchParams] = useSearchParams();
+  const templateId = searchParams.get("templateId");
   const id = searchParams.get("id");
+
   useEffect(() => {
     if (id) {
       getWorkHistoryById(id).then((res) => {
@@ -52,6 +58,10 @@ export const HDMBXe = ({
       });
     }
   }, [id]);
+
+  const userInfo = localStorage.getItem("user_info");
+  const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
+  const uchiId = userInfoObject?.uchi_id;
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -113,7 +123,10 @@ export const HDMBXe = ({
     sốBảnGốc: number,
     isOutSide: boolean,
     côngChứngViên: string,
-    ngày: string
+    isUchi: boolean,
+    ngày: string,
+    sốHợpĐồng?: string,
+    notaryId?: number
   ): HDMBXeOtoPayload => {
     if (!agreementObject) {
       throw new Error("Agreement object is null");
@@ -135,6 +148,12 @@ export const HDMBXe = ({
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
+      template_id: templateId ? templateId : undefined,
+      số_hợp_đồng: sốHợpĐồng || undefined,
+      isUchi: isUchi,
+      uchi_id: uchiId ? String(uchiId) : "",
+      notary_id: notaryId ? String(notaryId) : "13",
+      template_name: templateName,
       original_payload: {
         partyA: partyA,
         partyB: partyB,
@@ -151,7 +170,10 @@ export const HDMBXe = ({
       metaData.sốBảnGốc,
       metaData.isOutSide,
       metaData.côngChứngViên,
-      metaData.ngày
+      metaData.isUchi,
+      metaData.ngày,
+      metaData.sốHợpĐồng,
+      metaData.notaryId
     );
     let fileName = "";
     if (isXeMay) {
@@ -179,8 +201,7 @@ export const HDMBXe = ({
           window.URL.revokeObjectURL(url);
         })
         .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
+          toast.error("Lỗi khi tạo hợp đồng " + error?.response?.data?.message);
         })
         .finally(() => {
           setIsGenerating(false);
@@ -199,10 +220,23 @@ export const HDMBXe = ({
           link.click();
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
+          if (metaData.isUchi && templateId && Number(templateId) > 0) {
+            uchiTemporarySave(payload)
+              .then(() =>
+                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                  position: "top-left",
+                })
+              )
+              .catch((error) => {
+                toast.error(
+                  "Lỗi khi gửi thông tin lên Uchi " +
+                    error?.response?.data?.message
+                );
+              });
+          }
         })
         .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
+          toast.error("Lỗi khi tạo hợp đồng " + error?.response?.data?.message);
         })
         .finally(() => {
           setIsGenerating(false);

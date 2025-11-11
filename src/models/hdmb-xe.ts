@@ -34,6 +34,12 @@ export interface HDMBXeOtoPayload extends ThongTinXeOto {
   số_bản_công_chứng_bằng_chữ: string;
   ký_bên_ngoài: boolean;
   công_chứng_viên: string;
+  template_id?: number | string;
+  số_hợp_đồng?: string;
+  isUchi: boolean;
+  uchi_id?: string;
+  notary_id?: string;
+  template_name?: string;
   original_payload?: {
     partyA: AgreementParty;
     partyB: AgreementParty;
