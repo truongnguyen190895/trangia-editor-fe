@@ -26,17 +26,21 @@ import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
 import { useSearchParams } from "react-router-dom";
 import { getWorkHistoryById } from "@/api/contract";
+import { uchiTemporarySave } from "@/api/uchi";
+import { toast } from "react-toastify";
 
 interface Props {
   isUyQuyen?: boolean;
   isMotPhan?: boolean;
   scope?: "partial" | "full";
+  templateName?: string;
 }
 
 export const HDMBCanHoToanBo = ({
   isUyQuyen,
   isMotPhan = false,
   scope = "full",
+  templateName,
 }: Props) => {
   const { agreementObject, canHo, addAgreementObject, addCanHo } =
     useHDMBCanHoContext();
@@ -45,6 +49,7 @@ export const HDMBCanHoToanBo = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [searchParams] = useSearchParams();
+  const templateId = searchParams.get("templateId");
   const id = searchParams.get("id");
 
   useEffect(() => {
@@ -60,6 +65,10 @@ export const HDMBCanHoToanBo = ({
       });
     }
   }, [id]);
+
+  const userInfo = localStorage.getItem("user_info");
+  const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
+  const uchiId = userInfoObject?.uchi_id;
 
   const isFormValid = isUyQuyen
     ? Boolean(canHo)
@@ -120,7 +129,10 @@ export const HDMBCanHoToanBo = ({
     sốBảnGốc: number,
     isOutSide: boolean,
     côngChứngViên: string,
-    ngày: string
+    isUchi: boolean,
+    ngày: string,
+    sốHợpĐồng?: string,
+    notaryId?: number
   ): HDMBCanHoPayload => {
     if (isUyQuyen) {
       if (!canHo) {
@@ -154,8 +166,8 @@ export const HDMBCanHoToanBo = ({
       hình_thức_sở_hữu_căn_hộ: canHo["hình_thức_sở_hữu_căn_hộ"],
       năm_hoàn_thành_xây_dựng: canHo["năm_hoàn_thành_xây_dựng"],
       ghi_chú_căn_hộ: canHo["ghi_chú_căn_hộ"],
-      giá_căn_hộ_bằng_số: canHo["giá_căn_hộ_bằng_số"],
-      giá_căn_hộ_bằng_chữ: canHo["giá_căn_hộ_bằng_chữ"],
+      số_tiền: canHo["số_tiền"],
+      số_tiền_bằng_chữ: canHo["số_tiền_bằng_chữ"],
       số_thửa_đất: agreementObject?.["số_thửa_đất"] ?? "",
       số_tờ_bản_đồ: agreementObject?.["số_tờ_bản_đồ"] ?? "",
       diện_tích_đất_bằng_số: agreementObject?.["diện_tích_đất_bằng_số"] ?? "",
@@ -179,6 +191,12 @@ export const HDMBCanHoToanBo = ({
       thời_hạn: canHo?.["thời_hạn"] ?? null,
       thời_hạn_bằng_chữ: canHo?.["thời_hạn_bằng_chữ"] ?? null,
       công_chứng_viên: côngChứngViên,
+      template_id: templateId ? templateId : undefined,
+      số_hợp_đồng: sốHợpĐồng || undefined,
+      isUchi: isUchi,
+      uchi_id: uchiId ? String(uchiId) : "",
+      notary_id: notaryId ? String(notaryId) : "13",
+      template_name: templateName,
       original_payload: {
         partyA: partyA,
         partyB: partyB,
@@ -196,7 +214,10 @@ export const HDMBCanHoToanBo = ({
       metaData.sốBảnGốc,
       metaData.isOutSide,
       metaData.côngChứngViên,
-      metaData.ngày
+      metaData.isUchi,
+      metaData.ngày,
+      metaData.sốHợpĐồng,
+      metaData.notaryId
     );
     setOpenDialog(false);
     setIsGenerating(true);
@@ -217,8 +238,7 @@ export const HDMBCanHoToanBo = ({
           window.URL.revokeObjectURL(url);
         })
         .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
+          toast.error("Lỗi khi tạo hợp đồng " + error?.response?.data?.message);
         })
         .finally(() => {
           setIsGenerating(false);
@@ -238,6 +258,20 @@ export const HDMBCanHoToanBo = ({
           link.click();
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
+          if (metaData.isUchi && templateId && Number(templateId) > 0) {
+            uchiTemporarySave(payload)
+              .then(() =>
+                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                  position: "top-left",
+                })
+              )
+              .catch((error) => {
+                toast.error(
+                  "Lỗi khi gửi thông tin lên Uchi " +
+                    error?.response?.data?.message
+                );
+              });
+          }
         })
         .catch((error) => {
           console.error("Error generating document:", error);
@@ -312,7 +346,7 @@ export const HDMBCanHoToanBo = ({
         mục_đích_và_thời_hạn_sử_dụng: [],
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
       },
-      số_tiền: canHo["giá_căn_hộ_bằng_số"],
+      số_tiền: canHo["số_tiền"],
       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
       diện_tích_sàn_bằng_số: isMotPhan

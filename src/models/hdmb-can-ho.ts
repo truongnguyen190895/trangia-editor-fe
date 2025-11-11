@@ -30,8 +30,8 @@ export interface HDMBCanHoPayload {
   mục_đích_sở_hữu_đất: string;
   thời_hạn_sử_dụng_đất: string;
   nguồn_gốc_sử_dụng_đất: string;
-  giá_căn_hộ_bằng_số: string;
-  giá_căn_hộ_bằng_chữ: string;
+  số_tiền: string;
+  số_tiền_bằng_chữ: string;
   ngày: string;
   ngày_bằng_chữ: string;
   số_bản_gốc: string;
@@ -42,6 +42,12 @@ export interface HDMBCanHoPayload {
   thời_hạn: string | null;
   thời_hạn_bằng_chữ: string | null;
   công_chứng_viên: string;
+  template_id?: number | string;
+  số_hợp_đồng?: string;
+  isUchi: boolean;
+  uchi_id?: string;
+  notary_id?: string;
+  template_name?: string;
   original_payload?: {
     partyA: AgreementParty;
     partyB: AgreementParty;
@@ -82,8 +88,8 @@ export interface ThongTinCanHo {
   hình_thức_sở_hữu_căn_hộ: string; //
   năm_hoàn_thành_xây_dựng: string; //
   ghi_chú_căn_hộ: string; //
-  giá_căn_hộ_bằng_số: string; //
-  giá_căn_hộ_bằng_chữ: string; //
+  số_tiền: string;
+  số_tiền_bằng_chữ: string;
   thời_hạn: string | null;
   thời_hạn_bằng_chữ: string | null;
 }

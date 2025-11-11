@@ -26,7 +26,11 @@ import { extractCoupleFromParty } from "@/utils/common";
 import { useSearchParams } from "react-router-dom";
 import { getWorkHistoryById } from "@/api/contract";
 
-export const HDTangChoCanHoToanBo = () => {
+interface Props {
+  templateName?: string;
+}
+
+export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
   const { agreementObject, canHo, addAgreementObject, addCanHo } =
     useHDMBCanHoContext();
   const { partyA, partyB } = useThemChuTheContext();
@@ -35,6 +39,7 @@ export const HDTangChoCanHoToanBo = () => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const [searchParams] = useSearchParams();
+  const templateId = searchParams.get("templateId");
   const id = searchParams.get("id");
 
   useEffect(() => {
@@ -50,6 +55,10 @@ export const HDTangChoCanHoToanBo = () => {
       });
     }
   }, [id]);
+
+  const userInfo = localStorage.getItem("user_info");
+  const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
+  const uchiId = userInfoObject?.uchi_id;
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -110,7 +119,10 @@ export const HDTangChoCanHoToanBo = () => {
     sốBảnGốc: number,
     isOutSide: boolean,
     côngChứngViên: string,
-    ngày: string
+    isUchi: boolean,
+    ngày: string,
+    sốHợpĐồng?: string,
+    notaryId?: number
   ): HDMBCanHoPayload => {
     if (!agreementObject || !canHo) {
       throw new Error("Agreement object or can ho is null");
@@ -131,8 +143,8 @@ export const HDTangChoCanHoToanBo = () => {
       hình_thức_sở_hữu_căn_hộ: canHo["hình_thức_sở_hữu_căn_hộ"],
       năm_hoàn_thành_xây_dựng: canHo["năm_hoàn_thành_xây_dựng"],
       ghi_chú_căn_hộ: canHo["ghi_chú_căn_hộ"],
-      giá_căn_hộ_bằng_số: canHo["giá_căn_hộ_bằng_số"],
-      giá_căn_hộ_bằng_chữ: canHo["giá_căn_hộ_bằng_chữ"],
+      số_tiền: canHo["số_tiền"],
+      số_tiền_bằng_chữ: canHo["số_tiền_bằng_chữ"],
       số_thửa_đất: agreementObject["số_thửa_đất"],
       số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
       diện_tích_đất_bằng_số: agreementObject["diện_tích_đất_bằng_số"],
@@ -156,6 +168,12 @@ export const HDTangChoCanHoToanBo = () => {
       thời_hạn: null,
       thời_hạn_bằng_chữ: null,
       công_chứng_viên: côngChứngViên,
+      template_id: templateId ? templateId : undefined,
+      số_hợp_đồng: sốHợpĐồng || undefined,
+      isUchi: isUchi,
+      uchi_id: uchiId ? String(uchiId) : "",
+      notary_id: notaryId ? String(notaryId) : "13",
+      template_name: templateName,
       original_payload: {
         partyA,
         partyB,
@@ -173,7 +191,10 @@ export const HDTangChoCanHoToanBo = () => {
       metaData.sốBảnGốc,
       metaData.isOutSide,
       metaData.côngChứngViên,
-      metaData.ngày
+      metaData.isUchi,
+      metaData.ngày,
+      metaData.sốHợpĐồng,
+      metaData.notaryId
     );
     setOpenDialog(false);
     setIsGenerating(true);
@@ -265,7 +286,7 @@ export const HDTangChoCanHoToanBo = () => {
         mục_đích_và_thời_hạn_sử_dụng: [],
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
       },
-      số_tiền: canHo["giá_căn_hộ_bằng_số"],
+      số_tiền: canHo["số_tiền"],
       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
       diện_tích_sàn_bằng_số: canHo["diện_tích_sàn_bằng_số"],

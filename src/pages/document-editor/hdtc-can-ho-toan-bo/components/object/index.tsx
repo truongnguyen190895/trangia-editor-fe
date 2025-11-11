@@ -232,8 +232,8 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
                     <Typography variant="body1">Giá căn hộ</Typography>
                   </TableCell>
                   <TableCell>
-                    {canHo?.["giá_căn_hộ_bằng_số"]} (
-                    {canHo?.["giá_căn_hộ_bằng_chữ"]})
+                    {canHo?.["số_tiền"]} (
+                    {canHo?.["số_tiền_bằng_chữ"]})
                   </TableCell>
                   <TableCell />
                   <TableCell />

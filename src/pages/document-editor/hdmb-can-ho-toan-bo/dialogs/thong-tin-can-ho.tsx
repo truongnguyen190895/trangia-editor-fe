@@ -69,8 +69,8 @@ export const ThongTinCanHoDialog = ({
           hình_thức_sở_hữu_căn_hộ: "",
           năm_hoàn_thành_xây_dựng: "",
           ghi_chú_căn_hộ: "",
-          giá_căn_hộ_bằng_số: "",
-          giá_căn_hộ_bằng_chữ: "",
+          số_tiền: "",
+          số_tiền_bằng_chữ: "",
           thời_hạn: "",
           thời_hạn_bằng_chữ: "",
         };
@@ -95,6 +95,8 @@ export const ThongTinCanHoDialog = ({
       setValues({
         ...values,
         ...response,
+        số_tiền: response?.giá_căn_hộ_bằng_số,
+        số_tiền_bằng_chữ: response?.giá_căn_hộ_bằng_chữ,
       });
     }
   };
@@ -362,11 +364,11 @@ export const ThongTinCanHoDialog = ({
                     id="giá_căn_hộ_bằng_số"
                     name="giá_căn_hộ_bằng_số"
                     label="Giá căn hộ bằng số"
-                    value={values["giá_căn_hộ_bằng_số"]}
+                    value={values["số_tiền"]}
                     onChange={(event) => {
                       handleChange(event);
                       setFieldValue(
-                        "giá_căn_hộ_bằng_chữ",
+                        "số_tiền_bằng_chữ",
                         numberToVietnamese(
                           event.target.value
                             ?.replace(/\./g, "")
@@ -378,10 +380,10 @@ export const ThongTinCanHoDialog = ({
                   <TextField
                     fullWidth
                     type="text"
-                    id="giá_căn_hộ_bằng_chữ"
-                    name="giá_căn_hộ_bằng_chữ"
+                    id="số_tiền_bằng_chữ"
+                    name="số_tiền_bằng_chữ"
                     label="Giá căn hộ bằng chữ"
-                    value={values["giá_căn_hộ_bằng_chữ"]}
+                    value={values["số_tiền_bằng_chữ"]}
                     onChange={handleChange}
                   />
                   <TextField

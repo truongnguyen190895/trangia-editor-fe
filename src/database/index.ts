@@ -47,14 +47,14 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdmb-can-ho-toan-bo",
-    templateId: 0,
+    templateId: 1,
   },
   {
     id: uuidv4(),
     name: "HĐMB căn hộ một phần (để sở hữu toàn bộ).docx",
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
-    path: "hdmb-can-ho-mot-phan-de-so-huu-toan-bo",
+    path: "hdmb-can-ho-mot-phan-so-huu-toan-bo",
     templateId: 0,
   },
   {

@@ -114,7 +114,7 @@ export const getTemplateName = (name: string) => {
       return "Hợp đồng chuyển nhượng quyền sử dụng đất (toàn bộ)";
     case "hdmb-can-ho-toan-bo":
       return "Hợp đồng mua bán căn hộ toàn bộ";
-    case "hdmb-can-ho-mot-phan-de-so-huu-toan-bo":
+    case "hdmb-can-ho-mot-phan-so-huu-toan-bo":
       return "Hợp đồng mua bán căn hộ một phần (để sở hữu toàn bộ)";
     case "hdmb-nha-dat-toan-bo":
       return "Hợp đồng mua bán nhà đất toàn bộ";

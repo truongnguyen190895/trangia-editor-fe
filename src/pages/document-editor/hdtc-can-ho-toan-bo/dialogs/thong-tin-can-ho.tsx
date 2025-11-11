@@ -65,8 +65,8 @@ export const ThongTinCanHoDialog = ({
           hình_thức_sở_hữu_căn_hộ: "",
           năm_hoàn_thành_xây_dựng: "",
           ghi_chú_căn_hộ: "",
-          giá_căn_hộ_bằng_số: "0",
-          giá_căn_hộ_bằng_chữ: "không",
+          số_tiền: "0",
+          số_tiền_bằng_chữ: "không",
           thời_hạn: null,
           thời_hạn_bằng_chữ: null,
         };

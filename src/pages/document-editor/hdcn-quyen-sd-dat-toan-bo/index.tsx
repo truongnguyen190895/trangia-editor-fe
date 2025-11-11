@@ -40,11 +40,13 @@ import type { ThongTinThuaDat } from "@/models/agreement-object";
 interface Props {
   isNongNghiep?: boolean;
   isTangCho?: boolean;
+  templateName?: string;
 }
 
 export const ChuyenNhuongDatToanBo = ({
   isNongNghiep = false,
   isTangCho = false,
+  templateName,
 }: Props) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
   const { partyA, partyB } = useThemChuTheContext();
@@ -194,6 +196,7 @@ export const ChuyenNhuongDatToanBo = ({
       isUchi: isUchi,
       uchi_id: uchiId ? String(uchiId) : "",
       notary_id: notaryId ? String(notaryId) : "13",
+      template_name: templateName,
       original_payload: {
         partyA: partyA,
         partyB: partyB,
@@ -265,14 +268,15 @@ export const ChuyenNhuongDatToanBo = ({
                 })
               )
               .catch((error) => {
-                console.error("Error sending to Uchi:", error);
-                toast.error("Lỗi khi gửi thông tin lên Uchi");
+                toast.error(
+                  "Lỗi khi gửi thông tin lên Uchi " +
+                    error?.response?.data?.message
+                );
               });
           }
         })
         .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
+          toast.error("Lỗi khi tạo hợp đồng " + error?.response?.data?.message);
         })
         .finally(() => {
           setIsGenerating(false);
