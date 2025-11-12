@@ -23,6 +23,12 @@ export interface HDCNDatVaTaiSanGanLienVoiDatToanBoPayload
   số_tiền_bằng_chữ: string;
   diện_tích_xây_dựng: string;
   công_chứng_viên: string;
+  template_id?: number | string;
+  số_hợp_đồng?: string;
+  isUchi: boolean;
+  uchi_id?: string;
+  notary_id?: string;
+  template_name?: string;
   original_payload?: {
     partyA: AgreementParty;
     partyB: AgreementParty;

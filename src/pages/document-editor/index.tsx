@@ -117,6 +117,7 @@ export const DocumentEditor = () => {
             <HDCNDatVaTaiSanGanLienVoiDatToanBo
               isMotPhan={/mot-phan/.test(name ?? "")}
               scope={/dong-su-dung/.test(name ?? "") ? "partial" : "full"}
+              templateName={getTemplateName(name ?? "")}
             />
           </HDCNDatVaTaiSanGanLienVoiDatToanBoProvider>
         );
