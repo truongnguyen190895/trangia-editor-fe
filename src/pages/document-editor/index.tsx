@@ -93,7 +93,7 @@ export const DocumentEditor = () => {
             <HDMBCanHoToanBo
               isUyQuyen={/uy-quyen/.test(name ?? "")}
               isMotPhan={/mot-phan/.test(name ?? "")}
-              scope={/de-so-huu-toan-bo/.test(name ?? "") ? "full" : "partial"}
+              scope={/so-huu-toan-bo/.test(name ?? "") ? "full" : "partial"}
               templateName={getTemplateName(name ?? "")}
             />
           </HDMBCanHoProvider>
