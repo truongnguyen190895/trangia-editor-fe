@@ -15,7 +15,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo",
-    templateId: 0,
+    templateId: 5,
   },
   {
     id: uuidv4(),
@@ -23,7 +23,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung",
-    templateId: 0,
+    templateId: 6,
   },
   {
     id: uuidv4(),
@@ -31,7 +31,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo",
-    templateId: 0,
+    templateId: 6,
   },
   {
     id: uuidv4(),
@@ -55,7 +55,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdmb-can-ho-mot-phan-so-huu-toan-bo",
-    templateId: 0,
+    templateId: 1,
   },
   {
     id: uuidv4(),
