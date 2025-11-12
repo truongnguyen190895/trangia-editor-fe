@@ -106,6 +106,7 @@ export const DocumentEditor = () => {
             <HDMBNhaDatToanBo
               isTangCho={/tang-cho/.test(name ?? "")}
               isUyQuyen={/uy-quyen/.test(name ?? "")}
+              templateName={getTemplateName(name ?? "")}
             />
           </HDMBNhaDatProvider>
         );

@@ -13,6 +13,12 @@ export interface HDMBNhaDatPayload extends ThongTinThuaDat, ThongTinNhaDat {
   ký_bên_ngoài: boolean;
   công_chứng_viên: string;
   địa_chỉ_hiển_thị: string;
+  template_id?: number | string;
+  số_hợp_đồng?: string;
+  isUchi: boolean;
+  uchi_id?: string;
+  notary_id?: string;
+  template_name?: string;
   original_payload?: {
     partyA: AgreementParty;
     partyB: AgreementParty;
