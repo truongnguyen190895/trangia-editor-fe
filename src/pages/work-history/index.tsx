@@ -28,9 +28,9 @@ const WorkHistory = () => {
     setLoading(true);
     listWorkHistory({ size: 20, page: page - 1 })
       .then((resp) => {
-        setWorkHistory(resp.content);
-        setTotalPages(resp.page.total_pages);
-        setTotalElements(resp.page.total_elements);
+        setWorkHistory(resp?.content ?? []);
+        setTotalPages(resp?.page?.total_pages ?? 0);
+        setTotalElements(resp?.page?.total_elements ?? 0);
       })
       .finally(() => {
         setLoading(false);
@@ -38,18 +38,26 @@ const WorkHistory = () => {
   }, [page]);
 
   const handleClick = (templatePath: string, id: string) => {
-    const [group, subGroup] = templatePath.split("/");
-    const filterByGroup = templates.filter(
-      (template) => template.subCategory === group
-    );
-    const document = filterByGroup.find(
-      (template) => template.path === subGroup
-    );
-    if (document) {
+    const [group, subGroup] = templatePath?.split("/") ?? ["", ""];
+    const filterByGroup = templates.filter((template) => template.subCategory === group);
+    const document = filterByGroup.find((template) => template.path === subGroup);
+    if (document && id) {
       navigate(
         `/editor?type=${document.type}&name=${document.path}&templateId=${document.templateId}&id=${id}`
       );
     }
+  };
+
+  const renderCreatedAt = (value?: string) => {
+    if (!value) {
+      return "";
+    }
+    const formatted = dayjs(value).format("DD/MM/YYYY HH:mm:ss");
+    return formatted;
+  };
+
+  const getPartyName = (content: any, partyKey: "bên_A" | "bên_B") => {
+    return content?.[partyKey]?.["cá_thể"]?.[0]?.tên ?? "";
   };
 
   const handleChangePage = (
@@ -73,10 +81,10 @@ const WorkHistory = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {workHistory.map((item) => (
+            {workHistory.map((item, idx) => (
               <TableRow
-                key={item.id}
-                onClick={() => handleClick(item.template, item.id)}
+                key={item?.id ?? idx}
+                onClick={() => handleClick(item?.template ?? "", item?.id ?? "")}
                 sx={{
                   "&:hover": {
                     backgroundColor: "#f0f0f0",
@@ -85,14 +93,12 @@ const WorkHistory = () => {
                   },
                 }}
               >
-                <TableCell>
-                  {dayjs(item.audit.created_at).format("DD/MM/YYYY HH:mm:ss")}
-                </TableCell>
+                <TableCell>{renderCreatedAt(item?.audit?.created_at)}</TableCell>
                 <TableCell>
                   {getTemplateName(item?.template?.split("/")?.[1] ?? "")}
                 </TableCell>
-                <TableCell>{item.content.bên_A["cá_thể"][0].tên}</TableCell>
-                <TableCell>{item.content.bên_B["cá_thể"][0].tên}</TableCell>
+                <TableCell>{getPartyName(item?.content, "bên_A")}</TableCell>
+                <TableCell>{getPartyName(item?.content, "bên_B")}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -113,7 +119,7 @@ const WorkHistory = () => {
       </Box>
       <LoadingDialog open={loading} />
     </Box>
-  );
+    );
 };
 
 export default WorkHistory;
