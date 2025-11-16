@@ -27,6 +27,7 @@ export interface HDMBXeOtoPayload extends ThongTinXeOto {
   bên_A: Party;
   bên_B: Party;
   ngày: string;
+  property_type: "car" | "motorbike";
   ngày_bằng_chữ: string;
   số_bản_gốc: string;
   số_bản_gốc_bằng_chữ: string;

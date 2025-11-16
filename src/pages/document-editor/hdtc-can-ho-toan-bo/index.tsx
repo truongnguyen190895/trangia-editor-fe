@@ -132,6 +132,7 @@ export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
     const payload: HDMBCanHoPayload = {
       ...getBenABenB(),
       ...getCanHo(),
+      property_type: "apartment_whole",
       loại_gcn: canHo["loại_gcn"],
       số_gcn: canHo["số_gcn"],
       số_vào_sổ_cấp_gcn: canHo["số_vào_sổ_cấp_gcn"],

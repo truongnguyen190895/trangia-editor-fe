@@ -131,7 +131,9 @@ export const DocumentEditor = () => {
       case "uy-quyen-toan-bo-quyen-su-dung-dat":
         return (
           <HdcnQuyenSdDatProvider>
-            <UyQuyenToanBoQuyenSdDat />
+            <UyQuyenToanBoQuyenSdDat
+              templateName={getTemplateName(name ?? "")}
+            />
           </HdcnQuyenSdDatProvider>
         );
       case "hdmb-xe-oto":

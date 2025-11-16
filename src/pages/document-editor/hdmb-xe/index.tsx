@@ -136,6 +136,7 @@ export const HDMBXe = ({
       ...getBenABenB(),
       ...agreementObject,
       ngày: ngày,
+      property_type: isXeMay ? "motorbike" : "car",
       ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
@@ -199,6 +200,20 @@ export const HDMBXe = ({
           link.click();
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
+          if (metaData.isUchi && templateId && Number(templateId) > 0) {
+            uchiTemporarySave(payload)
+              .then(() =>
+                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                  position: "top-left",
+                })
+              )
+              .catch((error) => {
+                toast.error(
+                  "Lỗi khi gửi thông tin lên Uchi " +
+                    error?.response?.data?.message
+                );
+              });
+          }
         })
         .catch((error) => {
           toast.error("Lỗi khi tạo hợp đồng " + error?.response?.data?.message);

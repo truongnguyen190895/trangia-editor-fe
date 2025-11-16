@@ -79,7 +79,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-tang-cho",
     path: "hd-tang-cho-dat-nong-nghiep-toan-bo",
-    templateId: 0,
+    templateId: 11,
   },
   {
     id: uuidv4(),
@@ -87,7 +87,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-tang-cho",
     path: "hd-tang-cho-dat-toan-bo",
-    templateId: 0,
+    templateId: 11,
   },
   {
     id: uuidv4(),
@@ -95,7 +95,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-tang-cho",
     path: "hd-tang-cho-nha-dat-toan-bo",
-    templateId: 0,
+    templateId: 15,
   },
   {
     id: uuidv4(),
@@ -103,7 +103,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-uy-quyen",
     path: "uy-quyen-toan-bo-quyen-su-dung-dat",
-    templateId: 0,
+    templateId: 30,
   },
   {
     id: uuidv4(),
@@ -111,15 +111,15 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-uy-quyen",
     path: "uy-quyen-toan-bo-nha-dat",
-    templateId: 0,
+    templateId: 30,
   },
   {
     id: uuidv4(),
-    name: "Uỷ quyền căn hộ.docx",
+    name: "Uỷ quyền căn hộ toàn bộ.docx",
     type: "agreement",
     subCategory: "nhom-uy-quyen",
     path: "uy-quyen-toan-bo-can-ho",
-    templateId: 0,
+    templateId: 30,
   },
   {
     id: uuidv4(),
@@ -151,7 +151,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-uy-quyen",
     path: "uy-quyen-xe-oto",
-    templateId: 0,
+    templateId: 30,
   },
   {
     id: uuidv4(),

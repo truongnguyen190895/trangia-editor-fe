@@ -146,6 +146,7 @@ export const HDMBCanHoToanBo = ({
 
     const payload: HDMBCanHoPayload = {
       ...getBenABenB(),
+      property_type: "apartment_whole",
       số_căn_hộ: canHo["số_căn_hộ"],
       tên_toà_nhà: canHo["tên_toà_nhà"],
       địa_chỉ_hiển_thị: canHo["địa_chỉ_cũ"]
@@ -236,6 +237,20 @@ export const HDMBCanHoToanBo = ({
           link.click();
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
+          if (metaData.isUchi && templateId && Number(templateId) > 0) {
+            uchiTemporarySave(payload)
+              .then(() =>
+                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                  position: "top-left",
+                })
+              )
+              .catch((error) => {
+                toast.error(
+                  "Lỗi khi gửi thông tin lên Uchi " +
+                    error?.response?.data?.message
+                );
+              });
+          }
         })
         .catch((error) => {
           toast.error("Lỗi khi tạo hợp đồng " + error?.response?.data?.message);

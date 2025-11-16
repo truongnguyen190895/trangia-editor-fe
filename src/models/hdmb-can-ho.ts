@@ -4,6 +4,7 @@ import type { AgreementParty, Gender } from "./agreement-entity";
 export interface HDMBCanHoPayload {
   bên_A: Party;
   bên_B: Party;
+  property_type: "apartment_whole" | "apartment_part";
   số_căn_hộ: string;
   tên_toà_nhà: string;
   địa_chỉ_hiển_thị: string;

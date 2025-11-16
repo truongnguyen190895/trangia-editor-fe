@@ -25,6 +25,13 @@ export interface UyQuyenToanBoQuyenSdDatPayload {
   bên_A: Party;
   bên_B: Party;
   ngày: string;
+  property_type:
+    | "land_whole"
+    | "land_part"
+    | "house_whole"
+    | "house_part"
+    | "apartment_whole"
+    | "apartment_part";
   ngày_bằng_chữ: string;
   số_bản_gốc: string;
   số_bản_gốc_bằng_chữ: string;
@@ -42,6 +49,13 @@ export interface UyQuyenToanBoQuyenSdDatPayload {
   nơi_cấp_giấy_chứng_nhận: string;
   ngày_cấp_giấy_chứng_nhận: string;
   công_chứng_viên: string;
+  số_tiền: string;
+  template_id?: number | string;
+  số_hợp_đồng?: string;
+  isUchi: boolean;
+  uchi_id?: string;
+  notary_id?: string;
+  template_name?: string;
   original_payload?: {
     partyA: AgreementParty;
     partyB: AgreementParty;

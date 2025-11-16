@@ -4,6 +4,7 @@ import type { AgreementParty, Gender } from "./agreement-entity";
 export interface HDMBNhaDatPayload extends ThongTinThuaDat, ThongTinNhaDat {
   bên_A: Party;
   bên_B: Party;
+  property_type: "house_whole" | "house_part";
   ngày: string;
   ngày_bằng_chữ: string;
   số_bản_gốc: string;
