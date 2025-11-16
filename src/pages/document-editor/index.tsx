@@ -125,7 +125,7 @@ export const DocumentEditor = () => {
       case "hd-tang-cho-can-ho-toan-bo":
         return (
           <HDMBCanHoProvider>
-            <HDTangChoCanHoToanBo />
+            <HDTangChoCanHoToanBo templateName={getTemplateName(name ?? "")} />
           </HDMBCanHoProvider>
         );
       case "uy-quyen-toan-bo-quyen-su-dung-dat":
@@ -151,7 +151,7 @@ export const DocumentEditor = () => {
       case "hdmb-tai-san":
         return (
           <HDMBTaiSanProvider>
-            <HDMBTaiSan />
+            <HDMBTaiSan templateName={getTemplateName(name ?? "")} />
           </HDMBTaiSanProvider>
         );
       case "vb-huy":

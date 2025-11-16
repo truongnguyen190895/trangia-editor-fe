@@ -25,6 +25,8 @@ import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
 import { useSearchParams } from "react-router-dom";
 import { getWorkHistoryById } from "@/api/contract";
+import { toast } from "react-toastify";
+import { uchiTemporarySave } from "@/api/uchi";
 
 interface Props {
   templateName?: string;
@@ -212,6 +214,24 @@ export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+        if (metaData.isUchi && templateId && Number(templateId) > 0) {
+          setIsGenerating(true);
+          uchiTemporarySave(payload)
+            .then(() =>
+              toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                position: "top-left",
+              })
+            )
+            .catch((error) => {
+              toast.error(
+                "Lỗi khi gửi thông tin lên Uchi " +
+                  error?.response?.data?.message
+              );
+            })
+            .finally(() => {
+              setIsGenerating(false);
+            });
+        }
       })
       .catch((error) => {
         console.error("Error generating document:", error);

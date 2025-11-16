@@ -81,7 +81,7 @@ export const ThemThongTinDat = ({
         <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
           <SearchEntity
-            placeholder="Nhập số thửa đất"
+            placeholder="Nhập số giấy chứng nhận"
             onSearch={handleSearch}
           />
           <Box sx={{ pt: 2 }}>

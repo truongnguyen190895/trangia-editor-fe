@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,8 @@ import { CircularProgress } from "@mui/material";
 import type {
   HDMBTaiSanPayload,
   KhaiThueHDMBTaiSanPayload,
+  ThongTinTaiSan,
+  ThongTinThuaDat,
 } from "@/models/hdmb-tai-san";
 import dayjs from "dayjs";
 import { render_hdmb_tai_san, render_khai_thue_hdmb_tai_san } from "@/api";
@@ -26,19 +28,49 @@ import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
 import { extractCoupleFromParty } from "@/utils/common";
+import { useSearchParams } from "react-router-dom";
+import { getWorkHistoryById } from "@/api/contract";
+import { toast } from "react-toastify";
+import { uchiTemporarySave } from "@/api/uchi";
 
-export const HDMBTaiSan = () => {
-  const { agreementObject, taiSan } = useHDMBTaiSanContext();
+interface Props {
+  templateName?: string;
+}
+
+export const HDMBTaiSan = ({ templateName }: Props) => {
+  const { agreementObject, taiSan, addAgreementObject, addTaiSan } =
+    useHDMBTaiSanContext();
   const { partyA, partyB } = useThemChuTheContext();
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [searchParams] = useSearchParams();
+  const templateId = searchParams.get("templateId");
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    if (id) {
+      getWorkHistoryById(id).then((res) => {
+        const originalPayload = res.content.original_payload;
+        if (originalPayload) {
+          addAgreementObject(
+            originalPayload?.agreementObject as ThongTinThuaDat
+          );
+          addTaiSan(originalPayload?.taiSan as ThongTinTaiSan);
+        }
+      });
+    }
+  }, [id]);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
     (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
     agreementObject !== null &&
     taiSan !== null;
+
+  const userInfo = localStorage.getItem("user_info");
+  const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
+  const uchiId = userInfoObject?.uchi_id;
 
   const getBenABenB = () => {
     const couplesA = extractCoupleFromParty(partyA);
@@ -87,7 +119,10 @@ export const HDMBTaiSan = () => {
     sốBảnGốc: number,
     isOutSide: boolean,
     côngChứngViên: string,
-    ngày: string
+    isUchi: boolean,
+    ngày: string,
+    sốHợpĐồng?: string,
+    notaryId?: number
   ): HDMBTaiSanPayload => {
     if (!agreementObject || !taiSan) {
       throw new Error("Agreement object or nha dat is null");
@@ -112,6 +147,19 @@ export const HDMBTaiSan = () => {
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
+      template_id: templateId ? templateId : undefined,
+      số_hợp_đồng: sốHợpĐồng || undefined,
+      isUchi: isUchi,
+      uchi_id: uchiId ? String(uchiId) : "",
+      notary_id: notaryId ? String(notaryId) : "13",
+      template_name: templateName,
+      original_payload: {
+        partyA: partyA,
+        partyB: partyB,
+        agreementObject: agreementObject,
+        taiSan: taiSan,
+      },
+      id: id ? id : undefined,
     };
 
     return payload;
@@ -122,7 +170,10 @@ export const HDMBTaiSan = () => {
       metaData.sốBảnGốc,
       metaData.isOutSide,
       metaData.côngChứngViên,
-      metaData.ngày
+      metaData.isUchi,
+      metaData.ngày,
+      metaData.sốHợpĐồng,
+      metaData.notaryId
     );
     setOpenDialog(false);
     setIsGenerating(true);
@@ -131,7 +182,6 @@ export const HDMBTaiSan = () => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
-
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
@@ -140,6 +190,20 @@ export const HDMBTaiSan = () => {
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
+        if (metaData.isUchi && templateId && Number(templateId) > 0) {
+          uchiTemporarySave(payload)
+            .then(() =>
+              toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                position: "top-left",
+              })
+            )
+            .catch((error) => {
+              toast.error(
+                "Lỗi khi gửi thông tin lên Uchi " +
+                  error?.response?.data?.message
+              );
+            });
+        }
       })
       .catch((error) => {
         console.error("Error generating document:", error);

@@ -71,7 +71,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-tang-cho",
     path: "hd-tang-cho-can-ho-toan-bo",
-    templateId: 0,
+    templateId: 62,
   },
   {
     id: uuidv4(),
@@ -143,7 +143,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdmb-xe-oto-bien-so-xe",
-    templateId: 0,
+    templateId: 2,
   },
   {
     id: uuidv4(),
@@ -159,7 +159,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdmb-tai-san",
-    templateId: 0,
+    templateId: 3,
   },
   {
     id: uuidv4(),
