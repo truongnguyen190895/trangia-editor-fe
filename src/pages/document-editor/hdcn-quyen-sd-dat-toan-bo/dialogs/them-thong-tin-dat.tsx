@@ -36,6 +36,7 @@ import SearchIcon from "@mui/icons-material/Search";
 interface ThemThongTinDatProps {
   open: boolean;
   isTangCho?: boolean;
+  isMotPhan?: boolean;
   handleClose: () => void;
 }
 
@@ -61,6 +62,7 @@ export const ThemThongTinDat = ({
   open,
   handleClose,
   isTangCho = false,
+  isMotPhan = false,
 }: ThemThongTinDatProps) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
   const [mụcđíchVàThờiHạnSửDụng, setMụcĐíchVàThờiHạnSửDụng] = useState<
@@ -70,7 +72,27 @@ export const ThemThongTinDat = ({
       thời_hạn_sử_dụng: string;
     }[]
   >(agreementObject?.["mục_đích_và_thời_hạn_sử_dụng"] ?? []);
+  const [mụcđíchVàThờiHạnSửDụngMotPhan, setMụcĐíchVàThờiHạnSửDụngMotPhan] =
+    useState<
+      {
+        phân_loại: string;
+        diện_tích: string;
+        thời_hạn_sử_dụng: string;
+      }[]
+    >(agreementObject?.["mục_đích_và_thời_hạn_sử_dụng_một_phần"] ?? []);
   const [mụcđíchVàThờiHạnSửDụngEdit, setMụcĐíchVàThờiHạnSửDụngEdit] = useState<{
+    phân_loại: string;
+    diện_tích: string;
+    thời_hạn_sử_dụng: string;
+  }>({
+    phân_loại: "",
+    diện_tích: "",
+    thời_hạn_sử_dụng: "",
+  });
+  const [
+    mụcđíchVàThờiHạnSửDụngMotPhanEdit,
+    setMụcĐíchVàThờiHạnSửDụngMotPhanEdit,
+  ] = useState<{
     phân_loại: string;
     diện_tích: string;
     thời_hạn_sử_dụng: string;
@@ -89,6 +111,7 @@ export const ThemThongTinDat = ({
     const payload = {
       ...values,
       mục_đích_và_thời_hạn_sử_dụng: mụcđíchVàThờiHạnSửDụng,
+      mục_đích_và_thời_hạn_sử_dụng_một_phần: mụcđíchVàThờiHạnSửDụngMotPhan,
     };
     addAgreementObject(payload);
     setSaveLoading(true);
@@ -112,12 +135,15 @@ export const ThemThongTinDat = ({
         ngày_cấp_giấy_chứng_nhận: "",
         diện_tích: "",
         diện_tích_bằng_chữ: "",
+        một_phần_diện_tích: "",
+        một_phần_diện_tích_bằng_chữ: "",
         hình_thức_sử_dụng: "",
         nguồn_gốc_sử_dụng: null,
         giá_tiền: isTangCho ? "0" : "",
         giá_tiền_bằng_chữ: isTangCho ? "Không" : "",
         ghi_chú: "",
         mục_đích_và_thời_hạn_sử_dụng: [],
+        mục_đích_và_thời_hạn_sử_dụng_một_phần: [],
         thời_hạn: null,
         thời_hạn_bằng_chữ: null,
       }
@@ -169,6 +195,9 @@ export const ThemThongTinDat = ({
           ...response,
         });
         setMụcĐíchVàThờiHạnSửDụng(response.mục_đích_và_thời_hạn_sử_dụng ?? []);
+        setMụcĐíchVàThờiHạnSửDụngMotPhan(
+          response.mục_đích_và_thời_hạn_sử_dụng_một_phần ?? []
+        );
       })
       .catch(() => {
         setIsNotExisted(true);
@@ -420,6 +449,38 @@ export const ThemThongTinDat = ({
                   errors["diện_tích_bằng_chữ"]
                 }
               />
+              {isMotPhan ? (
+                <>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="một_phần_diện_tích"
+                    name="một_phần_diện_tích"
+                    label="Diện tích một phần (m2)"
+                    value={values["một_phần_diện_tích"]}
+                    onChange={(event) => {
+                      handleChange(event);
+                      setFieldValue(
+                        "một_phần_diện_tích_bằng_chữ",
+                        numberToVietnamese(
+                          event.target.value
+                            ?.replace(/\./g, "")
+                            .replace(/\,/g, ".")
+                        )
+                      );
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="một_phần_diện_tích_bằng_chữ"
+                    name="một_phần_diện_tích_bằng_chữ"
+                    label="Diện tích một phần bằng chữ"
+                    value={values["một_phần_diện_tích_bằng_chữ"]}
+                    onChange={handleChange}
+                  />
+                </>
+              ) : null}
               <TextField
                 fullWidth
                 id="hình_thức_sử_dụng"
@@ -597,6 +658,210 @@ export const ThemThongTinDat = ({
                   </Table>
                 </TableContainer>
               </Box>
+              {isMotPhan ? (
+                <Box
+                  sx={{ gridColumn: "span 3" }}
+                  border="1px solid #ccc"
+                  borderRadius="10px"
+                  padding="20px"
+                >
+                  <Typography
+                    variant="body1"
+                    fontSize="1.2rem"
+                    fontWeight="600"
+                    sx={{ marginBottom: "20px" }}
+                  >
+                    Mục đích và thời hạn sử dụng của một phần thửa đất (nhập các
+                    giá trị sau đó bấm nút để thêm vào)
+                  </Typography>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns="repeat(3, 1fr)"
+                    gap="20px"
+                  >
+                    <Autocomplete
+                      fullWidth
+                      freeSolo
+                      id="mục đích sử dụng"
+                      options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
+                      getOptionLabel={(option) =>
+                        typeof option === "string" ? option : option.label
+                      }
+                      value={
+                        MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
+                          (item) =>
+                            item.value ===
+                            mụcđíchVàThờiHạnSửDụngMotPhanEdit["phân_loại"]
+                        ) ?? mụcđíchVàThờiHạnSửDụngMotPhanEdit["phân_loại"]
+                      }
+                      onChange={(_event, value) => {
+                        const newValue =
+                          typeof value === "string"
+                            ? value
+                            : value?.value ?? "";
+                        setMụcĐíchVàThờiHạnSửDụngMotPhanEdit({
+                          ...mụcđíchVàThờiHạnSửDụngMotPhanEdit,
+                          phân_loại: newValue,
+                        });
+                      }}
+                      onInputChange={(_event, newInputValue) => {
+                        setMụcĐíchVàThờiHạnSửDụngMotPhanEdit({
+                          ...mụcđíchVàThờiHạnSửDụngMotPhanEdit,
+                          phân_loại: newInputValue,
+                        });
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Mục đích sử dụng" />
+                      )}
+                    />
+                    <TextField
+                      fullWidth
+                      id="diện_tích"
+                      name="diện_tích"
+                      label="Diện tích (m2)"
+                      value={mụcđíchVàThờiHạnSửDụngMotPhanEdit["diện_tích"]}
+                      onChange={(event) => {
+                        setMụcĐíchVàThờiHạnSửDụngMotPhanEdit({
+                          ...mụcđíchVàThờiHạnSửDụngMotPhanEdit,
+                          diện_tích: event.target.value,
+                        });
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      id="thời_hạn_sử_dụng"
+                      name="thời_hạn_sử_dụng"
+                      label="Thời hạn sử dụng"
+                      value={
+                        mụcđíchVàThờiHạnSửDụngMotPhanEdit["thời_hạn_sử_dụng"]
+                      }
+                      onChange={(event) => {
+                        setMụcĐíchVàThờiHạnSửDụngMotPhanEdit({
+                          ...mụcđíchVàThờiHạnSửDụngMotPhanEdit,
+                          thời_hạn_sử_dụng: event.target.value,
+                        });
+                      }}
+                    />
+                  </Box>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    sx={{ marginTop: "20px" }}
+                    startIcon={<AddIcon />}
+                    onClick={() => {
+                      // Adding or editing logic for mục_đích_và_thời_hạn_sử_dụng_một_phần
+                      if (
+                        indexEdit !== null &&
+                        typeof indexEdit === "number" &&
+                        indexEdit >= 0
+                      ) {
+                        // Edit
+                        setMụcĐíchVàThờiHạnSửDụngMotPhan((prev) => {
+                          const updated = [...prev];
+                          updated[indexEdit] = {
+                            ...mụcđíchVàThờiHạnSửDụngMotPhanEdit,
+                          };
+                          return updated;
+                        });
+                      } else {
+                        // Add
+                        setMụcĐíchVàThờiHạnSửDụngMotPhan((prev) => [
+                          ...prev,
+                          { ...mụcđíchVàThờiHạnSửDụngMotPhanEdit },
+                        ]);
+                      }
+                      // Clear edit
+                      setMụcĐíchVàThờiHạnSửDụngMotPhanEdit({
+                        phân_loại: "",
+                        diện_tích: "",
+                        thời_hạn_sử_dụng: "",
+                      });
+                      setIndexEdit(null);
+                    }}
+                  >
+                    Thêm mục đích và thời hạn sử dụng
+                  </Button>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>
+                            <Typography
+                              variant="body1"
+                              fontSize="1rem"
+                              fontWeight="600"
+                            >
+                              Phân loại
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body1"
+                              fontSize="1rem"
+                              fontWeight="600"
+                            >
+                              Diện tích (m2)
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="body1"
+                              fontSize="1rem"
+                              fontWeight="600"
+                            >
+                              Thời hạn sử dụng
+                            </Typography>
+                          </TableCell>
+                          <TableCell>Thao tác</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {mụcđíchVàThờiHạnSửDụngMotPhan.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item["phân_loại"]}</TableCell>
+                            <TableCell>{item["diện_tích"]}</TableCell>
+                            <TableCell>{item["thời_hạn_sử_dụng"]}</TableCell>
+                            <TableCell>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<EditIcon />}
+                                onClick={() => {
+                                  setMụcĐíchVàThờiHạnSửDụngMotPhanEdit(item);
+                                  setIndexEdit(index);
+                                }}
+                              >
+                                Sửa
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="error"
+                                startIcon={<DeleteIcon />}
+                                onClick={() => {
+                                  setMụcĐíchVàThờiHạnSửDụngMotPhan((prev) =>
+                                    prev.filter((_item, i) => i !== index)
+                                  );
+                                  // Clear edit state if deleted item was being edited
+                                  if (indexEdit === index) {
+                                    setMụcĐíchVàThờiHạnSửDụngMotPhanEdit({
+                                      phân_loại: "",
+                                      diện_tích: "",
+                                      thời_hạn_sử_dụng: "",
+                                    });
+                                    setIndexEdit(null);
+                                  }
+                                }}
+                              >
+                                Xóa
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              ) : null}
               <Autocomplete
                 sx={{ gridColumn: "span 3" }}
                 freeSolo

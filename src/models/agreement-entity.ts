@@ -62,6 +62,17 @@ interface BaseThuaDat {
     ghi_chú: string;
     thời_hạn: string | null;
   };
+  đặc_điểm_một_phần_thửa_đất?: {
+    diện_tích: {
+      số: string;
+      chữ: string;
+    };
+    mục_đích_và_thời_hạn_sử_dụng: Array<{
+      phân_loại: string;
+      diện_tích: string | null;
+      thời_hạn_sử_dụng: string;
+    }>;
+  };
   số_tiền: string;
   số_tiền_bằng_chữ: string;
 }

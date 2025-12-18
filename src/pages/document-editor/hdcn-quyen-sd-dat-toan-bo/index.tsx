@@ -23,6 +23,7 @@ import {
   render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep,
   render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo,
   render_hdtc_dat_toan_bo,
+  render_hdcn_quyen_sd_dat_mot_phan,
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
@@ -41,12 +42,16 @@ interface Props {
   isNongNghiep?: boolean;
   isTangCho?: boolean;
   templateName?: string;
+  isMotPhan?: boolean;
+  scope?: "partial" | "full";
 }
 
 export const ChuyenNhuongDatToanBo = ({
   isNongNghiep = false,
   isTangCho = false,
   templateName,
+  isMotPhan = false,
+  scope = "full",
 }: Props) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
   const { partyA, partyB } = useThemChuTheContext();
@@ -176,6 +181,19 @@ export const ChuyenNhuongDatToanBo = ({
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
         ghi_chú: agreementObject["ghi_chú"],
       },
+      đặc_điểm_một_phần_thửa_đất: {
+        diện_tích: {
+          số: agreementObject["một_phần_diện_tích"] ?? "",
+          chữ: agreementObject["một_phần_diện_tích_bằng_chữ"] ?? "",
+        },
+        mục_đích_và_thời_hạn_sử_dụng: agreementObject[
+          "mục_đích_và_thời_hạn_sử_dụng_một_phần"
+        ]?.map((item) => ({
+          phân_loại: item["phân_loại"],
+          diện_tích: item["diện_tích"] || null,
+          thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
+        })),
+      },
       số_tiền: agreementObject["giá_tiền"],
       số_tiền_bằng_chữ: agreementObject["giá_tiền_bằng_chữ"],
       ngày: ngày,
@@ -253,6 +271,28 @@ export const ChuyenNhuongDatToanBo = ({
                 );
               });
           }
+        })
+        .catch((error) => {
+          console.error("Error generating document:", error);
+          window.alert("Lỗi khi tạo hợp đồng");
+        })
+        .finally(() => {
+          setIsGenerating(false);
+        });
+    } else if (isMotPhan) {
+      render_hdcn_quyen_sd_dat_mot_phan(payload, scope)
+        .then((res) => {
+          const blob = new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
         })
         .catch((error) => {
           console.error("Error generating document:", error);
@@ -358,14 +398,21 @@ export const ChuyenNhuongDatToanBo = ({
       nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
       đặc_điểm_thửa_đất: {
         diện_tích: {
-          số: agreementObject["diện_tích"],
+          số: isMotPhan
+            ? agreementObject["một_phần_diện_tích"] ?? ""
+            : agreementObject["diện_tích"],
         },
-        mục_đích_và_thời_hạn_sử_dụng: agreementObject[
-          "mục_đích_và_thời_hạn_sử_dụng"
-        ]?.map((item) => ({
-          phân_loại: item["phân_loại"],
-          diện_tích: item["diện_tích"] || agreementObject["diện_tích"],
-        })),
+        mục_đích_và_thời_hạn_sử_dụng: isMotPhan
+          ? agreementObject["mục_đích_và_thời_hạn_sử_dụng_một_phần"]?.map(
+              (item) => ({
+                phân_loại: item["phân_loại"],
+                diện_tích: item["diện_tích"] || agreementObject["diện_tích"],
+              })
+            )
+          : agreementObject["mục_đích_và_thời_hạn_sử_dụng"]?.map((item) => ({
+              phân_loại: item["phân_loại"],
+              diện_tích: item["diện_tích"] || agreementObject["diện_tích"],
+            })),
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
       },
       số_tiền: agreementObject["giá_tiền"],
@@ -436,6 +483,8 @@ export const ChuyenNhuongDatToanBo = ({
       return "hd-tang-cho-dat-toan-bo";
     } else if (isNongNghiep) {
       return "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo";
+    } else if (isMotPhan) {
+      return "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung";
     } else {
       return "hdcn-quyen-sd-dat-toan-bo";
     }
@@ -481,6 +530,7 @@ export const ChuyenNhuongDatToanBo = ({
         <ThongTinDat
           title="Đối tượng chuyển nhượng của hợp đồng"
           isTangCho={isTangCho}
+          isMotPhan={isMotPhan}
         />
         <Box display="flex" gap="1rem">
           <Button
