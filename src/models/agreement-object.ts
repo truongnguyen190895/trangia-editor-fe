@@ -10,12 +10,19 @@ export interface ThongTinThuaDat {
   ngày_cấp_giấy_chứng_nhận: string;
   diện_tích: string;
   diện_tích_bằng_chữ: string;
+  một_phần_diện_tích?: string;
+  một_phần_diện_tích_bằng_chữ?: string;
   hình_thức_sử_dụng: string;
   nguồn_gốc_sử_dụng: string | null;
   giá_tiền: string;
   giá_tiền_bằng_chữ: string;
   ghi_chú: string;
   mục_đích_và_thời_hạn_sử_dụng: {
+    phân_loại: string;
+    diện_tích: string;
+    thời_hạn_sử_dụng: string;
+  }[];
+  mục_đích_và_thời_hạn_sử_dụng_một_phần: {
     phân_loại: string;
     diện_tích: string;
     thời_hạn_sử_dụng: string;

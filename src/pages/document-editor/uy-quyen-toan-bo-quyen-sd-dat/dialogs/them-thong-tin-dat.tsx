@@ -69,6 +69,9 @@ export const ThemThongTinDat = ({
         giá_tiền_bằng_chữ: "",
         ghi_chú: "",
         mục_đích_và_thời_hạn_sử_dụng: [],
+        mục_đích_và_thời_hạn_sử_dụng_một_phần: [],
+        một_phần_diện_tích: "",
+        một_phần_diện_tích_bằng_chữ: "",
         thời_hạn: "",
         thời_hạn_bằng_chữ: "",
       }

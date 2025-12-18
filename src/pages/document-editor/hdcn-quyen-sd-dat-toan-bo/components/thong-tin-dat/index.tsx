@@ -20,9 +20,14 @@ interface ThongTinDatProps {
   title: string;
   isTangCho?: boolean;
   isNongNghiep?: boolean;
+  isMotPhan?: boolean;
 }
 
-export const ThongTinDat = ({ title, isTangCho = false }: ThongTinDatProps) => {
+export const ThongTinDat = ({
+  title,
+  isTangCho = false,
+  isMotPhan = false,
+}: ThongTinDatProps) => {
   const { agreementObject, deleteAgreementObject } = useHdcnQuyenSdDatContext();
   const [open, setOpen] = useState(false);
 
@@ -95,7 +100,9 @@ export const ThongTinDat = ({ title, isTangCho = false }: ThongTinDatProps) => {
                   <TableCell component="th">
                     <Typography variant="body1">Số giấy tờ</Typography>
                   </TableCell>
-                  <TableCell>{agreementObject?.["số_giấy_chứng_nhận"]}</TableCell>
+                  <TableCell>
+                    {agreementObject?.["số_giấy_chứng_nhận"]}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
@@ -137,7 +144,9 @@ export const ThongTinDat = ({ title, isTangCho = false }: ThongTinDatProps) => {
                       Diện tích bằng chữ (mét vuông)
                     </Typography>
                   </TableCell>
-                  <TableCell>{agreementObject?.["diện_tích_bằng_chữ"]}</TableCell>
+                  <TableCell>
+                    {agreementObject?.["diện_tích_bằng_chữ"]}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
@@ -149,13 +158,17 @@ export const ThongTinDat = ({ title, isTangCho = false }: ThongTinDatProps) => {
                   <TableCell component="th">
                     <Typography variant="body1">Giá tiền bằng chữ</Typography>
                   </TableCell>
-                  <TableCell>{agreementObject?.["giá_tiền_bằng_chữ"]}</TableCell>
+                  <TableCell>
+                    {agreementObject?.["giá_tiền_bằng_chữ"]}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
                     <Typography variant="body1">Hình thức sử dụng</Typography>
                   </TableCell>
-                  <TableCell>{agreementObject?.["hình_thức_sử_dụng"]}</TableCell>
+                  <TableCell>
+                    {agreementObject?.["hình_thức_sử_dụng"]}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
@@ -180,7 +193,9 @@ export const ThongTinDat = ({ title, isTangCho = false }: ThongTinDatProps) => {
                   <TableCell component="th">
                     <Typography variant="body1">Nguồn gốc sử dụng</Typography>
                   </TableCell>
-                  <TableCell>{agreementObject?.["nguồn_gốc_sử_dụng"]}</TableCell>
+                  <TableCell>
+                    {agreementObject?.["nguồn_gốc_sử_dụng"]}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th">
@@ -215,6 +230,7 @@ export const ThongTinDat = ({ title, isTangCho = false }: ThongTinDatProps) => {
           open={open}
           handleClose={() => setOpen(false)}
           isTangCho={isTangCho}
+          isMotPhan={isMotPhan}
         />
       ) : null}
     </Box>

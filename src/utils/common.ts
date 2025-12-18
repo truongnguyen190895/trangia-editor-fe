@@ -160,6 +160,8 @@ export const getTemplateName = (name: string) => {
       return "HĐCN một phần đất và TSGLVĐ (đồng sử dụng)";
     case "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo":
       return "HĐCN một phần đất và TSGLVĐ (để sử dụng toàn bộ)";
+    case "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung":
+      return "HĐCN Quyền sử dụng đất một phần (đồng sử dụng)";
     default:
       return "";
   }

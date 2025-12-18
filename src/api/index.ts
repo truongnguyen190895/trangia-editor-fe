@@ -98,6 +98,25 @@ export const render_hdcn_quyen_sd_dat_toan_bo = async (
   );
 };
 
+export const render_hdcn_quyen_sd_dat_mot_phan = async (
+    payload: HDCNQuyenSDDatPayload,
+    scope: "partial" | "full"
+  ) => {
+    let url = "";
+    if (scope === "partial") {
+      url = "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung";
+    } else {
+      url = "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-mot-phan-de-su-dung-toan-bo";
+    }
+    return api.post(
+      url,
+      payload,
+      {
+        responseType: "blob",
+      }
+    );
+  };
+
 export const render_hdmb_can_ho = async (
   payload: HDMBCanHoPayload,
   metadata: { isMotPhan?: boolean; scope?: "partial" | "full" }
@@ -388,6 +407,9 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
     case "hdcn-quyen-sd-dat-toan-bo":
     case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
       documentName = "ptl-hdcn-quyen-su-dung-dat-toan-bo";
+      break;
+    case "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung":
+      documentName = "ptl-hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung";
       break;
     case "hdmb-can-ho-toan-bo":
       documentName = "ptl-hdmb-can-ho-toan-bo";

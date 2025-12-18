@@ -11,6 +11,14 @@ export const templates = [
   },
   {
     id: uuidv4(),
+    name: "HĐCN Quyền sử dụng đất một phần (đồng sử dụng).docx",
+    type: "agreement",
+    subCategory: "nhom-chuyen-nhuong-mua-ban",
+    path: "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung",
+    templateId: 0,
+  },
+  {
+    id: uuidv4(),
     name: "HĐCN Quyền sử dụng đất nông nghiệp toàn bộ.docx",
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
