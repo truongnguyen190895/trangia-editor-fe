@@ -15,7 +15,7 @@ export const templates = [
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",
     path: "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung",
-    templateId: 0,
+    templateId: 4,
   },
   {
     id: uuidv4(),
