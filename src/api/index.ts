@@ -99,23 +99,21 @@ export const render_hdcn_quyen_sd_dat_toan_bo = async (
 };
 
 export const render_hdcn_quyen_sd_dat_mot_phan = async (
-    payload: HDCNQuyenSDDatPayload,
-    scope: "partial" | "full"
-  ) => {
-    let url = "";
-    if (scope === "partial") {
-      url = "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung";
-    } else {
-      url = "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-mot-phan-de-su-dung-toan-bo";
-    }
-    return api.post(
-      url,
-      payload,
-      {
-        responseType: "blob",
-      }
-    );
-  };
+  payload: HDCNQuyenSDDatPayload,
+  scope: "partial" | "full"
+) => {
+  let url = "";
+  if (scope === "partial") {
+    url =
+      "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung";
+  } else {
+    url =
+      "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-mot-phan-de-su-dung-toan-bo";
+  }
+  return api.post(url, payload, {
+    responseType: "blob",
+  });
+};
 
 export const render_hdmb_can_ho = async (
   payload: HDMBCanHoPayload,
@@ -223,27 +221,31 @@ export const render_hdtc_dat_toan_bo = async (
 };
 
 export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
-  payload: SampleToKhaiChungPayload
+  payload: SampleToKhaiChungPayload,
+  isCM: boolean = false
 ) => {
-  return api.post(
-    "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep",
-    payload,
-    {
-      responseType: "blob",
-    }
-  );
+  let url =
+    "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep";
+  if (isCM) {
+    url =
+      "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep-cm";
+  }
+  return api.post(url, payload, {
+    responseType: "blob",
+  });
 };
 
 export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
-  payload: SampleToKhaiChungPayload
+  payload: SampleToKhaiChungPayload,
+  isCM: boolean = false
 ) => {
-  return api.post(
-    "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep",
-    payload,
-    {
-      responseType: "blob",
-    }
-  );
+  let url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep";
+  if (isCM) {
+    url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep-cm";
+  }
+  return api.post(url, payload, {
+    responseType: "blob",
+  });
 };
 
 export const render_khai_thue_tang_cho_nha_dat_toan_bo = async (

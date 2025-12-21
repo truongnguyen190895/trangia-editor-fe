@@ -78,6 +78,8 @@ export const ChuyenNhuongDatToanBo = ({
   const userInfo = localStorage.getItem("user_info");
   const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
   const uchiId = userInfoObject?.uchi_id;
+  const isCM = userInfoObject?.branches?.some((branch: any) => branch.id === 'CM');
+  console.log(isCM);
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -393,6 +395,7 @@ export const ChuyenNhuongDatToanBo = ({
         stt: index + 1,
         tên: person["tên"],
         số_giấy_tờ: person["số_giấy_tờ"],
+        tỉ_lệ: (100 / các_cá_thể_bên_A.length).toFixed(0) + '%',
       })),
       bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
         stt: index + 1,
@@ -428,10 +431,17 @@ export const ChuyenNhuongDatToanBo = ({
               diện_tích: item["diện_tích"] || agreementObject["diện_tích"],
             })),
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
+        hình_thức_sử_dụng: agreementObject["hình_thức_sử_dụng"],
+        thời_hạn: generateThoiHanSuDung(
+            agreementObject["mục_đích_và_thời_hạn_sử_dụng"]
+          )?.trim(),
       },
       số_tiền: agreementObject["giá_tiền"],
       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
+      địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
+      ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_mới"]})`
+      : agreementObject["địa_chỉ_mới"],
       ...extractAddress(agreementObject["địa_chỉ_mới"]),
     };
 
@@ -443,7 +453,7 @@ export const ChuyenNhuongDatToanBo = ({
     setOpenDialog(false);
     setIsGenerating(true);
     if (isTangCho) {
-      render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(payload)
+      render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(payload, isCM)
         .then((res) => {
           const blob = new Blob([res.data], {
             type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -465,7 +475,7 @@ export const ChuyenNhuongDatToanBo = ({
           setIsGenerating(false);
         });
     } else {
-      render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload)
+      render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload, isCM)
         .then((res) => {
           const blob = new Blob([res.data], {
             type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

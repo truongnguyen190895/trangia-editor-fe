@@ -187,12 +187,15 @@ export type SampleToKhaiChungPayload = {
   thôn: string | null;
   phường: string | null;
   thành_phố: string | null;
+  địa_chỉ_hiển_thị: string;
   đặc_điểm_thửa_đất: {
+    hình_thức_sử_dụng: string;
     mục_đích_và_thời_hạn_sử_dụng: Array<{
       phân_loại: string;
       diện_tích: string | null;
     }>;
     nguồn_gốc_sử_dụng: string | null;
+    thời_hạn: string | null;
     diện_tích: {
       số: string;
     };
