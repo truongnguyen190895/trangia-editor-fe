@@ -26,6 +26,8 @@ import {
   NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
 } from "@/constants";
 import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
+import { CodeScanner } from "@/components/common/code-scanner";
+import { getContractEntityFromCode } from "@/utils/common";
 
 interface ThemCaNhanDialogProps {
   open: boolean;
@@ -152,6 +154,20 @@ export const ThemCaNhanDialog = ({
     });
   };
 
+  const handleScanSuccess = (text: string) => {
+    const { cccd, ten, ngaySinh, gioiTinh, diaChi, ngayCap } =
+      getContractEntityFromCode(text);
+    setValues({
+      ...values,
+      giới_tính: gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
+      tên: ten,
+      ngày_sinh: ngaySinh,
+      số_giấy_tờ: cccd,
+      ngày_cấp: ngayCap,
+      địa_chỉ_thường_trú: diaChi,
+    });
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>
@@ -170,7 +186,7 @@ export const ThemCaNhanDialog = ({
           bgcolor="#f5f5f5"
         >
           <Typography fontSize="1.2rem" fontWeight="500">
-            Tìm theo số giấy tờ
+            Tìm theo số giấy tờ hoặc tải/kéo thả ảnh CCCD để quét QR
           </Typography>
           <TextField
             sx={{ width: "400px" }}
@@ -189,6 +205,7 @@ export const ThemCaNhanDialog = ({
           >
             {loading ? <CircularProgress size={20} /> : <SearchIcon />}
           </Button>
+          <CodeScanner onScanSuccess={handleScanSuccess} />
         </Box>
         {notExisted ? (
           <Typography
