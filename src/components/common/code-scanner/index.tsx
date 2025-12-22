@@ -117,15 +117,6 @@ export const CodeScanner: React.FC<CodeScannerProps> = ({
             )}
           </Button>
         </label>
-        {/* {!isScanning && (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mt: 1 }}
-          >
-            hoặc kéo thả ảnh vào đây
-          </Typography>
-        )} */}
       </Box>
       <Box id="reader" sx={{ display: "none" }} />
       {error && (
