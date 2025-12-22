@@ -65,7 +65,7 @@ export const convertEmptyStringsToNull = <T>(obj: T): T => {
 
 export const extractCoupleFromParty = (
   party: AgreementParty,
-  _isKhaiThue = false //TODO: consider remove this parameter
+  isKhaiThue = false //TODO: consider remove this parameter
 ) => {
   let flattenArray = [];
 
@@ -79,7 +79,7 @@ export const extractCoupleFromParty = (
     ngày_sinh: person["ngày_sinh"],
     ngày_cấp: person["ngày_cấp"],
     tình_trạng_hôn_nhân: null,
-    quan_hệ: person.giới_tính === "Bà" ? "vợ" : null,
+    quan_hệ: isKhaiThue ? null : person.giới_tính === "Bà" ? "vợ" : null,
     ...extractAddress(person["địa_chỉ_thường_trú"]),
   }));
 
