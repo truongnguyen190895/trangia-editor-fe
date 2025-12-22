@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useId } from "react";
 import { Box, Button, Alert, CircularProgress } from "@mui/material";
 import { Html5Qrcode } from "html5-qrcode";
 import QrCodeIcon from "@mui/icons-material/QrCode";
@@ -12,6 +12,9 @@ export const CodeScanner: React.FC<CodeScannerProps> = ({
   onScanSuccess,
   onScanError,
 }) => {
+  const uniqueId = useId();
+  const readerId = `reader-${uniqueId}`;
+  const fileInputId = `qr-code-file-input-${uniqueId}`;
   const [error, setError] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -27,7 +30,7 @@ export const CodeScanner: React.FC<CodeScannerProps> = ({
     setError(null);
 
     try {
-      const html5QrCode = new Html5Qrcode("reader");
+      const html5QrCode = new Html5Qrcode(readerId);
 
       const result = await html5QrCode.scanFile(file, true);
       onScanSuccess?.(result);
@@ -98,9 +101,9 @@ export const CodeScanner: React.FC<CodeScannerProps> = ({
           accept="image/*"
           onChange={handleFileUpload}
           style={{ display: "none" }}
-          id="qr-code-file-input"
+          id={fileInputId}
         />
-        <label htmlFor="qr-code-file-input">
+        <label htmlFor={fileInputId}>
           <Button
             variant="contained"
             component="span"
@@ -118,7 +121,7 @@ export const CodeScanner: React.FC<CodeScannerProps> = ({
           </Button>
         </label>
       </Box>
-      <Box id="reader" sx={{ display: "none" }} />
+      <Box id={readerId} sx={{ display: "none" }} />
       {error && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
           {error}
