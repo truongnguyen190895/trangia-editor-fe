@@ -26,6 +26,8 @@ import {
 } from "@/constants";
 import * as Yup from "yup";
 import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
+import { getContractEntityFromCode } from "@/utils/common";
+import { CodeScanner } from "@/components/common/code-scanner";
 
 interface ThemVoChongDialogProps {
   open: boolean;
@@ -198,6 +200,40 @@ export const ThemVoChongDialog = ({
     }
   };
 
+  const handleScanSuccessHusband = (text: string) => {
+    const { cccd, ten, ngaySinh, gioiTinh, diaChi, ngayCap } =
+      getContractEntityFromCode(text);
+    setValues({
+      ...values,
+      chồng: {
+        ...values.chồng,
+        số_giấy_tờ: cccd,
+        tên: ten,
+        ngày_sinh: ngaySinh,
+        giới_tính: gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
+        địa_chỉ_thường_trú: diaChi,
+        ngày_cấp: ngayCap,
+      },
+    });
+  };
+
+  const handleScanSuccessWife = (text: string) => {
+    const { cccd, ten, ngaySinh, gioiTinh, diaChi, ngayCap } =
+      getContractEntityFromCode(text);
+    setValues({
+      ...values,
+      vợ: {
+        ...values.vợ,
+        số_giấy_tờ: cccd,
+        tên: ten,
+        ngày_sinh: ngaySinh,
+        giới_tính: gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
+        địa_chỉ_thường_trú: diaChi,
+        ngày_cấp: ngayCap,
+      },
+    });
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>
@@ -252,6 +288,7 @@ export const ThemVoChongDialog = ({
                     <SearchIcon />
                   )}
                 </Button>
+                <CodeScanner onScanSuccess={handleScanSuccessHusband} />
               </Box>
               {isNotExistedHusband ? (
                 <Typography
@@ -356,7 +393,10 @@ export const ThemVoChongDialog = ({
                       options={NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH.map((o) => o.value)}
                       value={values["chồng"]["nơi_cấp"] || ""}
                       onChange={(_, newValue) =>
-                        setFieldValue("chồng.nơi_cấp", (newValue as string) || "")
+                        setFieldValue(
+                          "chồng.nơi_cấp",
+                          (newValue as string) || ""
+                        )
                       }
                       onInputChange={(_, newInputValue) =>
                         setFieldValue("chồng.nơi_cấp", newInputValue)
@@ -426,6 +466,7 @@ export const ThemVoChongDialog = ({
                     <SearchIcon />
                   )}
                 </Button>
+                <CodeScanner onScanSuccess={handleScanSuccessWife} />
               </Box>
               {isNotExistedWife ? (
                 <Typography
