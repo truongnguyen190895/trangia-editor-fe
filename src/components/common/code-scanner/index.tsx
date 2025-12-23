@@ -1,5 +1,5 @@
 import React, { useState, useRef, useId } from "react";
-import { Box, Button, Alert, CircularProgress } from "@mui/material";
+import { Box, Button, Alert, CircularProgress, Typography } from "@mui/material";
 import { Html5Qrcode } from "html5-qrcode";
 import QrCodeIcon from "@mui/icons-material/QrCode";
 
@@ -20,6 +20,26 @@ export const CodeScanner: React.FC<CodeScannerProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const getErrorMessage = (error: unknown): string => {
+    if (error instanceof Error) {
+      const errorMessage = error.message.toLowerCase();
+      
+      if (
+        errorMessage.includes("no multiformat readers") ||
+        errorMessage.includes("no code detected") ||
+        errorMessage.includes("not found") ||
+        errorMessage.includes("unable to detect") ||
+        errorMessage.includes("exception") ||
+        errorMessage.includes("failed to load")
+      ) {
+        return "Không tìm thấy mã QR trong ảnh. Vui lòng đảm bảo:\n- Ảnh rõ nét, không bị mờ\n- Mã QR không bị che khuất\n- Ánh sáng đủ để nhìn rõ mã QR\n- Thử chụp lại ảnh gần hơn\n- Thử tải lại trang nếu vấn đề vẫn tiếp tục";
+      }
+      
+      return error.message;
+    }
+    return "Không thể quét mã QR. Vui lòng thử lại với ảnh khác.";
+  };
+
   const processFile = async (file: File) => {
     if (!file.type.startsWith("image/")) {
       setError("Vui lòng chọn file ảnh hợp lệ");
@@ -29,18 +49,51 @@ export const CodeScanner: React.FC<CodeScannerProps> = ({
     setIsScanning(true);
     setError(null);
 
-    try {
-      const html5QrCode = new Html5Qrcode(readerId);
+    let html5QrCode: Html5Qrcode | null = null;
 
-      const result = await html5QrCode.scanFile(file, true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const readerElement = document.getElementById(readerId);
+      if (!readerElement) {
+        throw new Error("Không thể khởi tạo trình quét mã QR");
+      }
+      if (!Html5Qrcode) {
+        throw new Error("Thư viện quét mã QR chưa được tải");
+      }
+      html5QrCode = new Html5Qrcode(readerId, {
+        verbose: false,
+      });
+
+      let result: string;
+      
+      try {
+        result = await html5QrCode.scanFile(file, true);
+      } catch (firstError) {
+        try {
+          result = await html5QrCode.scanFile(file, false);
+        } catch (secondError) {
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          try {
+            result = await html5QrCode.scanFile(file, false);
+          } catch (thirdError) {
+            throw firstError;
+          }
+        }
+      }
+
       onScanSuccess?.(result);
-      await html5QrCode.clear();
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Không thể quét mã QR";
+      const errorMessage = getErrorMessage(err);
       setError(errorMessage);
       onScanError?.(errorMessage);
     } finally {
+      if (html5QrCode) {
+        try {
+          await html5QrCode.clear();
+        } catch (clearError) {
+          console.warn("Error clearing QR scanner:", clearError);
+        }
+      }
       setIsScanning(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -124,7 +177,9 @@ export const CodeScanner: React.FC<CodeScannerProps> = ({
       <Box id={readerId} sx={{ display: "none" }} />
       {error && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
-          {error}
+          <Typography component="pre" sx={{ whiteSpace: "pre-wrap", margin: 0 }}>
+            {error}
+          </Typography>
         </Alert>
       )}
     </Box>

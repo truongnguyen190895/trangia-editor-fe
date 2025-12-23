@@ -19,4 +19,17 @@ export default defineConfig({
       '@theme': path.resolve(__dirname, './src/theme'),
     },
   },
+  build: {
+    commonjsOptions: {
+      include: [/html5-qrcode/, /node_modules/],
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  optimizeDeps: {
+    include: ['html5-qrcode'],
+  },
 })
