@@ -19,6 +19,14 @@ export const templates = [
   },
   {
     id: uuidv4(),
+    name: "HĐCN Quyền sử dụng đất một phần (để sở hữu toàn bộ).docx",
+    type: "agreement",
+    subCategory: "nhom-chuyen-nhuong-mua-ban",
+    path: "hdcn-quyen-su-dung-dat-mot-phan-de-su-dung-toan-bo",
+    templateId: 4,
+  },
+  {
+    id: uuidv4(),
     name: "HĐCN Quyền sử dụng đất nông nghiệp toàn bộ.docx",
     type: "agreement",
     subCategory: "nhom-chuyen-nhuong-mua-ban",

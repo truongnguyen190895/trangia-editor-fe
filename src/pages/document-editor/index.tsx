@@ -77,6 +77,7 @@ export const DocumentEditor = () => {
       case "hd-tang-cho-dat-nong-nghiep-toan-bo":
       case "hd-tang-cho-dat-toan-bo":
       case "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung":
+      case "hdcn-quyen-su-dung-dat-mot-phan-de-su-dung-toan-bo":
         return (
           <HdcnQuyenSdDatProvider>
             <ChuyenNhuongDatToanBo
