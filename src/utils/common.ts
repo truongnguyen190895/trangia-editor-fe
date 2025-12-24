@@ -1,6 +1,5 @@
 import type { AgreementParty } from "@/models/agreement-entity";
 import { extractAddress } from "./extract-address";
-import dayjs from "dayjs";
 
 export const generateThoiHanSuDung = (
   input: {
@@ -168,19 +167,4 @@ export const getTemplateName = (name: string) => {
     default:
       return "";
   }
-};
-
-// Code has format: 034181013195|013444307|Bùi Thị Thanh Nga|20111981|Nữ|Tổ 9, Thịnh Liệt, Hoàng Mai, Hà Nội|08032022
-export const getContractEntityFromCode = (code: string) => {
-  const [cccd, cmnd, ten, ngaySinh, gioiTinh, diaChi, ngayCap] =
-    code.split("|");
-  return {
-    cccd: cccd || "",
-    cmnd: cmnd || "",
-    ten: ten || "",
-    ngaySinh: dayjs(ngaySinh, "DDMMYYYY").format("DD/MM/YYYY") || "",
-    gioiTinh: gioiTinh || "",
-    diaChi: diaChi || "",
-    ngayCap: dayjs(ngayCap, "DDMMYYYY").format("DD/MM/YYYY") || "",
-  };
 };

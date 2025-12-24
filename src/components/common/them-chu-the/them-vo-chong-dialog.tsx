@@ -26,8 +26,7 @@ import {
 } from "@/constants";
 import * as Yup from "yup";
 import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
-import { getContractEntityFromCode } from "@/utils/common";
-import { CodeScanner } from "@/components/common/code-scanner";
+import { CopyMapper } from "../copy-mapper";
 
 interface ThemVoChongDialogProps {
   open: boolean;
@@ -200,36 +199,32 @@ export const ThemVoChongDialog = ({
     }
   };
 
-  const handleScanSuccessHusband = (text: string) => {
-    const { cccd, ten, ngaySinh, gioiTinh, diaChi, ngayCap } =
-      getContractEntityFromCode(text);
+  const handleScanSuccessHusband = (text: Record<string, string>) => {
     setValues({
       ...values,
       chồng: {
         ...values.chồng,
-        số_giấy_tờ: cccd,
-        tên: ten,
-        ngày_sinh: ngaySinh,
-        giới_tính: gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
-        địa_chỉ_thường_trú: diaChi,
-        ngày_cấp: ngayCap,
+        số_giấy_tờ: text?.cccd,
+        tên: text?.hoTen,
+        ngày_sinh: text?.ngaySinh,
+        giới_tính: text?.gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
+        địa_chỉ_thường_trú: text?.noiThuongTru,
+        ngày_cấp: text?.ngayCapCCCD,
       },
     });
   };
 
-  const handleScanSuccessWife = (text: string) => {
-    const { cccd, ten, ngaySinh, gioiTinh, diaChi, ngayCap } =
-      getContractEntityFromCode(text);
+  const handleScanSuccessWife = (text: Record<string, string>) => {
     setValues({
       ...values,
       vợ: {
         ...values.vợ,
-        số_giấy_tờ: cccd,
-        tên: ten,
-        ngày_sinh: ngaySinh,
-        giới_tính: gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
-        địa_chỉ_thường_trú: diaChi,
-        ngày_cấp: ngayCap,
+        số_giấy_tờ: text?.cccd,
+        tên: text?.hoTen,
+        ngày_sinh: text?.ngaySinh,
+        giới_tính: text?.gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
+        địa_chỉ_thường_trú: text?.noiThuongTru,
+        ngày_cấp: text?.ngayCapCCCD,
       },
     });
   };
@@ -266,6 +261,7 @@ export const ThemVoChongDialog = ({
                 p="1rem"
                 borderRadius="5px"
                 bgcolor="#f5f5f5"
+                mb="1rem"
               >
                 <TextField
                   sx={{ width: "400px" }}
@@ -288,7 +284,6 @@ export const ThemVoChongDialog = ({
                     <SearchIcon />
                   )}
                 </Button>
-                <CodeScanner onScanSuccess={handleScanSuccessHusband} />
               </Box>
               {isNotExistedHusband ? (
                 <Typography
@@ -300,7 +295,13 @@ export const ThemVoChongDialog = ({
                   Số này không tồn tại trong hệ thống và sẽ được lưu lại
                 </Typography>
               ) : null}
-              <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
+              <CopyMapper onMapped={handleScanSuccessHusband} />
+              <Box
+                border="1px solid #ccc"
+                borderRadius="10px"
+                padding="20px"
+                mt="1rem"
+              >
                 <Box
                   display="grid"
                   gridTemplateColumns="1fr 1fr 1fr"
@@ -444,6 +445,7 @@ export const ThemVoChongDialog = ({
                 p="1rem"
                 borderRadius="5px"
                 bgcolor="#f5f5f5"
+                mb="1rem"
               >
                 <TextField
                   sx={{ width: "400px" }}
@@ -466,7 +468,6 @@ export const ThemVoChongDialog = ({
                     <SearchIcon />
                   )}
                 </Button>
-                <CodeScanner onScanSuccess={handleScanSuccessWife} />
               </Box>
               {isNotExistedWife ? (
                 <Typography
@@ -478,7 +479,13 @@ export const ThemVoChongDialog = ({
                   Số này không tồn tại trong hệ thống và sẽ được lưu lại
                 </Typography>
               ) : null}
-              <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
+              <CopyMapper onMapped={handleScanSuccessWife} />
+              <Box
+                border="1px solid #ccc"
+                borderRadius="10px"
+                padding="20px"
+                mt="1rem"
+              >
                 <Box
                   display="grid"
                   gridTemplateColumns="1fr 1fr 1fr"

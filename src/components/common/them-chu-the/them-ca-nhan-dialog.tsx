@@ -26,8 +26,7 @@ import {
   NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
 } from "@/constants";
 import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
-import { CodeScanner } from "@/components/common/code-scanner";
-import { getContractEntityFromCode } from "@/utils/common";
+import { CopyMapper } from "../copy-mapper";
 
 interface ThemCaNhanDialogProps {
   open: boolean;
@@ -154,17 +153,15 @@ export const ThemCaNhanDialog = ({
     });
   };
 
-  const handleScanSuccess = (text: string) => {
-    const { cccd, ten, ngaySinh, gioiTinh, diaChi, ngayCap } =
-      getContractEntityFromCode(text);
+  const handleScanSuccess = (text: Record<string, string>) => {
     setValues({
       ...values,
-      giới_tính: gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
-      tên: ten,
-      ngày_sinh: ngaySinh,
-      số_giấy_tờ: cccd,
-      ngày_cấp: ngayCap,
-      địa_chỉ_thường_trú: diaChi,
+      giới_tính: text?.gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
+      tên: text?.hoTen,
+      ngày_sinh: text?.ngaySinh,
+      số_giấy_tờ: text?.cccd,
+      ngày_cấp: text?.ngayCapCCCD,
+      địa_chỉ_thường_trú: text?.noiThuongTru,
     });
   };
 
@@ -184,6 +181,7 @@ export const ThemCaNhanDialog = ({
           p="1rem"
           borderRadius="5px"
           bgcolor="#f5f5f5"
+          mb="1rem"
         >
           <Typography fontSize="1.2rem" fontWeight="500">
             Tìm theo số giấy tờ hoặc tải/kéo thả ảnh CCCD để quét QR
@@ -205,8 +203,8 @@ export const ThemCaNhanDialog = ({
           >
             {loading ? <CircularProgress size={20} /> : <SearchIcon />}
           </Button>
-          <CodeScanner onScanSuccess={handleScanSuccess} />
         </Box>
+        <CopyMapper onMapped={handleScanSuccess} rows={7} />
         {notExisted ? (
           <Typography
             variant="body1"
