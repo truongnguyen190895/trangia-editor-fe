@@ -27,6 +27,7 @@ import {
 } from "@/constants";
 import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
 import { CopyMapper } from "../copy-mapper";
+import dayjs from "dayjs";
 
 interface ThemCaNhanDialogProps {
   open: boolean;
@@ -154,6 +155,9 @@ export const ThemCaNhanDialog = ({
   };
 
   const handleScanSuccess = (text: Record<string, string>) => {
+    const isBefore2024 = dayjs(text?.ngayCapCCCD, "DD/MM/YYYY").isBefore(
+      dayjs("01/07/2024", "DD/MM/YYYY")
+    );
     setValues({
       ...values,
       giới_tính: text?.gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
@@ -162,6 +166,12 @@ export const ThemCaNhanDialog = ({
       số_giấy_tờ: text?.cccd,
       ngày_cấp: text?.ngayCapCCCD,
       địa_chỉ_thường_trú: text?.noiThuongTru,
+      nơi_cấp: isBefore2024
+        ? NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH[1].value
+        : NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH[4].value,
+      loại_giấy_tờ: isBefore2024
+        ? CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH[0].value
+        : CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH[3].value,
     });
   };
 

@@ -27,6 +27,7 @@ import {
 import * as Yup from "yup";
 import { saveContractEntity, getContractEntity } from "@/api/contract_entity";
 import { CopyMapper } from "../copy-mapper";
+import dayjs from "dayjs";
 
 interface ThemVoChongDialogProps {
   open: boolean;
@@ -200,6 +201,9 @@ export const ThemVoChongDialog = ({
   };
 
   const handleScanSuccessHusband = (text: Record<string, string>) => {
+    const isBefore2024 = dayjs(text?.ngayCapCCCD, "DD/MM/YYYY").isBefore(
+      dayjs("01/07/2024", "DD/MM/YYYY")
+    );
     setValues({
       ...values,
       chồng: {
@@ -210,11 +214,20 @@ export const ThemVoChongDialog = ({
         giới_tính: text?.gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
         địa_chỉ_thường_trú: text?.noiThuongTru,
         ngày_cấp: text?.ngayCapCCCD,
+        nơi_cấp: isBefore2024
+          ? NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH[1].value
+          : NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH[4].value,
+        loại_giấy_tờ: isBefore2024
+          ? CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH[0].value
+          : CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH[3].value,
       },
     });
   };
 
   const handleScanSuccessWife = (text: Record<string, string>) => {
+    const isBefore2024 = dayjs(text?.ngayCapCCCD, "DD/MM/YYYY").isBefore(
+      dayjs("01/07/2024", "DD/MM/YYYY")
+    );
     setValues({
       ...values,
       vợ: {
@@ -225,6 +238,12 @@ export const ThemVoChongDialog = ({
         giới_tính: text?.gioiTinh === "Nam" ? GENDER.MALE : GENDER.FEMALE,
         địa_chỉ_thường_trú: text?.noiThuongTru,
         ngày_cấp: text?.ngayCapCCCD,
+        nơi_cấp: isBefore2024
+          ? NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH[1].value
+          : NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH[4].value,
+        loại_giấy_tờ: isBefore2024
+          ? CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH[0].value
+          : CÁC_LOẠI_GIẤY_TỜ_ĐỊNH_DANH[3].value,
       },
     });
   };
