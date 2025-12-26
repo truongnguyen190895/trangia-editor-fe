@@ -24,11 +24,16 @@ import {
   render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo,
   render_hdtc_dat_toan_bo,
   render_hdcn_quyen_sd_dat_mot_phan,
+  render_hdtc_dat_mot_phan,
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { extractAddress } from "@/utils/extract-address";
-import { extractCoupleFromParty, generateThoiHanSuDung } from "@/utils/common";
+import {
+  extractCoupleFromParty,
+  generateThoiHanSuDung,
+  createDownloadLink,
+} from "@/utils/common";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
@@ -242,117 +247,118 @@ export const ChuyenNhuongDatToanBo = ({
     setOpenDialog(false);
     setIsGenerating(true);
     if (isTangCho) {
-      render_hdtc_dat_toan_bo(payload, isNongNghiep)
-        .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      // Tặng cho
+      if (isMotPhan) {
+        render_hdtc_dat_mot_phan(payload, isNongNghiep, scope)
+          .then((res) => {
+            createDownloadLink(
+              res.data,
+              `HDTC đất ${isNongNghiep ? "nông nghiệp" : ""} một phần - ${
+                payload["bên_A"]["cá_thể"][0]["tên"]
+              } - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+            );
+          })
+          .catch((error) => {
+            console.error("Error generating document:", error);
+            window.alert("Lỗi khi tạo hợp đồng");
+          })
+          .finally(() => {
+            setIsGenerating(false);
           });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `HDTC đất ${
-            isNongNghiep ? "nông nghiệp" : ""
-          } toàn bộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${
-            payload["bên_B"]["cá_thể"][0]["tên"]
-          }.docx`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-
-          if (metaData.isUchi && templateId && Number(templateId) > 0) {
-            uchiTemporarySave(payload)
-              .then(() =>
-                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
-                  position: "top-left",
-                })
-              )
-              .catch((error) => {
-                toast.error(
-                  "Lỗi khi gửi thông tin lên Uchi " +
-                    error?.response?.data?.message
-                );
-              });
-          }
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
-    } else if (isMotPhan) {
-      render_hdcn_quyen_sd_dat_mot_phan(payload, scope)
-        .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      } else {
+        render_hdtc_dat_toan_bo(payload, isNongNghiep)
+          .then((res) => {
+            createDownloadLink(
+              res.data,
+              `HDTC đất ${isNongNghiep ? "nông nghiệp" : ""} toàn bộ - ${
+                payload["bên_A"]["cá_thể"][0]["tên"]
+              } - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+            );
+            if (metaData.isUchi && templateId && Number(templateId) > 0) {
+              uchiTemporarySave(payload)
+                .then(() =>
+                  toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                    position: "top-left",
+                  })
+                )
+                .catch((error) => {
+                  toast.error(
+                    "Lỗi khi gửi thông tin lên Uchi " +
+                      error?.response?.data?.message
+                  );
+                });
+            }
+          })
+          .catch((error) => {
+            console.error("Error generating document:", error);
+            window.alert("Lỗi khi tạo hợp đồng");
+          })
+          .finally(() => {
+            setIsGenerating(false);
           });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-          if (metaData.isUchi && templateId && Number(templateId) > 0) {
-            uchiTemporarySave(payload)
-              .then(() =>
-                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
-                  position: "top-left",
-                })
-              )
-              .catch((error) => {
-                toast.error(
-                  "Lỗi khi gửi thông tin lên Uchi " +
-                    error?.response?.data?.message
-                );
-              });
-          }
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
+      }
     } else {
-      render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
-        .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      // Chuyển nhượng
+      if (isMotPhan) {
+        render_hdcn_quyen_sd_dat_mot_phan(payload, scope)
+          .then((res) => {
+            createDownloadLink(
+              res.data,
+              `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+            );
+            if (metaData.isUchi && templateId && Number(templateId) > 0) {
+              uchiTemporarySave(payload)
+                .then(() =>
+                  toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                    position: "top-left",
+                  })
+                )
+                .catch((error) => {
+                  toast.error(
+                    "Lỗi khi gửi thông tin lên Uchi " +
+                      error?.response?.data?.message
+                  );
+                });
+            }
+          })
+          .catch((error) => {
+            console.error("Error generating document:", error);
+            window.alert("Lỗi khi tạo hợp đồng");
+          })
+          .finally(() => {
+            setIsGenerating(false);
           });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-          if (metaData.isUchi && templateId && Number(templateId) > 0) {
-            uchiTemporarySave(payload)
-              .then(() =>
-                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
-                  position: "top-left",
-                })
-              )
-              .catch((error) => {
-                toast.error(
-                  "Lỗi khi gửi thông tin lên Uchi " +
-                    error?.response?.data?.message
-                );
-              });
-          }
-        })
-        .catch((error) => {
-          toast.error("Lỗi khi tạo hợp đồng " + error?.response?.data?.message);
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
+      } else {
+        render_hdcn_quyen_sd_dat_toan_bo(payload, isNongNghiep)
+          .then((res) => {
+            createDownloadLink(
+              res.data,
+              `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+            );
+            if (metaData.isUchi && templateId && Number(templateId) > 0) {
+              uchiTemporarySave(payload)
+                .then(() =>
+                  toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                    position: "top-left",
+                  })
+                )
+                .catch((error) => {
+                  toast.error(
+                    "Lỗi khi gửi thông tin lên Uchi " +
+                      error?.response?.data?.message
+                  );
+                });
+            }
+          })
+          .catch((error) => {
+            toast.error(
+              "Lỗi khi tạo hợp đồng " + error?.response?.data?.message
+            );
+          })
+          .finally(() => {
+            setIsGenerating(false);
+          });
+      }
     }
   };
 
@@ -456,17 +462,7 @@ export const ChuyenNhuongDatToanBo = ({
     if (isTangCho) {
       render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(payload, isCM)
         .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "to-khai-chung.docx";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
+          createDownloadLink(res?.data, "to-khai-chung.docx");
         })
         .catch((error) => {
           console.error("Error generating document:", error);
@@ -478,18 +474,7 @@ export const ChuyenNhuongDatToanBo = ({
     } else {
       render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload, isCM)
         .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "to-khai-chung.docx";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
+          createDownloadLink(res?.data, "to-khai-chung.docx");
         })
         .catch((error) => {
           console.error("Error generating document:", error);
@@ -502,16 +487,34 @@ export const ChuyenNhuongDatToanBo = ({
   };
 
   const generateThuLyType = () => {
-    if (isNongNghiep && isTangCho) {
-      return "hd-tang-cho-dat-nong-nghiep-toan-bo";
-    } else if (isTangCho) {
-      return "hd-tang-cho-dat-toan-bo";
-    } else if (isNongNghiep) {
-      return "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo";
-    } else if (isMotPhan) {
-      return "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung";
+    if (isTangCho) {
+      if (isMotPhan) {
+        if (isNongNghiep) {
+          return "hd-tang-cho-dat-nong-nghiep-mot-phan-de-dong-su-dung";
+        } else {
+          return "hd-tang-cho-dat-mot-phan-de-dong-su-dung";
+        }
+      } else {
+        if (isNongNghiep) {
+          return "hd-tang-cho-dat-nong-nghiep-toan-bo";
+        } else {
+          return "hd-tang-cho-dat-toan-bo";
+        }
+      }
     } else {
-      return "hdcn-quyen-sd-dat-toan-bo";
+      if (isMotPhan) {
+        if (isNongNghiep) {
+          return "hdcn-quyen-su-dung-dat-nong-nghiep-mot-phan-de-dong-su-dung";
+        } else {
+          return "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung";
+        }
+      } else {
+        if (isNongNghiep) {
+          return "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo";
+        } else {
+          return "hdcn-quyen-su-dung-dat-toan-bo";
+        }
+      }
     }
   };
 

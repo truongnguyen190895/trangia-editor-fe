@@ -220,6 +220,33 @@ export const render_hdtc_dat_toan_bo = async (
   );
 };
 
+export const render_hdtc_dat_mot_phan = async (
+  payload: HDCNQuyenSDDatPayload,
+  isNongNghiep: boolean,
+  scope: "partial" | "full"
+) => {
+  let url = "";
+  if (isNongNghiep) {
+    if (scope === "partial") {
+      url =
+        "/templates/nhom-tang-cho/hd-tang-cho-dat-nong-nghiep-mot-phan-de-dong-su-dung";
+    } else {
+      url =
+        "/templates/nhom-tang-cho/hd-tang-cho-dat-nong-nghiep-mot-phan-de-su-dung-toan-bo";
+    }
+  } else {
+    if (scope === "partial") {
+      url = "/templates/nhom-tang-cho/hd-tang-cho-dat-mot-phan-de-dong-su-dung";
+    } else {
+      url =
+        "/templates/nhom-tang-cho/hd-tang-cho-dat-mot-phan-de-su-dung-toan-bo";
+    }
+  }
+  return api.post(url, convertEmptyStringsToNull(payload), {
+    responseType: "blob",
+  });
+};
+
 export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   payload: SampleToKhaiChungPayload,
   isCM: boolean = false
@@ -406,7 +433,7 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
     case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
       documentName = "ptl-hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung";
       break;
-    case "hdcn-quyen-sd-dat-toan-bo":
+    case "hdcn-quyen-su-dung-dat-toan-bo":
     case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
       documentName = "ptl-hdcn-quyen-su-dung-dat-toan-bo";
       break;
@@ -443,6 +470,9 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
       break;
     case "hd-tang-cho-nha-dat-toan-bo":
       documentName = "ptl-hd-tang-cho-nha-dat-toan-bo";
+      break;
+    case "hd-tang-cho-dat-mot-phan-de-dong-su-dung":
+      documentName = "ptl-hd-tang-cho-dat-mot-phan";
       break;
     default:
       documentName = "";

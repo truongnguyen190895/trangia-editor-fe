@@ -128,6 +128,8 @@ export const getTemplateName = (name: string) => {
       return "Hợp đồng tặng cho đất nông nghiệp (toàn bộ)";
     case "hd-tang-cho-dat-toan-bo":
       return "Hợp đồng tặng cho đất (toàn bộ)";
+    case "hd-tang-cho-dat-mot-phan-de-dong-su-dung":
+      return "Hợp đồng tặng cho đất một phần (đồng sử dụng)";
     case "uy-quyen-toan-bo-quyen-su-dung-dat":
       return "Uỷ quyền toàn bộ quyền sử dụng đất";
     case "uy-quyen-toan-bo-nha-dat":
@@ -167,4 +169,18 @@ export const getTemplateName = (name: string) => {
     default:
       return "";
   }
+};
+
+export const createDownloadLink = (data: any, fileName: string) => {
+  const blob = new Blob([data], {
+    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${fileName}.docx`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
 };

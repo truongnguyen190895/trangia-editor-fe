@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, CircularProgress } from "@mui/material";
 import { render_phieu_thu_ly } from "@/api";
+import { createDownloadLink } from "@/utils/common";
 
 interface PhieuThuLyButtonProps {
   commonPayload: any;
@@ -26,17 +27,7 @@ export const PhieuThuLyButton = ({
     setIsGenerating(true);
     render_phieu_thu_ly(payload, type)
       .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "Phieu thu ly CC.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        createDownloadLink(res.data, "Phieu thu ly CC.docx");
       })
       .catch((err) => {
         console.error("Error generating document:", err);
