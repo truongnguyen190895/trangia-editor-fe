@@ -217,108 +217,115 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         externalNotes: "",
         notarizedBy: "",
       },
-      onSubmit: (formValues) => {
-        setIsLoading(true);
-        let idToSubmit = "";
-        let idPhieuThu = "";
-        if (type === "Contract") {
-          if (!isEdit && Number(formValues.id) > 9999) {
-            setWarningDialogOpen(true);
-            setIsLoading(false);
-            return;
+      onSubmit: async (formValues) => {
+        try {
+          setIsLoading(true);
+          let idToSubmit = "";
+          let idPhieuThu = "";
+          if (type === "Contract") {
+            if (!isEdit && Number(formValues.id) > 9999) {
+              setWarningDialogOpen(true);
+              setIsLoading(false);
+              return;
+            }
+            idToSubmit =
+              formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
+            idPhieuThu = formValues.id + "/" + suffix;
+          } else if (type === "Invoice") {
+            const resp = await getTheNextAvailableId("Invoice");
+            idToSubmit = resp;
+            idPhieuThu = resp;
+          } else {
+            if (!isEdit && Number(formValues.id) > 30000) {
+              setWarningDialogOpen(true);
+              setIsLoading(false);
+              return;
+            }
+            idToSubmit = formValues.id + "." + suffix;
+            idPhieuThu = formValues.id + "." + suffix;
           }
-          idToSubmit =
-            formValues.id + "/" + suffix + "/" + dayjs().format("YYYY");
-          idPhieuThu = formValues.id + "/" + suffix;
-        } else if (type === "Invoice") {
-          idToSubmit = formValues.id;
-          idPhieuThu = formValues.id;
-        } else {
-          if (!isEdit && Number(formValues.id) > 30000) {
-            setWarningDialogOpen(true);
-            setIsLoading(false);
-            return;
-          }
-          idToSubmit = formValues.id + "." + suffix;
-          idPhieuThu = formValues.id + "." + suffix;
-        }
-        const payload = {
-          ...formValues,
-          customer: formValues.customer?.trim(),
-          id: idToSubmit,
-          filedDate: formValues?.filedDate?.format("YYYY-MM-DD"),
-        };
-        const phieuThuPayload: PhieuThuPayload = {
-          d: dayjs(formValues?.filedDate).format("DD"),
-          m: dayjs(formValues?.filedDate).format("MM"),
-          y: dayjs(formValues?.filedDate).format("YYYY"),
-          người_nộp_tiền: formValues.customer,
-          số_cc: type === "Invoice" ? null : idPhieuThu,
-          số_tiền: (
-            Number(formValues.value * 1000) +
-            Number(formValues.copiesValue * 1000)
-          ).toLocaleString(),
-          số_tiền_bằng_chữ: numberToVietnamese(
-            (
+          const payload = {
+            ...formValues,
+            customer: formValues.customer?.trim(),
+            id: idToSubmit,
+            filedDate: formValues?.filedDate?.format("YYYY-MM-DD"),
+          };
+          const phieuThuPayload: PhieuThuPayload = {
+            d: dayjs(formValues?.filedDate).format("DD"),
+            m: dayjs(formValues?.filedDate).format("MM"),
+            y: dayjs(formValues?.filedDate).format("YYYY"),
+            người_nộp_tiền: formValues.customer,
+            số_cc: type === "Invoice" ? null : idPhieuThu,
+            số_tiền: (
               Number(formValues.value * 1000) +
               Number(formValues.copiesValue * 1000)
-            )
-              .toString()
-              .replace(/\./g, "")
-              .replace(/\,/g, ".")
-          ),
-          tên_chuyên_viên: namedByUser,
-          loại_hđ: formValues.name,
-          ghi_chú: `(Công chứng: ${(
-            formValues.value * 1000 || 0
-          )?.toLocaleString()}đ; Bản sao: ${(
-            formValues.copiesValue * 1000 || 0
-          )?.toLocaleString()}đ)`,
-          lý_do_nộp:
-            type === "Invoice"
-              ? formValues.name
-              : `Phí, giá dịch vụ yêu cầu theo hồ sơ cc ${formValues.name} số:`,
-        };
-        if (isEdit) {
-          updateContract({
-            ...payload,
-            id: idFromUrl as string,
-            newId: idToSubmit,
-          })
-            .then(() => {
-              toast.success("Cập nhật thành công");
-              if (shouldRenderPhieuThu) {
-                handleRenderPhieuThu(phieuThuPayload);
-              }
+            ).toLocaleString(),
+            số_tiền_bằng_chữ: numberToVietnamese(
+              (
+                Number(formValues.value * 1000) +
+                Number(formValues.copiesValue * 1000)
+              )
+                .toString()
+                .replace(/\./g, "")
+                .replace(/\,/g, ".")
+            ),
+            tên_chuyên_viên: namedByUser,
+            loại_hđ: formValues.name,
+            ghi_chú: `(Công chứng: ${(
+              formValues.value * 1000 || 0
+            )?.toLocaleString()}đ; Bản sao: ${(
+              formValues.copiesValue * 1000 || 0
+            )?.toLocaleString()}đ)`,
+            lý_do_nộp:
+              type === "Invoice"
+                ? formValues.name
+                : `Phí, giá dịch vụ yêu cầu theo hồ sơ cc ${formValues.name} số:`,
+          };
+          if (isEdit) {
+            updateContract({
+              ...payload,
+              id: idFromUrl as string,
+              newId: idToSubmit,
             })
-            .catch((error) => {
-              errorHandler(error);
-            })
-            .finally(() => {
-              setIsLoading(false);
-            });
-        } else {
-          submitContract(payload)
-            .then(() => {
-              toast.success("Tạo thành công");
-              if (shouldRenderPhieuThu) {
-                handleRenderPhieuThu(phieuThuPayload);
-              }
-              resetForm();
-            })
-            .catch((error) => {
-              errorHandler(error);
-            })
-            .finally(() => {
-              getTheNextAvailableId(type)
-                .then((resp) => {
-                  setNextAvailableId(resp);
-                })
-                .finally(() => {
-                  setCheckingLoading(false);
-                });
-              setIsLoading(false);
-            });
+              .then(() => {
+                toast.success("Cập nhật thành công");
+                if (shouldRenderPhieuThu) {
+                  handleRenderPhieuThu(phieuThuPayload);
+                }
+              })
+              .catch((error) => {
+                errorHandler(error);
+              })
+              .finally(() => {
+                setIsLoading(false);
+              });
+          } else {
+            submitContract(payload)
+              .then(() => {
+                toast.success("Tạo thành công");
+                if (shouldRenderPhieuThu) {
+                  handleRenderPhieuThu(phieuThuPayload);
+                }
+                resetForm();
+              })
+              .catch((error) => {
+                errorHandler(error);
+              })
+              .finally(() => {
+                getTheNextAvailableId(type)
+                  .then((resp) => {
+                    setNextAvailableId(resp);
+                  })
+                  .finally(() => {
+                    setCheckingLoading(false);
+                  });
+                setIsLoading(false);
+              });
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsLoading(false);
         }
       },
     });
