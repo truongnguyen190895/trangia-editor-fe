@@ -130,6 +130,8 @@ export const getTemplateName = (name: string) => {
       return "Hợp đồng tặng cho đất (toàn bộ)";
     case "hd-tang-cho-dat-mot-phan-de-dong-su-dung":
       return "Hợp đồng tặng cho đất một phần (đồng sử dụng)";
+    case "hd-tang-cho-dat-mot-phan-de-su-dung-toan-bo":
+      return "Hợp đồng tặng cho đất một phần (để sở hữu toàn bộ)";
     case "uy-quyen-toan-bo-quyen-su-dung-dat":
       return "Uỷ quyền toàn bộ quyền sử dụng đất";
     case "uy-quyen-toan-bo-nha-dat":
