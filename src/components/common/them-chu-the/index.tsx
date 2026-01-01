@@ -23,10 +23,9 @@ import { v4 as uuidv4 } from "uuid";
 interface ThemChuTheProps {
   title: string;
   side: "partyA" | "partyB";
-  isUyQuyen?: boolean;
 }
 
-export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
+export const ThemChuThe = ({ title, side }: ThemChuTheProps) => {
   const {
     partyA,
     partyB,
@@ -44,7 +43,6 @@ export const ThemChuThe = ({ title, side, isUyQuyen }: ThemChuTheProps) => {
   const partyEntities = side === "partyA" ? partyA : partyB;
   const individualParty = partyEntities["cá_nhân"];
   const coupleParty = partyEntities["vợ_chồng"];
-  console.log("isUyQuyen", isUyQuyen);
 
   const handleDeleteSingleParty = (arrayIndex: number) => {
     if (side === "partyA") {

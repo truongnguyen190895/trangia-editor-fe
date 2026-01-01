@@ -399,7 +399,6 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
         <ObjectEntity
           title="Đối tượng chuyển nhượng của hợp đồng"
           isMotPhan={isMotPhan}
-          scope={scope}
         />
         <Box display="flex" gap="1rem">
           <Button

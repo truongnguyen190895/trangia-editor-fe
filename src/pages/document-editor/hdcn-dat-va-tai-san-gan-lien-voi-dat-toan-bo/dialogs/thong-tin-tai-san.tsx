@@ -17,9 +17,8 @@ import { SearchEntity } from "@/components/common/search-entity";
 
 interface ThongTinTaiSanProps {
   open: boolean;
-  handleClose: () => void;
   isMotPhan?: boolean;
-  scope?: "partial" | "full";
+  handleClose: () => void;
 }
 
 const validationSchema = Yup.object({
@@ -32,11 +31,9 @@ const validationSchema = Yup.object({
 export const ThongTinTaiSanDialog = ({
   open,
   isMotPhan = false,
-  scope = "full",
   handleClose,
 }: ThongTinTaiSanProps) => {
   const { taiSan, addTaiSan } = useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
-  console.log(scope);
   const submitForm = (values: ThongTinTaiSan) => {
     addTaiSan(values);
     handleClose();

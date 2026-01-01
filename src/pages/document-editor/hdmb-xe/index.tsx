@@ -295,7 +295,7 @@ export const HDMBXe = ({
         flex={4}
       >
         <ThemChuThe title="Bên A" side="partyA" />
-        <ThemChuThe title="Bên B" side="partyB" isUyQuyen={isUyQuyen} />
+        <ThemChuThe title="Bên B" side="partyB" />
         <ObjectEntity
           title="Đối tượng của hợp đồng"
           isXeMay={isXeMay}

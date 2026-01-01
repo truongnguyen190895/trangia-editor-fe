@@ -168,7 +168,7 @@ const History = () => {
           setUsers(resp?.content?.filter((user) => user.username !== "admin"));
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         })
         .finally(() => {
           setLoadingUsers(false);

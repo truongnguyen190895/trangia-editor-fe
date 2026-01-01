@@ -188,13 +188,22 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
           ),
       otherwise: (schema) => schema,
     }),
-    name: yup.string().required("Tên hợp đồng là bắt buộc"),
+    name: yup.string().required("Bắt buộc"),
     customer: yup.string().required("Tên khách hàng là bắt buộc"),
     broker: yup.string(),
     value: yup.number().required("Số tiền là bắt buộc"),
     copiesValue: yup.number(),
     notes: yup.string(),
-    nationalId: yup.string(),
+    nationalId: yup.string().when([], {
+      is: () => type === "Signature",
+      then: (schema) => schema.required("Số CCCD là bắt buộc"),
+      otherwise: (schema) => schema,
+    }),
+    notarizedBy: yup.string().when([], {
+      is: () => type === "Signature",
+      then: (schema) => schema.required("CCV là bắt buộc"),
+      otherwise: (schema) => schema,
+    }),
   });
 
   const { values, errors, resetForm, handleChange, handleSubmit, setValues } =
@@ -432,6 +441,8 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
+                        error={!!errors.name}
+                        helperText={errors.name}
                         label="Nội dung thu"
                         name="name"
                         onChange={handleChange}
@@ -507,10 +518,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
               <TextField
                 label="Số CCCD"
                 name="nationalId"
+                disabled={type === "Contract"}
                 value={values.nationalId}
-                onChange={handleChange}
                 error={!!errors.nationalId}
                 helperText={errors.nationalId}
+                onChange={handleChange}
               />
               <DatePicker
                 label="Ngày viết phiếu"
@@ -563,8 +575,9 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   name="notarizedBy"
                   label="CCV"
                   value={values.notarizedBy}
-                  onChange={handleChange}
                   error={!!errors.notarizedBy}
+                  disabled={type === "Contract"}
+                  onChange={handleChange}
                 >
                   <MenuItem value="">Chọn CCV</MenuItem>
                   {CÔNG_CHỨNG_VIÊN.map((reviewer) => (

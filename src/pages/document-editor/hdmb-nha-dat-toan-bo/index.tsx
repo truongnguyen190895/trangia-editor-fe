@@ -452,7 +452,6 @@ export const HDMBNhaDatToanBo = ({
               textTransform: "uppercase",
               width: "350px",
             }}
-            // disabled={!isFormValid || !isUyQuyen}
             onClick={() => setOpenDialog(true)}
           >
             {isGenerating ? (

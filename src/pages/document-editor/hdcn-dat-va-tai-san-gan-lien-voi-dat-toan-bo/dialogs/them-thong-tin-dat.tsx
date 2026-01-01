@@ -30,7 +30,6 @@ interface ThemThongTinDatProps {
   open: boolean;
   handleClose: () => void;
   isMotPhan?: boolean;
-  scope?: "partial" | "full";
 }
 
 const validationSchema = Yup.object({
@@ -39,14 +38,13 @@ const validationSchema = Yup.object({
 
 export const ThemThongTinDat = ({
   open,
-  handleClose,
   isMotPhan = false,
-  scope = "full",
+  handleClose,
 }: ThemThongTinDatProps) => {
   const { taiSan, agreementObject, addAgreementObject } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
   const { partyA } = useThemChuTheContext();
-  console.log(scope); // TODO: WIP
+
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const submitForm = (values: ThongTinThuaDat) => {
     const biendong =

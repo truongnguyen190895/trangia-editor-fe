@@ -20,13 +20,11 @@ import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat
 interface ObjectEntityProps {
   title: string;
   isMotPhan?: boolean;
-  scope?: "partial" | "full";
 }
 
 export const ObjectEntity = ({
   title,
   isMotPhan = false,
-  scope = "full",
 }: ObjectEntityProps) => {
   const { agreementObject, taiSan, deleteAgreementObject, deleteTaiSan } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
@@ -85,7 +83,7 @@ export const ObjectEntity = ({
             Thêm thông tin mảnh đất
           </Button>
         </Box>
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px" >
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px">
           <Box>
             <Typography variant="h4" color="#B12C00" my="1rem">
               Thông tin tài sản
@@ -271,7 +269,6 @@ export const ObjectEntity = ({
           open={open}
           handleClose={() => setOpen(false)}
           isMotPhan={isMotPhan}
-          scope={scope}
         />
       ) : null}
       {openThongTinTaiSan ? (
@@ -279,7 +276,6 @@ export const ObjectEntity = ({
           open={openThongTinTaiSan}
           handleClose={() => setOpenThongTinTaiSan(false)}
           isMotPhan={isMotPhan}
-          scope={scope}
         />
       ) : null}
     </Box>
