@@ -155,10 +155,22 @@ export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
 };
 
 export const render_hdtc_nha_dat_toan_bo = async (
-  payload: HDMBNhaDatPayload
+  payload: HDMBNhaDatPayload,
+  isMotPhan?: boolean,
+  scope?: "partial" | "full"
 ) => {
+  let url = "/templates/nhom-tang-cho";
+  if (isMotPhan) {
+    if (scope === "partial") {
+      url += "/hd-tang-cho-nha-dat-mot-phan-de-dong-su-dung";
+    } else {
+      url += "/hd-tang-cho-nha-dat-mot-phan-de-su-dung-toan-bo";
+    }
+  } else {
+    url += "/hd-tang-cho-nha-dat-toan-bo";
+  }
   return api.post(
-    "/templates/nhom-tang-cho/hd-tang-cho-nha-dat-toan-bo",
+    url,
     convertEmptyStringsToNull(payload),
     {
       responseType: "blob",

@@ -60,6 +60,8 @@ export const ThemThongTinDat = ({
           số_tờ_bản_đồ: "",
           diện_tích_đất_bằng_số: "",
           diện_tích_đất_bằng_chữ: "",
+          diện_tích_đất_một_phần_bằng_số: "",
+          diện_tích_đất_một_phần_bằng_chữ: "",
           hình_thức_sở_hữu_đất: "",
           mục_đích_sở_hữu_đất: "",
           thời_hạn_sử_dụng_đất: "",
@@ -230,6 +232,34 @@ export const ThemThongTinDat = ({
                     name="diện_tích_đất_bằng_chữ"
                     label="Diện tích bằng chữ"
                     value={values["diện_tích_đất_bằng_chữ"]}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="diện_tích_đất_một_phần_bằng_số"
+                    name="diện_tích_đất_một_phần_bằng_số"
+                    label="Diện tích một phần (m2)"
+                    value={values["diện_tích_đất_một_phần_bằng_số"]}
+                    onChange={(event) => {
+                      handleChange(event);
+                      setFieldValue(
+                        "diện_tích_đất_một_phần_bằng_chữ",
+                        numberToVietnamese(
+                          event.target.value
+                            ?.replace(/\./g, "")
+                            .replace(/\,/g, ".")
+                        )
+                      );
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    id="diện_tích_đất_một_phần_bằng_chữ"
+                    name="diện_tích_đất_một_phần_bằng_chữ"
+                    label="Diện tích một phần bằng chữ"
+                    value={values["diện_tích_đất_một_phần_bằng_chữ"]}
                     onChange={handleChange}
                   />
                   <TextField

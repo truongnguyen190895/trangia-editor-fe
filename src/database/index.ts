@@ -147,6 +147,22 @@ export const templates = [
   },
   {
     id: uuidv4(),
+    name: "HĐ tặng cho nhà đất một phần (đồng sử dụng).docx",
+    type: "agreement",
+    subCategory: "nhom-tang-cho",
+    path: "hd-tang-cho-nha-dat-mot-phan-de-dong-su-dung",
+    templateId: 0,
+  },
+  {
+    id: uuidv4(),
+    name: "HĐ tặng cho nhà đất một phần (sử dụng toàn bộ).docx",
+    type: "agreement",
+    subCategory: "nhom-tang-cho",
+    path: "hd-tang-cho-nha-dat-mot-phan-de-su-dung-toan-bo",
+    templateId: 0,
+  },
+  {
+    id: uuidv4(),
     name: "Uỷ quyền toàn bộ quyền sử dụng đất.docx",
     type: "agreement",
     subCategory: "nhom-uy-quyen",

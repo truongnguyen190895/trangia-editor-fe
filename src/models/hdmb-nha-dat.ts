@@ -36,6 +36,8 @@ export interface ThongTinThuaDat {
   địa_chỉ_cũ: string;
   diện_tích_đất_bằng_số: string;
   diện_tích_đất_bằng_chữ: string;
+  diện_tích_đất_một_phần_bằng_số: string;
+  diện_tích_đất_một_phần_bằng_chữ: string;
   hình_thức_sở_hữu_đất: string;
   mục_đích_sở_hữu_đất: string;
   thời_hạn_sử_dụng_đất: string;
@@ -52,7 +54,9 @@ export interface ThongTinThuaDat {
 
 export interface ThongTinNhaDat {
   diện_tích_xây_dựng: string;
+  diện_tích_xây_dựng_một_phần: string;
   diện_tích_sàn: string;
+  diện_tích_sàn_một_phần: string;
   số_tầng: string | null;
   kết_cấu: string | null;
   cấp_hạng: string | null;

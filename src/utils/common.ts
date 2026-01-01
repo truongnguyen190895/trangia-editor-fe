@@ -164,6 +164,10 @@ export const getTemplateName = (name: string) => {
       return "Hợp đồng đặt cọc chưa xoá chấp";
     case "hd-tang-cho-nha-dat-toan-bo":
       return "Hợp đồng tặng cho nhà đất toàn bộ";
+    case "hd-tang-cho-nha-dat-mot-phan-de-dong-su-dung":
+      return "Hợp đồng tặng cho nhà đất một phần (đồng sử dụng)";
+    case "hd-tang-cho-nha-dat-mot-phan-de-su-dung-toan-bo":
+      return "Hợp đồng tặng cho nhà đất một phần (sử dụng toàn bộ)";
     case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
       return "HĐCN một phần đất và TSGLVĐ (đồng sử dụng)";
     case "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo":

@@ -106,6 +106,8 @@ export const DocumentEditor = () => {
         );
       case "hdmb-nha-dat-toan-bo":
       case "hd-tang-cho-nha-dat-toan-bo":
+      case "hd-tang-cho-nha-dat-mot-phan-de-dong-su-dung":
+      case "hd-tang-cho-nha-dat-mot-phan-de-su-dung-toan-bo":
       case "uy-quyen-toan-bo-nha-dat":
         return (
           <HDMBNhaDatProvider>
@@ -113,6 +115,8 @@ export const DocumentEditor = () => {
               isTangCho={/tang-cho/.test(name ?? "")}
               isUyQuyen={/uy-quyen/.test(name ?? "")}
               templateName={getTemplateName(name ?? "")}
+              isMotPhan={/mot-phan/.test(name ?? "")}
+              scope={/dong-su-dung/.test(name ?? "") ? "partial" : "full"}
             />
           </HDMBNhaDatProvider>
         );

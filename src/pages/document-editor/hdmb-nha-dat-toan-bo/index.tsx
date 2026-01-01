@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  InputAdornment,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
 import { DoiTuongHopDong } from "./components/doi-tuong-hop-dong";
-import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 import type {
   HDMBNhaDatPayload,
@@ -37,17 +29,22 @@ import { getWorkHistoryById } from "@/api/contract";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { uchiTemporarySave } from "@/api/uchi";
+import { createDownloadLink } from "@/utils/common";
 
 interface Props {
   isTangCho?: boolean;
   isUyQuyen?: boolean;
   templateName?: string;
+  scope?: "partial" | "full";
+  isMotPhan?: boolean;
 }
 
 export const HDMBNhaDatToanBo = ({
   isTangCho = false,
   isUyQuyen = false,
   templateName,
+  scope,
+  isMotPhan,
 }: Props) => {
   const { agreementObject, nhaDat, addAgreementObject, addNhaDat } =
     useHDMBNhaDatContext();
@@ -204,20 +201,12 @@ export const HDMBNhaDatToanBo = ({
     setOpenDialog(false);
     setIsGenerating(true);
     if (isTangCho) {
-      render_hdtc_nha_dat_toan_bo(payload)
+      render_hdtc_nha_dat_toan_bo(payload, isMotPhan, scope)
         .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `Hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
+          createDownloadLink(
+            res.data,
+            `Hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+          );
           if (metaData.isUchi && templateId && Number(templateId) > 0) {
             uchiTemporarySave(payload)
               .then(() =>
@@ -243,17 +232,7 @@ export const HDMBNhaDatToanBo = ({
     } else if (isUyQuyen) {
       render_uy_quyen_toan_bo_nha_dat(payload)
         .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "UQ toàn bộ nhà + đất.docx";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
+          createDownloadLink(res.data, "UQ toàn bộ nhà + đất.docx");
           if (metaData.isUchi && templateId && Number(templateId) > 0) {
             uchiTemporarySave(payload)
               .then(() =>
@@ -279,18 +258,10 @@ export const HDMBNhaDatToanBo = ({
     } else {
       render_hdmb_nha_dat(payload)
         .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `Hợp đồng mua bán nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
+          createDownloadLink(
+            res.data,
+            `Hợp đồng mua bán nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+          );
           if (metaData.isUchi && templateId && Number(templateId) > 0) {
             uchiTemporarySave(payload)
               .then(() =>
@@ -387,8 +358,12 @@ export const HDMBNhaDatToanBo = ({
         },
       },
       số_tiền: nhaDat["số_tiền"],
-      diện_tích_xây_dựng: nhaDat["diện_tích_xây_dựng"],
-      diện_tích_sàn: nhaDat["diện_tích_sàn"],
+      diện_tích_xây_dựng: isMotPhan
+        ? nhaDat["diện_tích_xây_dựng_một_phần"]
+        : nhaDat["diện_tích_xây_dựng"],
+      diện_tích_sàn: isMotPhan
+        ? nhaDat["diện_tích_sàn_một_phần"]
+        : nhaDat["diện_tích_sàn"],
       cấp_hạng: nhaDat["cấp_hạng"],
       nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
       năm_hoàn_thành_xây_dựng: nhaDat["năm_hoàn_thành_xây_dựng"],
@@ -405,17 +380,10 @@ export const HDMBNhaDatToanBo = ({
     if (isTangCho) {
       render_khai_thue_tang_cho_nha_dat_toan_bo(payload)
         .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "khai-thue-tang-cho-nha-dat-toan-bo.docx";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
+          createDownloadLink(
+            res.data,
+            `Khai thuế hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+          );
         })
         .catch((error) => {
           console.error("Error generating document:", error);
@@ -460,29 +428,6 @@ export const HDMBNhaDatToanBo = ({
 
   return (
     <Box display="flex" gap="2rem">
-      <Box
-        border="1px solid #BCCCDC"
-        borderRadius="5px"
-        padding="1rem"
-        display="none" // TODO: temporary hide search
-        flex={1}
-      >
-        <Typography variant="h6">Tìm kiếm</Typography>
-        <TextField
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            },
-          }}
-          fullWidth
-          placeholder="Tên hoặc CCCD/CMND/Hộ chiếu"
-          sx={{ mt: 2 }}
-        />
-      </Box>
       <Box
         className="full-land-transfer"
         display="flex"

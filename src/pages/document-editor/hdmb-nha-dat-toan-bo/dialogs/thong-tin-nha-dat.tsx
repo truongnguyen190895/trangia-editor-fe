@@ -41,7 +41,9 @@ export const ThongTinNhaDatDialog = ({
       ? nhaDat
       : {
           diện_tích_xây_dựng: "",
+          diện_tích_xây_dựng_một_phần: "",
           diện_tích_sàn: "",
+          diện_tích_sàn_một_phần: "",
           số_tầng: "",
           kết_cấu: "",
           cấp_hạng: "",
@@ -99,10 +101,26 @@ export const ThongTinNhaDatDialog = ({
               />
               <TextField
                 fullWidth
+                id="diện_tích_xây_dựng_một_phần"
+                name="diện_tích_xây_dựng_một_phần"
+                label="Diện tích xây dựng một phần (m2)"
+                value={values["diện_tích_xây_dựng_một_phần"]}
+                onChange={handleChange}
+              />
+              <TextField
+                fullWidth
                 id="diện_tích_sàn"
                 name="diện_tích_sàn"
                 label="Diện tích sàn (m2)"
                 value={values["diện_tích_sàn"]}
+                onChange={handleChange}
+              />
+              <TextField
+                fullWidth
+                id="diện_tích_sàn_một_phần"
+                name="diện_tích_sàn_một_phần"
+                label="Diện tích sàn một phần (m2)"
+                value={values["diện_tích_sàn_một_phần"]}
                 onChange={handleChange}
               />
               <TextField
