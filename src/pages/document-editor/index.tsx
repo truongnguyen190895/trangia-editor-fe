@@ -12,7 +12,7 @@ import { HDMBTaiSanProvider } from "@/context/hdmb-tai-san";
 import { HDDatCocProvider } from "@/context/hd-dat-coc";
 import { HDMBXeProvider } from "@/context/hdmb-xe";
 import { HDCNDatVaTaiSanGanLienVoiDatToanBoProvider } from "@/context/hdcn-dat-va-tai-san-glvd";
-import { HDTangChoCanHoToanBo } from "@/pages/document-editor/hdtc-can-ho-toan-bo";
+import { HDTangChoCanHo } from "@/pages/document-editor/hdtc-can-ho-toan-bo";
 import { UyQuyenToanBoQuyenSdDat } from "@/pages/document-editor/uy-quyen-toan-bo-quyen-sd-dat";
 import { HDMBXe } from "@/pages/document-editor/hdmb-xe";
 import { HDMBTaiSan } from "@/pages/document-editor/hdmb-tai-san";
@@ -129,9 +129,15 @@ export const DocumentEditor = () => {
           </HDCNDatVaTaiSanGanLienVoiDatToanBoProvider>
         );
       case "hd-tang-cho-can-ho-toan-bo":
+      case "hd-tang-cho-can-ho-mot-phan-de-dong-su-dung":
+      case "hd-tang-cho-can-ho-mot-phan-de-su-dung-toan-bo":
         return (
           <HDMBCanHoProvider>
-            <HDTangChoCanHoToanBo templateName={getTemplateName(name ?? "")} />
+            <HDTangChoCanHo
+              isMotPhan={/mot-phan/.test(name ?? "")}
+              scope={/dong-su-dung/.test(name ?? "") ? "partial" : "full"}
+              templateName={getTemplateName(name ?? "")}
+            />
           </HDMBCanHoProvider>
         );
       case "uy-quyen-toan-bo-quyen-su-dung-dat":

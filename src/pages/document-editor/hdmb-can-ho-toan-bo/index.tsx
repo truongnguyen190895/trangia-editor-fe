@@ -28,6 +28,7 @@ import { useSearchParams } from "react-router-dom";
 import { getWorkHistoryById } from "@/api/contract";
 import { uchiTemporarySave } from "@/api/uchi";
 import { toast } from "react-toastify";
+import { createDownloadLink } from "@/utils/common";
 
 interface Props {
   isUyQuyen?: boolean;
@@ -225,18 +226,10 @@ export const HDMBCanHoToanBo = ({
     if (isUyQuyen) {
       render_uy_quyen_toan_bo_can_ho(payload)
         .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "HD uỷ quyền toàn bộ căn hộ.docx";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
+          createDownloadLink(
+            res.data,
+            `Hợp đồng uỷ quyền toàn bộ căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+          );
           if (metaData.isUchi && templateId && Number(templateId) > 0) {
             uchiTemporarySave(payload)
               .then(() =>
@@ -261,18 +254,10 @@ export const HDMBCanHoToanBo = ({
     } else {
       render_hdmb_can_ho(payload, { isMotPhan, scope })
         .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `Hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
+          createDownloadLink(
+            res.data,
+            `Hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+          );
           if (metaData.isUchi && templateId && Number(templateId) > 0) {
             uchiTemporarySave(payload)
               .then(() =>
@@ -384,18 +369,10 @@ export const HDMBCanHoToanBo = ({
     setIsGenerating(true);
     render_khai_thue_hdmb_can_ho_toan_bo(payload)
       .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
-
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "to-khai-chung.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        createDownloadLink(
+          res.data,
+          `Khai thuế hợp đồng tặng cho căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+        );
       })
       .catch((error) => {
         console.error("Error generating document:", error);

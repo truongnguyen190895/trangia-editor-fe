@@ -27,12 +27,15 @@ import { useSearchParams } from "react-router-dom";
 import { getWorkHistoryById } from "@/api/contract";
 import { toast } from "react-toastify";
 import { uchiTemporarySave } from "@/api/uchi";
+import { createDownloadLink } from "@/utils/common";
 
 interface Props {
   templateName?: string;
+  isMotPhan?: boolean;
+  scope?: "partial" | "full";
 }
 
-export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
+export const HDTangChoCanHo = ({ templateName, isMotPhan, scope }: Props) => {
   const { agreementObject, canHo, addAgreementObject, addCanHo } =
     useHDMBCanHoContext();
   const { partyA, partyB } = useThemChuTheContext();
@@ -140,6 +143,8 @@ export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
       ngày_cấp_gcn: canHo["ngày_cấp_gcn"],
       diện_tích_sàn_bằng_số: canHo["diện_tích_sàn_bằng_số"],
       diện_tích_sàn_bằng_chữ: canHo["diện_tích_sàn_bằng_chữ"],
+      diện_tích_sàn_một_phần_bằng_số: canHo["diện_tích_sàn_một_phần_bằng_số"],
+      diện_tích_sàn_một_phần_bằng_chữ: canHo["diện_tích_sàn_một_phần_bằng_chữ"],
       cấp_hạng: canHo["cấp_hạng"],
       tầng_có_căn_hộ: canHo["tầng_có_căn_hộ"],
       kết_cấu: canHo["kết_cấu"],
@@ -201,20 +206,12 @@ export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
     );
     setOpenDialog(false);
     setIsGenerating(true);
-    render_hdtc_can_ho_toan_bo(payload)
+    render_hdtc_can_ho_toan_bo(payload, Boolean(isMotPhan), scope)
       .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
-
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Hợp đồng tặng cho căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}.docx`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        createDownloadLink(
+          res.data,
+          `Hợp đồng tặng cho căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+        );
         if (metaData.isUchi && templateId && Number(templateId) > 0) {
           setIsGenerating(true);
           uchiTemporarySave(payload)
@@ -302,7 +299,9 @@ export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
       nơi_cấp_giấy_chứng_nhận: canHo["nơi_cấp_gcn"],
       đặc_điểm_thửa_đất: {
         diện_tích: {
-          số: canHo["diện_tích_sàn_bằng_số"],
+          số: isMotPhan
+            ? canHo["diện_tích_sàn_một_phần_bằng_số"] ?? ""
+            : canHo["diện_tích_sàn_bằng_số"],
         },
         mục_đích_và_thời_hạn_sử_dụng: [],
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
@@ -327,18 +326,10 @@ export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
     setIsGenerating(true);
     render_khai_thue_hdtc_can_ho_toan_bo(payload)
       .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
-
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "khai-thue-hdtc-can-ho-toan-bo.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        createDownloadLink(
+          res.data,
+          `Khai thuế hợp đồng tặng cho căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+        );
       })
       .catch((error) => {
         console.error("Error generating document:", error);
@@ -401,7 +392,11 @@ export const HDTangChoCanHoToanBo = ({ templateName }: Props) => {
                 ? { ...getBenABenB(), ...getCanHo() }
                 : null
             }
-            type="hd-tang-cho-can-ho-toan-bo"
+            type={
+              isMotPhan
+                ? "hd-tang-cho-can-ho-mot-phan"
+                : "hd-tang-cho-can-ho-toan-bo"
+            }
           />
         </Box>
       </Box>

@@ -29,7 +29,7 @@ export const ThemThongTinDat = ({
   open,
   handleClose,
 }: ThemThongTinDatProps) => {
-  const { agreementObject, addAgreementObject } = useHDMBCanHoContext();
+  const { canHo, agreementObject, addAgreementObject } = useHDMBCanHoContext();
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const submitForm = (values: ThongTinThuaDat) => {
@@ -40,10 +40,16 @@ export const ThemThongTinDat = ({
     }
     addAgreementObject(values);
     setSaveLoading(true);
-    saveContractEntity(values.số_thửa_đất, values).finally(() => {
-      setSaveLoading(false);
+    if (canHo && canHo?.số_gcn) {
+      const payload = { ...values, ...canHo };
+      saveContractEntity(canHo?.số_gcn, payload).finally(() => {
+        setSaveLoading(false);
+        handleClose();
+      });
+    } else {
+      // no saving
       handleClose();
-    });
+    }
   };
 
   const getInitialValue = (): ThongTinThuaDat => {
@@ -72,6 +78,8 @@ export const ThemThongTinDat = ({
       setValues({
         ...values,
         ...response,
+        mục_đích_sở_hữu_đất:
+          response?.mục_đích_sở_hữu_đất?.value ?? response?.mục_đích_sở_hữu_đất,
       });
     }
   };
