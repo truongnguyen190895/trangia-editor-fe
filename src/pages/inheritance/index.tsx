@@ -2,12 +2,14 @@ import { useReducer } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { DecedentSection } from "./components/decedent-section";
 import { PropertySection } from "./components/property-section";
-import {
-  type InheritanceDto,
-  type Person,
-  type Property,
-  type DeathCertificate,
+import type {
+  InheritanceDto,
+  Person,
+  Property,
+  DeathCertificate,
 } from "@/api/inheritance";
+import { createInheritance } from "@/api/inheritance";
+import { createDownloadLink } from "@/utils/common";
 
 /**
  * State Management Solution:
@@ -41,6 +43,13 @@ const initialInheritance: InheritanceDto = {
     spouses: [],
     parents: [],
     children: [],
+    death_certificate: {
+      id: "",
+      died_date: "",
+      issued_date: "",
+      issued_by: "",
+      issued_by_address: "",
+    },
   },
   property: {
     id: "",
@@ -189,6 +198,16 @@ function inheritanceReducer(
   }
 }
 
+const handleCreateInheritance = async (inheritance: InheritanceDto) => {
+  try {
+    const response = await createInheritance(inheritance);
+    createDownloadLink(response.data, "van-ban-thua-ke");
+  } catch (error) {
+    console.error("Error creating inheritance:", error);
+    throw error;
+  }
+};
+
 const InheritancePage = () => {
   const [inheritance, dispatch] = useReducer(
     inheritanceReducer,
@@ -266,7 +285,11 @@ const InheritancePage = () => {
         />
       </Box>
       <Box mt="2rem" mb="1rem">
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleCreateInheritance(inheritance)}
+        >
           In văn bản thừa kế
         </Button>
       </Box>

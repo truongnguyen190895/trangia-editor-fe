@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   Box,
-  Switch,
   TextField,
   Typography,
   IconButton,
@@ -11,8 +10,12 @@ import {
   Select,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import type { Person } from "@/api/inheritance";
-
+import type {
+  Person,
+  DeathCertificate,
+  RefusalDocument,
+} from "@/api/inheritance";
+import { IOSSwitch } from "./switch";
 interface PersionComponentProps {
   index: number;
   person: Person;
@@ -42,9 +45,6 @@ export const PersionComponent = ({
   const [isAlive, setIsAlive] = useState(true);
   const [refuseToInherit, setRefuseToInherit] = useState(false);
 
-  /**
-   * Gets the expected gender for this relationship
-   */
   const getExpectedGender = (): "Male" | "Female" => {
     if (relationship === "Spouse") {
       return decedentGender === "Male" ? "Female" : "Male";
@@ -55,13 +55,9 @@ export const PersionComponent = ({
     if (relationship === "Mother") {
       return "Female";
     }
-    // Child can be either
     return person.sex;
   };
 
-  /**
-   * Determines if gender selection should be disabled based on relationship
-   */
   const isGenderDisabled = (): boolean => {
     return (
       relationship === "Spouse" ||
@@ -75,43 +71,72 @@ export const PersionComponent = ({
   };
 
   const handleUpdate = (field: keyof Person, value: any) => {
-    // Enforce gender rules based on relationship
     if (field === "sex") {
       const newGender = value as "Male" | "Female";
-      
-      // Validate gender changes based on relationship
+
       if (relationship === "Spouse") {
-        // Spouse must be opposite of decedent
         const expectedGender = decedentGender === "Male" ? "Female" : "Male";
         if (newGender !== expectedGender) {
-          // Auto-correct to expected gender
           value = expectedGender;
         }
       } else if (relationship === "Father" && newGender !== "Male") {
-        // Father must be Male
         value = "Male";
       } else if (relationship === "Mother" && newGender !== "Female") {
-        // Mother must be Female
         value = "Female";
       }
     }
-    
+
     const processedValue = field === "birth_year" ? Number(value) || 0 : value;
     onUpdate(relationshipKey, index, { ...person, [field]: processedValue });
   };
 
-  // Enforce correct gender based on relationship when component mounts or relationship changes
+  const handleDeathCertificateUpdate = (
+    field: keyof DeathCertificate,
+    value: any
+  ) => {
+    const updatedDeathCertificate: DeathCertificate = {
+      ...(person.death_certificate || {
+        id: "",
+        died_date: "",
+        issued_by: "",
+        issued_date: "",
+        issued_by_address: "",
+      }),
+      [field]: value,
+    };
+    onUpdate(relationshipKey, index, {
+      ...person,
+      death_certificate: updatedDeathCertificate,
+    });
+  };
+
+  const handleRefusalDocumentUpdate = (
+    field: keyof RefusalDocument,
+    value: any
+  ) => {
+    const updatedRefusalDocument: RefusalDocument = {
+      ...(person.refusal_document || {
+        id: "",
+        notarized_by: "",
+        notarized_date: "",
+      }),
+      [field]: value,
+    };
+    onUpdate(relationshipKey, index, {
+      ...person,
+      refusal_document: updatedRefusalDocument,
+    });
+  };
+
   useEffect(() => {
-    // Only auto-correct if gender doesn't match expected and it's not a child
     if (relationship !== "Child") {
       const expectedGender = getExpectedGender();
       if (person.sex !== expectedGender) {
-        // Use onUpdate directly to avoid infinite loop
         onUpdate(relationshipKey, index, { ...person, sex: expectedGender });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [relationship, decedentGender]); // Only run when relationship or decedent gender changes
+  }, [relationship, decedentGender]);
 
   const generateRelationship = () => {
     switch (relationship) {
@@ -129,15 +154,15 @@ export const PersionComponent = ({
   };
 
   return (
-    <Box border="1px solid #e0e0e0" borderRadius="5px" padding="10px">
+    <Box border="1px solid #e0e0e0" borderRadius="5px" padding="20px">
       <Box display="flex" alignItems="center" gap="10px">
         <TextField
-          slotProps={{ input: { readOnly: true } }}
-          label="Quan hệ với người để lại di sản"
+          slotProps={{ input: { readOnly: true, sx: { width: "120px" } } }}
+          label="Quan hệ"
           variant="outlined"
           value={generateRelationship()}
         />
-        <FormControl sx={{ minWidth: 120 }}>
+        <FormControl sx={{ width: "120px" }}>
           <InputLabel id={`gender-select-label-${index}`}>Giới tính</InputLabel>
           <Select
             labelId={`gender-select-label-${index}`}
@@ -163,20 +188,157 @@ export const PersionComponent = ({
           value={person.name}
           onChange={(e) => handleUpdate("name", e.target.value)}
         />
-        <TextField label="Số giấy tờ" variant="outlined" />
-        <Box display="flex" alignItems="center" gap="10px">
-          <Switch checked={isAlive} onChange={() => setIsAlive(!isAlive)} />
-          <Typography>Đang sống</Typography>
-          <Switch
-            checked={refuseToInherit}
-            onChange={() => setRefuseToInherit(!refuseToInherit)}
-          />
-          <Typography>Từ chối thừa kế</Typography>
-        </Box>
+        <TextField
+          label="Năm sinh"
+          variant="outlined"
+          value={person.birth_year}
+          onChange={(e) => handleUpdate("birth_year", e.target.value)}
+        />
+
         <Box display="flex" alignItems="center" gap="10px">
           <IconButton onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
+        </Box>
+      </Box>
+      <Box mt={2}>
+        <Typography>Tình trạng</Typography>
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="50px"
+          width="50%"
+          mt="20px"
+        >
+          <Box display="flex" alignItems="center" gap="8px" flex={1}>
+            <IOSSwitch
+              checked={isAlive}
+              onChange={() => setIsAlive(!isAlive)}
+            />
+            <Typography sx={{ lineHeight: 1, minWidth: "fit-content" }}>
+              {isAlive ? "Đang sống" : "Đã chết"}
+            </Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap="8px" flex={1}>
+            <IOSSwitch
+              checked={refuseToInherit}
+              onChange={() => setRefuseToInherit(!refuseToInherit)}
+            />
+            <Typography sx={{ lineHeight: 1, minWidth: "fit-content" }}>
+              {refuseToInherit ? "Từ chối" : "Không từ chối"}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box className="dead-certificate-section" mt="20px">
+          <Typography>Thông tin giấy chứng tử</Typography>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap="20px"
+            mt="20px"
+            flexWrap="wrap"
+          >
+            <TextField
+              disabled={isAlive}
+              label="Chết ngày"
+              variant="outlined"
+              value={person.death_certificate?.died_date || ""}
+              onChange={(e) =>
+                handleDeathCertificateUpdate("died_date", e.target.value)
+              }
+            />
+            <TextField
+              disabled={isAlive}
+              label="Số trích lục khai tử"
+              variant="outlined"
+              value={person.death_certificate?.id || ""}
+              onChange={(e) =>
+                handleDeathCertificateUpdate("id", e.target.value)
+              }
+            />
+            <TextField
+              disabled={isAlive}
+              label="Nơi cấp"
+              variant="outlined"
+              value={person.death_certificate?.issued_by || ""}
+              onChange={(e) =>
+                handleDeathCertificateUpdate("issued_by", e.target.value)
+              }
+            />
+            <TextField
+              disabled={isAlive}
+              label="Ngày cấp"
+              variant="outlined"
+              value={person.death_certificate?.issued_date || ""}
+              onChange={(e) =>
+                handleDeathCertificateUpdate("issued_date", e.target.value)
+              }
+            />
+            <TextField
+              disabled={isAlive}
+              label="Địa chỉ nơi cấp"
+              variant="outlined"
+              value={person.death_certificate?.issued_by_address || ""}
+              onChange={(e) =>
+                handleDeathCertificateUpdate(
+                  "issued_by_address",
+                  e.target.value
+                )
+              }
+            />
+            <TextField
+              disabled={isAlive}
+              label="Địa chỉ nơi cấp (địa chỉ cũ nếu có)"
+              variant="outlined"
+              value={person.death_certificate?.issued_by_address_old || ""}
+              onChange={(e) =>
+                handleDeathCertificateUpdate(
+                  "issued_by_address_old",
+                  e.target.value
+                )
+              }
+            />
+          </Box>
+        </Box>
+
+        <Box className="refusal-document-section" mt="20px">
+          <Typography>Thông tin từ chối</Typography>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap="20px"
+            mt="20px"
+            flexWrap="wrap"
+          >
+            <TextField
+              disabled={!refuseToInherit}
+              label="Từ chối"
+              variant="outlined"
+              value={person.refusal_document?.id || ""}
+              onChange={(e) =>
+                handleRefusalDocumentUpdate("id", e.target.value)
+              }
+            />
+            <TextField
+              disabled={!refuseToInherit}
+              label="Ngày cấp"
+              variant="outlined"
+              value={person.refusal_document?.notarized_date || ""}
+              onChange={(e) =>
+                handleRefusalDocumentUpdate("notarized_date", e.target.value)
+              }
+            />
+            <TextField
+              disabled={!refuseToInherit}
+              label="Người công chứng"
+              variant="outlined"
+              value={person.refusal_document?.notarized_by || ""}
+              onChange={(e) =>
+                handleRefusalDocumentUpdate("notarized_by", e.target.value)
+              }
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

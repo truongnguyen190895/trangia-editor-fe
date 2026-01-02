@@ -59,3 +59,55 @@ export const createInheritance = (payload: InheritanceDto) => {
     responseType: "blob",
   });
 };
+
+/**
+ * TypeScript type definitions for OCR Land Certificate API
+ *
+ * Endpoint: POST /ocr/land-certificate
+ *
+ * Extracts Land Certificate ID from an image using OCR
+ */
+export interface LandCertificateResponse {
+  id: string; // Format: "[A-Z]{2} [digits]" (e.g., "AB 12345")
+}
+
+export interface ErrorResponse {
+  timestamp: string; // ISO 8601 format
+  status: number;
+  error: string;
+  message: string;
+}
+
+/**
+ * Extracts Land Certificate ID from an image file using OCR
+ *
+ * @param file - Image file containing the Land Certificate document
+ * @returns Promise resolving to LandCertificateResponse with extracted ID
+ * @throws Error if the land certificate ID cannot be found or if the request fails
+ *
+ * @example
+ * ```typescript
+ * const fileInput = document.querySelector('input[type="file"]');
+ * const file = fileInput.files[0];
+ * const result = await ocrLandCertificate(file);
+ * console.log(result.id); // "AB 12345"
+ * ```
+ */
+export const ocrLandCertificate = async (
+  file: File
+): Promise<LandCertificateResponse> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await api.post<LandCertificateResponse>(
+    "/ocr/land-certificate",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+};
