@@ -6,36 +6,51 @@ import {
   MenuItem,
   Paper,
 } from "@mui/material";
-import type { DeathCertificate, Person } from "../interface";
+import type { DeathCertificate, Person } from "@/api/inheritance";
 import { FirstClassHeirs } from "./first-class-heirs";
+
+interface InheritanceActions {
+  updateDecedentField: (field: keyof Person, value: any) => void;
+  updateDeathCertificateField: (
+    field: keyof DeathCertificate,
+    value: any
+  ) => void;
+  addHeir: (
+    relationship: "spouses" | "children" | "parents",
+    person: Person
+  ) => void;
+  updateHeir: (
+    relationship: "spouses" | "children" | "parents",
+    index: number,
+    person: Person
+  ) => void;
+  removeHeir: (
+    relationship: "spouses" | "children" | "parents",
+    index: number
+  ) => void;
+}
 
 interface DecedentSectionProps {
   decedent: Person;
-  onDecedentChange: (decedent: Person) => void;
+  actions: InheritanceActions;
 }
 
 export const DecedentSection = ({
   decedent,
-  onDecedentChange,
+  actions,
 }: DecedentSectionProps) => {
   const handleDecedentChange = (field: keyof Person, value: any) => {
-    onDecedentChange({ ...decedent, [field]: value });
+    // Convert birth_year to number if it's the birth_year field
+    const processedValue =
+      field === "birth_year" ? Number(value) || 0 : value;
+    actions.updateDecedentField(field, processedValue);
   };
 
   const handleDeathCertificateChange = (
     field: keyof DeathCertificate,
     value: any
   ) => {
-    const currentCertificate = decedent.death_certificate || {
-      id: "",
-      died_date: "",
-      issued_date: "",
-      issued_by: "",
-    };
-    onDecedentChange({
-      ...decedent,
-      death_certificate: { ...currentCertificate, [field]: value },
-    });
+    actions.updateDeathCertificateField(field, value);
   };
   return (
     <Box>
@@ -99,6 +114,7 @@ export const DecedentSection = ({
               <TextField
                 variant="outlined"
                 fullWidth
+                value={decedent.death_certificate?.died_date || ""}
                 onChange={(e) =>
                   handleDeathCertificateChange("died_date", e.target.value)
                 }
@@ -109,6 +125,7 @@ export const DecedentSection = ({
               <TextField
                 variant="outlined"
                 fullWidth
+                value={decedent.death_certificate?.id || ""}
                 onChange={(e) =>
                   handleDeathCertificateChange("id", e.target.value)
                 }
@@ -119,6 +136,7 @@ export const DecedentSection = ({
               <TextField
                 variant="outlined"
                 fullWidth
+                value={decedent.death_certificate?.issued_by || ""}
                 onChange={(e) =>
                   handleDeathCertificateChange("issued_by", e.target.value)
                 }
@@ -129,6 +147,7 @@ export const DecedentSection = ({
               <TextField
                 variant="outlined"
                 fullWidth
+                value={decedent.death_certificate?.issued_date || ""}
                 onChange={(e) =>
                   handleDeathCertificateChange("issued_date", e.target.value)
                 }
@@ -137,7 +156,13 @@ export const DecedentSection = ({
           </Box>
         </Box>
         <Box mt="40px">
-          <FirstClassHeirs decedentGender={decedent.sex} />
+          <FirstClassHeirs
+            decedentGender={decedent.sex}
+            spouses={decedent.spouses || []}
+            children={decedent.children || []}
+            parents={decedent.parents || []}
+            actions={actions}
+          />
         </Box>
       </Paper>
     </Box>

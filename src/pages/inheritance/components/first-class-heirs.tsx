@@ -1,18 +1,83 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Box, Typography, Chip } from "@mui/material";
-import type { Person } from "../interface";
+import type { Person } from "@/api/inheritance";
 import { PersionComponent } from "./persion";
+
+interface InheritanceActions {
+  addHeir: (
+    relationship: "spouses" | "children" | "parents",
+    person: Person
+  ) => void;
+  updateHeir: (
+    relationship: "spouses" | "children" | "parents",
+    index: number,
+    person: Person
+  ) => void;
+  removeHeir: (
+    relationship: "spouses" | "children" | "parents",
+    index: number
+  ) => void;
+}
 
 interface FirstClassHeirsProps {
   decedentGender: "Male" | "Female";
+  spouses: Person[];
+  children: Person[];
+  parents: Person[];
+  actions: InheritanceActions;
 }
 
 interface Heir {
-  relationship: "Spouse" | "Child" | "Parent";
+  relationship: "spouses" | "children" | "parents";
+  relationshipLabel: "Spouse" | "Child" | "Father" | "Mother";
   detail: Person;
+  index: number;
 }
-export const FirstClassHeirs = ({ decedentGender }: FirstClassHeirsProps) => {
-  const [heirs, setHeirs] = useState<Heir[]>([]);
+
+export const FirstClassHeirs = ({
+  decedentGender,
+  spouses,
+  children,
+  parents,
+  actions,
+}: FirstClassHeirsProps) => {
+  // Combine all heirs into a single array with relationship info
+  const heirs = useMemo<Heir[]>(() => {
+    const result: Heir[] = [];
+    
+    spouses.forEach((person, index) => {
+      result.push({
+        relationship: "spouses",
+        relationshipLabel: "Spouse",
+        detail: person,
+        index,
+      });
+    });
+    
+    children.forEach((person, index) => {
+      result.push({
+        relationship: "children",
+        relationshipLabel: "Child",
+        detail: person,
+        index,
+      });
+    });
+    
+    parents.forEach((person, index) => {
+      // Determine if parent is Father (Male) or Mother (Female)
+      const relationshipLabel: "Father" | "Mother" = 
+        person.sex === "Male" ? "Father" : "Mother";
+      result.push({
+        relationship: "parents",
+        relationshipLabel,
+        detail: person,
+        index,
+      });
+    });
+    
+    return result;
+  }, [spouses, children, parents]);
+
   const [containerHeight, setContainerHeight] = useState<number | "auto">(
     "auto"
   );
@@ -31,28 +96,54 @@ export const FirstClassHeirs = ({ decedentGender }: FirstClassHeirsProps) => {
     });
   }, [heirs]);
 
-  const handleDelete = (index: number) => {
-    setHeirs(heirs.filter((_, i) => i !== index));
-  };
-  const handleUpdate = (index: number, person: Person) => {
-    setHeirs(heirs.map((h, i) => (i === index ? { ...h, detail: person } : h)));
+  const handleDelete = (relationship: "spouses" | "children" | "parents", index: number) => {
+    actions.removeHeir(relationship, index);
   };
 
-  const handleAddHeir = (relationship: "Spouse" | "Child" | "Parent") => {
-    setHeirs([
-      ...heirs,
-      {
-        relationship,
-        detail: {
-          name: "",
-          sex: "Male",
-          birth_year: "",
-          spouses: [],
-          parents: [],
-          children: [],
-        },
-      },
-    ]);
+  const handleUpdate = (
+    relationship: "spouses" | "children" | "parents",
+    index: number,
+    person: Person
+  ) => {
+    actions.updateHeir(relationship, index, person);
+  };
+
+  /**
+   * Determines the correct gender based on relationship type
+   * - Spouse: opposite of decedent's gender
+   * - Father: Male
+   * - Mother: Female
+   * - Child: can be either (defaults to Male, user can change)
+   */
+  const getDefaultGender = (
+    relationship: "spouses" | "children" | "parents",
+    parentType?: "father" | "mother"
+  ): "Male" | "Female" => {
+    if (relationship === "spouses") {
+      // Spouse gender is opposite of decedent
+      return decedentGender === "Male" ? "Female" : "Male";
+    }
+    if (relationship === "parents") {
+      // Father is Male, Mother is Female
+      return parentType === "father" ? "Male" : "Female";
+    }
+    // Children can be either gender, default to Male
+    return "Male";
+  };
+
+  const handleAddHeir = (
+    relationship: "spouses" | "children" | "parents",
+    parentType?: "father" | "mother"
+  ) => {
+    const newPerson: Person = {
+      name: "",
+      sex: getDefaultGender(relationship, parentType),
+      birth_year: 0,
+      spouses: [],
+      parents: [],
+      children: [],
+    };
+    actions.addHeir(relationship, newPerson);
   };
   return (
     <Box>
@@ -80,22 +171,22 @@ export const FirstClassHeirs = ({ decedentGender }: FirstClassHeirsProps) => {
           <Chip
             label={decedentGender === "Male" ? "+Vợ" : "+Chồng"}
             color="info"
-            onClick={() => handleAddHeir("Spouse")}
+            onClick={() => handleAddHeir("spouses")}
           />
           <Chip
-            label="Con"
+            label="+Con"
             color="secondary"
-            onClick={() => handleAddHeir("Child")}
+            onClick={() => handleAddHeir("children")}
           />
           <Chip
-            label="Cha"
+            label="+Cha"
             color="success"
-            onClick={() => handleAddHeir("Parent")}
+            onClick={() => handleAddHeir("parents", "father")}
           />
           <Chip
-            label="Mẹ"
+            label="+Mẹ"
             color="error"
-            onClick={() => handleAddHeir("Parent")}
+            onClick={() => handleAddHeir("parents", "mother")}
           />
         </Box>
       </Box>
@@ -132,12 +223,14 @@ export const FirstClassHeirs = ({ decedentGender }: FirstClassHeirsProps) => {
               <Typography variant="body1">Không có người thừa kế</Typography>
             </Box>
           ) : null}
-          {heirs.map((heir, index) => (
+          {heirs.map((heir) => (
             <PersionComponent
-              key={index}
-              index={index}
+              key={`${heir.relationship}-${heir.index}`}
+              index={heir.index}
               person={heir.detail}
-              relationship={heir.relationship}
+              relationship={heir.relationshipLabel}
+              relationshipKey={heir.relationship}
+              decedentGender={decedentGender}
               onDelete={handleDelete}
               onUpdate={handleUpdate}
             />
