@@ -41,7 +41,6 @@ export const FirstClassHeirs = ({
   parents,
   actions,
 }: FirstClassHeirsProps) => {
-  // Combine all heirs into a single array with relationship info
   const heirs = useMemo<Heir[]>(() => {
     const result: Heir[] = [];
     
@@ -64,7 +63,6 @@ export const FirstClassHeirs = ({
     });
     
     parents.forEach((person, index) => {
-      // Determine if parent is Father (Male) or Mother (Female)
       const relationshipLabel: "Father" | "Mother" = 
         person.sex === "Male" ? "Father" : "Mother";
       result.push({
@@ -108,26 +106,16 @@ export const FirstClassHeirs = ({
     actions.updateHeir(relationship, index, person);
   };
 
-  /**
-   * Determines the correct gender based on relationship type
-   * - Spouse: opposite of decedent's gender
-   * - Father: Male
-   * - Mother: Female
-   * - Child: can be either (defaults to Male, user can change)
-   */
   const getDefaultGender = (
     relationship: "spouses" | "children" | "parents",
     parentType?: "father" | "mother"
   ): "Male" | "Female" => {
     if (relationship === "spouses") {
-      // Spouse gender is opposite of decedent
       return decedentGender === "Male" ? "Female" : "Male";
     }
     if (relationship === "parents") {
-      // Father is Male, Mother is Female
       return parentType === "father" ? "Male" : "Female";
     }
-    // Children can be either gender, default to Male
     return "Male";
   };
 

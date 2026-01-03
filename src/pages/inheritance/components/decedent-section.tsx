@@ -41,8 +41,7 @@ export const DecedentSection = ({
 }: DecedentSectionProps) => {
   const handleDecedentChange = (field: keyof Person, value: any) => {
     // Convert birth_year to number if it's the birth_year field
-    const processedValue =
-      field === "birth_year" ? Number(value) || 0 : value;
+    const processedValue = field === "birth_year" ? Number(value) || 0 : value;
     actions.updateDecedentField(field, processedValue);
   };
 
@@ -150,6 +149,34 @@ export const DecedentSection = ({
                 value={decedent.death_certificate?.issued_date || ""}
                 onChange={(e) =>
                   handleDeathCertificateChange("issued_date", e.target.value)
+                }
+              />
+            </Box>
+            <Box width="450px">
+              <Typography>Địa chỉ nơi cấp</Typography>
+              <TextField
+                variant="outlined"
+                fullWidth
+                value={decedent.death_certificate?.issued_by_address || ""}
+                onChange={(e) =>
+                  handleDeathCertificateChange(
+                    "issued_by_address",
+                    e.target.value
+                  )
+                }
+              />
+            </Box>
+            <Box width="450px">
+              <Typography>Địa chỉ nơi cấp (địa chỉ cũ nếu có)</Typography>
+              <TextField
+                variant="outlined"
+                fullWidth
+                value={decedent.death_certificate?.issued_by_address_old || ""}
+                onChange={(e) =>
+                  handleDeathCertificateChange(
+                    "issued_by_address_old",
+                    e.target.value
+                  )
                 }
               />
             </Box>
