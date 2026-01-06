@@ -14,7 +14,7 @@ import Employee from "@/pages/employee";
 import WorkHistory from "@/pages/work-history";
 import { ErrorBoundary } from "@/components/common/error-boundary";
 import AddEmployee from "@/pages/employee/add";
-import InheritancePage from "@/pages/inheritance";
+// import InheritancePage from "@/pages/inheritance";
 
 export const router = createBrowserRouter([
   {
@@ -74,10 +74,10 @@ export const router = createBrowserRouter([
         path: "/staff/edit/:username",
         element: <AddEmployee />,
       },
-      {
-        path: "/inheritance",
-        element: <InheritancePage />,
-      },
+    //   {
+    //     path: "/inheritance",
+    //     element: <InheritancePage />,
+    //   },
     ],
   },
   {
