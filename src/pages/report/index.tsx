@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
     Box,
     Typography,
@@ -9,18 +9,84 @@ import {
     TableCell,
     TableContainer,
     CircularProgress,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
 } from "@mui/material";
 import { getUserReport } from "@/api/report";
 import type { UserReport } from "@/api/report";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { type Dayjs } from "dayjs";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { listBranches, type Branch } from "@/api/branchs";
+import { useSearchParams } from "react-router-dom";
 
 const Report = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(false);
     const [reports, setReports] = useState<UserReport[]>([]);
-    const [dateBegin, setDateBegin] = useState<Dayjs>(dayjs().startOf("month"));
-    const [dateEnd, setDateEnd] = useState<Dayjs>(dayjs());
+    const [allReports, setAllReports] = useState<UserReport[]>([]);
+
+    const getInitialDateBegin = () => {
+        const startDate = searchParams.get("startDate");
+        return startDate ? dayjs(startDate) : dayjs().startOf("month");
+    };
+    const getInitialDateEnd = () => {
+        const endDate = searchParams.get("endDate");
+        return endDate ? dayjs(endDate) : dayjs();
+    };
+
+    const [dateBegin, setDateBegin] = useState<Dayjs>(getInitialDateBegin());
+    const [dateEnd, setDateEnd] = useState<Dayjs>(getInitialDateEnd());
+    const [branches, setBranches] = useState<Branch[]>([]);
+    const getInitialBranch = () => {
+        const branchId = searchParams.get("branch");
+        return branchId || null;
+    };
+    const [selectedBranchId, setSelectedBranchId] = useState<string | null>(getInitialBranch());
+    const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
+
+    const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
+    const isAdmin = userRoles.some(
+        (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
+    );
+
+    const isInitialMount = useRef(true);
+
+    useEffect(() => {
+        listBranches().then((resp) => {
+            setBranches(resp);
+        });
+    }, []);
+
+    useEffect(() => {
+        if (branches.length > 0 && selectedBranchId) {
+            const branch = branches.find((b) => b.id === selectedBranchId);
+            if (branch) {
+                setSelectedBranch(branch);
+            }
+        } else if (!selectedBranchId) {
+            setSelectedBranch(null);
+        }
+    }, [branches, selectedBranchId]);
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
+
+        const params = new URLSearchParams();
+        params.set("startDate", dayjs(dateBegin).format("YYYY-MM-DD"));
+        params.set("endDate", dayjs(dateEnd).format("YYYY-MM-DD"));
+        if (selectedBranchId && isAdmin) {
+            params.set("branch", selectedBranchId);
+        } else {
+            params.delete("branch");
+        }
+        setSearchParams(params, { replace: true });
+    }, [dateBegin, dateEnd, selectedBranchId, isAdmin, setSearchParams]);
 
     useEffect(() => {
         setLoading(true);
@@ -29,7 +95,7 @@ const Report = () => {
             endDate: dayjs(dateEnd).format("YYYY-MM-DD"),
         })
             .then((res) => {
-                setReports(res);
+                setAllReports(res);
             })
             .catch((err) => {
                 console.error(err);
@@ -39,11 +105,22 @@ const Report = () => {
             });
     }, [dateBegin, dateEnd]);
 
+    useEffect(() => {
+        if (selectedBranch) {
+            const filtered = allReports.filter(
+                (report) => report.branch_name === selectedBranch.friendly_name
+            );
+            setReports(filtered);
+        } else {
+            setReports(allReports);
+        }
+    }, [selectedBranch, allReports]);
+
     const renderTableContent = () => {
         if (reports.length === 0 && !loading) {
             return (
                 <TableRow>
-                    <TableCell colSpan={6}>
+                    <TableCell colSpan={5}>
                         <Typography>Không có dữ liệu</Typography>
                     </TableCell>
                 </TableRow>
@@ -104,6 +181,30 @@ const Report = () => {
                             setDateEnd(e as Dayjs);
                         }}
                     />
+                    {isAdmin ? (
+                        <>
+                            <FormControl
+                                sx={{ minWidth: 200, width: { xs: "100%", md: "300px" } }}
+                            >
+                                <InputLabel>Chi nhánh</InputLabel>
+                                <Select
+                                    label="Chi nhánh"
+                                    value={selectedBranchId || ""}
+                                    onChange={(e) => {
+                                        const branchId = e.target.value || null;
+                                        setSelectedBranchId(branchId);
+                                    }}
+                                >
+                                    <MenuItem value="">Tất cả</MenuItem>
+                                    {branches.map((branch) => (
+                                        <MenuItem key={branch.id} value={branch.id}>
+                                            {branch.friendly_name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </>
+                    ) : null}
                 </Box>
             </Box>
             <TableContainer
