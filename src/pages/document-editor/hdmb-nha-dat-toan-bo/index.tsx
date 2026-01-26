@@ -3,17 +3,17 @@ import { Box, Button, useTheme } from "@mui/material";
 import { DoiTuongHopDong } from "./components/doi-tuong-hop-dong";
 import { CircularProgress } from "@mui/material";
 import type {
-  HDMBNhaDatPayload,
-  KhaiThueHDMBNhaDatToanBoPayload,
-  ThongTinNhaDat,
-  ThongTinThuaDat,
+    HDMBNhaDatPayload,
+    KhaiThueHDMBNhaDatToanBoPayload,
+    ThongTinNhaDat,
+    ThongTinThuaDat,
 } from "@/models/hdmb-nha-dat";
 import {
-  render_hdmb_nha_dat,
-  render_khai_thue_hdmb_nha_dat_toan_bo,
-  render_khai_thue_tang_cho_nha_dat_toan_bo,
-  render_hdtc_nha_dat_toan_bo,
-  render_uy_quyen_toan_bo_nha_dat,
+    render_hdmb_nha_dat,
+    render_khai_thue_hdmb_nha_dat_toan_bo,
+    render_khai_thue_tang_cho_nha_dat_toan_bo,
+    render_hdtc_nha_dat_toan_bo,
+    render_uy_quyen_toan_bo_nha_dat,
 } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
@@ -32,468 +32,470 @@ import { uchiTemporarySave } from "@/api/uchi";
 import { createDownloadLink } from "@/utils/common";
 
 interface Props {
-  isTangCho?: boolean;
-  isUyQuyen?: boolean;
-  templateName?: string;
-  scope?: "partial" | "full";
-  isMotPhan?: boolean;
+    isTangCho?: boolean;
+    isUyQuyen?: boolean;
+    templateName?: string;
+    scope?: "partial" | "full";
+    isMotPhan?: boolean;
 }
 
 export const HDMBNhaDatToanBo = ({
-  isTangCho = false,
-  isUyQuyen = false,
-  templateName,
-  scope,
-  isMotPhan,
+    isTangCho = false,
+    isUyQuyen = false,
+    templateName,
+    scope,
+    isMotPhan,
 }: Props) => {
-  const { agreementObject, nhaDat, addAgreementObject, addNhaDat } =
-    useHDMBNhaDatContext();
-  const { partyA, partyB } = useThemChuTheContext();
-  const { palette } = useTheme();
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [searchParams] = useSearchParams();
-  const templateId = searchParams.get("templateId");
-  const id = searchParams.get("id");
+    const { agreementObject, nhaDat, addAgreementObject, addNhaDat } =
+        useHDMBNhaDatContext();
+    const { partyA, partyB } = useThemChuTheContext();
+    const { palette } = useTheme();
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [searchParams] = useSearchParams();
+    const templateId = searchParams.get("templateId");
+    const id = searchParams.get("id");
 
-  useEffect(() => {
-    if (id) {
-      getWorkHistoryById(id).then((res) => {
-        const originalPayload = res.content.original_payload;
-        if (originalPayload) {
-          addAgreementObject(
-            originalPayload?.agreementObject as ThongTinThuaDat
-          );
-          addNhaDat(originalPayload?.nhaDat as ThongTinNhaDat);
+    useEffect(() => {
+        if (id) {
+            getWorkHistoryById(id).then((res) => {
+                const originalPayload = res.content.original_payload;
+                if (originalPayload) {
+                    addAgreementObject(
+                        originalPayload?.agreementObject as ThongTinThuaDat
+                    );
+                    addNhaDat(originalPayload?.nhaDat as ThongTinNhaDat);
+                }
+            });
         }
-      });
-    }
-  }, [id]);
+    }, [id]);
 
-  const userInfo = localStorage.getItem("user_info");
-  const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
-  const uchiId = userInfoObject?.uchi_id;
+    const userInfo = localStorage.getItem("user_info");
+    const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
+    const uchiId = userInfoObject?.uchi_id;
 
-  const isFormValid =
-    (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-    (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
-    agreementObject !== null &&
-    nhaDat !== null;
+    const isFormValid =
+        (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
+        (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
+        agreementObject !== null &&
+        nhaDat !== null;
 
-  const getBenABenB = () => {
-    const couplesA = extractCoupleFromParty(partyA, true);
-    const couplesB = extractCoupleFromParty(partyB, true);
+    const getBenABenB = () => {
+        const couplesA = extractCoupleFromParty(partyA, true);
+        const couplesB = extractCoupleFromParty(partyB, true);
 
-    return {
-      bên_A: {
-        cá_thể: [
-          ...partyA["cá_nhân"].map((person) => ({
-            ...person,
-            ngày_sinh: person["ngày_sinh"],
-            ngày_cấp: person["ngày_cấp"],
-            tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-            tình_trạng_hôn_nhân_vợ_chồng: null,
-            quan_hệ: person["quan_hệ"] || null,
-            ...extractAddress(person["địa_chỉ_thường_trú"]),
-          })),
-          ...couplesA,
-        ],
-      },
-      bên_B: {
-        cá_thể: [
-          ...partyB["cá_nhân"].map((person) => ({
-            ...person,
-            ngày_sinh: person["ngày_sinh"],
-            ngày_cấp: person["ngày_cấp"],
-            tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-            tình_trạng_hôn_nhân_vợ_chồng: null,
-            quan_hệ: person["quan_hệ"] || null,
-            ...extractAddress(person["địa_chỉ_thường_trú"]),
-          })),
-          ...couplesB,
-        ],
-      },
-    };
-  };
-
-  const getAdditionalForThuLy = () => {
-    if (!agreementObject) {
-      return null;
-    }
-
-    return {
-      số_thửa_đất: agreementObject?.["số_thửa_đất"],
-      số_tờ_bản_đồ: agreementObject?.["số_tờ_bản_đồ"],
-      địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
-        ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_nhà_đất"]})`
-        : agreementObject["địa_chỉ_nhà_đất"],
-    };
-  };
-
-  const getPayload = (
-    sốBảnGốc: number,
-    isOutSide: boolean,
-    côngChứngViên: string,
-    isUchi: boolean,
-    ngày: string,
-    sốHợpĐồng?: string,
-    notaryId?: number
-  ): HDMBNhaDatPayload => {
-    if (isUyQuyen) {
-      if (!agreementObject) {
-        throw new Error("Nhà đất is null");
-      }
-    } else {
-      if (!agreementObject || !nhaDat) {
-        throw new Error("Agreement object or nha dat is null");
-      }
-    }
-
-    const payload: HDMBNhaDatPayload = {
-      ...getBenABenB(),
-      ...agreementObject,
-      ...nhaDat!,
-      địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
-        ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_nhà_đất"]})`
-        : agreementObject["địa_chỉ_nhà_đất"],
-      ngày: ngày,
-      property_type: "house_whole",
-      ngày_bằng_chữ: translateDateToVietnamese(ngày),
-      số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
-      số_bản_gốc_bằng_chữ: numberToVietnamese(
-        String(sốBảnGốc)
-      )?.toLocaleLowerCase(),
-      số_bản_công_chứng:
-        sốBảnGốc - 1 < 10 ? "0" + String(sốBảnGốc - 1) : String(sốBảnGốc - 1),
-      số_bản_công_chứng_bằng_chữ: numberToVietnamese(
-        String(sốBảnGốc - 1)
-      )?.toLocaleLowerCase(),
-      ký_bên_ngoài: isOutSide,
-      công_chứng_viên: côngChứngViên,
-      template_id: templateId ? templateId : undefined,
-      số_hợp_đồng: sốHợpĐồng || undefined,
-      isUchi: isUchi,
-      uchi_id: uchiId ? String(uchiId) : "",
-      notary_id: notaryId ? String(notaryId) : "13",
-      template_name: templateName,
-      original_payload: {
-        partyA: partyA,
-        partyB: partyB,
-        agreementObject: agreementObject,
-        nhaDat: nhaDat as ThongTinNhaDat,
-      },
-      id: id ? id : undefined,
+        return {
+            bên_A: {
+                cá_thể: [
+                    ...partyA["cá_nhân"].map((person) => ({
+                        ...person,
+                        ngày_sinh: person["ngày_sinh"],
+                        ngày_cấp: person["ngày_cấp"],
+                        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+                        tình_trạng_hôn_nhân_vợ_chồng: null,
+                        quan_hệ: person["quan_hệ"] || null,
+                        ...extractAddress(person["địa_chỉ_thường_trú"]),
+                    })),
+                    ...couplesA,
+                ],
+            },
+            bên_B: {
+                cá_thể: [
+                    ...partyB["cá_nhân"].map((person) => ({
+                        ...person,
+                        ngày_sinh: person["ngày_sinh"],
+                        ngày_cấp: person["ngày_cấp"],
+                        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+                        tình_trạng_hôn_nhân_vợ_chồng: null,
+                        quan_hệ: person["quan_hệ"] || null,
+                        ...extractAddress(person["địa_chỉ_thường_trú"]),
+                    })),
+                    ...couplesB,
+                ],
+            },
+        };
     };
 
-    return payload;
-  };
+    const getAdditionalForThuLy = () => {
+        if (!agreementObject) {
+            return null;
+        }
 
-  const handleGenerateDocument = (metaData: MetaData) => {
-    const payload = getPayload(
-      metaData.sốBảnGốc,
-      metaData.isOutSide,
-      metaData.côngChứngViên,
-      metaData.isUchi,
-      metaData.ngày,
-      metaData.sốHợpĐồng,
-      metaData.notaryId
-    );
-    setOpenDialog(false);
-    setIsGenerating(true);
-    if (isTangCho) {
-      render_hdtc_nha_dat_toan_bo(payload, isMotPhan, scope)
-        .then((res) => {
-          createDownloadLink(
-            res.data,
-            `Hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
-          );
-          if (metaData.isUchi && templateId && Number(templateId) > 0) {
-            uchiTemporarySave(payload)
-              .then(() =>
-                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
-                  position: "top-left",
-                })
-              )
-              .catch((error) => {
-                toast.error(
-                  "Lỗi khi gửi thông tin lên Uchi " +
-                    error?.response?.data?.message
-                );
-              });
-          }
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
-    } else if (isUyQuyen) {
-      render_uy_quyen_toan_bo_nha_dat(payload)
-        .then((res) => {
-          createDownloadLink(res.data, "UQ toàn bộ nhà + đất.docx");
-          if (metaData.isUchi && templateId && Number(templateId) > 0) {
-            uchiTemporarySave(payload)
-              .then(() =>
-                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
-                  position: "top-left",
-                })
-              )
-              .catch((error) => {
-                toast.error(
-                  "Lỗi khi gửi thông tin lên Uchi " +
-                    error?.response?.data?.message
-                );
-              });
-          }
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
-    } else {
-      render_hdmb_nha_dat(payload)
-        .then((res) => {
-          createDownloadLink(
-            res.data,
-            `Hợp đồng mua bán nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
-          );
-          if (metaData.isUchi && templateId && Number(templateId) > 0) {
-            uchiTemporarySave(payload)
-              .then(() =>
-                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
-                  position: "top-left",
-                })
-              )
-              .catch((error) => {
-                toast.error(
-                  "Lỗi khi gửi thông tin lên Uchi " +
-                    error?.response?.data?.message
-                );
-              });
-          }
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
-    }
-  };
-
-  const getPayloadToKhaiChung = (): KhaiThueHDMBNhaDatToanBoPayload => {
-    if (!agreementObject || !nhaDat) {
-      throw new Error("Agreement object is null");
-    }
-
-    const couplesA = extractCoupleFromParty(partyA, true);
-    const couplesB = extractCoupleFromParty(partyB, true);
-
-    const các_cá_thể_bên_A = [
-      ...partyA["cá_nhân"].map((person) => ({
-        ...person,
-        ngày_sinh: person["ngày_sinh"],
-        ngày_cấp: person["ngày_cấp"],
-        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        ...extractAddress(person["địa_chỉ_thường_trú"]),
-      })),
-      ...couplesA,
-    ];
-    const các_cá_thể_bên_B = [
-      ...partyB["cá_nhân"].map((person) => ({
-        ...person,
-        ngày_sinh: person["ngày_sinh"],
-        ngày_cấp: person["ngày_cấp"],
-        tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
-        ...extractAddress(person["địa_chỉ_thường_trú"]),
-      })),
-      ...couplesB,
-    ];
-
-    const payload: KhaiThueHDMBNhaDatToanBoPayload = {
-      bên_A: {
-        cá_thể: các_cá_thể_bên_A,
-      },
-      bên_B: {
-        cá_thể: các_cá_thể_bên_B,
-      },
-      bảng_tncn_bên_A: các_cá_thể_bên_A.map((person, index) => ({
-        stt: index + 1,
-        tên: person["tên"],
-        số_giấy_tờ: person["số_giấy_tờ"],
-      })),
-      bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
-        stt: index + 1,
-        tên: person["tên"],
-        số_giấy_tờ: person["số_giấy_tờ"],
-      })),
-      bảng_bên_A: các_cá_thể_bên_A.map((person, index) => ({
-        stt: index + 1,
-        tên: person["tên"],
-      })),
-      tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
-      số_giấy_chứng_nhận: agreementObject["số_gcn"],
-      nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_gcn"],
-      ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
-      ngày_chứng_thực: null,
-      ...extractAddress(agreementObject["địa_chỉ_nhà_đất"]),
-      số_thửa_đất: agreementObject["số_thửa_đất"],
-      số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-      đặc_điểm_thửa_đất: {
-        mục_đích_và_thời_hạn_sử_dụng: [
-          {
-            phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
-            diện_tích: agreementObject["diện_tích_đất_bằng_số"],
-          },
-        ],
-        nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
-        diện_tích: {
-          số: agreementObject["diện_tích_đất_bằng_số"],
-        },
-      },
-      số_tiền: nhaDat["số_tiền"],
-      diện_tích_xây_dựng: isMotPhan
-        ? nhaDat["diện_tích_xây_dựng_một_phần"]
-        : nhaDat["diện_tích_xây_dựng"],
-      diện_tích_sàn: isMotPhan
-        ? nhaDat["diện_tích_sàn_một_phần"]
-        : nhaDat["diện_tích_sàn"],
-      cấp_hạng: nhaDat["cấp_hạng"],
-      nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
-      năm_hoàn_thành_xây_dựng: nhaDat["năm_hoàn_thành_xây_dựng"],
-      loại_nhà_ở: nhaDat["loại_nhà_ở"],
+        return {
+            số_thửa_đất: agreementObject?.["số_thửa_đất"],
+            số_tờ_bản_đồ: agreementObject?.["số_tờ_bản_đồ"],
+            địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
+                ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_nhà_đất"]})`
+                : agreementObject["địa_chỉ_nhà_đất"],
+        };
     };
 
-    return payload;
-  };
-
-  const handleKhaiThue = () => {
-    const payload = getPayloadToKhaiChung();
-    setOpenDialog(false);
-    setIsGenerating(true);
-    if (isTangCho) {
-      render_khai_thue_tang_cho_nha_dat_toan_bo(payload)
-        .then((res) => {
-          createDownloadLink(
-            res.data,
-            `Khai thuế hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
-          );
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
-    } else {
-      render_khai_thue_hdmb_nha_dat_toan_bo(payload)
-        .then((res) => {
-          const blob = new Blob([res.data], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "khai-thue-hdmb-nha-dat-toan-bo.docx";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
-    }
-  };
-
-  const generateThuLyType = () => {
-    if (isTangCho) {
-      return "hd-tang-cho-nha-dat-toan-bo";
-    } else {
-      return "hdmb-nha-dat-toan-bo";
-    }
-  };
-
-  return (
-    <Box display="flex" gap="2rem">
-      <Box
-        className="full-land-transfer"
-        display="flex"
-        gap="4rem"
-        flexDirection="column"
-        border="1px solid #BCCCDC"
-        borderRadius="5px"
-        padding="1rem"
-        flex={4}
-      >
-        <ThemChuThe title="Bên A" side="partyA" />
-        <ThemChuThe title="Bên B" side="partyB" />
-        <DoiTuongHopDong title="Đối tượng của hợp đồng" isUyQuyen={isUyQuyen} />
-        <Box display="flex" gap="1rem">
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: palette.softTeal,
-              height: "50px",
-              fontSize: "1.2rem",
-              fontWeight: "600",
-              textTransform: "uppercase",
-              width: "350px",
-            }}
-            onClick={() => setOpenDialog(true)}
-          >
-            {isGenerating ? (
-              <CircularProgress size={20} />
-            ) : (
-              `Tạo hợp đồng ${isUyQuyen ? "uỷ quyền" : ""}`
-            )}
-          </Button>
-          {!isUyQuyen ? (
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: palette.softTeal,
-                height: "50px",
-                fontSize: "1.2rem",
-                fontWeight: "600",
-                textTransform: "uppercase",
-                width: "200px",
-              }}
-              disabled={!isFormValid}
-              onClick={handleKhaiThue}
-            >
-              {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
-            </Button>
-          ) : (
-            <></>
-          )}
-          <PhieuThuLyButton
-            commonPayload={
-              agreementObject && nhaDat
-                ? { ...getBenABenB(), ...getAdditionalForThuLy() }
-                : null
+    const getPayload = (
+        sốBảnGốc: number,
+        isOutSide: boolean,
+        côngChứngViên: string,
+        isUchi: boolean,
+        ngày: string,
+        sốHợpĐồng?: string,
+        notaryId?: number
+    ): HDMBNhaDatPayload => {
+        if (isUyQuyen) {
+            if (!agreementObject) {
+                throw new Error("Nhà đất is null");
             }
-            type={generateThuLyType()}
-          />
+        } else {
+            if (!agreementObject || !nhaDat) {
+                throw new Error("Agreement object or nha dat is null");
+            }
+        }
+
+        const payload: HDMBNhaDatPayload = {
+            ...getBenABenB(),
+            ...agreementObject,
+            ...nhaDat!,
+            địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
+                ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_nhà_đất"]})`
+                : agreementObject["địa_chỉ_nhà_đất"],
+            ngày: ngày,
+            property_type: "house_whole",
+            ngày_bằng_chữ: translateDateToVietnamese(ngày),
+            số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
+            số_bản_gốc_bằng_chữ: numberToVietnamese(
+                String(sốBảnGốc)
+            )?.toLocaleLowerCase(),
+            số_bản_công_chứng:
+                sốBảnGốc - 1 < 10 ? "0" + String(sốBảnGốc - 1) : String(sốBảnGốc - 1),
+            số_bản_công_chứng_bằng_chữ: numberToVietnamese(
+                String(sốBảnGốc - 1)
+            )?.toLocaleLowerCase(),
+            ký_bên_ngoài: isOutSide,
+            công_chứng_viên: côngChứngViên,
+            template_id: templateId ? templateId : undefined,
+            số_hợp_đồng: sốHợpĐồng || undefined,
+            isUchi: isUchi,
+            uchi_id: uchiId ? String(uchiId) : "",
+            notary_id: notaryId ? String(notaryId) : "13",
+            template_name: templateName,
+            original_payload: {
+                partyA: partyA,
+                partyB: partyB,
+                agreementObject: agreementObject,
+                nhaDat: nhaDat as ThongTinNhaDat,
+            },
+            id: id ? id : undefined,
+        };
+
+        return payload;
+    };
+
+    const handleGenerateDocument = (metaData: MetaData) => {
+        const payload = getPayload(
+            metaData.sốBảnGốc,
+            metaData.isOutSide,
+            metaData.côngChứngViên,
+            metaData.isUchi,
+            metaData.ngày,
+            metaData.sốHợpĐồng,
+            metaData.notaryId
+        );
+        setOpenDialog(false);
+        setIsGenerating(true);
+        if (isTangCho) {
+            render_hdtc_nha_dat_toan_bo(payload, isMotPhan, scope)
+                .then((res) => {
+                    createDownloadLink(
+                        res.data,
+                        `Hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+                    );
+                    if (metaData.isUchi && templateId && Number(templateId) > 0) {
+                        uchiTemporarySave(payload)
+                            .then(() =>
+                                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                                    position: "top-left",
+                                })
+                            )
+                            .catch((error) => {
+                                toast.error(
+                                    "Lỗi khi gửi thông tin lên Uchi " +
+                                    error?.response?.data?.message
+                                );
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error generating document:", error);
+                    window.alert("Lỗi khi tạo hợp đồng");
+                })
+                .finally(() => {
+                    setIsGenerating(false);
+                });
+        } else if (isUyQuyen) {
+            render_uy_quyen_toan_bo_nha_dat(payload)
+                .then((res) => {
+                    createDownloadLink(res.data, "UQ toàn bộ nhà + đất.docx");
+                    if (metaData.isUchi && templateId && Number(templateId) > 0) {
+                        uchiTemporarySave(payload)
+                            .then(() =>
+                                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                                    position: "top-left",
+                                })
+                            )
+                            .catch((error) => {
+                                toast.error(
+                                    "Lỗi khi gửi thông tin lên Uchi " +
+                                    error?.response?.data?.message
+                                );
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error generating document:", error);
+                    window.alert("Lỗi khi tạo hợp đồng");
+                })
+                .finally(() => {
+                    setIsGenerating(false);
+                });
+        } else {
+            render_hdmb_nha_dat(payload)
+                .then((res) => {
+                    createDownloadLink(
+                        res.data,
+                        `Hợp đồng mua bán nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+                    );
+                    if (metaData.isUchi && templateId && Number(templateId) > 0) {
+                        uchiTemporarySave(payload)
+                            .then(() =>
+                                toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
+                                    position: "top-left",
+                                })
+                            )
+                            .catch((error) => {
+                                toast.error(
+                                    "Lỗi khi gửi thông tin lên Uchi " +
+                                    error?.response?.data?.message
+                                );
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error generating document:", error);
+                    window.alert("Lỗi khi tạo hợp đồng");
+                })
+                .finally(() => {
+                    setIsGenerating(false);
+                });
+        }
+    };
+
+    const getPayloadToKhaiChung = (): KhaiThueHDMBNhaDatToanBoPayload => {
+        if (!agreementObject || !nhaDat) {
+            throw new Error("Agreement object is null");
+        }
+
+        const couplesA = extractCoupleFromParty(partyA, true);
+        const couplesB = extractCoupleFromParty(partyB, true);
+
+        const các_cá_thể_bên_A = [
+            ...partyA["cá_nhân"].map((person) => ({
+                ...person,
+                ngày_sinh: person["ngày_sinh"],
+                ngày_cấp: person["ngày_cấp"],
+                tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+                ...extractAddress(person["địa_chỉ_thường_trú"]),
+            })),
+            ...couplesA,
+        ];
+        const các_cá_thể_bên_B = [
+            ...partyB["cá_nhân"].map((person) => ({
+                ...person,
+                ngày_sinh: person["ngày_sinh"],
+                ngày_cấp: person["ngày_cấp"],
+                tình_trạng_hôn_nhân: person["tình_trạng_hôn_nhân"] || null,
+                ...extractAddress(person["địa_chỉ_thường_trú"]),
+            })),
+            ...couplesB,
+        ];
+
+        const payload: KhaiThueHDMBNhaDatToanBoPayload = {
+            bên_A: {
+                cá_thể: các_cá_thể_bên_A,
+            },
+            bên_B: {
+                cá_thể: các_cá_thể_bên_B,
+            },
+            bảng_tncn_bên_A: các_cá_thể_bên_A.map((person, index) => ({
+                stt: index + 1,
+                tên: person["tên"],
+                số_giấy_tờ: person["số_giấy_tờ"],
+            })),
+            bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
+                stt: index + 1,
+                tên: person["tên"],
+                số_giấy_tờ: person["số_giấy_tờ"],
+            })),
+            bảng_bên_A: các_cá_thể_bên_A.map((person, index) => ({
+                stt: index + 1,
+                tên: person["tên"],
+            })),
+            tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
+            số_giấy_chứng_nhận: agreementObject["số_gcn"],
+            nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_gcn"],
+            ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
+            ngày_chứng_thực: null,
+            ...extractAddress(agreementObject["địa_chỉ_nhà_đất"]),
+            số_thửa_đất: agreementObject["số_thửa_đất"],
+            số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
+            đặc_điểm_thửa_đất: {
+                mục_đích_và_thời_hạn_sử_dụng: [
+                    {
+                        phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
+                        diện_tích: agreementObject["diện_tích_đất_bằng_số"],
+                    },
+                ],
+                nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng_đất"],
+                diện_tích: {
+                    số: agreementObject["diện_tích_đất_bằng_số"],
+                },
+            },
+            số_tiền: nhaDat["số_tiền"],
+            diện_tích_xây_dựng: isMotPhan
+                ? nhaDat["diện_tích_xây_dựng_một_phần"]
+                : nhaDat["diện_tích_xây_dựng"],
+            diện_tích_sàn: isMotPhan
+                ? nhaDat["diện_tích_sàn_một_phần"]
+                : nhaDat["diện_tích_sàn"],
+            cấp_hạng: nhaDat["cấp_hạng"],
+            nguồn_gốc_sử_dụng_đất: agreementObject["nguồn_gốc_sử_dụng_đất"],
+            năm_hoàn_thành_xây_dựng: nhaDat["năm_hoàn_thành_xây_dựng"],
+            loại_nhà_ở: nhaDat["loại_nhà_ở"],
+        };
+
+        return payload;
+    };
+
+    const handleKhaiThue = () => {
+        const payload = getPayloadToKhaiChung();
+        setOpenDialog(false);
+        setIsGenerating(true);
+        if (isTangCho) {
+            render_khai_thue_tang_cho_nha_dat_toan_bo(payload)
+                .then((res) => {
+                    createDownloadLink(
+                        res.data,
+                        `Khai thuế hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+                    );
+                })
+                .catch((error) => {
+                    console.error("Error generating document:", error);
+                    window.alert("Lỗi khi tạo hợp đồng");
+                })
+                .finally(() => {
+                    setIsGenerating(false);
+                });
+        } else {
+            render_khai_thue_hdmb_nha_dat_toan_bo(payload)
+                .then((res) => {
+                    const blob = new Blob([res.data], {
+                        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    });
+
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = "khai-thue-hdmb-nha-dat-toan-bo.docx";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch((error) => {
+                    console.error("Error generating document:", error);
+                    window.alert("Lỗi khi tạo hợp đồng");
+                })
+                .finally(() => {
+                    setIsGenerating(false);
+                });
+        }
+    };
+
+    const generateThuLyType = () => {
+        if (isTangCho) {
+            return "hd-tang-cho-nha-dat-toan-bo";
+        } else if (isUyQuyen) {
+            return "uy-quyen-toan-bo-nha-dat";
+        } else {
+            return "hdmb-nha-dat-toan-bo";
+        }
+    };
+
+    return (
+        <Box display="flex" gap="2rem">
+            <Box
+                className="full-land-transfer"
+                display="flex"
+                gap="4rem"
+                flexDirection="column"
+                border="1px solid #BCCCDC"
+                borderRadius="5px"
+                padding="1rem"
+                flex={4}
+            >
+                <ThemChuThe title="Bên A" side="partyA" />
+                <ThemChuThe title="Bên B" side="partyB" />
+                <DoiTuongHopDong title="Đối tượng của hợp đồng" isUyQuyen={isUyQuyen} />
+                <Box display="flex" gap="1rem">
+                    <Button
+                        variant="contained"
+                        sx={{
+                            backgroundColor: palette.softTeal,
+                            height: "50px",
+                            fontSize: "1.2rem",
+                            fontWeight: "600",
+                            textTransform: "uppercase",
+                            width: "350px",
+                        }}
+                        onClick={() => setOpenDialog(true)}
+                    >
+                        {isGenerating ? (
+                            <CircularProgress size={20} />
+                        ) : (
+                            `Tạo hợp đồng ${isUyQuyen ? "uỷ quyền" : ""}`
+                        )}
+                    </Button>
+                    {!isUyQuyen ? (
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: palette.softTeal,
+                                height: "50px",
+                                fontSize: "1.2rem",
+                                fontWeight: "600",
+                                textTransform: "uppercase",
+                                width: "200px",
+                            }}
+                            disabled={!isFormValid}
+                            onClick={handleKhaiThue}
+                        >
+                            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
+                        </Button>
+                    ) : (
+                        <></>
+                    )}
+                    <PhieuThuLyButton
+                        commonPayload={
+                            agreementObject
+                                ? { ...getBenABenB(), ...getAdditionalForThuLy() }
+                                : null
+                        }
+                        type={generateThuLyType()}
+                    />
+                </Box>
+            </Box>
+            <ThemLoiChungDialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                handleGenerateDocument={handleGenerateDocument}
+            />
         </Box>
-      </Box>
-      <ThemLoiChungDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        handleGenerateDocument={handleGenerateDocument}
-      />
-    </Box>
-  );
+    );
 };
