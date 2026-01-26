@@ -39,6 +39,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { toast } from "react-toastify";
+import { REVIEWERS } from "@/constants/reviewer";
 
 const DEBOUNCE_TIME = 1000;
 
@@ -66,6 +67,8 @@ const History = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [brokerQuery, setBrokerQuery] = useState<string>("");
     const [debounceBrokerQuery, setDebounceBrokerQuery] = useState<string>("");
+    const [deliveredByQuery, setDeliveredByQuery] = useState<string>("");
+    const [inspectedByQuery, setInspectedByQuery] = useState<string>("");
     const [customerQuery, setCustomerQuery] = useState<string>("");
     const [debounceCustomerQuery, setDebounceCustomerQuery] =
         useState<string>("");
@@ -133,6 +136,8 @@ const History = () => {
             customer: customerQuery,
             sort: "audit.createdAt,desc",
             broker: brokerQuery,
+            deliveredBy: deliveredByQuery,
+            inspectedBy: inspectedByQuery,
             id: searchQuery,
             size,
             page: page - 1,
@@ -161,6 +166,8 @@ const History = () => {
         selectedUser,
         searchQuery,
         brokerQuery,
+        deliveredByQuery,
+        inspectedByQuery,
         customerQuery,
         selectedBranch?.id,
     ]);
@@ -205,6 +212,8 @@ const History = () => {
             sort: "audit.createdAt,desc",
             customer: customerQuery,
             broker: brokerQuery,
+            deliveredBy: deliveredByQuery,
+            inspectedBy: inspectedByQuery,
             id: searchQuery,
             type,
             size: 1000000,
@@ -313,6 +322,8 @@ const History = () => {
                         sort: "audit.createdAt,desc",
                         customer: customerQuery,
                         broker: brokerQuery,
+                        deliveredBy: deliveredByQuery,
+                        inspectedBy: inspectedByQuery,
                         id: searchQuery,
                         size,
                         page: page - 1,
@@ -533,6 +544,54 @@ const History = () => {
                             </FormControl>
                         </>
                     ) : null}
+                    <FormControl sx={{ width: { xs: "100%", md: "300px" } }}>
+                        <InputLabel>Người giao</InputLabel>
+                        <Select
+                            label="Người giao"
+                            value={deliveredByQuery}
+                            onChange={(e) => {
+                                const nextValue = e.target.value;
+                                setDeliveredByQuery(nextValue);
+                                setPage(1);
+                                setDateBegin(
+                                    nextValue !== ""
+                                        ? dayjs(dateBegin).startOf("year")
+                                        : dayjs().startOf("month")
+                                );
+                            }}
+                        >
+                            <MenuItem value="">Chọn người giao</MenuItem>
+                            {REVIEWERS.map((reviewer) => (
+                                <MenuItem key={reviewer.id} value={reviewer.value}>
+                                    {reviewer.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl sx={{ width: { xs: "100%", md: "300px" } }}>
+                        <InputLabel>Người kiểm tra</InputLabel>
+                        <Select
+                            label="Người kiểm tra"
+                            value={inspectedByQuery}
+                            onChange={(e) => {
+                                const nextValue = e.target.value;
+                                setInspectedByQuery(nextValue);
+                                setPage(1);
+                                setDateBegin(
+                                    nextValue !== ""
+                                        ? dayjs(dateBegin).startOf("year")
+                                        : dayjs().startOf("month")
+                                );
+                            }}
+                        >
+                            <MenuItem value="">Chọn người kiểm tra</MenuItem>
+                            {REVIEWERS.map((reviewer) => (
+                                <MenuItem key={reviewer.id} value={reviewer.value}>
+                                    {reviewer.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Box>
             </Box>
             <Box

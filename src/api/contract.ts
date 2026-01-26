@@ -70,6 +70,8 @@ export const updateContract = (payload: SubmitContractPayload) => {
 interface ListContractsParams {
   customer?: string;
   broker?: string;
+  deliveredBy?: string;
+  inspectedBy?: string;
   id?: string;
   size?: number;
   page?: number;
@@ -79,6 +81,7 @@ interface ListContractsParams {
   createdBy?: string;
   sort?: string;
   unit?: string;
+  [key: string]: string | number | undefined;
 }
 
 export const getContractById = (id: string): Promise<Contract> => {
