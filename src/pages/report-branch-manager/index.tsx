@@ -1,0 +1,258 @@
+import { useEffect, useState, useRef } from "react";
+import {
+  Box,
+  Typography,
+  Table,
+  TableHead,
+  TableRow,
+  TableBody,
+  TableCell,
+  TableContainer,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import { getBranchManagerReport } from "@/api/report";
+import type { BranchManagerReport } from "@/api/report";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { type Dayjs } from "dayjs";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { listBranches, type Branch } from "@/api/branchs";
+import { useSearchParams } from "react-router-dom";
+
+const ReportBranchManager = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
+  const [reports, setReports] = useState<BranchManagerReport[]>([]);
+  const [allReports, setAllReports] = useState<BranchManagerReport[]>([]);
+
+  const getInitialDateBegin = () => {
+    const startDate = searchParams.get("startDate");
+    return startDate ? dayjs(startDate) : dayjs().startOf("month");
+  };
+  const getInitialDateEnd = () => {
+    const endDate = searchParams.get("endDate");
+    return endDate ? dayjs(endDate) : dayjs();
+  };
+
+  const [dateBegin, setDateBegin] = useState<Dayjs>(getInitialDateBegin());
+  const [dateEnd, setDateEnd] = useState<Dayjs>(getInitialDateEnd());
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const getInitialBranch = () => {
+    const branchId = searchParams.get("branch");
+    return branchId || null;
+  };
+  const [selectedBranchId, setSelectedBranchId] = useState<string | null>(
+    getInitialBranch()
+  );
+  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
+
+  const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
+  const isAdmin = userRoles.some(
+    (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
+  );
+
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    listBranches().then((resp) => {
+      setBranches(resp);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (branches.length > 0 && selectedBranchId) {
+      const branch = branches.find((b) => b.id === selectedBranchId);
+      if (branch) {
+        setSelectedBranch(branch);
+      }
+    } else if (!selectedBranchId) {
+      setSelectedBranch(null);
+    }
+  }, [branches, selectedBranchId]);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("startDate", dayjs(dateBegin).format("YYYY-MM-DD"));
+    params.set("endDate", dayjs(dateEnd).format("YYYY-MM-DD"));
+    if (selectedBranchId && isAdmin) {
+      params.set("branch", selectedBranchId);
+    } else {
+      params.delete("branch");
+    }
+    setSearchParams(params, { replace: true });
+  }, [dateBegin, dateEnd, selectedBranchId, isAdmin, setSearchParams]);
+
+  useEffect(() => {
+    setLoading(true);
+    getBranchManagerReport({
+      startDate: dayjs(dateBegin).format("YYYY-MM-DD"),
+      endDate: dayjs(dateEnd).format("YYYY-MM-DD"),
+    })
+      .then((res) => {
+        setAllReports(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [dateBegin, dateEnd]);
+
+  useEffect(() => {
+    if (selectedBranch) {
+      const filtered = allReports.filter(
+        (report) => report.branch_name === selectedBranch.friendly_name
+      );
+      setReports(filtered);
+    } else {
+      setReports(allReports);
+    }
+  }, [selectedBranch, allReports]);
+
+  const renderTableContent = () => {
+    if (reports.length === 0 && !loading) {
+      return (
+        <TableRow>
+          <TableCell colSpan={5}>
+            <Typography>Không có dữ liệu</Typography>
+          </TableCell>
+        </TableRow>
+      );
+    }
+    return reports.map((report, index) => (
+      <TableRow key={index}>
+        <TableCell>{report.full_name}</TableCell>
+        <TableCell>{report.branch_name}</TableCell>
+        <TableCell align="center">{report.delivered_by_count}</TableCell>
+        <TableCell align="center">{report.inspected_by_count}</TableCell>
+        <TableCell align="center">
+          {report.delivered_by_count + report.inspected_by_count}
+        </TableCell>
+      </TableRow>
+    ));
+  };
+
+  return (
+    <Box sx={{ width: { xs: "100%", md: "auto" } }}>
+      <Typography
+        sx={{ fontSize: { xs: "1.2rem", md: "2rem" } }}
+        fontWeight={600}
+      >
+        Báo cáo nhân viên
+      </Typography>
+      <Box
+        mt="2rem"
+        border="1px solid #e0e0e0"
+        borderRadius="5px"
+        px="1rem"
+        py="1rem"
+      >
+        <Box display="flex" gap="0.5rem" alignItems="center">
+          <Typography variant="h6">Lọc dữ liệu</Typography>
+          <FilterAltIcon />
+        </Box>
+        <Box
+          display="flex"
+          gap="1rem"
+          mt="1rem"
+          flexWrap="wrap"
+          width={{ xs: "100%", md: "auto" }}
+        >
+          <DatePicker
+            label="Ngày bắt đầu"
+            format="DD/MM/YYYY"
+            sx={{ width: { xs: "100%", md: "300px" } }}
+            value={dateBegin}
+            onChange={(e) => {
+              setDateBegin(e as Dayjs);
+            }}
+          />
+          <DatePicker
+            label="Ngày kết thúc"
+            format="DD/MM/YYYY"
+            sx={{ width: { xs: "100%", md: "300px" } }}
+            value={dateEnd}
+            onChange={(e) => {
+              setDateEnd(e as Dayjs);
+            }}
+          />
+          {isAdmin ? (
+            <>
+              <FormControl
+                sx={{ minWidth: 200, width: { xs: "100%", md: "300px" } }}
+              >
+                <InputLabel>Chi nhánh</InputLabel>
+                <Select
+                  label="Chi nhánh"
+                  value={selectedBranchId || ""}
+                  onChange={(e) => {
+                    const branchId = e.target.value || null;
+                    setSelectedBranchId(branchId);
+                  }}
+                >
+                  <MenuItem value="">Tất cả</MenuItem>
+                  {branches.map((branch) => (
+                    <MenuItem key={branch.id} value={branch.id}>
+                      {branch.friendly_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </>
+          ) : null}
+        </Box>
+      </Box>
+      <TableContainer
+        sx={{
+          mt: "2rem",
+          maxWidth: { xs: "90vw", md: "auto" },
+          overflowX: "auto",
+          border: "1px solid #e0e0e0",
+          borderRadius: "5px",
+          px: "1rem",
+          py: "1rem",
+        }}
+      >
+        {loading ? (
+          <Box display="flex" justifyContent="center" p="2rem">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Typography fontWeight={600}>Tên trưởng/phó</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight={600}>Chi nhánh</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight={600}>Đã giao</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight={600}>Đã kiểm tra</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight={600}>Tổng số</Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{renderTableContent()}</TableBody>
+          </Table>
+        )}
+      </TableContainer>
+    </Box>
+  );
+};
+
+export default ReportBranchManager;

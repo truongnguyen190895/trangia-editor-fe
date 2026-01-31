@@ -55,6 +55,12 @@ const menuItems = [
         path: "/report",
         adminRequired: false,
     },
+    {
+        text: "Báo cáo trưởng phó",
+        icon: <Report />,
+        path: "/report-branch-manager",
+        adminRequired: false,
+    },
 ];
 
 export const SidebarMenu = () => {

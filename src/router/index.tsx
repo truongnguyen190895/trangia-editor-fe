@@ -5,6 +5,7 @@ import Layout from "../components/layout";
 import { Documents } from "../pages/documents";
 import { DocumentEditor } from "../pages/document-editor";
 import { ThemChuTheProvider } from "@/context/them-chu-the";
+import ReportBranchManager from "@/pages/report-branch-manager";
 import LoginPage from "@/pages/login";
 import SubmitContract from "@/pages/submit-contract";
 import History from "@/pages/history";
@@ -15,7 +16,6 @@ import WorkHistory from "@/pages/work-history";
 import { ErrorBoundary } from "@/components/common/error-boundary";
 import AddEmployee from "@/pages/employee/add";
 import Report from "@/pages/report";
-// import InheritancePage from "@/pages/inheritance";
 
 export const router = createBrowserRouter([
   {
@@ -79,10 +79,10 @@ export const router = createBrowserRouter([
         path: "/report",
         element: <Report />,
       },
-    //   {
-    //     path: "/inheritance",
-    //     element: <InheritancePage />,
-    //   },
+      {
+        path: "/report-branch-manager",
+        element: <ReportBranchManager />,
+      },
     ],
   },
   {
