@@ -25,6 +25,7 @@ import {
   getContractById,
   updateContract,
 } from "@/api/contract";
+import { listUsers } from "@/api/users";
 import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
@@ -66,6 +67,8 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   const [nextAvailableId, setNextAvailableId] = useState<string>("");
   const [shouldRenderPhieuThu, setShouldRenderPhieuThu] = useState(false);
   const [warningDialogOpen, setWarningDialogOpen] = useState(false);
+  const [users, setUsers] =
+    useState<{ id: number; value: string; label: string }[]>(REVIEWERS);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
   const isAdmin = userRoles.some(
     (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
@@ -74,6 +77,18 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   const namedByUser = localStorage.getItem("username") || "";
   const user = JSON.parse(localStorage.getItem("user_info") || "{}");
   const userBranch = user?.branches[0]?.id;
+
+  useEffect(() => {
+    listUsers({ employee: true, size: 1000 }).then((resp) => {
+        const branchManagers = resp.content?.filter((user) => user.role === "BranchManager");
+        const branchManagersUsers = branchManagers?.map((user, index) => ({
+          id: index + 1,
+          value: user.name,
+          label: user.name,
+        }));
+      setUsers(branchManagersUsers);
+    });
+  }, []);
 
   useEffect(() => {
     if (!isEdit) {
@@ -543,7 +558,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   error={!!errors.deliveredBy}
                 >
                   <MenuItem value="">Chọn người giao</MenuItem>
-                  {REVIEWERS.map((reviewer) => (
+                  {users.map((reviewer) => (
                     <MenuItem key={reviewer.id} value={reviewer.value}>
                       {reviewer.label}
                     </MenuItem>
@@ -561,7 +576,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   error={!!errors.inspectedBy}
                 >
                   <MenuItem value="">Chọn người kiểm tra</MenuItem>
-                  {REVIEWERS.map((reviewer) => (
+                  {users.map((reviewer) => (
                     <MenuItem key={reviewer.id} value={reviewer.value}>
                       {reviewer.label}
                     </MenuItem>
