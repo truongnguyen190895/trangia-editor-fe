@@ -373,12 +373,12 @@ export const HDMBNhaDatToanBo = ({
         return payload;
     };
 
-    const handleKhaiThue = () => {
+    const handleKhaiThue = (isND373?: boolean) => {
         const payload = getPayloadToKhaiChung();
         setOpenDialog(false);
         setIsGenerating(true);
         if (isTangCho) {
-            render_khai_thue_tang_cho_nha_dat_toan_bo(payload)
+            render_khai_thue_tang_cho_nha_dat_toan_bo(payload, isND373)
                 .then((res) => {
                     createDownloadLink(
                         res.data,
@@ -393,7 +393,7 @@ export const HDMBNhaDatToanBo = ({
                     setIsGenerating(false);
                 });
         } else {
-            render_khai_thue_hdmb_nha_dat_toan_bo(payload)
+            render_khai_thue_hdmb_nha_dat_toan_bo(payload, isND373)
                 .then((res) => {
                     const blob = new Blob([res.data], {
                         type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -463,6 +463,7 @@ export const HDMBNhaDatToanBo = ({
                         )}
                     </Button>
                     {!isUyQuyen ? (
+                        <>
                         <Button
                             variant="contained"
                             sx={{
@@ -474,10 +475,25 @@ export const HDMBNhaDatToanBo = ({
                                 width: "200px",
                             }}
                             disabled={!isFormValid}
-                            onClick={handleKhaiThue}
+                            onClick={() => handleKhaiThue(false)}
                         >
                             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
                         </Button>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: palette.softTeal,
+                                height: "50px",
+                                fontSize: "1.2rem",
+                                fontWeight: "600",
+                                textTransform: "uppercase",
+                            }}
+                            disabled={!isFormValid}
+                            onClick={() => handleKhaiThue(true)}
+                        >
+                            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế theo NĐ 373"}
+                        </Button>
+                        </>
                     ) : (
                         <></>
                     )}

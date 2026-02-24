@@ -294,11 +294,11 @@ export const HDMBTaiSan = ({ templateName }: Props) => {
     return payload;
   };
 
-  const handleGenerateToKhaiThue = () => {
+  const handleGenerateToKhaiThue = (isND373?: boolean) => {
     const payload = getPayloadToKhaiChung();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_khai_thue_hdmb_tai_san(payload)
+    render_khai_thue_hdmb_tai_san(payload, isND373)
       .then((res) => {
         const blob = new Blob([res.data], {
           type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -387,9 +387,23 @@ export const HDMBTaiSan = ({ templateName }: Props) => {
               width: "200px",
             }}
             disabled={!isFormValid}
-            onClick={handleGenerateToKhaiThue}
+            onClick={() => handleGenerateToKhaiThue(false)}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: palette.softTeal,
+              height: "50px",
+              fontSize: "1.2rem",
+              fontWeight: "600",
+              textTransform: "uppercase",
+            }}
+            disabled={!isFormValid}
+            onClick={() => handleGenerateToKhaiThue(true)}
+          >
+            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế theo NĐ 373"}
           </Button>
           <PhieuThuLyButton
             commonPayload={

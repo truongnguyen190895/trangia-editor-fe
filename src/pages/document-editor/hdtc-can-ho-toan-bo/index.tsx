@@ -320,11 +320,11 @@ export const HDTangChoCanHo = ({ templateName, isMotPhan, scope }: Props) => {
     return payload;
   };
 
-  const handleGenerateKhaiThue = () => {
+  const handleGenerateKhaiThue = (isND373?: boolean) => {
     const payload = getPayloadKhaiThue();
     setOpenDialog(false);
     setIsGenerating(true);
-    render_khai_thue_hdtc_can_ho_toan_bo(payload)
+    render_khai_thue_hdtc_can_ho_toan_bo(payload, isND373)
       .then((res) => {
         createDownloadLink(
           res.data,
@@ -382,9 +382,23 @@ export const HDTangChoCanHo = ({ templateName, isMotPhan, scope }: Props) => {
               width: "200px",
             }}
             disabled={!isFormValid}
-            onClick={handleGenerateKhaiThue}
+            onClick={() => handleGenerateKhaiThue(false)}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: palette.softTeal,
+              height: "50px",
+              fontSize: "1.2rem",
+              fontWeight: "600",
+              textTransform: "uppercase",
+            }}
+            disabled={!isFormValid}
+            onClick={() => handleGenerateKhaiThue(true)}
+          >
+            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế theo NĐ 373"}
           </Button>
           <PhieuThuLyButton
             commonPayload={

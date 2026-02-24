@@ -455,12 +455,12 @@ export const ChuyenNhuongDatToanBo = ({
     return payload;
   };
 
-  const handleGenerateToKhaiChung = () => {
+  const handleGenerateToKhaiChung = (isND373?: boolean) => {
     const payload = getPayloadToKhaiChung();
     setOpenDialog(false);
     setIsGenerating(true);
     if (isTangCho) {
-      render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(payload, isCM)
+      render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(payload, isCM, isND373)
         .then((res) => {
           createDownloadLink(res?.data, "to-khai-chung.docx");
         })
@@ -472,7 +472,7 @@ export const ChuyenNhuongDatToanBo = ({
           setIsGenerating(false);
         });
     } else {
-      render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload, isCM)
+      render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload, isCM, isND373)
         .then((res) => {
           createDownloadLink(res?.data, "to-khai-chung.docx");
         })
@@ -587,9 +587,23 @@ export const ChuyenNhuongDatToanBo = ({
               width: "200px",
             }}
             disabled={!isFormValid}
-            onClick={handleGenerateToKhaiChung}
+            onClick={() => handleGenerateToKhaiChung(false)}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: palette.softTeal,
+              height: "50px",
+              fontSize: "1.2rem",
+              fontWeight: "600",
+              textTransform: "uppercase",
+            }}
+            disabled={!isFormValid}
+            onClick={() => handleGenerateToKhaiChung(true)}
+          >
+            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế theo NĐ 373"}
           </Button>
           <PhieuThuLyButton
             commonPayload={

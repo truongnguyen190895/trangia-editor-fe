@@ -273,13 +273,17 @@ export const render_hdtc_dat_mot_phan = async (
 
 export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   payload: SampleToKhaiChungPayload,
-  isCM: boolean = false
+  isCM: boolean = false,
+  isND373?: boolean
 ) => {
   let url =
     "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep";
   if (isCM) {
     url =
       "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep-cm";
+  }
+  if (isND373) {
+    url = url + "-v2";
   }
   return api.post(url, payload, {
     responseType: "blob",
@@ -288,11 +292,15 @@ export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
 
 export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
   payload: SampleToKhaiChungPayload,
-  isCM: boolean = false
+  isCM: boolean = false,
+  isND373?: boolean
 ) => {
   let url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep";
   if (isCM) {
     url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep-cm";
+  }
+  if (isND373) {
+    url = url + "-v2";
   }
   return api.post(url, payload, {
     responseType: "blob",
@@ -300,10 +308,15 @@ export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
 };
 
 export const render_khai_thue_tang_cho_nha_dat_toan_bo = async (
-  payload: KhaiThueHDMBNhaDatToanBoPayload
+  payload: KhaiThueHDMBNhaDatToanBoPayload,
+  isND373?: boolean
 ) => {
+  let url = "/templates/khai-thue/khai-thue-tang-cho-nha-dat-va-tsglvd";
+  if (isND373) {
+    url = url + "-v2";
+  }
   return api.post(
-    "/templates/khai-thue/khai-thue-tang-cho-nha-dat-va-tsglvd",
+    url,
     payload,
     {
       responseType: "blob",
@@ -312,26 +325,41 @@ export const render_khai_thue_tang_cho_nha_dat_toan_bo = async (
 };
 
 export const render_khai_thue_hdmb_can_ho_toan_bo = async (
-  payload: KhaiThueHDMBCanHoToanBoPayload
+  payload: KhaiThueHDMBCanHoToanBoPayload,
+  isND373?: boolean
 ) => {
-  return api.post("/templates/khai-thue/khai-thue-mua-ban-can-ho", payload, {
+  let url = "/templates/khai-thue/khai-thue-mua-ban-can-ho";
+  if (isND373) {
+    url = url + "-v2";
+  }
+  return api.post(url, payload, {
     responseType: "blob",
   });
 };
 
 export const render_khai_thue_hdmb_nha_dat_toan_bo = async (
-  payload: KhaiThueHDMBNhaDatToanBoPayload
+  payload: KhaiThueHDMBNhaDatToanBoPayload,
+  isND373?: boolean
 ) => {
-  return api.post("/templates/khai-thue/khai-thue-mua-ban-nha-dat", payload, {
+  let url = "/templates/khai-thue/khai-thue-mua-ban-nha-dat";
+  if (isND373) {
+    url = url + "-v2";
+  }
+  return api.post(url, payload, {
     responseType: "blob",
   });
 };
 
 export const render_khai_thue_hdcn_dat_va_tsglvd_toan_bo = async (
-  payload: KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload
+  payload: KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
+  isND373?: boolean
 ) => {
+  let url = "/templates/khai-thue/khai-thue-mua-ban-nha-dat-va-tsglvd";
+  if (isND373) {
+    url = url + "-v2";
+  }
   return api.post(
-    "/templates/khai-thue/khai-thue-mua-ban-nha-dat-va-tsglvd",
+    url,
     payload,
     {
       responseType: "blob",
@@ -339,18 +367,15 @@ export const render_khai_thue_hdcn_dat_va_tsglvd_toan_bo = async (
   );
 };
 
-export const render_khai_thue_hdtc_nha_dat_toan_bo = async (
-  payload: KhaiThueHDMBNhaDatToanBoPayload
-) => {
-  return api.post("/templates/khai-thue/khai-thue-tang-cho-nha-dat", payload, {
-    responseType: "blob",
-  });
-};
-
 export const render_khai_thue_hdtc_can_ho_toan_bo = async (
-  payload: KhaiThueHDMBCanHoToanBoPayload
+  payload: KhaiThueHDMBCanHoToanBoPayload,
+  isND373?: boolean
 ) => {
-  return api.post("/templates/khai-thue/khai-thue-tang-cho-can-ho", payload, {
+  let url = "/templates/khai-thue/khai-thue-tang-cho-can-ho";
+  if (isND373) {
+    url = url + "-v2";
+  }
+  return api.post(url, payload, {
     responseType: "blob",
   });
 };
@@ -402,9 +427,14 @@ export const render_hdmb_tai_san = async (payload: HDMBTaiSanPayload) => {
 };
 
 export const render_khai_thue_hdmb_tai_san = async (
-  payload: KhaiThueHDMBTaiSanPayload
+  payload: KhaiThueHDMBTaiSanPayload,
+  isND373?: boolean
 ) => {
-  return api.post("/templates/khai-thue/khai-thue-mua-ban-tai-san", payload, {
+  let url = "/templates/khai-thue/khai-thue-mua-ban-tai-san";
+  if (isND373) {
+    url = url + "-v2";
+  }
+  return api.post(url, payload, {
     responseType: "blob",
   });
 };

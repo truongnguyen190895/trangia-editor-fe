@@ -59,7 +59,7 @@ export const HDMBCanHoToanBo = ({
         const originalPayload = res.content.original_payload;
         if (originalPayload) {
           addAgreementObject(
-            originalPayload?.agreementObject as ThongTinThuaDat
+            originalPayload?.agreementObject as ThongTinThuaDat,
           );
           addCanHo(originalPayload?.canHo as ThongTinCanHoType);
         }
@@ -133,7 +133,7 @@ export const HDMBCanHoToanBo = ({
     isUchi: boolean,
     ngày: string,
     sốHợpĐồng?: string,
-    notaryId?: number
+    notaryId?: number,
   ): HDMBCanHoPayload => {
     if (isUyQuyen) {
       if (!canHo) {
@@ -182,12 +182,12 @@ export const HDMBCanHoToanBo = ({
       ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
-        String(sốBảnGốc)
+        String(sốBảnGốc),
       )?.toLocaleLowerCase(),
       số_bản_công_chứng:
         sốBảnGốc - 1 < 10 ? "0" + String(sốBảnGốc - 1) : String(sốBảnGốc - 1),
       số_bản_công_chứng_bằng_chữ: numberToVietnamese(
-        String(sốBảnGốc - 1)
+        String(sốBảnGốc - 1),
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       thời_hạn: canHo?.["thời_hạn"] ?? null,
@@ -219,7 +219,7 @@ export const HDMBCanHoToanBo = ({
       metaData.isUchi,
       metaData.ngày,
       metaData.sốHợpĐồng,
-      metaData.notaryId
+      metaData.notaryId,
     );
     setOpenDialog(false);
     setIsGenerating(true);
@@ -228,19 +228,19 @@ export const HDMBCanHoToanBo = ({
         .then((res) => {
           createDownloadLink(
             res.data,
-            `Hợp đồng uỷ quyền toàn bộ căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+            `Hợp đồng uỷ quyền toàn bộ căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
           );
           if (metaData.isUchi && templateId && Number(templateId) > 0) {
             uchiTemporarySave(payload)
               .then(() =>
                 toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
                   position: "top-left",
-                })
+                }),
               )
               .catch((error) => {
                 toast.error(
                   "Lỗi khi gửi thông tin lên Uchi " +
-                    error?.response?.data?.message
+                    error?.response?.data?.message,
                 );
               });
           }
@@ -256,19 +256,19 @@ export const HDMBCanHoToanBo = ({
         .then((res) => {
           createDownloadLink(
             res.data,
-            `Hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+            `Hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
           );
           if (metaData.isUchi && templateId && Number(templateId) > 0) {
             uchiTemporarySave(payload)
               .then(() =>
                 toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
                   position: "top-left",
-                })
+                }),
               )
               .catch((error) => {
                 toast.error(
                   "Lỗi khi gửi thông tin lên Uchi " +
-                    error?.response?.data?.message
+                    error?.response?.data?.message,
                 );
               });
           }
@@ -350,7 +350,7 @@ export const HDMBCanHoToanBo = ({
       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
       diện_tích_sàn_bằng_số: isMotPhan
-        ? canHo["diện_tích_sàn_một_phần_bằng_số"] ?? ""
+        ? (canHo["diện_tích_sàn_một_phần_bằng_số"] ?? "")
         : canHo["diện_tích_sàn_bằng_số"],
       kết_cấu: canHo["kết_cấu"],
       tầng_có_căn_hộ: canHo["tầng_có_căn_hộ"],
@@ -362,16 +362,16 @@ export const HDMBCanHoToanBo = ({
     return payload;
   };
 
-  const handleGenerateKhaiThue = () => {
+  const handleGenerateKhaiThue = (isND373?: boolean) => {
     const payload = getPayloadKhaiThue();
 
     setOpenDialog(false);
     setIsGenerating(true);
-    render_khai_thue_hdmb_can_ho_toan_bo(payload)
+    render_khai_thue_hdmb_can_ho_toan_bo(payload, isND373)
       .then((res) => {
         createDownloadLink(
           res.data,
-          `Khai thuế hợp đồng tặng cho căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+          `Khai thuế hợp đồng tặng cho căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
         );
       })
       .catch((error) => {
@@ -425,21 +425,37 @@ export const HDMBCanHoToanBo = ({
             {isUyQuyen ? "Tạo hợp đồng uỷ quyền" : "Tạo hợp đồng"}
           </Button>
           {!isUyQuyen ? (
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: palette.softTeal,
-                height: "50px",
-                fontSize: "1.2rem",
-                fontWeight: "600",
-                textTransform: "uppercase",
-                width: "200px",
-              }}
-              disabled={!isFormValid}
-              onClick={handleGenerateKhaiThue}
-            >
-              {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: palette.softTeal,
+                  height: "50px",
+                  fontSize: "1.2rem",
+                  fontWeight: "600",
+                  textTransform: "uppercase",
+                  width: "200px",
+                }}
+                disabled={!isFormValid}
+                onClick={() => handleGenerateKhaiThue(false)}
+              >
+                {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: palette.softTeal,
+                  height: "50px",
+                  fontSize: "1.2rem",
+                  fontWeight: "600",
+                  textTransform: "uppercase",
+                }}
+                disabled={!isFormValid}
+                onClick={() => handleGenerateKhaiThue(true)}
+              >
+                {isGenerating ? <CircularProgress size={20} /> : "Khai thuế theo NĐ 373"}
+              </Button>
+            </>
           ) : null}
           <PhieuThuLyButton
             commonPayload={
