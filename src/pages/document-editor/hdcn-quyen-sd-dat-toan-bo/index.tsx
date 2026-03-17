@@ -7,6 +7,10 @@ import {
   TextField,
   InputAdornment,
   useTheme,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { ThongTinDat } from "./components/thong-tin-dat";
 import SearchIcon from "@mui/icons-material/Search";
@@ -63,6 +67,10 @@ export const ChuyenNhuongDatToanBo = ({
   const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openTaxTypeDialog, setOpenTaxTypeDialog] = useState(false);
+  const [pendingIsND373, setPendingIsND373] = useState<boolean | undefined>(
+    undefined,
+  );
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get("templateId");
   const id = searchParams.get("id");
@@ -73,7 +81,7 @@ export const ChuyenNhuongDatToanBo = ({
         const originalPayload = res.content.original_payload;
         if (originalPayload) {
           addAgreementObject(
-            originalPayload?.agreementObject as ThongTinThuaDat
+            originalPayload?.agreementObject as ThongTinThuaDat,
           );
         }
       });
@@ -83,9 +91,6 @@ export const ChuyenNhuongDatToanBo = ({
   const userInfo = localStorage.getItem("user_info");
   const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
   const uchiId = userInfoObject?.uchi_id;
-  const isCM = userInfoObject?.branches?.some(
-    (branch: any) => branch.id === "CM"
-  );
 
   const isFormValid =
     (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
@@ -149,7 +154,7 @@ export const ChuyenNhuongDatToanBo = ({
     isUchi: boolean,
     ngày: string,
     sốHợpĐồng?: string,
-    notaryId?: number
+    notaryId?: number,
   ): HDCNQuyenSDDatPayload => {
     if (!agreementObject) {
       throw new Error("Agreement object is null");
@@ -184,7 +189,7 @@ export const ChuyenNhuongDatToanBo = ({
           thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
         })),
         thời_hạn: generateThoiHanSuDung(
-          agreementObject["mục_đích_và_thời_hạn_sử_dụng"]
+          agreementObject["mục_đích_và_thời_hạn_sử_dụng"],
         )?.trim(),
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
         ghi_chú: agreementObject["ghi_chú"],
@@ -208,12 +213,12 @@ export const ChuyenNhuongDatToanBo = ({
       ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
       số_bản_gốc_bằng_chữ: numberToVietnamese(
-        String(sốBảnGốc)
+        String(sốBảnGốc),
       )?.toLocaleLowerCase(),
       số_bản_công_chứng:
         sốBảnGốc - 1 < 10 ? "0" + String(sốBảnGốc - 1) : String(sốBảnGốc - 1),
       số_bản_công_chứng_bằng_chữ: numberToVietnamese(
-        String(sốBảnGốc - 1)
+        String(sốBảnGốc - 1),
       )?.toLocaleLowerCase(),
       ký_bên_ngoài: isOutSide,
       công_chứng_viên: côngChứngViên,
@@ -242,7 +247,7 @@ export const ChuyenNhuongDatToanBo = ({
       metaData.isUchi,
       metaData.ngày,
       metaData.sốHợpĐồng,
-      metaData.notaryId
+      metaData.notaryId,
     );
     setOpenDialog(false);
     setIsGenerating(true);
@@ -255,7 +260,7 @@ export const ChuyenNhuongDatToanBo = ({
               res.data,
               `HDTC đất ${isNongNghiep ? "nông nghiệp" : ""} một phần - ${
                 payload["bên_A"]["cá_thể"][0]["tên"]
-              } - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+              } - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
             );
           })
           .catch((error) => {
@@ -272,19 +277,19 @@ export const ChuyenNhuongDatToanBo = ({
               res.data,
               `HDTC đất ${isNongNghiep ? "nông nghiệp" : ""} toàn bộ - ${
                 payload["bên_A"]["cá_thể"][0]["tên"]
-              } - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+              } - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
             );
             if (metaData.isUchi && templateId && Number(templateId) > 0) {
               uchiTemporarySave(payload)
                 .then(() =>
                   toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
                     position: "top-left",
-                  })
+                  }),
                 )
                 .catch((error) => {
                   toast.error(
                     "Lỗi khi gửi thông tin lên Uchi " +
-                      error?.response?.data?.message
+                      error?.response?.data?.message,
                   );
                 });
             }
@@ -304,19 +309,19 @@ export const ChuyenNhuongDatToanBo = ({
           .then((res) => {
             createDownloadLink(
               res.data,
-              `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+              `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
             );
             if (metaData.isUchi && templateId && Number(templateId) > 0) {
               uchiTemporarySave(payload)
                 .then(() =>
                   toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
                     position: "top-left",
-                  })
+                  }),
                 )
                 .catch((error) => {
                   toast.error(
                     "Lỗi khi gửi thông tin lên Uchi " +
-                      error?.response?.data?.message
+                      error?.response?.data?.message,
                   );
                 });
             }
@@ -333,26 +338,26 @@ export const ChuyenNhuongDatToanBo = ({
           .then((res) => {
             createDownloadLink(
               res.data,
-              `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+              `Hợp đồng chuyển nhượng - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
             );
             if (metaData.isUchi && templateId && Number(templateId) > 0) {
               uchiTemporarySave(payload)
                 .then(() =>
                   toast.success("Hợp đồng đã được lưu tạm trong Uchi", {
                     position: "top-left",
-                  })
+                  }),
                 )
                 .catch((error) => {
                   toast.error(
                     "Lỗi khi gửi thông tin lên Uchi " +
-                      error?.response?.data?.message
+                      error?.response?.data?.message,
                   );
                 });
             }
           })
           .catch((error) => {
             toast.error(
-              "Lỗi khi tạo hợp đồng " + error?.response?.data?.message
+              "Lỗi khi tạo hợp đồng " + error?.response?.data?.message,
             );
           })
           .finally(() => {
@@ -423,7 +428,7 @@ export const ChuyenNhuongDatToanBo = ({
       đặc_điểm_thửa_đất: {
         diện_tích: {
           số: isMotPhan
-            ? agreementObject["một_phần_diện_tích"] ?? ""
+            ? (agreementObject["một_phần_diện_tích"] ?? "")
             : agreementObject["diện_tích"],
         },
         mục_đích_và_thời_hạn_sử_dụng: isMotPhan
@@ -431,7 +436,7 @@ export const ChuyenNhuongDatToanBo = ({
               (item) => ({
                 phân_loại: item["phân_loại"],
                 diện_tích: item["diện_tích"] || agreementObject["diện_tích"],
-              })
+              }),
             )
           : agreementObject["mục_đích_và_thời_hạn_sử_dụng"]?.map((item) => ({
               phân_loại: item["phân_loại"],
@@ -440,7 +445,7 @@ export const ChuyenNhuongDatToanBo = ({
         nguồn_gốc_sử_dụng: agreementObject["nguồn_gốc_sử_dụng"],
         hình_thức_sử_dụng: agreementObject["hình_thức_sử_dụng"],
         thời_hạn: generateThoiHanSuDung(
-          agreementObject["mục_đích_và_thời_hạn_sử_dụng"]
+          agreementObject["mục_đích_và_thời_hạn_sử_dụng"],
         )?.trim(),
       },
       số_tiền: agreementObject["giá_tiền"],
@@ -455,12 +460,19 @@ export const ChuyenNhuongDatToanBo = ({
     return payload;
   };
 
-  const handleGenerateToKhaiChung = (isND373?: boolean) => {
+  const handleGenerateToKhaiChung = (
+    isND373: boolean | undefined,
+    isCM: boolean,
+  ) => {
     const payload = getPayloadToKhaiChung();
     setOpenDialog(false);
     setIsGenerating(true);
     if (isTangCho) {
-      render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(payload, isCM, isND373)
+      render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(
+        payload,
+        isCM,
+        isND373,
+      )
         .then((res) => {
           createDownloadLink(res?.data, "to-khai-chung.docx");
         })
@@ -472,7 +484,11 @@ export const ChuyenNhuongDatToanBo = ({
           setIsGenerating(false);
         });
     } else {
-      render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(payload, isCM, isND373)
+      render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(
+        payload,
+        isCM,
+        isND373,
+      )
         .then((res) => {
           createDownloadLink(res?.data, "to-khai-chung.docx");
         })
@@ -587,7 +603,10 @@ export const ChuyenNhuongDatToanBo = ({
               width: "200px",
             }}
             disabled={!isFormValid}
-            onClick={() => handleGenerateToKhaiChung(false)}
+            onClick={() => {
+              setPendingIsND373(false);
+              setOpenTaxTypeDialog(true);
+            }}
           >
             {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
           </Button>
@@ -601,9 +620,16 @@ export const ChuyenNhuongDatToanBo = ({
               textTransform: "uppercase",
             }}
             disabled={!isFormValid}
-            onClick={() => handleGenerateToKhaiChung(true)}
+            onClick={() => {
+              setPendingIsND373(true);
+              setOpenTaxTypeDialog(true);
+            }}
           >
-            {isGenerating ? <CircularProgress size={20} /> : "Khai thuế theo NĐ 373"}
+            {isGenerating ? (
+              <CircularProgress size={20} />
+            ) : (
+              "Khai thuế theo NĐ 373"
+            )}
           </Button>
           <PhieuThuLyButton
             commonPayload={
@@ -622,6 +648,48 @@ export const ChuyenNhuongDatToanBo = ({
           handleGenerateDocument={handleGenerateDocument}
         />
       ) : null}
+      {openTaxTypeDialog && (
+        <Dialog
+          open={openTaxTypeDialog}
+          onClose={() => setOpenTaxTypeDialog(false)}
+        >
+          <DialogTitle>Chọn loại tờ khai</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Bạn muốn tạo tờ khai cho chi nhánh CM hay loại thông thường?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setOpenTaxTypeDialog(false);
+                setPendingIsND373(undefined);
+              }}
+            >
+              Hủy
+            </Button>
+            <Button
+              onClick={() => {
+                if (pendingIsND373 === undefined) return;
+                setOpenTaxTypeDialog(false);
+                handleGenerateToKhaiChung(pendingIsND373, false);
+              }}
+            >
+              Thông thường
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                if (pendingIsND373 === undefined) return;
+                setOpenTaxTypeDialog(false);
+                handleGenerateToKhaiChung(pendingIsND373, true);
+              }}
+            >
+              Chi nhánh CM
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Box>
   );
 };
