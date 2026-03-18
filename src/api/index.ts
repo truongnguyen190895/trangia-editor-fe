@@ -24,6 +24,7 @@ import type {
 } from "@/models/hdmb-tai-san";
 import type { HdDatCocPayload } from "@/models/hd-dat-coc";
 import { convertEmptyStringsToNull } from "@/utils/common";
+import { getChiNhanhVanPhongDangKyDat } from "@/utils/extract-address";
 
 export interface PhieuThuPayload {
   d: string;
@@ -62,13 +63,13 @@ api.interceptors.response.use(
       window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export const render_hdmb_xe_oto = async (
   payload: HDMBXeOtoPayload,
   isXeMay?: boolean,
-  isDauGia?: boolean
+  isDauGia?: boolean,
 ) => {
   let url = "";
   if (isXeMay) {
@@ -85,7 +86,7 @@ export const render_hdmb_xe_oto = async (
 
 export const render_hdcn_quyen_sd_dat_toan_bo = async (
   payload: HDCNQuyenSDDatPayload,
-  isNongNghiep: boolean
+  isNongNghiep: boolean,
 ) => {
   return api.post(
     `/templates/nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat${
@@ -94,13 +95,13 @@ export const render_hdcn_quyen_sd_dat_toan_bo = async (
     payload,
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_hdcn_quyen_sd_dat_mot_phan = async (
   payload: HDCNQuyenSDDatPayload,
-  scope: "partial" | "full"
+  scope: "partial" | "full",
 ) => {
   let url = "";
   if (scope === "partial") {
@@ -117,7 +118,7 @@ export const render_hdcn_quyen_sd_dat_mot_phan = async (
 
 export const render_hdmb_can_ho = async (
   payload: HDMBCanHoPayload,
-  metadata: { isMotPhan?: boolean; scope?: "partial" | "full" }
+  metadata: { isMotPhan?: boolean; scope?: "partial" | "full" },
 ) => {
   let url = "";
   if (metadata.isMotPhan) {
@@ -137,7 +138,7 @@ export const render_hdmb_can_ho = async (
 };
 
 export const render_uy_quyen_toan_bo_can_ho = async (
-  payload: HDMBCanHoPayload
+  payload: HDMBCanHoPayload,
 ) => {
   return api.post("/templates/nhom-uy-quyen/uy-quyen-toan-bo-can-ho", payload, {
     responseType: "blob",
@@ -150,14 +151,14 @@ export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
     convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_hdtc_nha_dat_toan_bo = async (
   payload: HDMBNhaDatPayload,
   isMotPhan?: boolean,
-  scope?: "partial" | "full"
+  scope?: "partial" | "full",
 ) => {
   let url = "/templates/nhom-tang-cho";
   if (isMotPhan) {
@@ -169,30 +170,26 @@ export const render_hdtc_nha_dat_toan_bo = async (
   } else {
     url += "/hd-tang-cho-nha-dat-toan-bo";
   }
-  return api.post(
-    url,
-    convertEmptyStringsToNull(payload),
-    {
-      responseType: "blob",
-    }
-  );
+  return api.post(url, convertEmptyStringsToNull(payload), {
+    responseType: "blob",
+  });
 };
 
 export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (
-  payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload
+  payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
 ) => {
   return api.post(
     "/templates/nhom-chuyen-nhuong-mua-ban/hdcn-dat-va-tsglvd-toan-bo",
     payload,
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_hdcn_mot_phan_dat_va_tsglvd = async (
   payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
-  scope: "partial" | "full"
+  scope: "partial" | "full",
 ) => {
   let url = "";
   if (scope === "partial") {
@@ -210,7 +207,7 @@ export const render_hdcn_mot_phan_dat_va_tsglvd = async (
 export const render_hdtc_can_ho_toan_bo = async (
   payload: HDMBCanHoPayload,
   isMotPhan?: boolean,
-  scope?: "partial" | "full"
+  scope?: "partial" | "full",
 ) => {
   let url = "";
   if (isMotPhan) {
@@ -231,7 +228,7 @@ export const render_hdtc_can_ho_toan_bo = async (
 
 export const render_hdtc_dat_toan_bo = async (
   payload: HDCNQuyenSDDatPayload,
-  isNongNghiep: boolean
+  isNongNghiep: boolean,
 ) => {
   return api.post(
     `/templates/nhom-tang-cho/hd-tang-cho-dat${
@@ -240,14 +237,14 @@ export const render_hdtc_dat_toan_bo = async (
     payload,
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_hdtc_dat_mot_phan = async (
   payload: HDCNQuyenSDDatPayload,
   isNongNghiep: boolean,
-  scope: "partial" | "full"
+  scope: "partial" | "full",
 ) => {
   let url = "";
   if (isNongNghiep) {
@@ -274,7 +271,7 @@ export const render_hdtc_dat_mot_phan = async (
 export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   payload: SampleToKhaiChungPayload,
   isCM: boolean = false,
-  isND373?: boolean
+  isND373?: boolean,
 ) => {
   let url =
     "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep";
@@ -285,15 +282,23 @@ export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   if (isND373) {
     url = url + "-v2";
   }
-  return api.post(url, payload, {
-    responseType: "blob",
-  });
+  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
+    payload["phường"] || null,
+  );
+
+  return api.post(
+    url,
+    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
+    {
+      responseType: "blob",
+    },
+  );
 };
 
 export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
   payload: SampleToKhaiChungPayload,
   isCM: boolean = false,
-  isND373?: boolean
+  isND373?: boolean,
 ) => {
   let url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep";
   if (isCM) {
@@ -302,117 +307,151 @@ export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
   if (isND373) {
     url = url + "-v2";
   }
-  return api.post(url, payload, {
-    responseType: "blob",
-  });
+  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
+    payload["phường"] || null,
+  );
+  return api.post(
+    url,
+    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
+    {
+      responseType: "blob",
+    },
+  );
 };
 
 export const render_khai_thue_tang_cho_nha_dat_toan_bo = async (
   payload: KhaiThueHDMBNhaDatToanBoPayload,
-  isND373?: boolean
+  isND373?: boolean,
 ) => {
   let url = "/templates/khai-thue/khai-thue-tang-cho-nha-dat-va-tsglvd";
   if (isND373) {
     url = url + "-v2";
   }
+  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
+    payload.phường,
+  );
   return api.post(
     url,
-    payload,
+    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_khai_thue_hdmb_can_ho_toan_bo = async (
   payload: KhaiThueHDMBCanHoToanBoPayload,
-  isND373?: boolean
+  isND373?: boolean,
 ) => {
   let url = "/templates/khai-thue/khai-thue-mua-ban-can-ho";
   if (isND373) {
     url = url + "-v2";
   }
-  return api.post(url, payload, {
-    responseType: "blob",
-  });
+  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
+    payload.phường,
+  );
+  return api.post(
+    url,
+    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
+    {
+      responseType: "blob",
+    },
+  );
 };
 
 export const render_khai_thue_hdmb_nha_dat_toan_bo = async (
   payload: KhaiThueHDMBNhaDatToanBoPayload,
-  isND373?: boolean
+  isND373?: boolean,
 ) => {
   let url = "/templates/khai-thue/khai-thue-mua-ban-nha-dat";
   if (isND373) {
     url = url + "-v2";
   }
-  return api.post(url, payload, {
-    responseType: "blob",
-  });
+  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
+    payload.phường,
+  );
+  return api.post(
+    url,
+    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
+    {
+      responseType: "blob",
+    },
+  );
 };
 
 export const render_khai_thue_hdcn_dat_va_tsglvd_toan_bo = async (
   payload: KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
-  isND373?: boolean
+  isND373?: boolean,
 ) => {
   let url = "/templates/khai-thue/khai-thue-mua-ban-nha-dat-va-tsglvd";
   if (isND373) {
     url = url + "-v2";
   }
+  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
+    payload.phường,
+  );
   return api.post(
     url,
-    payload,
+    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_khai_thue_hdtc_can_ho_toan_bo = async (
   payload: KhaiThueHDMBCanHoToanBoPayload,
-  isND373?: boolean
+  isND373?: boolean,
 ) => {
   let url = "/templates/khai-thue/khai-thue-tang-cho-can-ho";
   if (isND373) {
     url = url + "-v2";
   }
-  return api.post(url, payload, {
-    responseType: "blob",
-  });
+  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
+    payload.phường,
+  );
+  return api.post(
+    url,
+    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
+    {
+      responseType: "blob",
+    },
+  );
 };
 
 export const render_uy_quyen_toan_bo_quyen_su_dung_dat = async (
-  payload: UyQuyenToanBoQuyenSdDatPayload
+  payload: UyQuyenToanBoQuyenSdDatPayload,
 ) => {
   return api.post(
     "/templates/nhom-uy-quyen/uy-quyen-toan-bo-quyen-su-dung-dat",
     convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_uy_quyen_toan_bo_nha_dat = async (
-  payload: HDMBNhaDatPayload
+  payload: HDMBNhaDatPayload,
 ) => {
   return api.post(
     "/templates/nhom-uy-quyen/uy-quyen-toan-bo-nha-dat",
     convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_uy_quyen_toan_bo_xe_oto = async (
-  payload: HDMBXeOtoPayload
+  payload: HDMBXeOtoPayload,
 ) => {
   return api.post(
     "/templates/nhom-uy-quyen/uy-quyen-xe-oto",
     convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
@@ -422,21 +461,28 @@ export const render_hdmb_tai_san = async (payload: HDMBTaiSanPayload) => {
     convertEmptyStringsToNull(payload),
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_khai_thue_hdmb_tai_san = async (
   payload: KhaiThueHDMBTaiSanPayload,
-  isND373?: boolean
+  isND373?: boolean,
 ) => {
   let url = "/templates/khai-thue/khai-thue-mua-ban-tai-san";
   if (isND373) {
     url = url + "-v2";
   }
-  return api.post(url, payload, {
-    responseType: "blob",
-  });
+  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
+    payload.phường,
+  );
+  return api.post(
+    url,
+    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
+    {
+      responseType: "blob",
+    },
+  );
 };
 
 export const render_vb_huy = async (payload: NhomHuySuaDoiPayload) => {
@@ -452,20 +498,20 @@ export const render_vb_cham_dut_hd = async (payload: NhomHuySuaDoiPayload) => {
 };
 
 export const render_vb_cham_dut_hq_uy_quyen = async (
-  payload: NhomHuySuaDoiPayload
+  payload: NhomHuySuaDoiPayload,
 ) => {
   return api.post(
     "/templates/nhom-huy-sua-doi/vb-cham-dut-hq-uy-quyen",
     payload,
     {
       responseType: "blob",
-    }
+    },
   );
 };
 
 export const render_hd_dat_coc = async (
   payload: HdDatCocPayload,
-  isChuaXoaChap: boolean
+  isChuaXoaChap: boolean,
 ) => {
   let url = "";
   if (isChuaXoaChap) {
