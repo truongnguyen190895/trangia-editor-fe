@@ -116,16 +116,21 @@ export const getTheNextAvailableId = (type: string): Promise<string> => {
 interface ListWorkHistoryParams {
   size?: number;
   page?: number;
+  /** ISO date `YYYY-MM-DD`, filters by contract creation date (inclusive). */
+  dateBegin?: string;
+  dateEnd?: string;
+  /** Case-insensitive partial match on Bên A or Bên B (first party name). */
+  partyName?: string;
 }
 export const listWorkHistory = (
   params: ListWorkHistoryParams
-): Promise<WorkHistoryResponse> => {
+): Promise<WorkHistoryPageResponse> => {
   return api
     .get("/contracts?sort=audit.createdAt,desc", { params })
     .then((resp) => resp.data);
 };
 
-export interface WorkHistoryResponse {
+export interface WorkHistoryItem {
   id: string;
   template: string;
   audit: {
@@ -135,6 +140,10 @@ export interface WorkHistoryResponse {
     updated_by_username: string;
   };
   content: any;
+}
+
+export interface WorkHistoryPageResponse {
+  content: WorkHistoryItem[];
   page: {
     number: number;
     size: number;
@@ -144,6 +153,6 @@ export interface WorkHistoryResponse {
 }
 export const getWorkHistoryById = (
   id: string
-): Promise<WorkHistoryResponse> => {
+): Promise<WorkHistoryItem> => {
   return api.get("/contracts/" + id).then((resp) => resp.data);
 };

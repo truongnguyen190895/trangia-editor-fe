@@ -7,26 +7,60 @@ import {
   Typography,
   TableBody,
   Pagination,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
-import { listWorkHistory } from "@/api/contract";
-import { useEffect, useState } from "react";
-import dayjs from "dayjs";
+import { listWorkHistory, type WorkHistoryItem } from "@/api/contract";
+import { useEffect, useRef, useState } from "react";
+import dayjs, { type Dayjs } from "dayjs";
 import { templates } from "@/database";
 import { useNavigate } from "react-router-dom";
 import { getTemplateName } from "@/utils/common";
 import { LoadingDialog } from "@/components/common/loading-dialog";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import SearchIcon from "@mui/icons-material/Search";
+
+const DEBOUNCE_MS = 500;
 
 const WorkHistory = () => {
   const [loading, setLoading] = useState(false);
-  const [workHistory, setWorkHistory] = useState<any[]>([]);
+  const [workHistory, setWorkHistory] = useState<WorkHistoryItem[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [page, setPage] = useState(1);
+  const [dateBegin, setDateBegin] = useState<Dayjs | null>(null);
+  const [dateEnd, setDateEnd] = useState<Dayjs | null>(null);
+  const [partyNameInput, setPartyNameInput] = useState("");
+  const [debouncedPartyName, setDebouncedPartyName] = useState("");
+  const prevDebouncedPartyName = useRef<string | undefined>(undefined);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedPartyName(partyNameInput.trim());
+    }, DEBOUNCE_MS);
+    return () => clearTimeout(t);
+  }, [partyNameInput]);
+
+  useEffect(() => {
+    if (
+      prevDebouncedPartyName.current !== undefined &&
+      prevDebouncedPartyName.current !== debouncedPartyName
+    ) {
+      setPage(1);
+    }
+    prevDebouncedPartyName.current = debouncedPartyName;
+  }, [debouncedPartyName]);
+
+  useEffect(() => {
     setLoading(true);
-    listWorkHistory({ size: 20, page: page - 1 })
+    listWorkHistory({
+      size: 20,
+      page: page - 1,
+      dateBegin: dateBegin ? dayjs(dateBegin).format("YYYY-MM-DD") : undefined,
+      dateEnd: dateEnd ? dayjs(dateEnd).format("YYYY-MM-DD") : undefined,
+      partyName: debouncedPartyName || undefined,
+    })
       .then((resp) => {
         setWorkHistory(resp?.content ?? []);
         setTotalPages(resp?.page?.total_pages ?? 0);
@@ -35,7 +69,7 @@ const WorkHistory = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [page]);
+  }, [page, dateBegin, dateEnd, debouncedPartyName]);
 
   const handleClick = (templatePath: string, id: string) => {
     const [group, subGroup] = templatePath?.split("/") ?? ["", ""];
@@ -70,7 +104,49 @@ const WorkHistory = () => {
   return (
     <Box>
       <Typography variant="h3">Lịch sử soạn thảo ({totalElements})</Typography>
-      <Box mt="2rem">
+      <Box
+        mt="1.5rem"
+        mb="1.5rem"
+        display="flex"
+        flexWrap="wrap"
+        gap={2}
+        alignItems="center"
+      >
+        <DatePicker
+          label="Từ ngày"
+          value={dateBegin}
+          onChange={(v) => {
+            setDateBegin(v);
+            setPage(1);
+          }}
+          slotProps={{ textField: { size: "small" } }}
+        />
+        <DatePicker
+          label="Đến ngày"
+          value={dateEnd}
+          onChange={(v) => {
+            setDateEnd(v);
+            setPage(1);
+          }}
+          slotProps={{ textField: { size: "small" } }}
+        />
+        <TextField
+          size="small"
+          label="Tìm theo tên bên (A hoặc B)"
+          placeholder="Nhập tên…"
+          value={partyNameInput}
+          onChange={(e) => setPartyNameInput(e.target.value)}
+          sx={{ minWidth: 280 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" color="action" />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+      <Box mt="0.5rem">
         <Table>
           <TableHead sx={{ backgroundColor: "#f0f0f0" }}>
             <TableRow>
@@ -119,7 +195,7 @@ const WorkHistory = () => {
       </Box>
       <LoadingDialog open={loading} />
     </Box>
-    );
+  );
 };
 
 export default WorkHistory;
