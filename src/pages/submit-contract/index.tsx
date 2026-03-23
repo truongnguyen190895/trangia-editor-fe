@@ -14,9 +14,9 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { BRANCHES } from "@/constants/branches";
 import { CONTRACT_TYPES, INVOICE_TYPES } from "@/constants/contract-types";
 import { REVIEWERS } from "@/constants/reviewer";
+import { listBranches, type Branch } from "@/api/branchs";
 import { useFormik } from "formik";
 import { WarningDialog } from "@/components/common/warning-dialog";
 import {
@@ -69,6 +69,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   const [warningDialogOpen, setWarningDialogOpen] = useState(false);
   const [users, setUsers] =
     useState<{ id: number; value: string; label: string }[]>(REVIEWERS);
+  const [branchs, setBranchs] = useState<Branch[]>([]);
   const userRoles = JSON.parse(localStorage.getItem("roles") || "[]");
   const isAdmin = userRoles.some(
     (role: string) => role === "ROLE_Admin" || role === "ROLE_Manager"
@@ -88,6 +89,16 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         }));
       setUsers(branchManagersUsers);
     });
+  }, []);
+
+  useEffect(() => {
+    listBranches()
+      .then((resp) => {
+        setBranchs(resp);
+      })
+      .catch((err) => {
+        console.error("Error loading branches:", err);
+      });
   }, []);
 
   useEffect(() => {
@@ -413,9 +424,9 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
                   value={values.unit}
                   onChange={handleChange}
                 >
-                  {BRANCHES.map((branch) => (
-                    <MenuItem key={branch.id} value={branch.value}>
-                      {branch.label}
+                  {branchs.map((branch) => (
+                    <MenuItem key={branch.id} value={branch.id}>
+                      {branch.friendly_name}
                     </MenuItem>
                   ))}
                 </Select>
