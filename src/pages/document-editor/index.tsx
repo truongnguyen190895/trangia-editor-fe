@@ -105,6 +105,8 @@ export const DocumentEditor = () => {
           </HDMBCanHoProvider>
         );
       case "hdmb-nha-dat-toan-bo":
+      case "hdmb-nha-dat-mot-phan-de-su-dung-toan-bo":
+      case "hdmb-nha-dat-mot-phan-de-dong-su-dung":
       case "hd-tang-cho-nha-dat-toan-bo":
       case "hd-tang-cho-nha-dat-mot-phan-de-dong-su-dung":
       case "hd-tang-cho-nha-dat-mot-phan-de-su-dung-toan-bo":

@@ -256,11 +256,15 @@ export const HDMBNhaDatToanBo = ({
                     setIsGenerating(false);
                 });
         } else {
-            render_hdmb_nha_dat(payload)
+            render_hdmb_nha_dat(payload, isMotPhan, scope)
                 .then((res) => {
+                    let documentName = "Hợp đồng mua bán nhà đất toàn bộ";
+                    if (isMotPhan) {
+                        documentName = "Hợp đồng mua bán nhà đất một phần";
+                    }
                     createDownloadLink(
                         res.data,
-                        `Hợp đồng mua bán nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+                        `${documentName} - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
                     );
                     if (metaData.isUchi && templateId && Number(templateId) > 0) {
                         uchiTemporarySave(payload)

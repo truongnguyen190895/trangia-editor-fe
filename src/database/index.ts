@@ -83,6 +83,22 @@ export const templates = [
   },
   {
     id: uuidv4(),
+    name: "HĐMB nhà đất một phần (để sở hữu toàn bộ).docx",
+    type: "agreement",
+    subCategory: "nhom-chuyen-nhuong-mua-ban",
+    path: "hdmb-nha-dat-mot-phan-de-su-dung-toan-bo",
+    templateId: 0,
+  },
+  {
+    id: uuidv4(),
+    name: "HĐMB nhà đất một phần (đồng sở hữu).docx",
+    type: "agreement",
+    subCategory: "nhom-chuyen-nhuong-mua-ban",
+    path: "hdmb-nha-dat-mot-phan-de-dong-su-dung",
+    templateId: 0,
+  },
+  {
+    id: uuidv4(),
     name: "HĐ tặng cho căn hộ toàn bộ.docx",
     type: "agreement",
     subCategory: "nhom-tang-cho",

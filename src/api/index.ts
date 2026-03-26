@@ -145,14 +145,24 @@ export const render_uy_quyen_toan_bo_can_ho = async (
   });
 };
 
-export const render_hdmb_nha_dat = async (payload: HDMBNhaDatPayload) => {
-  return api.post(
-    "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-toan-bo",
-    convertEmptyStringsToNull(payload),
-    {
-      responseType: "blob",
-    },
-  );
+export const render_hdmb_nha_dat = async (
+  payload: HDMBNhaDatPayload,
+  isMotPhan?: boolean,
+  scope?: "partial" | "full",
+) => {
+  let url = "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-toan-bo";
+  if (isMotPhan) {
+    if (scope === "partial") {
+      url =
+        "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-mot-phan-de-dong-su-dung";
+    } else {
+      url =
+        "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-nha-dat-mot-phan-de-su-dung-toan-bo";
+    }
+  }
+  return api.post(url, convertEmptyStringsToNull(payload), {
+    responseType: "blob",
+  });
 };
 
 export const render_hdtc_nha_dat_toan_bo = async (
