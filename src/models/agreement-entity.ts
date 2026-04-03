@@ -199,6 +199,7 @@ export type SampleToKhaiChungPayload = {
     diện_tích: {
       số: string;
     };
+    diện_tích_phi_nông_nghiệp: string;
   };
   số_tiền: string;
 };

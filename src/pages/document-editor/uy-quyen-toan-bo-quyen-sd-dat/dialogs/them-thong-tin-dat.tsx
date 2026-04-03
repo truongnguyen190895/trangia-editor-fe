@@ -63,6 +63,7 @@ export const ThemThongTinDat = ({
         ngày_cấp_giấy_chứng_nhận: "",
         diện_tích: "",
         diện_tích_bằng_chữ: "",
+        diện_tích_phi_nông_nghiệp: "",
         hình_thức_sử_dụng: "",
         nguồn_gốc_sử_dụng: "",
         giá_tiền: "",

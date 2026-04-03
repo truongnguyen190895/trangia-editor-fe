@@ -431,6 +431,7 @@ export const ChuyenNhuongDatToanBo = ({
             ? (agreementObject["một_phần_diện_tích"] ?? "")
             : agreementObject["diện_tích"],
         },
+        diện_tích_phi_nông_nghiệp: agreementObject["diện_tích_phi_nông_nghiệp"],
         mục_đích_và_thời_hạn_sử_dụng: isMotPhan
           ? agreementObject["mục_đích_và_thời_hạn_sử_dụng_một_phần"]?.map(
               (item) => ({

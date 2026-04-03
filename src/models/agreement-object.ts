@@ -10,6 +10,7 @@ export interface ThongTinThuaDat {
   ngày_cấp_giấy_chứng_nhận: string;
   diện_tích: string;
   diện_tích_bằng_chữ: string;
+  diện_tích_phi_nông_nghiệp: string;
   một_phần_diện_tích?: string;
   một_phần_diện_tích_bằng_chữ?: string;
   hình_thức_sử_dụng: string;

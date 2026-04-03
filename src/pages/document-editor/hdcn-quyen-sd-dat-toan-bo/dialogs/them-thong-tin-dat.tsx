@@ -135,6 +135,7 @@ export const ThemThongTinDat = ({
         ngày_cấp_giấy_chứng_nhận: "",
         diện_tích: "",
         diện_tích_bằng_chữ: "",
+        diện_tích_phi_nông_nghiệp: "",
         một_phần_diện_tích: "",
         một_phần_diện_tích_bằng_chữ: "",
         hình_thức_sử_dụng: "",
@@ -168,8 +169,8 @@ export const ThemThongTinDat = ({
     if (indexEdit !== null) {
       setMụcĐíchVàThờiHạnSửDụng(
         mụcđíchVàThờiHạnSửDụng.map((item, index) =>
-          index === indexEdit ? mụcđíchVàThờiHạnSửDụngEdit : item
-        )
+          index === indexEdit ? mụcđíchVàThờiHạnSửDụngEdit : item,
+        ),
       );
     } else {
       setMụcĐíchVàThờiHạnSửDụng([
@@ -196,7 +197,7 @@ export const ThemThongTinDat = ({
         });
         setMụcĐíchVàThờiHạnSửDụng(response.mục_đích_và_thời_hạn_sử_dụng ?? []);
         setMụcĐíchVàThờiHạnSửDụngMotPhan(
-          response.mục_đích_và_thời_hạn_sử_dụng_một_phần ?? []
+          response.mục_đích_và_thời_hạn_sử_dụng_một_phần ?? [],
         );
       })
       .catch(() => {
@@ -311,7 +312,7 @@ export const ThemThongTinDat = ({
                 options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
                 value={
                   CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
-                    (item) => item.value === values["loại_giấy_chứng_nhận"]
+                    (item) => item.value === values["loại_giấy_chứng_nhận"],
                   ) ?? null
                 }
                 getOptionLabel={(option) => option.label}
@@ -420,8 +421,10 @@ export const ThemThongTinDat = ({
                   setFieldValue(
                     "diện_tích_bằng_chữ",
                     numberToVietnamese(
-                      event.target.value?.replace(/\./g, "").replace(/\,/g, ".")
-                    )
+                      event.target.value
+                        ?.replace(/\./g, "")
+                        .replace(/\,/g, "."),
+                    ),
                   );
                 }}
                 error={!!errors["diện_tích"] && touched["diện_tích"]}
@@ -465,8 +468,8 @@ export const ThemThongTinDat = ({
                         numberToVietnamese(
                           event.target.value
                             ?.replace(/\./g, "")
-                            .replace(/\,/g, ".")
-                        )
+                            .replace(/\,/g, "."),
+                        ),
                       );
                     }}
                   />
@@ -481,6 +484,26 @@ export const ThemThongTinDat = ({
                   />
                 </>
               ) : null}
+              <TextField
+                fullWidth
+                type="text"
+                id="diện_tích_phi_nông_nghiệp"
+                name="diện_tích_phi_nông_nghiệp"
+                label="Diện tích phi nông nghiệp (m2)"
+                value={values["diện_tích_phi_nông_nghiệp"]}
+                onChange={(event) => {
+                  handleChange(event);
+                }}
+                error={
+                  !!errors["diện_tích_phi_nông_nghiệp"] &&
+                  touched["diện_tích_phi_nông_nghiệp"]
+                }
+                helperText={
+                  errors["diện_tích_phi_nông_nghiệp"] &&
+                  touched["diện_tích_phi_nông_nghiệp"] &&
+                  errors["diện_tích_phi_nông_nghiệp"]
+                }
+              />
               <TextField
                 fullWidth
                 id="hình_thức_sử_dụng"
@@ -528,12 +551,15 @@ export const ThemThongTinDat = ({
                     value={
                       MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
                         (item) =>
-                          item.value === mụcđíchVàThờiHạnSửDụngEdit["phân_loại"]
+                          item.value ===
+                          mụcđíchVàThờiHạnSửDụngEdit["phân_loại"],
                       ) ?? mụcđíchVàThờiHạnSửDụngEdit["phân_loại"]
                     }
                     onChange={(_event, value) => {
                       const newValue =
-                        typeof value === "string" ? value : value?.value ?? "";
+                        typeof value === "string"
+                          ? value
+                          : (value?.value ?? "");
                       setMụcĐíchVàThờiHạnSửDụngEdit({
                         ...mụcđíchVàThờiHạnSửDụngEdit,
                         phân_loại: newValue,
@@ -644,8 +670,8 @@ export const ThemThongTinDat = ({
                               onClick={() => {
                                 setMụcĐíchVàThờiHạnSửDụng(
                                   mụcđíchVàThờiHạnSửDụng.filter(
-                                    (_item, i) => i !== index
-                                  )
+                                    (_item, i) => i !== index,
+                                  ),
                                 );
                               }}
                             >
@@ -691,14 +717,14 @@ export const ThemThongTinDat = ({
                         MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
                           (item) =>
                             item.value ===
-                            mụcđíchVàThờiHạnSửDụngMotPhanEdit["phân_loại"]
+                            mụcđíchVàThờiHạnSửDụngMotPhanEdit["phân_loại"],
                         ) ?? mụcđíchVàThờiHạnSửDụngMotPhanEdit["phân_loại"]
                       }
                       onChange={(_event, value) => {
                         const newValue =
                           typeof value === "string"
                             ? value
-                            : value?.value ?? "";
+                            : (value?.value ?? "");
                         setMụcĐíchVàThờiHạnSửDụngMotPhanEdit({
                           ...mụcđíchVàThờiHạnSửDụngMotPhanEdit,
                           phân_loại: newValue,
@@ -839,7 +865,7 @@ export const ThemThongTinDat = ({
                                 startIcon={<DeleteIcon />}
                                 onClick={() => {
                                   setMụcĐíchVàThờiHạnSửDụngMotPhan((prev) =>
-                                    prev.filter((_item, i) => i !== index)
+                                    prev.filter((_item, i) => i !== index),
                                   );
                                   // Clear edit state if deleted item was being edited
                                   if (indexEdit === index) {
@@ -876,7 +902,7 @@ export const ThemThongTinDat = ({
                     onChange={(event) => {
                       setFieldValue(
                         "nguồn_gốc_sử_dụng",
-                        event.target.value ?? ""
+                        event.target.value ?? "",
                       );
                     }}
                     label="Nguồn gốc sử dụng"
@@ -899,8 +925,8 @@ export const ThemThongTinDat = ({
                         numberToVietnamese(
                           event.target.value
                             ?.replace(/\./g, "")
-                            .replace(/\,/g, ".")
-                        )
+                            .replace(/\,/g, "."),
+                        ),
                       );
                     }}
                     error={!!errors["giá_tiền"] && touched["giá_tiền"]}
