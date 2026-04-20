@@ -117,8 +117,17 @@ export const ThemGiayUQButton = () => {
 
   return (
     <Box>
-      <Button variant="contained" onClick={handleOpen}>
-        Tạo giấy UQ
+      <Button
+        sx={{
+          height: "50px",
+          fontSize: "1.2rem",
+          fontWeight: "600",
+          textTransform: "uppercase",
+        }}
+        variant="contained"
+        onClick={handleOpen}
+      >
+        Giấy UQ
       </Button>
       <Dialog fullWidth maxWidth="lg" open={isOpen} onClose={handleClose}>
         <DialogTitle>GUQ</DialogTitle>
