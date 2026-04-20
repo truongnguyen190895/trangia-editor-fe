@@ -46,6 +46,7 @@ import { uchiTemporarySave } from "@/api/uchi";
 import { toast } from "react-toastify";
 import { getWorkHistoryById } from "@/api/contract";
 import type { ThongTinThuaDat } from "@/models/agreement-object";
+import { ThemGiayUQButton } from "@components/common/them-giay-uq-btn";
 
 interface Props {
   isNongNghiep?: boolean;
@@ -640,6 +641,7 @@ export const ChuyenNhuongDatToanBo = ({
             }
             type={generateThuLyType()}
           />
+          <ThemGiayUQButton />
         </Box>
       </Box>
       {openDialog ? (
