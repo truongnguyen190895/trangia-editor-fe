@@ -5,6 +5,12 @@ export const GENDER = {
 
 export type Gender = (typeof GENDER)[keyof typeof GENDER];
 
+export const GUQ_TEMPLATE = {
+  CM: "guq-cm",
+  VAC: "guq-vac",
+} as const;
+export type GuqTemplate = (typeof GUQ_TEMPLATE)[keyof typeof GUQ_TEMPLATE];
+
 export interface GiayUyQuyen {
   bên_B: {
     cá_thể: Array<{
@@ -36,4 +42,17 @@ export interface GiayUyQuyen {
     nơi_cấp: string;
     ngày_cấp: string;
   }>;
+
+  số_thửa_đất?: string;
+  số_tờ_bản_đồ?: string;
+  tên_hợp_đồng?: string;
+  ngày?: string;
+  tháng?: string;
+  năm?: string;
+  giờ_soạn?: string;
+  phút_soạn?: string;
+  ngày_bằng_chữ?: string;
+  tháng_bằng_chữ?: string;
+  năm_bằng_chữ?: string;
+  isSingleFrom?: boolean;
 }

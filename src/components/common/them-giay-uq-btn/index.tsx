@@ -12,34 +12,51 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  TextField,
   CircularProgress,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useThemChuTheContext } from "@/context/them-chu-the";
-import type { GiayUyQuyen } from "@/models/guq";
+import { GUQ_TEMPLATE, type GiayUyQuyen, type GuqTemplate } from "@/models/guq";
 import { generateGiayUyQuyen } from "@/api/giay_uy_quyen";
 import { createDownloadLink, extractCoupleFromParty } from "@/utils/common";
 import { extractAddress } from "@/utils/extract-address";
+import { translateDatePartsToVietnamese } from "@/utils/date-to-words";
 import { ThemNguoiDuocUQDialog } from "./them-nguoi-duoc-uq-dialog";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 
 type NguoiDuocUQ = GiayUyQuyen["nguoi_duoc_uq"][number];
 
+const TÊN_HỢP_ĐỒNG_VAC = "Hợp đồng chuyển nhượng quyền sử dụng đất";
+
 export const ThemGiayUQButton = () => {
   const { partyB } = useThemChuTheContext();
   const { agreementObject } = useHdcnQuyenSdDatContext();
+  const [chooserOpen, setChooserOpen] = useState<boolean>(false);
+  const [template, setTemplate] = useState<GuqTemplate | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [nguoiDuocUQList, setNguoiDuocUQList] = useState<NguoiDuocUQ[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [ngàyVAC, setNgàyVAC] = useState<string>(dayjs().format("DD/MM/YYYY"));
 
-  const handleClose = () => setIsOpen(false);
-  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => {
+    setIsOpen(false);
+    setTemplate(null);
+  };
+  const handleOpen = () => setChooserOpen(true);
+
+  const pickTemplate = (t: GuqTemplate) => {
+    setTemplate(t);
+    setChooserOpen(false);
+    setIsOpen(true);
+  };
 
   const handleOpenAdd = () => {
     setEditIndex(null);
@@ -71,6 +88,7 @@ export const ThemGiayUQButton = () => {
   };
 
   const handleGenerate = () => {
+    if (!template) return;
     const couplesB = extractCoupleFromParty(partyB);
     const payload: GiayUyQuyen = {
       bên_B: {
@@ -102,8 +120,26 @@ export const ThemGiayUQButton = () => {
         agreementObject?.["ngày_cấp_giấy_chứng_nhận"] ?? "",
       nguoi_duoc_uq: nguoiDuocUQList,
     };
+
+    if (template === GUQ_TEMPLATE.VAC) {
+      const [d, m, y] = ngàyVAC.split("/");
+      const parts = translateDatePartsToVietnamese(ngàyVAC);
+      const now = dayjs();
+      payload["số_thửa_đất"] = agreementObject?.["số_thửa_đất"] ?? "";
+      payload["số_tờ_bản_đồ"] = agreementObject?.["số_tờ_bản_đồ"] ?? "";
+      payload["tên_hợp_đồng"] = TÊN_HỢP_ĐỒNG_VAC;
+      payload["ngày"] = d ?? "";
+      payload["tháng"] = m ?? "";
+      payload["năm"] = y ?? "";
+      payload["giờ_soạn"] = now.format("HH");
+      payload["phút_soạn"] = now.format("mm");
+      payload["ngày_bằng_chữ"] = parts.ngày;
+      payload["tháng_bằng_chữ"] = parts.tháng;
+      payload["năm_bằng_chữ"] = parts.năm;
+    }
+
     setIsGenerating(true);
-    generateGiayUyQuyen(payload)
+    generateGiayUyQuyen(payload, template)
       .then((resp) => {
         createDownloadLink(resp.data, "giay-uy-quyen");
       })
@@ -129,9 +165,41 @@ export const ThemGiayUQButton = () => {
       >
         Giấy UQ
       </Button>
-      <Dialog fullWidth maxWidth="lg" open={isOpen} onClose={handleClose}>
-        <DialogTitle>GUQ</DialogTitle>
+      <Dialog open={chooserOpen} onClose={() => setChooserOpen(false)}>
+        <DialogTitle>Chọn loại giấy uỷ quyền</DialogTitle>
         <DialogContent>
+          <Typography>Bạn muốn tạo GUQ loại nào?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setChooserOpen(false)}>Hủy</Button>
+          <Button onClick={() => pickTemplate(GUQ_TEMPLATE.CM)}>
+            GUQ - (CM)
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => pickTemplate(GUQ_TEMPLATE.VAC)}
+          >
+            GUQ - VAC
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog fullWidth maxWidth="lg" open={isOpen} onClose={handleClose}>
+        <DialogTitle>
+          GUQ{template === GUQ_TEMPLATE.VAC ? " - VAC" : ""}
+        </DialogTitle>
+        <DialogContent>
+          {template === GUQ_TEMPLATE.VAC && (
+            <Box mt="1rem">
+              <Typography variant="h6">Ngày lập</Typography>
+              <TextField
+                value={ngàyVAC}
+                onChange={(e) => setNgàyVAC(e.target.value)}
+                placeholder="DD/MM/YYYY"
+                size="small"
+                sx={{ mt: 1, width: 220 }}
+              />
+            </Box>
+          )}
           <Box mt="1rem">
             <Typography variant="h6">Bên nhận uỷ quyền</Typography>
             {nguoiDuocUQList.length > 0 ? (
