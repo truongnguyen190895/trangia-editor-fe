@@ -8,6 +8,7 @@ export type Gender = (typeof GENDER)[keyof typeof GENDER];
 export const GUQ_TEMPLATE = {
   CM: "guq-cm",
   VAC: "guq-vac",
+  VAC_MULTIPLE: "guq-vac-multiple",
 } as const;
 export type GuqTemplate = (typeof GUQ_TEMPLATE)[keyof typeof GUQ_TEMPLATE];
 

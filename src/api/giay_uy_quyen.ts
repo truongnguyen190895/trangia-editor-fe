@@ -6,9 +6,14 @@ export const generateGiayUyQuyen = (
   payload: GiayUyQuyen,
   template: GuqTemplate = GUQ_TEMPLATE.CM,
 ) => {
-  const url = `/templates/guq/${template}`;
   const multiFrom = payload.bên_B.cá_thể?.length > 1;
   const isMultipleTo = payload.nguoi_duoc_uq.length > 1;
+
+  const effectiveTemplate =
+    template === GUQ_TEMPLATE.VAC && multiFrom
+      ? GUQ_TEMPLATE.VAC_MULTIPLE
+      : template;
+  const url = `/templates/guq/${effectiveTemplate}`;
 
   const extras =
     template === GUQ_TEMPLATE.CM
