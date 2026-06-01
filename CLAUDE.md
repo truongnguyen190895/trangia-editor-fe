@@ -62,6 +62,8 @@ Most write/render endpoints run their payload through `convertEmptyStringsToNull
 
 **Models.** TypeScript payload/entity types per document family live in [src/models/](src/models/). The `render_*` functions in [src/api/index.ts](src/api/index.ts) are the source of truth for which payload shape maps to which backend route.
 
+**Shared land editor.** `ChuyenNhuongDatToanBo` ([src/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/index.tsx](src/pages/document-editor/hdcn-quyen-sd-dat-toan-bo/index.tsx)) serves **8 land contract types** (chuyển nhượng + tặng cho, toàn bộ/một phần/nông nghiệp), routed by regex on the `name` query in [src/pages/document-editor/index.tsx](src/pages/document-editor/index.tsx) into `isTangCho`/`isMotPhan`/`isNongNghiep`/`scope`. Anything contract-type-specific in this page (and in `ThemGiayUQButton`) must derive from these flags — never hardcode "chuyển nhượng"/"tặng cho". For the giấy uỷ quyền `tên_hợp_đồng` mechanism (read from the source contract's lời chứng via the backend), see `tran-gia-be/docs/giay-uy-quyen-va-loi-chung.md`.
+
 **Build-time constant.** `vite.config.ts` defines `__BUILD_TIME__` (ISO string at build). It is read in [src/components/layout/index.tsx](src/components/layout/index.tsx) to show the build timestamp in the footer. Declare with `declare const __BUILD_TIME__: string;` when used elsewhere.
 
 **Path aliases.** Configured in both `vite.config.ts` and `tsconfig.app.json` — keep them in sync:
