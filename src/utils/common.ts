@@ -168,6 +168,12 @@ export const getTemplateName = (name: string) => {
       return "Hợp đồng tặng cho nhà đất một phần (đồng sử dụng)";
     case "hd-tang-cho-nha-dat-mot-phan-de-su-dung-toan-bo":
       return "Hợp đồng tặng cho nhà đất một phần (sử dụng toàn bộ)";
+    case "hd-tang-cho-toan-bo-dat-va-tsglvd":
+      return "Hợp đồng tặng cho đất và tài sản gắn liền với đất (toàn bộ)";
+    case "hd-tang-cho-dat-va-tsglvd-mot-phan-de-dong-su-dung":
+      return "Hợp đồng tặng cho đất và TSGLVĐ một phần (đồng sử dụng)";
+    case "hd-tang-cho-dat-va-tsglvd-mot-phan-de-su-dung-toan-bo":
+      return "Hợp đồng tặng cho đất và TSGLVĐ một phần (sử dụng toàn bộ)";
     case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
       return "HĐCN một phần đất và TSGLVĐ (đồng sử dụng)";
     case "hdcn-mot-phan-dat-va-tsglvd-de-su-dung-toan-bo":

@@ -13,6 +13,7 @@ import {
     render_khai_thue_hdmb_nha_dat_toan_bo,
     render_khai_thue_tang_cho_nha_dat_toan_bo,
     render_hdtc_nha_dat_toan_bo,
+    render_hdtc_dat_va_tsglvd,
     render_uy_quyen_toan_bo_nha_dat,
 } from "@/api";
 import { extractAddress } from "@/utils/extract-address";
@@ -34,6 +35,7 @@ import { createDownloadLink } from "@/utils/common";
 interface Props {
     isTangCho?: boolean;
     isUyQuyen?: boolean;
+    isDatVaTsglvd?: boolean;
     templateName?: string;
     scope?: "partial" | "full";
     isMotPhan?: boolean;
@@ -42,6 +44,7 @@ interface Props {
 export const HDMBNhaDatToanBo = ({
     isTangCho = false,
     isUyQuyen = false,
+    isDatVaTsglvd = false,
     templateName,
     scope,
     isMotPhan,
@@ -201,11 +204,17 @@ export const HDMBNhaDatToanBo = ({
         setOpenDialog(false);
         setIsGenerating(true);
         if (isTangCho) {
-            render_hdtc_nha_dat_toan_bo(payload, isMotPhan, scope)
+            const renderPromise = isDatVaTsglvd
+                ? render_hdtc_dat_va_tsglvd(payload, isMotPhan, scope)
+                : render_hdtc_nha_dat_toan_bo(payload, isMotPhan, scope);
+            const tenHopDong = isDatVaTsglvd
+                ? "Hợp đồng tặng cho đất và tài sản gắn liền với đất"
+                : "Hợp đồng tặng cho nhà đất";
+            renderPromise
                 .then((res) => {
                     createDownloadLink(
                         res.data,
-                        `Hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
+                        `${tenHopDong} - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
                     );
                     if (metaData.isUchi && templateId && Number(templateId) > 0) {
                         uchiTemporarySave(payload)
@@ -424,6 +433,11 @@ export const HDMBNhaDatToanBo = ({
 
     const generateThuLyType = () => {
         if (isTangCho) {
+            if (isDatVaTsglvd) {
+                return isMotPhan
+                    ? "hd-tang-cho-dat-va-tsglvd-mot-phan"
+                    : "hd-tang-cho-dat-va-tsglvd-toan-bo";
+            }
             return "hd-tang-cho-nha-dat-toan-bo";
         } else if (isUyQuyen) {
             return "uy-quyen-toan-bo-nha-dat";

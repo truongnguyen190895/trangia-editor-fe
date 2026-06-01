@@ -185,6 +185,26 @@ export const render_hdtc_nha_dat_toan_bo = async (
   });
 };
 
+export const render_hdtc_dat_va_tsglvd = async (
+  payload: HDMBNhaDatPayload,
+  isMotPhan?: boolean,
+  scope?: "partial" | "full",
+) => {
+  let url = "/templates/nhom-tang-cho";
+  if (isMotPhan) {
+    if (scope === "partial") {
+      url += "/hd-tang-cho-dat-va-tsglvd-mot-phan-de-dong-su-dung";
+    } else {
+      url += "/hd-tang-cho-dat-va-tsglvd-mot-phan-de-su-dung-toan-bo";
+    }
+  } else {
+    url += "/hd-tang-cho-toan-bo-dat-va-tsglvd";
+  }
+  return api.post(url, convertEmptyStringsToNull(payload), {
+    responseType: "blob",
+  });
+};
+
 export const render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo = async (
   payload: HDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
 ) => {
@@ -580,6 +600,12 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
       break;
     case "hd-tang-cho-nha-dat-toan-bo":
       documentName = "ptl-hd-tang-cho-nha-dat-toan-bo";
+      break;
+    case "hd-tang-cho-dat-va-tsglvd-toan-bo":
+      documentName = "ptl-hd-tang-cho-dat-va-tsglvd-toan-bo";
+      break;
+    case "hd-tang-cho-dat-va-tsglvd-mot-phan":
+      documentName = "ptl-hd-tang-cho-dat-va-tsglvd-mot-phan";
       break;
     case "hd-tang-cho-dat-mot-phan-de-dong-su-dung":
       documentName = "ptl-hd-tang-cho-dat-mot-phan";
