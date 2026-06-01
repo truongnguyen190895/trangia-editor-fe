@@ -536,6 +536,26 @@ export const ChuyenNhuongDatToanBo = ({
     }
   };
 
+  // Path of the source contract template being edited, mirroring the render_* selection
+  // above. Used so the giấy uỷ quyền can read the exact contract name from its lời chứng.
+  const getContractTemplatePath = () => {
+    const nn = isNongNghiep ? "-nong-nghiep" : "";
+    if (isTangCho) {
+      if (isMotPhan) {
+        return scope === "partial"
+          ? `nhom-tang-cho/hd-tang-cho-dat${nn}-mot-phan-de-dong-su-dung`
+          : `nhom-tang-cho/hd-tang-cho-dat${nn}-mot-phan-de-su-dung-toan-bo`;
+      }
+      return `nhom-tang-cho/hd-tang-cho-dat${nn}-toan-bo`;
+    }
+    if (isMotPhan) {
+      return scope === "partial"
+        ? "nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung"
+        : "nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat-mot-phan-de-su-dung-toan-bo";
+    }
+    return `nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat${nn}-toan-bo`;
+  };
+
   return (
     <Box display="flex" gap="2rem">
       <Box
@@ -641,7 +661,7 @@ export const ChuyenNhuongDatToanBo = ({
             }
             type={generateThuLyType()}
           />
-          <ThemGiayUQButton />
+          <ThemGiayUQButton contractTemplatePath={getContractTemplatePath()} />
         </Box>
       </Box>
       {openDialog ? (

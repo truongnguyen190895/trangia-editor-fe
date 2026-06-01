@@ -33,3 +33,18 @@ export const generateGiayUyQuyen = (
     { responseType: "blob" },
   );
 };
+
+/**
+ * Reads the contract name from the source contract's "LỜI CHỨNG ... CHỨNG NHẬN:" section,
+ * e.g. "Hợp đồng chuyển nhượng quyền sử dụng đất (Chuyển nhượng một phần)". Used to print the
+ * exact same name on the giấy uỷ quyền (tên_hợp_đồng).
+ */
+export const getContractName = async (
+  contractTemplatePath: string,
+): Promise<string> => {
+  const { data } = await api.get<string>(
+    `/templates/loi-chung/${contractTemplatePath}`,
+    { responseType: "text" },
+  );
+  return (data ?? "").trim();
+};

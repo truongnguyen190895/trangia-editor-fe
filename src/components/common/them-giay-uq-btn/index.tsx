@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { GUQ_TEMPLATE, type GiayUyQuyen, type GuqTemplate } from "@/models/guq";
-import { generateGiayUyQuyen } from "@/api/giay_uy_quyen";
+import { generateGiayUyQuyen, getContractName } from "@/api/giay_uy_quyen";
 import { createDownloadLink, extractCoupleFromParty } from "@/utils/common";
 import { extractAddress } from "@/utils/extract-address";
 import { translateDatePartsToVietnamese } from "@/utils/date-to-words";
@@ -32,9 +32,13 @@ import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 
 type NguoiDuocUQ = GiayUyQuyen["nguoi_duoc_uq"][number];
 
-const TÊN_HỢP_ĐỒNG_VAC = "Hợp đồng chuyển nhượng quyền sử dụng đất";
+interface Props {
+  // Path of the source contract template (e.g. "nhom-tang-cho/hd-tang-cho-dat-toan-bo").
+  // The GUQ-VAC contract name is read from this contract's lời chứng section.
+  contractTemplatePath: string;
+}
 
-export const ThemGiayUQButton = () => {
+export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
   const { partyB } = useThemChuTheContext();
   const { agreementObject } = useHdcnQuyenSdDatContext();
   const [chooserOpen, setChooserOpen] = useState<boolean>(false);
@@ -87,7 +91,7 @@ export const ThemGiayUQButton = () => {
     setNguoiDuocUQList((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!template) return;
     const couplesB = extractCoupleFromParty(partyB);
     const payload: GiayUyQuyen = {
@@ -127,7 +131,6 @@ export const ThemGiayUQButton = () => {
       const now = dayjs();
       payload["số_thửa_đất"] = agreementObject?.["số_thửa_đất"] ?? "";
       payload["số_tờ_bản_đồ"] = agreementObject?.["số_tờ_bản_đồ"] ?? "";
-      payload["tên_hợp_đồng"] = TÊN_HỢP_ĐỒNG_VAC;
       payload["ngày"] = d ?? "";
       payload["tháng"] = m ?? "";
       payload["năm"] = y ?? "";
@@ -139,16 +142,29 @@ export const ThemGiayUQButton = () => {
     }
 
     setIsGenerating(true);
-    generateGiayUyQuyen(payload, template)
-      .then((resp) => {
-        createDownloadLink(resp.data, "giay-uy-quyen");
-      })
-      .catch((error) => {
-        toast.error(error?.response?.data?.message || "Tạo giấy UQ thất bại");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
+    try {
+      if (template === GUQ_TEMPLATE.VAC) {
+        // Pull the exact contract name from the source contract's lời chứng so the
+        // GUQ matches it 100% (chuyển nhượng vs tặng cho, toàn bộ vs một phần).
+        const tênHợpĐồng = await getContractName(contractTemplatePath);
+        if (!tênHợpĐồng) {
+          toast.error(
+            "Không lấy được tên hợp đồng từ lời chứng. Vui lòng thử lại.",
+          );
+          return;
+        }
+        payload["tên_hợp_đồng"] = tênHợpĐồng;
+      }
+      const resp = await generateGiayUyQuyen(payload, template);
+      createDownloadLink(resp.data, "giay-uy-quyen");
+    } catch (error) {
+      const message =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Tạo giấy UQ thất bại";
+      toast.error(message);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
