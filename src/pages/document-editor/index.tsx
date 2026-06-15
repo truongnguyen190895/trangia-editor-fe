@@ -78,6 +78,7 @@ export const DocumentEditor = () => {
       case "hd-tang-cho-dat-toan-bo":
       case "hd-tang-cho-dat-mot-phan-de-dong-su-dung":
       case "hd-tang-cho-dat-mot-phan-de-su-dung-toan-bo":
+      case "hd-tang-cho-mot-phan-dat-co-cong-van":
       case "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung":
       case "hdcn-quyen-su-dung-dat-mot-phan-de-su-dung-toan-bo":
         return (
@@ -87,6 +88,7 @@ export const DocumentEditor = () => {
               isTangCho={/tang-cho/.test(name ?? "")}
               templateName={getTemplateName(name ?? "")}
               isMotPhan={/mot-phan/.test(name ?? "")}
+              isCoCongVan={/co-cong-van/.test(name ?? "")}
               scope={/dong-su-dung/.test(name ?? "") ? "partial" : "full"}
             />
           </HdcnQuyenSdDatProvider>

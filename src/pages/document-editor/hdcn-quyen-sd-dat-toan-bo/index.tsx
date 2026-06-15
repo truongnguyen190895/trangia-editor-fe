@@ -29,6 +29,7 @@ import {
   render_hdtc_dat_toan_bo,
   render_hdcn_quyen_sd_dat_mot_phan,
   render_hdtc_dat_mot_phan,
+  render_hdtc_mot_phan_dat_co_cong_van,
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
@@ -53,6 +54,7 @@ interface Props {
   isTangCho?: boolean;
   templateName?: string;
   isMotPhan?: boolean;
+  isCoCongVan?: boolean;
   scope?: "partial" | "full";
 }
 
@@ -61,6 +63,7 @@ export const ChuyenNhuongDatToanBo = ({
   isTangCho = false,
   templateName,
   isMotPhan = false,
+  isCoCongVan = false,
   scope = "full",
 }: Props) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
@@ -210,6 +213,23 @@ export const ChuyenNhuongDatToanBo = ({
       },
       số_tiền: agreementObject["giá_tiền"],
       số_tiền_bằng_chữ: agreementObject["giá_tiền_bằng_chữ"],
+      // The "có công văn" template reads the partial-area data from top-level keys
+      // (the land plot itself is filled via Word FORMTEXT fields, not placeholders),
+      // unlike the đặc_điểm_một_phần_thửa_đất nesting used by the other mot-phan templates.
+      ...(isCoCongVan
+        ? {
+            một_phần_diện_tích: agreementObject["một_phần_diện_tích"] ?? "",
+            một_phần_diện_tích_bằng_chữ:
+              agreementObject["một_phần_diện_tích_bằng_chữ"] ?? "",
+            mục_đích_và_thời_hạn_sử_dụng: agreementObject[
+              "mục_đích_và_thời_hạn_sử_dụng_một_phần"
+            ]?.map((item) => ({
+              phân_loại: item["phân_loại"],
+              diện_tích: item["diện_tích"] || null,
+              thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
+            })),
+          }
+        : {}),
       ngày: ngày,
       ngày_bằng_chữ: translateDateToVietnamese(ngày),
       số_bản_gốc: sốBảnGốc < 10 ? "0" + String(sốBảnGốc) : String(sốBảnGốc),
@@ -255,13 +275,18 @@ export const ChuyenNhuongDatToanBo = ({
     if (isTangCho) {
       // Tặng cho
       if (isMotPhan) {
-        render_hdtc_dat_mot_phan(payload, isNongNghiep, scope)
+        const renderMotPhan = isCoCongVan
+          ? render_hdtc_mot_phan_dat_co_cong_van(payload)
+          : render_hdtc_dat_mot_phan(payload, isNongNghiep, scope);
+        renderMotPhan
           .then((res) => {
             createDownloadLink(
               res.data,
-              `HDTC đất ${isNongNghiep ? "nông nghiệp" : ""} một phần - ${
-                payload["bên_A"]["cá_thể"][0]["tên"]
-              } - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
+              `HDTC đất ${isNongNghiep ? "nông nghiệp" : ""} một phần${
+                isCoCongVan ? " (có công văn)" : ""
+              } - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${
+                payload["bên_B"]["cá_thể"][0]["tên"]
+              }`,
             );
           })
           .catch((error) => {
@@ -505,6 +530,9 @@ export const ChuyenNhuongDatToanBo = ({
   };
 
   const generateThuLyType = () => {
+    if (isCoCongVan) {
+      return "hd-tang-cho-mot-phan-dat-co-cong-van";
+    }
     if (isTangCho) {
       if (isMotPhan) {
         if (isNongNghiep) {
@@ -540,6 +568,9 @@ export const ChuyenNhuongDatToanBo = ({
   // above. Used so the giấy uỷ quyền can read the exact contract name from its lời chứng.
   const getContractTemplatePath = () => {
     const nn = isNongNghiep ? "-nong-nghiep" : "";
+    if (isCoCongVan) {
+      return "nhom-tang-cho/hd-tang-cho-mot-phan-dat-co-cong-van";
+    }
     if (isTangCho) {
       if (isMotPhan) {
         return scope === "partial"

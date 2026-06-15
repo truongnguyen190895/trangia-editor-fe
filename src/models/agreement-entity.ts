@@ -108,6 +108,15 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
       tình_trạng_hôn_nhân_vợ_chồng: string | null;
     }>;
   };
+  // Top-level partial-area keys used by the "có công văn" tặng cho template,
+  // whose placeholders are not nested under đặc_điểm_một_phần_thửa_đất.
+  một_phần_diện_tích?: string;
+  một_phần_diện_tích_bằng_chữ?: string;
+  mục_đích_và_thời_hạn_sử_dụng?: Array<{
+    phân_loại: string;
+    diện_tích: string | null;
+    thời_hạn_sử_dụng: string;
+  }>;
   ngày: string;
   ngày_bằng_chữ: string;
   số_bản_gốc: string;

@@ -298,6 +298,18 @@ export const render_hdtc_dat_mot_phan = async (
   });
 };
 
+export const render_hdtc_mot_phan_dat_co_cong_van = async (
+  payload: HDCNQuyenSDDatPayload,
+) => {
+  return api.post(
+    "/templates/nhom-tang-cho/hd-tang-cho-mot-phan-dat-co-cong-van",
+    convertEmptyStringsToNull(payload),
+    {
+      responseType: "blob",
+    },
+  );
+};
+
 export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   payload: SampleToKhaiChungPayload,
   isCM: boolean = false,
@@ -608,6 +620,7 @@ export const render_phieu_thu_ly = async (payload: any, name: string) => {
       documentName = "ptl-hd-tang-cho-dat-va-tsglvd-mot-phan";
       break;
     case "hd-tang-cho-dat-mot-phan-de-dong-su-dung":
+    case "hd-tang-cho-mot-phan-dat-co-cong-van":
       documentName = "ptl-hd-tang-cho-dat-mot-phan";
       break;
     case "hd-tang-cho-can-ho-mot-phan":
