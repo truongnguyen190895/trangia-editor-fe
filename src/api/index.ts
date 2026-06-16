@@ -566,76 +566,11 @@ export const render_hd_dat_coc = async (
   });
 };
 
+// All Phiếu thụ lý now render from a single backend template. `name` is the contract-type id
+// (e.g. "hdmb-xe-may"); the backend maps it to the label + asset description. See
+// PhieuThuLyService.kt for the supported types.
 export const render_phieu_thu_ly = async (payload: any, name: string) => {
-  let documentName = "";
-  switch (name) {
-    case "hdcn-dat-va-tai-san-gan-lien-voi-dat-toan-bo":
-      documentName = "ptl-hdcn-dat-va-tsglvd-toan-bo";
-      break;
-    case "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung":
-      documentName = "ptl-hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung";
-      break;
-    case "hdcn-quyen-su-dung-dat-toan-bo":
-    case "hdcn-quyen-su-dung-dat-nong-nghiep-toan-bo":
-      documentName = "ptl-hdcn-quyen-su-dung-dat-toan-bo";
-      break;
-    case "hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung":
-      documentName = "ptl-hdcn-quyen-su-dung-dat-mot-phan-de-dong-su-dung";
-      break;
-    case "hdmb-can-ho-toan-bo":
-      documentName = "ptl-hdmb-can-ho-toan-bo";
-      break;
-    case "hdmb-can-ho-mot-phan-so-huu-toan-bo":
-      documentName = "ptl-hdmb-can-ho-mot-phan-su-dung-toan-bo";
-      break;
-    case "hdmb-nha-dat-toan-bo":
-      documentName = "ptl-hdmb-nha-dat-toan-bo";
-      break;
-    case "hdmb-xe-oto":
-    case "hdmb-xe-oto-bien-so-xe":
-      documentName = "ptl-hdmb-xe-oto";
-      break;
-    case "hdmb-xe-may":
-      documentName = "ptl-hdmb-xe-may";
-      break;
-    case "hdmb-tai-san":
-      documentName = "ptl-hdmb-tai-san";
-      break;
-    case "hd-tang-cho-can-ho-toan-bo":
-      documentName = "ptl-hd-tang-cho-can-ho-toan-bo";
-      break;
-    case "hd-tang-cho-dat-nong-nghiep-toan-bo":
-      documentName = "ptl-hd-tang-cho-dat-nong-nghiep-toan-bo";
-      break;
-    case "hd-tang-cho-dat-toan-bo":
-      documentName = "ptl-hd-tang-cho-dat-toan-bo";
-      break;
-    case "hd-tang-cho-nha-dat-toan-bo":
-      documentName = "ptl-hd-tang-cho-nha-dat-toan-bo";
-      break;
-    case "hd-tang-cho-dat-va-tsglvd-toan-bo":
-      documentName = "ptl-hd-tang-cho-dat-va-tsglvd-toan-bo";
-      break;
-    case "hd-tang-cho-dat-va-tsglvd-mot-phan":
-      documentName = "ptl-hd-tang-cho-dat-va-tsglvd-mot-phan";
-      break;
-    case "hd-tang-cho-dat-mot-phan-de-dong-su-dung":
-    case "hd-tang-cho-mot-phan-dat-co-cong-van":
-      documentName = "ptl-hd-tang-cho-dat-mot-phan";
-      break;
-    case "hd-tang-cho-can-ho-mot-phan":
-      documentName = "ptl-hd-tang-cho-can-ho-mot-phan";
-      break;
-    case "uy-quyen-toan-bo-quyen-su-dung-dat":
-      documentName = "ptl-uy-quyen-toan-bo-quyen-su-dung-dat";
-      break;
-    case "uy-quyen-toan-bo-nha-dat":
-      documentName = "ptl-uy-quyen-toan-bo-nha-dat";
-      break;
-    default:
-      documentName = "";
-  }
-  return api.post(`/templates/phieu-thu-ly/${documentName}`, payload, {
+  return api.post(`/templates/phieu-thu-ly?type=${encodeURIComponent(name)}`, payload, {
     responseType: "blob",
   });
 };

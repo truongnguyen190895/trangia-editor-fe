@@ -130,6 +130,13 @@ export const HDMBNhaDatToanBo = ({
             địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
                 ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_nhà_đất"]})`
                 : agreementObject["địa_chỉ_nhà_đất"],
+            // GCN fields — needed by the uỷ-quyền Phiếu thụ lý asset line; harmless for the
+            // tặng cho / mua bán variants (unused keys are ignored when rendering).
+            loại_gcn: agreementObject?.["loại_gcn"],
+            số_gcn: agreementObject?.["số_gcn"],
+            số_vào_sổ_cấp_gcn: agreementObject?.["số_vào_sổ_cấp_gcn"],
+            nơi_cấp_gcn: agreementObject?.["nơi_cấp_gcn"],
+            ngày_cấp_gcn: agreementObject?.["ngày_cấp_gcn"],
         };
     };
 
