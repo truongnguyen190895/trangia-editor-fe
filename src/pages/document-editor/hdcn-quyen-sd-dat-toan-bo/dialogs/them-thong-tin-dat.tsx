@@ -37,6 +37,7 @@ interface ThemThongTinDatProps {
   open: boolean;
   isTangCho?: boolean;
   isMotPhan?: boolean;
+  isCoCongVan?: boolean;
   handleClose: () => void;
 }
 
@@ -63,6 +64,7 @@ export const ThemThongTinDat = ({
   handleClose,
   isTangCho = false,
   isMotPhan = false,
+  isCoCongVan = false,
 }: ThemThongTinDatProps) => {
   const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
   const [mụcđíchVàThờiHạnSửDụng, setMụcĐíchVàThờiHạnSửDụng] = useState<
@@ -147,6 +149,17 @@ export const ThemThongTinDat = ({
         mục_đích_và_thời_hạn_sử_dụng_một_phần: [],
         thời_hạn: null,
         thời_hạn_bằng_chữ: null,
+        số_quyết_định: "",
+        nơi_đăng_ký_chuyển_mục_đích: "",
+        ngày_đăng_ký_chuyển_mục_đích: "",
+        giới_hạn_các_điểm: "",
+        loại_sơ_đồ: "",
+        số_sơ_đồ: "",
+        đơn_vị_lập_sơ_đồ: "",
+        ngày_lập_sơ_đồ: "",
+        số_công_văn: "",
+        cơ_quan_công_văn: "",
+        ngày_lập_công_văn: "",
       }
     );
   };
@@ -956,6 +969,118 @@ export const ThemThongTinDat = ({
                   />
                 </>
               )}
+              {isCoCongVan ? (
+                <Box
+                  sx={{ gridColumn: "span 3" }}
+                  border="1px solid #ccc"
+                  borderRadius="10px"
+                  padding="20px"
+                >
+                  <Typography
+                    variant="body1"
+                    fontSize="1.2rem"
+                    fontWeight="600"
+                    sx={{ marginBottom: "20px" }}
+                  >
+                    Chi tiết công văn (ĐIỀU 1, mục 1 — mẫu có công văn)
+                  </Typography>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns="repeat(3, 1fr)"
+                    gap="20px"
+                  >
+                    <TextField
+                      fullWidth
+                      id="số_quyết_định"
+                      name="số_quyết_định"
+                      label="Số quyết định (.../QĐ-UB)"
+                      value={values["số_quyết_định"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="nơi_đăng_ký_chuyển_mục_đích"
+                      name="nơi_đăng_ký_chuyển_mục_đích"
+                      label="Nơi đăng ký chuyển mục đích SDĐ"
+                      value={values["nơi_đăng_ký_chuyển_mục_đích"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="ngày_đăng_ký_chuyển_mục_đích"
+                      name="ngày_đăng_ký_chuyển_mục_đích"
+                      label="Ngày đăng ký chuyển mục đích"
+                      value={values["ngày_đăng_ký_chuyển_mục_đích"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      sx={{ gridColumn: "span 3" }}
+                      id="giới_hạn_các_điểm"
+                      name="giới_hạn_các_điểm"
+                      label="Giới hạn bởi các điểm"
+                      value={values["giới_hạn_các_điểm"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="loại_sơ_đồ"
+                      name="loại_sơ_đồ"
+                      label="Loại sơ đồ (theo ...)"
+                      value={values["loại_sơ_đồ"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="số_sơ_đồ"
+                      name="số_sơ_đồ"
+                      label="Số sơ đồ"
+                      value={values["số_sơ_đồ"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="đơn_vị_lập_sơ_đồ"
+                      name="đơn_vị_lập_sơ_đồ"
+                      label="Đơn vị lập sơ đồ"
+                      value={values["đơn_vị_lập_sơ_đồ"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="ngày_lập_sơ_đồ"
+                      name="ngày_lập_sơ_đồ"
+                      label="Ngày lập sơ đồ"
+                      value={values["ngày_lập_sơ_đồ"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="số_công_văn"
+                      name="số_công_văn"
+                      label="Số công văn"
+                      value={values["số_công_văn"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="cơ_quan_công_văn"
+                      name="cơ_quan_công_văn"
+                      label="Cơ quan lập công văn"
+                      value={values["cơ_quan_công_văn"] ?? ""}
+                      onChange={handleChange}
+                    />
+                    <TextField
+                      fullWidth
+                      id="ngày_lập_công_văn"
+                      name="ngày_lập_công_văn"
+                      label="Ngày lập công văn"
+                      value={values["ngày_lập_công_văn"] ?? ""}
+                      onChange={handleChange}
+                    />
+                  </Box>
+                </Box>
+              ) : null}
               <Box sx={{ gridColumn: "span 3" }}>
                 <TextField
                   fullWidth

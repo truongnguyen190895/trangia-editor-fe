@@ -31,4 +31,17 @@ export interface ThongTinThuaDat {
   // liên quan đến uỷ quyền
   thời_hạn: string | null;
   thời_hạn_bằng_chữ: string | null;
+  // Chi tiết riêng cho mẫu "tặng cho một phần đất có công văn" (ĐIỀU 1, mục 1).
+  // Các trường này điền tay theo từng hợp đồng, gate bằng cờ isCoCongVan.
+  số_quyết_định?: string;
+  nơi_đăng_ký_chuyển_mục_đích?: string;
+  ngày_đăng_ký_chuyển_mục_đích?: string;
+  giới_hạn_các_điểm?: string;
+  loại_sơ_đồ?: string;
+  số_sơ_đồ?: string;
+  đơn_vị_lập_sơ_đồ?: string;
+  ngày_lập_sơ_đồ?: string;
+  số_công_văn?: string;
+  cơ_quan_công_văn?: string;
+  ngày_lập_công_văn?: string;
 }

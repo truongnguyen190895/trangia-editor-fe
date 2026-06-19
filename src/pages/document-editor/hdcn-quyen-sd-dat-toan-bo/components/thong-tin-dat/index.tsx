@@ -21,12 +21,14 @@ interface ThongTinDatProps {
   isTangCho?: boolean;
   isNongNghiep?: boolean;
   isMotPhan?: boolean;
+  isCoCongVan?: boolean;
 }
 
 export const ThongTinDat = ({
   title,
   isTangCho = false,
   isMotPhan = false,
+  isCoCongVan = false,
 }: ThongTinDatProps) => {
   const { agreementObject, deleteAgreementObject } = useHdcnQuyenSdDatContext();
   const [open, setOpen] = useState(false);
@@ -231,6 +233,7 @@ export const ThongTinDat = ({
           handleClose={() => setOpen(false)}
           isTangCho={isTangCho}
           isMotPhan={isMotPhan}
+          isCoCongVan={isCoCongVan}
         />
       ) : null}
     </Box>

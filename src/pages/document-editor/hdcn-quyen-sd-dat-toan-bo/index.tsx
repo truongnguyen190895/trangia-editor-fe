@@ -228,6 +228,20 @@ export const ChuyenNhuongDatToanBo = ({
               diện_tích: item["diện_tích"] || null,
               thời_hạn_sử_dụng: item["thời_hạn_sử_dụng"],
             })),
+            // ĐIỀU 1 mục 1 — các chi tiết công-văn đặc thù (placeholder điền tự động)
+            số_quyết_định: agreementObject["số_quyết_định"] ?? "",
+            nơi_đăng_ký_chuyển_mục_đích:
+              agreementObject["nơi_đăng_ký_chuyển_mục_đích"] ?? "",
+            ngày_đăng_ký_chuyển_mục_đích:
+              agreementObject["ngày_đăng_ký_chuyển_mục_đích"] ?? "",
+            giới_hạn_các_điểm: agreementObject["giới_hạn_các_điểm"] ?? "",
+            loại_sơ_đồ: agreementObject["loại_sơ_đồ"] ?? "",
+            số_sơ_đồ: agreementObject["số_sơ_đồ"] ?? "",
+            đơn_vị_lập_sơ_đồ: agreementObject["đơn_vị_lập_sơ_đồ"] ?? "",
+            ngày_lập_sơ_đồ: agreementObject["ngày_lập_sơ_đồ"] ?? "",
+            số_công_văn: agreementObject["số_công_văn"] ?? "",
+            cơ_quan_công_văn: agreementObject["cơ_quan_công_văn"] ?? "",
+            ngày_lập_công_văn: agreementObject["ngày_lập_công_văn"] ?? "",
           }
         : {}),
       ngày: ngày,
@@ -628,6 +642,7 @@ export const ChuyenNhuongDatToanBo = ({
           title="Đối tượng chuyển nhượng của hợp đồng"
           isTangCho={isTangCho}
           isMotPhan={isMotPhan}
+          isCoCongVan={isCoCongVan}
         />
         <Box display="flex" gap="1rem">
           <Button

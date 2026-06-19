@@ -117,6 +117,18 @@ export interface HDCNQuyenSDDatPayload extends BaseThuaDat {
     diện_tích: string | null;
     thời_hạn_sử_dụng: string;
   }>;
+  // Chi tiết riêng cho ĐIỀU 1 mục 1 của mẫu "có công văn" (gate bằng isCoCongVan).
+  số_quyết_định?: string;
+  nơi_đăng_ký_chuyển_mục_đích?: string;
+  ngày_đăng_ký_chuyển_mục_đích?: string;
+  giới_hạn_các_điểm?: string;
+  loại_sơ_đồ?: string;
+  số_sơ_đồ?: string;
+  đơn_vị_lập_sơ_đồ?: string;
+  ngày_lập_sơ_đồ?: string;
+  số_công_văn?: string;
+  cơ_quan_công_văn?: string;
+  ngày_lập_công_văn?: string;
   ngày: string;
   ngày_bằng_chữ: string;
   số_bản_gốc: string;
