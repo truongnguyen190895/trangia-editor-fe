@@ -1,5 +1,32 @@
 # Front-end De-duplication Refactor
 
+## STATUS (updated 2026-06-23)
+
+**Phase 1 — DONE.** Branch `fe-dedup-phase1` (off `main`), 9 commits, per-file & bisectable,
+`npx tsc -b` green on every commit. Net −799 lines. PR to `main` pending (owner to open).
+
+- New shared components landed: `src/components/common/formik-fields/{formik-text-field,formik-autocomplete,index}.tsx`.
+  - `FormikTextField`: `{formik, name, label, onValueChange?}` + passthrough `TextFieldProps`. Reads/writes
+    via **bracket access** `formik.values[name]` → **cannot handle nested dot-path keys** (e.g. `biến_động.ngày`).
+  - `FormikAutocomplete`: `{formik, name, label?, options, freeSolo?, sx?, getOptionLabel?}`; freeSolo string-value model.
+  - `onValueChange(value, formik)` absorbs every derived-sibling write (số→chữ via `numberToVietnamese`).
+- All 7 `them-thong-tin-{dat,xe}` dialogs migrated (can-ho, hdtc-can-ho, uy-quyen, tai-san, xe, nha-dat,
+  dat-va-tsglvd, hdcn-quyen-sd-dat). Sizes e.g. hdcn-quyen-sd-dat 1116→891, dat-va-tsglvd 448→298.
+- **Intentionally left RAW (faithful preservation — don't "finish" these without care):**
+  object-valued `mục_đích`/`loại_giấy` autocompletes (use `getOptionLabel` + `.find()` resolution, value is an
+  Option object not a string); nested `biến_động.*` dot-path fields; the local-state
+  `mục_đích_và_thời_hạn_sử_dụng` add/edit/delete tables; the custom search box in hdcn-quyen-sd-dat.
+- **Verification gap:** `tsc -b` fully covers the type-equivalent refactor, but **no automated tests exist**
+  and the dialogs were **not** manually smoke-tested in-browser yet (open dialog → validation error → save →
+  reopen → prefill intact; generate one docx per type). Do this before/at merge.
+- Pre-existing eslint noise (`response: any`, `/\,/g`) was carried over verbatim — identical to `main`, not a
+  regression; lint is not a build gate (`tsc -b` is).
+
+**Next:** Phase 2 (type-only, ~2–3h, low risk) or Phase 3 (registry — biggest payoff, has one
+behavior-changing step 3c). Phases are independent; pick per appetite. Start a fresh branch per phase.
+
+---
+
 ## Context
 
 This is a Vietnamese notary app (`front-end` React+TS+MUI+Formik, `tran-gia-be` Spring/Kotlin)
@@ -48,7 +75,7 @@ code deleted last.
   derived flags (`isTangCho/isMotPhan/isCoCongVan/isNongNghiep/isXeMay/isDauGia/scope/…`); save as the
   reference table for Phase 3c. Likewise capture every khai-thue URL string per flag combo for Phase 6.
 
-## Phase 1 — `FormikTextField` / `FormikAutocomplete` (SAFE, high volume, ~1–1.5 d)
+## Phase 1 — `FormikTextField` / `FormikAutocomplete` (SAFE, high volume, ~1–1.5 d) — ✅ DONE (see STATUS)
 New: `src/components/common/formik-fields/{formik-text-field,formik-autocomplete,index}.tsx`.
 ```tsx
 interface FormikTextFieldProps extends Omit<TextFieldProps,"name"|"value"|"error"|"helperText"> {
