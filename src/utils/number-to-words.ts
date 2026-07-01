@@ -82,7 +82,7 @@ function convertThreeDigits(num: number, forceIncludeZeroHundreds: boolean = fal
         }
         
         if (unit > 0) {
-            if (ten === 0 && hundred !== 0) {
+            if (ten === 0 && (hundred !== 0 || forceIncludeZeroHundreds)) {
                 words.push('lẻ');
             }
             if (unit === 1 && ten >= 2) {
@@ -101,13 +101,29 @@ function convertThreeDigits(num: number, forceIncludeZeroHundreds: boolean = fal
 }
 
 function convertDecimalPart(decimalStr: string) {
-    const units = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
-    let words = [];
-    
-    for (let i = 0; i < decimalStr.length; i++) {
-        const digit = parseInt(decimalStr[i]);
-        words.push(units[digit]);
+    // Read the decimal fraction as a whole number (e.g. "14" -> "mười bốn"),
+    // emitting "không" for each leading zero so 0.04 -> "không bốn".
+    let leadingZeros = 0;
+    while (leadingZeros < decimalStr.length && decimalStr[leadingZeros] === '0') {
+        leadingZeros++;
     }
-    
+
+    const remainder = decimalStr.slice(leadingZeros);
+
+    // An all-zero fraction (e.g. ".00") reads as a single "không".
+    if (remainder.length === 0) {
+        return 'không';
+    }
+
+    let words = [];
+    for (let i = 0; i < leadingZeros; i++) {
+        words.push('không');
+    }
+
+    // convertInteger capitalizes its first letter; lowercase it since this
+    // sits mid-sentence after "phẩy".
+    const converted = convertInteger(parseInt(remainder));
+    words.push(converted.charAt(0).toLowerCase() + converted.slice(1));
+
     return words.join(' ');
 }
