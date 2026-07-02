@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -17,6 +18,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
+import { PageHeader } from "@/components/common/page-header";
 import { listUsers, type User, toggleUserActive } from "@/api/users";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
@@ -70,9 +72,19 @@ const Employee = () => {
 
   const getUserStatus = (active: boolean) => {
     return active ? (
-      <Chip label="Đang hoạt động" color="success" />
+      <Chip
+        label="Đang hoạt động"
+        color="success"
+        size="small"
+        variant="outlined"
+      />
     ) : (
-      <Chip label="Không hoạt động" color="error" />
+      <Chip
+        label="Không hoạt động"
+        color="warning"
+        size="small"
+        variant="outlined"
+      />
     );
   };
 
@@ -86,13 +98,15 @@ const Employee = () => {
   const getUserRole = (role: string) => {
     switch (role) {
       case "Admin":
-        return <Chip label="Quản trị viên" color="primary" />;
+        return <Chip label="Quản trị viên" size="small" variant="outlined" />;
       case "User":
-        return <Chip label="Nhân viên" color="secondary" />;
+        return <Chip label="Nhân viên" size="small" variant="outlined" />;
       case "BranchManager":
-        return <Chip label="Phó/Trưởng bộ phận" color="info" />;
+        return (
+          <Chip label="Phó/Trưởng bộ phận" size="small" variant="outlined" />
+        );
       default:
-        return <Chip label="Nhân viên" color="secondary" />;
+        return <Chip label="Nhân viên" size="small" variant="outlined" />;
     }
   };
 
@@ -126,25 +140,25 @@ const Employee = () => {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h4">
-          Danh sách nhân viên ({totalElements})
-        </Typography>
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<AddIcon />}
-          onClick={() => navigate("/staff/add")}
-        >
-          Thêm nhân viên
-        </Button>
-      </Box>
-      <Box mt="2rem">
+      <PageHeader
+        eyebrow="Nhân sự"
+        title={`Danh sách nhân viên (${totalElements})`}
+        action={
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => navigate("/staff/add")}
+          >
+            Thêm nhân viên
+          </Button>
+        }
+      />
+      <Box>
         <TextField
           label="Tìm kiếm"
           placeholder="Tìm kiếm nhân viên"
           value={search}
-          sx={{ width: "400px" }}
+          sx={{ width: "400px", maxWidth: "100%" }}
           onChange={(e) => setSearch(e.target.value)}
           slotProps={{
             input: {
@@ -165,64 +179,63 @@ const Employee = () => {
         />
       </Box>
       {users.length > 0 ? (
-        <TableContainer sx={{ mt: "1rem" }}>
-          <Table sx={{ borderCollapse: "separate", borderSpacing: "0 10px" }}>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#D1D3D4" }}>
-                <TableCell>Tên</TableCell>
-                <TableCell>Chức vụ</TableCell>
-                <TableCell>Tài khoản</TableCell>
-                <TableCell>Chi nhánh</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell>Hành động</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow
-                  key={user.username}
-                  sx={{
-                    cursor: user?.active ? "pointer" : "not-allowed",
-                    "&:hover": {
-                      backgroundColor: "#f0f0f0",
-                      transition: "scale 0.3s ease",
-                      "& .MuiTableCell-root": {
-                        backgroundColor: "#f0f0f0",
-                      },
-                    },
-                  }}
-                  onClick={() =>
-                    user?.active
-                      ? navigate(`/staff/edit/${user.username}`)
-                      : undefined
-                  }
-                >
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{getUserRole(user.role)}</TableCell>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>
-                    {user.branches.map((branch) => branch.id).join(", ")}
-                  </TableCell>
-                  <TableCell>{getUserStatus(user.active)}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      color={user?.active ? "error" : "success"}
-                      onClick={(e) => handleOpenWarning(e, user)}
-                    >
-                      {user?.active ? "Ngừng hoạt động" : "Kích hoạt"}
-                      {user?.active ? <StopIcon /> : <PlayArrowIcon />}
-                    </Button>
-                  </TableCell>
+        <Paper variant="outlined" sx={{ p: 2, mt: 2 }}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Tên</TableCell>
+                  <TableCell>Chức vụ</TableCell>
+                  <TableCell>Tài khoản</TableCell>
+                  <TableCell>Chi nhánh</TableCell>
+                  <TableCell>Trạng thái</TableCell>
+                  <TableCell>Hành động</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {users.map((user) => (
+                  <TableRow
+                    key={user.username}
+                    sx={{
+                      cursor: user?.active ? "pointer" : "not-allowed",
+                      "&:hover": {
+                        backgroundColor: "action.hover",
+                      },
+                    }}
+                    onClick={() =>
+                      user?.active
+                        ? navigate(`/staff/edit/${user.username}`)
+                        : undefined
+                    }
+                  >
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{getUserRole(user.role)}</TableCell>
+                    <TableCell>{user.username}</TableCell>
+                    <TableCell>
+                      {user.branches.map((branch) => branch.id).join(", ")}
+                    </TableCell>
+                    <TableCell>{getUserStatus(user.active)}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        color={user?.active ? "error" : "success"}
+                        endIcon={user?.active ? <StopIcon /> : <PlayArrowIcon />}
+                        onClick={(e) => handleOpenWarning(e, user)}
+                      >
+                        {user?.active ? "Ngừng hoạt động" : "Kích hoạt"}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <Box
             className="pagination-container"
             display="flex"
             justifyContent="center"
-            mt="2rem"
+            mt={2}
           >
             <Pagination
               count={totalPages}
@@ -231,7 +244,7 @@ const Employee = () => {
               onChange={handleChangePage}
             />
           </Box>
-        </TableContainer>
+        </Paper>
       ) : (
         <Box py="2rem">
           <Typography variant="h6" sx={{ fontStyle: "italic" }}>

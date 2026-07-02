@@ -8,7 +8,8 @@ import {
   Container,
   CircularProgress,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Alert } from "@mui/material";
 import { login } from "@/api/auth";
 import { SERIF_FAMILY } from "@/theme";
 
@@ -18,6 +19,8 @@ export const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const sessionExpired = searchParams.get("expired") === "1";
 
   const handleSubmit = async (e: React.FormEvent) => {
     setLoading(true);
@@ -82,6 +85,11 @@ export const LoginPage = () => {
             >
               Hệ thống soạn thảo văn bản
             </Typography>
+            {sessionExpired && (
+              <Alert severity="info" sx={{ width: "100%", mb: 1 }}>
+                Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.
+              </Alert>
+            )}
             <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
               <TextField
                 margin="normal"

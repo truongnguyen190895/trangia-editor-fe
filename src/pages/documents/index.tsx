@@ -1,7 +1,16 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { DocumentThumbnail } from "../../components/document-thumbnail";
+import { PageHeader } from "@/components/common/page-header";
 import { templates } from "@/database";
+
+const columnLabelSx = {
+  fontSize: "0.7rem",
+  fontWeight: 700,
+  letterSpacing: "0.1em",
+  textTransform: "uppercase",
+  color: "text.secondary",
+} as const;
 
 export const Documents = () => {
   const navigate = useNavigate();
@@ -13,41 +22,31 @@ export const Documents = () => {
 
   return (
     <Box>
-      <Typography fontWeight={600} variant="h3">
-        Chọn văn bản cần chỉnh sửa
-      </Typography>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        gap={2}
-        mt={2}
-        bgcolor="#799EFF"
-        height="70px"
-        px="10px"
-        borderRadius="5px"
-      >
-        <Typography fontWeight={600} variant="h6">
-          Tên mẫu
-        </Typography>
-        <Typography fontWeight={600} variant="h6">
-          Hỗ trợ lên uchi
-        </Typography>
-      </Box>
-      <Box display="flex" flexDirection="column" gap={2} mt={2}>
-        {documents.map((document) => (
-          <DocumentThumbnail
-            key={document.id}
-            title={document.name}
-            isUchiReady={document.templateId > 0}
-            onClick={() =>
-              navigate(
-                `/editor?type=${document.type}&name=${document.path}&templateId=${document.templateId}`
-              )
-            }
-          />
-        ))}
-      </Box>
+      <PageHeader title="Chọn văn bản cần chỉnh sửa" />
+      <Paper variant="outlined" sx={{ p: 2 }}>
+        <Box display="flex" alignItems="center" gap={1} pb={1}>
+          <Typography sx={{ ...columnLabelSx, flex: 1 }}>Tên mẫu</Typography>
+          <Typography
+            sx={{ ...columnLabelSx, minWidth: "100px", textAlign: "center" }}
+          >
+            Hỗ trợ lên uchi
+          </Typography>
+        </Box>
+        <Box display="flex" flexDirection="column" gap={2}>
+          {documents.map((document) => (
+            <DocumentThumbnail
+              key={document.id}
+              title={document.name}
+              isUchiReady={document.templateId > 0}
+              onClick={() =>
+                navigate(
+                  `/editor?type=${document.type}&name=${document.path}&templateId=${document.templateId}`
+                )
+              }
+            />
+          ))}
+        </Box>
+      </Paper>
     </Box>
   );
 };

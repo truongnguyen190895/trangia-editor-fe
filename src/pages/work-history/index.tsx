@@ -1,10 +1,10 @@
 import {
   Box,
+  Paper,
   Table,
   TableCell,
   TableRow,
   TableHead,
-  Typography,
   TableBody,
   Pagination,
   TextField,
@@ -19,6 +19,7 @@ import { getTemplateName } from "@/utils/common";
 import { LoadingDialog } from "@/components/common/loading-dialog";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import SearchIcon from "@mui/icons-material/Search";
+import { PageHeader } from "@/components/common/page-header";
 
 const DEBOUNCE_MS = 500;
 
@@ -103,9 +104,8 @@ const WorkHistory = () => {
 
   return (
     <Box>
-      <Typography variant="h3">Lịch sử soạn thảo ({totalElements})</Typography>
+      <PageHeader title={`Lịch sử soạn thảo (${totalElements})`} />
       <Box
-        mt="1.5rem"
         mb="1.5rem"
         display="flex"
         flexWrap="wrap"
@@ -146,9 +146,9 @@ const WorkHistory = () => {
           }}
         />
       </Box>
-      <Box mt="0.5rem">
-        <Table>
-          <TableHead sx={{ backgroundColor: "#f0f0f0" }}>
+      <Paper variant="outlined" sx={{ p: 2 }}>
+        <Table size="small">
+          <TableHead>
             <TableRow>
               <TableCell width="15%">Ngày tạo</TableCell>
               <TableCell width="45%">Tên văn bản</TableCell>
@@ -163,7 +163,7 @@ const WorkHistory = () => {
                 onClick={() => handleClick(item?.template ?? "", item?.id ?? "")}
                 sx={{
                   "&:hover": {
-                    backgroundColor: "#f0f0f0",
+                    backgroundColor: "action.hover",
                     cursor: "pointer",
                     transition: "background-color 0.3s ease",
                   },
@@ -192,7 +192,7 @@ const WorkHistory = () => {
             onChange={handleChangePage}
           />
         </Box>
-      </Box>
+      </Paper>
       <LoadingDialog open={loading} />
     </Box>
   );

@@ -40,9 +40,6 @@ export const theme = createTheme({
       secondary: INK_SOFT,
     },
     divider: LINE,
-    // Legacy key still used by document-editor pages; remapped from teal to a
-    // muted brass that fits the new palette. Migrate usages, then delete.
-    softTeal: "#B9A063",
   },
   typography: {
     fontFamily: SANS_FAMILY,

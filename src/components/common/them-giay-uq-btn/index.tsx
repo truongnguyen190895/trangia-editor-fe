@@ -266,9 +266,9 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
                 </Table>
                 <Box display="flex" alignItems="center" marginTop="10px">
                   <AddCircleRoundedIcon
+                    color="primary"
                     sx={{
-                      fontSize: "3rem",
-                      color: "#3D90D7",
+                      fontSize: "2rem",
                       cursor: "pointer",
                       "&:active": {
                         scale: 0.9,

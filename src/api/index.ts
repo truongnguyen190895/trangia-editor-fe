@@ -58,9 +58,9 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      window.alert("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
       localStorage.clear();
-      window.location.href = "/login";
+      // The expired=1 flag makes LoginPage explain why the user landed there.
+      window.location.href = "/login?expired=1";
     }
     return Promise.reject(error);
   },
