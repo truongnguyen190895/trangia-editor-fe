@@ -63,6 +63,41 @@ https://claude.ai/code/artifact/e567a60f-e0d8-4103-9ba9-bbcc254d3019
 
 ## Work log (newest first)
 
+### 2026-07-02 — Session 3 — Phase 2 rollout complete (all 10 editors)
+- Owner visually approved the land-editor screenshot; two leftovers fixed in
+  `document-editor/index.tsx`: grey `#E0E0E0` title banner → eyebrow
+  ("Soạn văn bản") + serif h4 title; contained back button → outlined
+  IconButton beside the title.
+- Pattern rolled out to the remaining 9 editors (via 3 parallel agents, one
+  per batch of page directories): hdmb-can-ho, hdtc-can-ho, hdmb-nha-dat,
+  hdmb-tai-san, hdmb-xe, hdcn-dat-va-tai-san, uy-quyen, nhom-huy-sua-doi,
+  nhom-thue-muon-dat-coc. All now use SectionNav (anchor ids `section-*`) +
+  numbered FormSections + StickyActionBar with "Còn thiếu: …" status; softTeal
+  buttons, hidden "Tìm kiếm" boxes, `#3D90D7`/`#BCCCDC` chrome all removed.
+  `softTeal` is now referenced NOWHERE in src/pages — the palette key +
+  type.d.ts declaration can be deleted in Phase 3.
+- Notable per-page decisions (details in git log / page files):
+  - Pages whose object component holds TWO entities (căn hộ+đất, nhà+đất,
+    tài sản+đất) use one FormSection with two Divider-separated subsections,
+    each with its own add/edit/delete controls — not two FormSections.
+  - hdmb-nha-dat uỷ-quyền flow: primary button intentionally NOT gated on
+    `isFormValid` (pre-existing behavior, kept); status text uses its own
+    missing-list instead.
+  - nhom-huy-sua-doi: Bên B section + nav item only when `!isHuy`.
+  - nhom-thue-muon-dat-coc: details section wrapped in FormSection but has no
+    completion state (all fields optional) and is omitted from the nav.
+  - Dead code found, untouched: `nhom-huy-sua-doi/components/party-entity/`
+    and `nhom-thue-muon-dat-coc/components/party-entity/` are imported
+    nowhere (one even uses the wrong context). Delete in Phase 3.
+- Build passes; lint errors 98 → 93, all remaining are pre-existing in dialog
+  files. Editors NOT yet visually checked except the land editor — owner
+  should click through a few (esp. căn hộ and đặt cọc) before Phase 3.
+
+**Next (Phase 3):** page-by-page migration of non-editor pages (work-history,
+submit-contract, history, report ×2, employee, profile, documents), replace
+the 401 `alert()` in `src/api/index.ts`, delete `softTeal` + dead
+party-entity components, restyle dialog internals (them-thong-tin-dat etc.).
+
 ### 2026-07-02 — Session 2 — Phase 2 core done (land editor)
 - New shared components in `src/components/common/`:
   - `form-section/` — `FormSection`: outlined card with serif header, optional
