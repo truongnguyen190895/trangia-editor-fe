@@ -6,7 +6,6 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  Divider,
 } from "@mui/material";
 import {
   Description,
@@ -17,6 +16,8 @@ import {
 } from "@mui/icons-material";
 import HistoryIcon from "@mui/icons-material/History";
 import { useNavigate, useLocation } from "react-router-dom";
+
+declare const __BUILD_TIME__: string;
 
 const menuItems = [
   {
@@ -63,6 +64,20 @@ const menuItems = [
   },
 ];
 
+const formatBuildTime = (buildTime: string) => {
+  try {
+    return new Date(buildTime).toLocaleString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return "";
+  }
+};
+
 export const SidebarMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -78,68 +93,77 @@ export const SidebarMenu = () => {
     <Box
       sx={{
         flexShrink: 0,
-        transition: "width 0.3s ease",
         overflow: "hidden",
-        borderRight: "1px solid #e0e0e0",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "secondary.main",
+        color: "rgba(255,255,255,0.72)",
         height: "100%",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h6" color="primary" fontWeight="bold">
-          Menu
-        </Typography>
-      </Box>
-      <Divider />
-      <List sx={{ p: 0 }}>
+      <List sx={{ p: 0, pt: 1, flex: 1 }}>
         {menuItems.map((item) => {
           if (item.adminRequired && !isAdmin) {
             return null;
           }
+          const selected = location.pathname === item.path;
           return (
             <ListItem key={item.text} disablePadding>
               <ListItemButton
                 onClick={() => handleItemClick(item.path)}
-                selected={location.pathname == item.path}
+                selected={selected}
                 sx={{
-                  minHeight: 48,
-                  px: 2.5,
+                  minHeight: 44,
+                  px: 2,
+                  borderLeft: "3px solid transparent",
                   "&.Mui-selected": {
-                    backgroundColor: "#e3f2fd",
-                    borderRight: "3px solid #1976d2",
-                    "& .MuiListItemIcon-root": {
-                      color: "#1976d2",
+                    backgroundColor: "rgba(255,255,255,0.08)",
+                    borderLeftColor: "primary.light",
+                    "&:hover": {
+                      backgroundColor: "rgba(255,255,255,0.12)",
+                    },
+                    "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+                      color: "#fff",
                     },
                     "& .MuiListItemText-primary": {
-                      color: "#1976d2",
-                      fontWeight: "medium",
+                      fontWeight: 600,
                     },
                   },
                   "&:hover": {
-                    backgroundColor: "#f0f0f0",
+                    backgroundColor: "rgba(255,255,255,0.06)",
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    mr: 2,
+                    mr: 1.5,
                     justifyContent: "center",
+                    color: "inherit",
+                    "& svg": { fontSize: "1.2rem" },
                   }}
                 >
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText
                   primary={item.text}
-                  primaryTypographyProps={{
-                    fontSize: "0.9rem",
-                  }}
+                  primaryTypographyProps={{ fontSize: "0.88rem" }}
                 />
               </ListItemButton>
             </ListItem>
           );
         })}
       </List>
+      <Typography
+        variant="caption"
+        sx={{
+          p: 1.5,
+          color: "rgba(255,255,255,0.4)",
+          fontSize: "0.68rem",
+        }}
+      >
+        Bản dựng {formatBuildTime(__BUILD_TIME__)}
+      </Typography>
     </Box>
   );
 };
