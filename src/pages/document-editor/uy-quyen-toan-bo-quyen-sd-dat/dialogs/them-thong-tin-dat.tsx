@@ -3,10 +3,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  TextField,
   DialogActions,
   Button,
-  Autocomplete,
   Typography,
   CircularProgress,
 } from "@mui/material";
@@ -17,6 +15,10 @@ import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import { CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT } from "@/constants";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { SearchEntity } from "@/components/common/search-entity";
+import {
+  FormikTextField,
+  FormikAutocomplete,
+} from "@/components/common/formik-fields";
 import { saveContractEntity } from "@/api/contract_entity";
 import { useState } from "react";
 
@@ -79,15 +81,7 @@ export const ThemThongTinDat = ({
     );
   };
 
-  const {
-    values,
-    errors,
-    touched,
-    setFieldValue,
-    handleChange,
-    handleSubmit,
-    setValues,
-  } = useFormik<ThongTinThuaDat>({
+  const formik = useFormik<ThongTinThuaDat>({
     initialValues: getInitialValue(),
     validationSchema,
     onSubmit: submitForm,
@@ -96,8 +90,8 @@ export const ThemThongTinDat = ({
   const handleSearch = (response: any) => {
     if (response) {
       setCurrentStatus(response);
-      setValues({
-        ...values,
+      formik.setValues({
+        ...formik.values,
         ...response,
       });
     }
@@ -105,7 +99,7 @@ export const ThemThongTinDat = ({
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
-      <Box component="form" onSubmit={handleSubmit}>
+      <Box component="form" onSubmit={formik.handleSubmit}>
         <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
           <SearchEntity
@@ -114,110 +108,54 @@ export const ThemThongTinDat = ({
           />
           <Box sx={{ pt: 2 }}>
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
-              <TextField
-                fullWidth
-                id="số_thửa_đất"
+              <FormikTextField
+                formik={formik}
                 name="số_thửa_đất"
                 label="Số thửa đất"
-                value={values["số_thửa_đất"]}
-                onChange={handleChange}
               />
-              <TextField
-                fullWidth
-                id="số_tờ_bản_đồ"
+              <FormikTextField
+                formik={formik}
                 name="số_tờ_bản_đồ"
                 label="Tờ bản đồ số"
-                value={values["số_tờ_bản_đồ"]}
-                onChange={handleChange}
               />
-              <TextField
-                fullWidth
-                id="địa_chỉ_cũ"
+              <FormikTextField
+                formik={formik}
                 name="địa_chỉ_cũ"
                 label="Địa chỉ cũ"
-                value={values["địa_chỉ_cũ"]}
-                onChange={handleChange}
               />
-              <TextField
-                fullWidth
-                id="địa_chỉ_mới"
+              <FormikTextField
+                formik={formik}
                 name="địa_chỉ_mới"
                 label="Địa chỉ mới"
-                value={values["địa_chỉ_mới"]}
-                onChange={handleChange}
               />
-              <Autocomplete
+              <FormikAutocomplete
+                formik={formik}
+                name="loại_giấy_chứng_nhận"
+                label="Loại giấy chứng nhận"
                 sx={{ gridColumn: "span 2" }}
-                freeSolo
                 options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.map(
                   (item) => item.value
                 )}
-                value={values["loại_giấy_chứng_nhận"]}
-                onChange={(_event, value) => {
-                  setFieldValue("loại_giấy_chứng_nhận", value ?? "");
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    error={
-                      !!errors["loại_giấy_chứng_nhận"] &&
-                      touched["loại_giấy_chứng_nhận"]
-                    }
-                    helperText={
-                      errors["loại_giấy_chứng_nhận"] &&
-                      touched["loại_giấy_chứng_nhận"] &&
-                      errors["loại_giấy_chứng_nhận"]
-                    }
-                    label="Loại giấy chứng nhận"
-                    onChange={(event) => {
-                      setFieldValue(
-                        "loại_giấy_chứng_nhận",
-                        event.target.value ?? ""
-                      );
-                    }}
-                  />
-                )}
               />
-              <TextField
-                fullWidth
-                id="số_giấy_chứng_nhận"
+              <FormikTextField
+                formik={formik}
                 name="số_giấy_chứng_nhận"
                 label="Số giấy tờ *"
-                value={values["số_giấy_chứng_nhận"]}
-                onChange={handleChange}
-                error={
-                  !!errors["số_giấy_chứng_nhận"] &&
-                  touched["số_giấy_chứng_nhận"]
-                }
-                helperText={
-                  errors["số_giấy_chứng_nhận"] &&
-                  touched["số_giấy_chứng_nhận"] &&
-                  errors["số_giấy_chứng_nhận"]
-                }
               />
-              <TextField
-                fullWidth
-                id="số_vào_sổ_cấp_giấy_chứng_nhận"
+              <FormikTextField
+                formik={formik}
                 name="số_vào_sổ_cấp_giấy_chứng_nhận"
                 label="Số vào sổ cấp GCN"
-                value={values["số_vào_sổ_cấp_giấy_chứng_nhận"]}
-                onChange={handleChange}
               />
-              <TextField
-                fullWidth
-                id="nơi_cấp_giấy_chứng_nhận"
+              <FormikTextField
+                formik={formik}
                 name="nơi_cấp_giấy_chứng_nhận"
                 label="Nơi cấp giấy chứng nhận"
-                value={values["nơi_cấp_giấy_chứng_nhận"]}
-                onChange={handleChange}
               />
-              <TextField
-                fullWidth
-                id="ngày_cấp_giấy_chứng_nhận"
+              <FormikTextField
+                formik={formik}
                 name="ngày_cấp_giấy_chứng_nhận"
                 label="Ngày cấp giấy chứng nhận"
-                value={values["ngày_cấp_giấy_chứng_nhận"]}
-                onChange={handleChange}
               />
             </Box>
             <Box sx={{ mt: 2 }}>
@@ -225,19 +163,16 @@ export const ThemThongTinDat = ({
                 Thông tin liên quan đến việc uỷ quyền
               </Typography>
               <Box py="1rem">
-                <TextField
-                  fullWidth
-                  id="thời_hạn"
+                <FormikTextField
+                  formik={formik}
                   name="thời_hạn"
                   label="Thời hạn uỷ quyền (năm)"
                   placeholder="Ví dụ: 10"
-                  value={values["thời_hạn"]}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setFieldValue(
+                  onValueChange={(value, formik) => {
+                    formik.setFieldValue(
                       "thời_hạn_bằng_chữ",
                       numberToVietnamese(
-                        e.target.value?.replace(/\./g, "").replace(/\,/g, ".")
+                        value?.replace(/\./g, "").replace(/\,/g, ".")
                       )?.toLocaleLowerCase()
                     );
                   }}
