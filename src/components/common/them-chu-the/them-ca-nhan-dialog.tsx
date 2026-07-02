@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { sốGiấyTờSchema } from "@/utils/validate-id-number";
 import type { SingleAgreementParty } from "@/models/agreement-entity";
 import { GENDER } from "@/models/agreement-entity";
 import { useThemChuTheContext } from "@/context/them-chu-the";
@@ -100,9 +101,7 @@ export const ThemCaNhanDialog = ({
       tên: Yup.string().required("Tên là bắt buộc"),
       ngày_sinh: Yup.string().required("Ngày sinh là bắt buộc"),
       loại_giấy_tờ: Yup.string().required("Loại giấy tờ là bắt buộc"),
-      số_giấy_tờ: Yup.string()
-        .required("Số giấy tờ là bắt buộc")
-        .max(12, "Số giấy tờ không được vượt quá 12 ký tự"),
+      số_giấy_tờ: sốGiấyTờSchema(),
       ngày_cấp: Yup.string().required("Ngày cấp là bắt buộc"),
       nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
       địa_chỉ_thường_trú: Yup.string().required(

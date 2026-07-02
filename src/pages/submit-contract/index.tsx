@@ -30,6 +30,7 @@ import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import * as yup from "yup";
+import { CCCD_12_DIGITS } from "@/utils/validate-id-number";
 import dayjs, { Dayjs } from "dayjs";
 import { numberToVietnamese } from "@/utils/number-to-words";
 import { WarningBanner } from "./warning-banner";
@@ -222,7 +223,10 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
     notes: yup.string(),
     nationalId: yup.string().when([], {
       is: () => type === "Signature",
-      then: (schema) => schema.required("Số CCCD là bắt buộc"),
+      then: (schema) =>
+        schema
+          .required("Số CCCD là bắt buộc")
+          .matches(CCCD_12_DIGITS, "Số CCCD phải gồm đúng 12 chữ số"),
       otherwise: (schema) => schema,
     }),
     notarizedBy: yup.string().when([], {

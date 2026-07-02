@@ -22,6 +22,7 @@ import {
   NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
 } from "@/constants";
 import * as Yup from "yup";
+import { sốGiấyTờSchema } from "@/utils/validate-id-number";
 
 interface AddCoupleDialogProps {
   open: boolean;
@@ -35,7 +36,7 @@ const validationSchema = Yup.object({
     tên: Yup.string().required("Tên là bắt buộc"),
     ngày_sinh: Yup.string().required("Ngày sinh là bắt buộc"),
     loại_giấy_tờ: Yup.string().required("Loại giấy tờ là bắt buộc"),
-    số_giấy_tờ: Yup.string().required("Số giấy tờ là bắt buộc"),
+    số_giấy_tờ: sốGiấyTờSchema(),
     ngày_cấp: Yup.string().required("Ngày cấp là bắt buộc"),
     nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
     địa_chỉ_thường_trú: Yup.string().required("Địa chỉ thường trú là bắt buộc"),
@@ -45,7 +46,7 @@ const validationSchema = Yup.object({
     tên: Yup.string().required("Tên là bắt buộc"),
     ngày_sinh: Yup.string().required("Ngày sinh là bắt buộc"),
     loại_giấy_tờ: Yup.string().required("Loại giấy tờ là bắt buộc"),
-    số_giấy_tờ: Yup.string().required("Số giấy tờ là bắt buộc"),
+    số_giấy_tờ: sốGiấyTờSchema(),
     ngày_cấp: Yup.string().required("Ngày cấp là bắt buộc"),
     nơi_cấp: Yup.string().required("Nơi cấp là bắt buộc"),
     địa_chỉ_thường_trú: Yup.string().required("Địa chỉ thường trú là bắt buộc"),
