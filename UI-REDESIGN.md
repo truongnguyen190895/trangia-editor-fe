@@ -63,6 +63,39 @@ https://claude.ai/code/artifact/e567a60f-e0d8-4103-9ba9-bbcc254d3019
 
 ## Work log (newest first)
 
+### 2026-07-02 — Session 4 — Phase 3 done (non-editor pages + cleanup)
+- 401 handling in `src/api/index.ts`: `window.alert` removed → redirect to
+  `/login?expired=1`; LoginPage shows an info `Alert` when `expired=1`.
+- `softTeal` fully removed (palette key + `src/theme/type.d.ts` deleted —
+  nothing referenced it anymore).
+- Dead `party-entity` components deleted from nhom-huy-sua-doi and
+  nhom-thue-muon-dat-coc.
+- New shared `PageHeader` (`src/components/common/page-header/`): eyebrow +
+  serif h4 title + right action slot. Used by all migrated pages.
+- All non-editor pages migrated (3 parallel agents): history (Tổng hợp),
+  submit-contract (Phiếu thu, incl. WarningBanner → MUI `Alert severity=
+  "warning"`), work-history, report, report-branch-manager, employee list +
+  add form, profile, documents, not-found (rebuilt as centered serif 404).
+  Pattern: PageHeader, outlined Paper containers for filters/tables/forms,
+  `size="small"` tables letting the theme style headers, one contained
+  primary action per page, row actions as small IconButtons.
+- `DocumentThumbnail` restyled (divider border, primary hover, was #000).
+- Remaining hardcoded colors are only in: login gradient + layout/sidebar
+  whites (intentional), and **dialog internals** (them-ca-nhan-dialog,
+  them-vo-chong-dialog, them-thong-tin-dat dialogs across editors,
+  them-giay-uq-btn inner table) — these are the last unmigrated surfaces.
+- Build passes; lint 93 errors, all pre-existing.
+- Bugs noticed by agents, NOT fixed (report to owner): report-branch-manager
+  on-screen title says "Báo cáo nhân viên" (copy-paste); employee add-form
+  password field lacks `type="password"`; `user.branches[0]` unguarded in
+  profile/submit-contract; dead never-shown Snackbar in history page;
+  duplicated filter/URL-sync logic across both report pages.
+
+**Next (Phase 4):** dialog internals restyle (them-ca-nhan/vo-chong,
+them-thong-tin-dat ×7, giay-uq inner table); then polish: home search +
+"recently edited" shortcuts, mobile bottom-nav for more routes, loading
+states naming the generated file, empty states.
+
 ### 2026-07-02 — Session 3 — Phase 2 rollout complete (all 10 editors)
 - Owner visually approved the land-editor screenshot; two leftovers fixed in
   `document-editor/index.tsx`: grey `#E0E0E0` title banner → eyebrow

@@ -1,6 +1,5 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import NotFoundImage from "@/assets/images/not-found.jpg";
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -11,25 +10,23 @@ const NotFound = () => {
 
   return (
     <Box
-      position="relative"
-      height="100vh"
-      width="100vw"
+      minHeight="100vh"
       display="flex"
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      bgcolor="#FF9A00"
+      gap={2}
+      px={2}
+      bgcolor="background.default"
+      textAlign="center"
     >
-      <img
-        src={NotFoundImage}
-        alt="Not found"
-        style={{ width: "auto", height: "100%" }}
-      />
-      <Box sx={{ position: "absolute", top: "10rem" }}>
-        <Button variant="contained" color="primary" onClick={handleBackToHome} sx={{ height: '70px', width: '350px', fontSize: '2rem' }}>
-          Quay về trang chủ
-        </Button>
-      </Box>
+      <Typography variant="h1">404</Typography>
+      <Typography variant="body1" color="text.secondary">
+        Trang bạn tìm kiếm không tồn tại hoặc đã bị di chuyển.
+      </Typography>
+      <Button variant="contained" onClick={handleBackToHome}>
+        Về trang chính
+      </Button>
     </Box>
   );
 };

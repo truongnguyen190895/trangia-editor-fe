@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import {
     Box,
+    Paper,
     Typography,
     Table,
     TableHead,
@@ -21,6 +22,7 @@ import dayjs, { type Dayjs } from "dayjs";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { listBranches, type Branch } from "@/api/branchs";
 import { useSearchParams } from "react-router-dom";
+import { PageHeader } from "@/components/common/page-header";
 
 const Report = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -139,19 +141,8 @@ const Report = () => {
 
     return (
         <Box sx={{ width: { xs: "100%", md: "auto" } }}>
-            <Typography
-                sx={{ fontSize: { xs: "1.2rem", md: "2rem" } }}
-                fontWeight={600}
-            >
-                Báo cáo nhân viên
-            </Typography>
-            <Box
-                mt="2rem"
-                border="1px solid #e0e0e0"
-                borderRadius="5px"
-                px="1rem"
-                py="1rem"
-            >
+            <PageHeader eyebrow="Báo cáo" title="Báo cáo nhân viên" />
+            <Paper variant="outlined" sx={{ p: 2 }}>
                 <Box display="flex" gap="0.5rem" alignItems="center">
                     <Typography variant="h6">Lọc dữ liệu</Typography>
                     <FilterAltIcon />
@@ -206,16 +197,15 @@ const Report = () => {
                         </>
                     ) : null}
                 </Box>
-            </Box>
+            </Paper>
             <TableContainer
+                component={Paper}
+                variant="outlined"
                 sx={{
                     mt: "2rem",
                     maxWidth: { xs: "90vw", md: "auto" },
                     overflowX: "auto",
-                    border: "1px solid #e0e0e0",
-                    borderRadius: "5px",
-                    px: "1rem",
-                    py: "1rem",
+                    p: 2,
                 }}
             >
                 {loading ? (
@@ -223,24 +213,14 @@ const Report = () => {
                         <CircularProgress />
                     </Box>
                 ) : (
-                    <Table>
+                    <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>
-                                    <Typography fontWeight={600}>Tên nhân viên</Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography fontWeight={600}>Chi nhánh</Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography fontWeight={600}>CC Hợp Đồng</Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography fontWeight={600}>Chứng thực chữ ký</Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography fontWeight={600}>Tổng</Typography>
-                                </TableCell>
+                                <TableCell>Tên nhân viên</TableCell>
+                                <TableCell>Chi nhánh</TableCell>
+                                <TableCell align="center">CC Hợp Đồng</TableCell>
+                                <TableCell align="center">Chứng thực chữ ký</TableCell>
+                                <TableCell align="center">Tổng</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>{renderTableContent()}</TableBody>

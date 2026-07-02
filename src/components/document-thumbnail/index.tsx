@@ -23,19 +23,21 @@ export const DocumentThumbnail = ({
         flex={1}
         sx={{
           cursor: "pointer",
-          border: "1px solid #000",
+          border: "1px solid",
+          borderColor: "divider",
+          backgroundColor: "background.paper",
           padding: 1,
           borderRadius: 1,
+          transition: "border-color 0.15s ease, box-shadow 0.15s ease",
           "&:hover": {
-            backgroundColor: "#f5f5f5",
-            transform: "scale(1.01)",
-            transition: "all 0.2s ease-in-out",
+            borderColor: "primary.main",
+            boxShadow: "0 6px 16px -10px rgba(43, 38, 34, 0.35)",
           },
         }}
         onClick={onClick}
       >
-        <AttachFileIcon />
-        <Typography variant="h6" sx={{ fontSize: "14px" }}>
+        <AttachFileIcon fontSize="small" color="action" />
+        <Typography variant="body2" fontWeight={500}>
           {title}
         </Typography>
       </Box>
