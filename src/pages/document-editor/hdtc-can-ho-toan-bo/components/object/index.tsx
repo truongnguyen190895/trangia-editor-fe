@@ -1,17 +1,13 @@
 import { useState } from "react";
 import {
   Box,
-  Typography,
   Button,
+  IconButton,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableRow,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
+  Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -19,12 +15,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ThemThongTinDat } from "../../dialogs/them-thong-tin-dat";
 import { ThongTinCanHoDialog } from "../../dialogs/thong-tin-can-ho";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
+import { FormSection } from "@/components/common/form-section";
 
 interface ObjectEntityProps {
   title: string;
+  /** Anchor id for SectionNav */
+  id?: string;
+  /** Roman numeral shown before the title */
+  numeral?: string;
 }
 
-export const ObjectEntity = ({ title }: ObjectEntityProps) => {
+export const ObjectEntity = ({ title, id, numeral }: ObjectEntityProps) => {
   const { agreementObject, canHo, deleteAgreementObject, deleteCanHo } =
     useHDMBCanHoContext();
   const [open, setOpen] = useState(false);
@@ -46,261 +47,159 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
     deleteCanHo();
   };
 
+  const canHoRows: Array<[string, React.ReactNode]> = canHo
+    ? [
+        ["Số căn hộ", canHo["số_căn_hộ"]],
+        ["Tên toà nhà", canHo["tên_toà_nhà"]],
+        ["Địa chỉ toà nhà", canHo["địa_chỉ_toà_nhà"]],
+        [
+          "Diện tích sàn (m2)",
+          `${canHo["diện_tích_sàn_bằng_số"]} (${canHo["diện_tích_sàn_bằng_chữ"]})`,
+        ],
+        ["Cấp hạng", canHo["cấp_hạng"]],
+        ["Tầng có căn hộ", canHo["tầng_có_căn_hộ"]],
+        ["Kết cấu", canHo["kết_cấu"]],
+        ["Hình thức sở hữu căn hộ", canHo["hình_thức_sở_hữu_căn_hộ"]],
+        ["Năm hoàn thành xây dựng", canHo["năm_hoàn_thành_xây_dựng"]],
+        ["Ghi chú căn hộ", canHo["ghi_chú_căn_hộ"]],
+        [
+          "Giá căn hộ",
+          `${canHo["số_tiền"]} (${canHo["số_tiền_bằng_chữ"]})`,
+        ],
+        ["Loại giấy chứng nhận", canHo["loại_gcn"]],
+        ["Số giấy chứng nhận", canHo["số_gcn"]],
+        ["Số vào sổ cấp GCN", canHo["số_vào_sổ_cấp_gcn"]],
+        ["Nơi cấp giấy chứng nhận", canHo["nơi_cấp_gcn"]],
+        ["Ngày cấp giấy chứng nhận", canHo["ngày_cấp_gcn"]],
+      ]
+    : [];
+
+  const datRows: Array<[string, React.ReactNode]> = agreementObject
+    ? [
+        ["Số thửa đất", agreementObject["số_thửa_đất"]],
+        ["Tờ bản đồ số", agreementObject["số_tờ_bản_đồ"]],
+        ["Diện tích (m2)", agreementObject["diện_tích_đất_bằng_số"]],
+        [
+          "Diện tích bằng chữ (mét vuông)",
+          agreementObject["diện_tích_đất_bằng_chữ"],
+        ],
+        ["Hình thức sử dụng", agreementObject["hình_thức_sở_hữu_đất"]],
+        ["Mục đích sử dụng", agreementObject["mục_đích_sở_hữu_đất"]],
+        ["Thời hạn sử dụng", agreementObject["thời_hạn_sử_dụng_đất"]],
+        ["Nguồn gốc sử dụng", agreementObject["nguồn_gốc_sử_dụng_đất"]],
+      ]
+    : [];
+
+  const renderRows = (rows: Array<[string, React.ReactNode]>) => (
+    <Table size="small">
+      <TableBody>
+        {rows.map(([label, value]) => (
+          <TableRow key={label}>
+            <TableCell
+              component="th"
+              sx={{ width: "260px", color: "text.secondary" }}
+            >
+              {label}
+            </TableCell>
+            <TableCell>{value}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+
   return (
-    <Box border="1px solid #BCCCDC" borderRadius="5px">
-      <Box
-        height="80px"
-        bgcolor="#3D90D7"
-        paddingX="10px"
-        display="flex"
-        alignItems="center"
-      >
-        <Typography variant="h6">{title}</Typography>
-      </Box>
-      <Box padding="10px">
-        <Box display="flex" gap="10px" marginBottom="10px">
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<AddIcon />}
-            disabled={Boolean(canHo)}
-            onClick={handleOpenThongTinCanHo}
-          >
-            Thêm thông tin căn hộ
-          </Button>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            disabled={Boolean(agreementObject)}
-            onClick={handleOpenThongTinDat}
-          >
-            Thêm thông tin mảnh đất
-          </Button>
-        </Box>
-        <Box display="grid" gridTemplateColumns="1fr 1fr" py="2rem">
-          <Typography
-            variant="h4"
-            color="#B12C00"
-            visibility={Boolean(canHo) ? "hidden" : "visible"}
-          >
-            Chưa có thông tin căn hộ
-          </Typography>
-          <Typography
-            variant="h4"
-            color="#B12C00"
-            visibility={Boolean(agreementObject) ? "hidden" : "visible"}
-          >
-            Chưa có thông tin mảnh đất
-          </Typography>
+    <FormSection
+      id={id}
+      numeral={numeral}
+      title={title}
+      complete={Boolean(canHo) && Boolean(agreementObject)}
+    >
+      <Box display="flex" flexDirection="column" gap={2}>
+        <Box>
+          <Box display="flex" alignItems="center" gap={1} mb={1}>
+            <Typography variant="subtitle2">Thông tin căn hộ</Typography>
+            <Box ml="auto">
+              {canHo ? (
+                <Box display="flex" gap={0.5}>
+                  <IconButton
+                    size="small"
+                    onClick={handleOpenThongTinCanHo}
+                    aria-label="Sửa thông tin căn hộ"
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    color="error"
+                    onClick={handleDeleteCanHo}
+                    aria-label="Xóa thông tin căn hộ"
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+              ) : (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<AddIcon />}
+                  onClick={handleOpenThongTinCanHo}
+                >
+                  Thêm thông tin căn hộ
+                </Button>
+              )}
+            </Box>
+          </Box>
+          {canHo ? (
+            renderRows(canHoRows)
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              Chưa có thông tin căn hộ. Bấm "Thêm thông tin căn hộ" để nhập.
+            </Typography>
+          )}
         </Box>
         <Box>
-          <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
-            <Table sx={{ border: "1px solid #BCCCDC" }}>
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Số căn hộ</Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["số_căn_hộ"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Số thửa đất</Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["số_thửa_đất"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Tên toà nhà</Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["tên_toà_nhà"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Tờ bản đồ số</Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["số_tờ_bản_đồ"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Địa chỉ toà nhà</Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["địa_chỉ_toà_nhà"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Diện tích (m2)</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["diện_tích_đất_bằng_số"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Diện tích sàn (m2)</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {canHo?.["diện_tích_sàn_bằng_số"]} (
-                    {canHo?.["diện_tích_sàn_bằng_chữ"]})
-                  </TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Diện tích bằng chữ (mét vuông)
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["diện_tích_đất_bằng_chữ"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Cấp hạng</Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["cấp_hạng"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Hình thức sử dụng</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["hình_thức_sở_hữu_đất"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Tầng có căn hộ</Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["tầng_có_căn_hộ"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Mục đích sử dụng</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["mục_đích_sở_hữu_đất"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Kết cấu</Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["kết_cấu"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Thời hạn sử dụng</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["thời_hạn_sử_dụng_đất"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Hình thức sở hữu căn hộ
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["hình_thức_sở_hữu_căn_hộ"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Nguồn gốc sử dụng</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["nguồn_gốc_sử_dụng_đất"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Năm hoàn thành xây dựng
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["năm_hoàn_thành_xây_dựng"]}</TableCell>
-                  <TableCell component="th">
-                    <Typography variant="body1">Thao tác</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box display="flex" gap={1}>
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleEditObject()}
-                      />
-                      <DeleteIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => deleteAgreementObject()}
-                      />
-                    </Box>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Ghi chú căn hộ</Typography>
-                  </TableCell>
-                  <TableCell>{canHo?.["ghi_chú_căn_hộ"]}</TableCell>
-                  <TableCell />
-                  <TableCell />
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Giá căn hộ</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {canHo?.["số_tiền"]} (
-                    {canHo?.["số_tiền_bằng_chữ"]})
-                  </TableCell>
-                  <TableCell />
-                  <TableCell />
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Giấy chứng nhận</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <List>
-                      <ListItem>
-                        <ListItemText
-                          primary="Loại"
-                          secondary={canHo?.["loại_gcn"]}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText
-                          primary="Số"
-                          secondary={canHo?.["số_gcn"]}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText
-                          primary="Số vào sổ"
-                          secondary={canHo?.["số_vào_sổ_cấp_gcn"]}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText
-                          primary="Nơi cấp"
-                          secondary={canHo?.["nơi_cấp_gcn"]}
-                        />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText
-                          primary="Ngày cấp"
-                          secondary={canHo?.["ngày_cấp_gcn"]}
-                        />
-                      </ListItem>
-                    </List>
-                  </TableCell>
-                  <TableCell />
-                  <TableCell />
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Thao tác</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box display="flex" gap={1}>
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleOpenThongTinCanHo()}
-                      />
-                      <DeleteIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleDeleteCanHo()}
-                      />
-                    </Box>
-                  </TableCell>
-                  <TableCell />
-                  <TableCell />
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <Box display="flex" alignItems="center" gap={1} mb={1}>
+            <Typography variant="subtitle2">Thông tin mảnh đất</Typography>
+            <Box ml="auto">
+              {agreementObject ? (
+                <Box display="flex" gap={0.5}>
+                  <IconButton
+                    size="small"
+                    onClick={handleEditObject}
+                    aria-label="Sửa thông tin mảnh đất"
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    color="error"
+                    onClick={() => deleteAgreementObject()}
+                    aria-label="Xóa thông tin mảnh đất"
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+              ) : (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<AddIcon />}
+                  onClick={handleOpenThongTinDat}
+                >
+                  Thêm thông tin mảnh đất
+                </Button>
+              )}
+            </Box>
+          </Box>
+          {agreementObject ? (
+            renderRows(datRows)
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              Chưa có thông tin mảnh đất. Bấm "Thêm thông tin mảnh đất" để
+              nhập.
+            </Typography>
+          )}
         </Box>
       </Box>
       {open ? (
@@ -312,6 +211,6 @@ export const ObjectEntity = ({ title }: ObjectEntityProps) => {
           handleClose={() => setOpenCanHo(false)}
         />
       ) : null}
-    </Box>
+    </FormSection>
   );
 };

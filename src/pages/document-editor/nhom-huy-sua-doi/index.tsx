@@ -1,14 +1,8 @@
 import { useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  InputAdornment,
-  useTheme,
-} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { Box, Button } from "@mui/material";
 import { CircularProgress } from "@mui/material";
+import { SectionNav } from "@/components/common/section-nav";
+import { StickyActionBar } from "@/components/common/sticky-action-bar";
 import type { NhomHuySuaDoiPayload } from "@/models/nhom-huy-sua-doi";
 import {
   render_vb_huy,
@@ -34,7 +28,6 @@ export const NhomHuySuaDoi = ({
   isChamDutHQUyQuyen = false,
 }: NhomHuySuaDoiProps) => {
   const { partyA, partyB } = useThemChuTheContext();
-  const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -219,60 +212,58 @@ export const NhomHuySuaDoi = ({
     }
   };
 
+  const hasPartyA =
+    partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
+  const hasPartyB =
+    partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0;
+  const isFormValid = validatePayload();
+  const missingParts = [
+    !hasPartyA && "Bên A",
+    !isHuy && !hasPartyB && "Bên B",
+  ].filter(Boolean);
+
   return (
-    <Box display="flex" gap="2rem">
-      <Box
-        border="1px solid #BCCCDC"
-        borderRadius="5px"
-        padding="1rem"
-        display="none" // TODO: temporary hide search
-        flex={1}
-      >
-        <Typography variant="h6">Tìm kiếm</Typography>
-        <TextField
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            },
-          }}
-          fullWidth
-          placeholder="Tên hoặc CCCD/CMND/Hộ chiếu"
-          sx={{ mt: 2 }}
-        />
-      </Box>
+    <Box display="flex" gap="1.5rem" alignItems="flex-start">
+      <SectionNav
+        sections={[
+          { id: "section-ben-a", label: "Bên A", complete: hasPartyA },
+          ...(!isHuy
+            ? [{ id: "section-ben-b", label: "Bên B", complete: hasPartyB }]
+            : []),
+        ]}
+      />
       <Box
         className="full-land-transfer"
         display="flex"
-        gap="4rem"
+        gap="1.5rem"
         flexDirection="column"
-        border="1px solid #BCCCDC"
-        borderRadius="5px"
-        padding="1rem"
-        flex={4}
+        flex={1}
+        minWidth={0}
       >
-        <ThemChuThe title="Bên A" side="partyA" />
-        {!isHuy && <ThemChuThe title="Bên B" side="partyB" />}
-        <Box display="flex" gap="1rem">
+        <ThemChuThe id="section-ben-a" numeral="I" title="Bên A" side="partyA" />
+        {!isHuy && (
+          <ThemChuThe id="section-ben-b" numeral="II" title="Bên B" side="partyB" />
+        )}
+        <StickyActionBar
+          status={
+            isFormValid
+              ? "Đủ thông tin — sẵn sàng tạo văn bản"
+              : `Còn thiếu: ${missingParts.join(", ")}`
+          }
+        >
           <Button
             variant="contained"
-            sx={{
-              backgroundColor: palette.softTeal,
-              height: "50px",
-              fontSize: "1.2rem",
-              fontWeight: "600",
-              textTransform: "uppercase",
-              width: "200px",
-            }}
-            disabled={!validatePayload()}
+            disabled={!isFormValid || isGenerating}
             onClick={() => setOpenDialog(true)}
+            startIcon={
+              isGenerating ? (
+                <CircularProgress size={16} color="inherit" />
+              ) : undefined
+            }
           >
-            {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
+            Tạo hợp đồng
           </Button>
-        </Box>
+        </StickyActionBar>
       </Box>
       <ThemLoiChungDialog
         open={openDialog}

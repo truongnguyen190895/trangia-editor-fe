@@ -4,15 +4,15 @@ import {
   Typography,
   Button,
   TextField,
-  InputAdornment,
-  useTheme,
   RadioGroup,
   FormControlLabel,
   Radio,
   Autocomplete,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
+import { FormSection } from "@/components/common/form-section";
+import { SectionNav } from "@/components/common/section-nav";
+import { StickyActionBar } from "@/components/common/sticky-action-bar";
 import type { HdDatCocPayload, GiayChungNhan } from "@/models/hd-dat-coc";
 import { render_hd_dat_coc } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -58,7 +58,6 @@ interface Props {
 
 export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
   const { partyA, partyB } = useThemChuTheContext();
-  const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [type, setType] = useState<string>("đặt_cọc_đất");
@@ -354,219 +353,218 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
     }
   };
 
+  const hasPartyA =
+    partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
+  const hasPartyB =
+    partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0;
+  const isFormValid = validatePayload();
+  const missingParts = [!hasPartyA && "Bên A", !hasPartyB && "Bên B"].filter(
+    Boolean
+  );
+
   return (
-    <Box display="flex" gap="2rem">
-      <Box
-        border="1px solid #BCCCDC"
-        borderRadius="5px"
-        padding="1rem"
-        display="none" // TODO: temporary hide search
-        flex={1}
-      >
-        <Typography variant="h6">Tìm kiếm</Typography>
-        <TextField
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            },
-          }}
-          fullWidth
-          placeholder="Tên hoặc CCCD/CMND/Hộ chiếu"
-          sx={{ mt: 2 }}
-        />
-      </Box>
+    <Box display="flex" gap="1.5rem" alignItems="flex-start">
+      <SectionNav
+        sections={[
+          { id: "section-ben-a", label: "Bên A", complete: hasPartyA },
+          { id: "section-ben-b", label: "Bên B", complete: hasPartyB },
+        ]}
+      />
       <Box
         className="full-land-transfer"
         display="flex"
-        gap="4rem"
+        gap="1.5rem"
         flexDirection="column"
-        border="1px solid #BCCCDC"
-        borderRadius="5px"
-        padding="1rem"
-        flex={4}
+        flex={1}
+        minWidth={0}
       >
-        <ThemChuThe title="Bên A" side="partyA" />
-        <ThemChuThe title="Bên B" side="partyB" />
-        <Box display="flex" gap="2rem">
-          <Box flex={1}>
-            <Typography variant="h6">Loại hợp đồng</Typography>
-            <RadioGroup value={type} onChange={handleChangeType}>
-              {typeOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  value={option.value}
-                  control={<Radio />}
-                  label={option.label}
-                />
-              ))}
-            </RadioGroup>
-          </Box>
-          <Box flex={4}>
-            <Box>
-              <Typography variant="h6">
-                Thông tin đối tượng đặt cọc (
-                {typeOptions.find((option) => option.value === type)?.label})
-              </Typography>
-              <Box py="1rem">{renderForm()}</Box>
+        <ThemChuThe id="section-ben-a" numeral="I" title="Bên A" side="partyA" />
+        <ThemChuThe id="section-ben-b" numeral="II" title="Bên B" side="partyB" />
+        <FormSection
+          id="section-dat-coc"
+          numeral="III"
+          title="Thông tin đặt cọc"
+        >
+          <Box display="flex" gap="2rem">
+            <Box flex={1}>
+              <Typography variant="h6">Loại hợp đồng</Typography>
+              <RadioGroup value={type} onChange={handleChangeType}>
+                {typeOptions.map((option) => (
+                  <FormControlLabel
+                    key={option.value}
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                  />
+                ))}
+              </RadioGroup>
             </Box>
-            <Box mt="1rem">
-              <Typography variant="h6">Thông tin giấy chứng nhận</Typography>
-              <Box
-                py="1rem"
-                display="grid"
-                gridTemplateColumns="repeat(3, 1fr)"
-                gap="1rem"
-              >
-                <Autocomplete
-                  sx={{ gridColumn: "span 2" }}
-                  freeSolo
-                  options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
-                  value={
-                    CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
-                      (item) => item.value === giayChungNhan.loại_gcn
-                    ) ?? null
-                  }
-                  getOptionLabel={(option) =>
-                    typeof option === "string" ? option : option?.label ?? ""
-                  }
-                  onChange={(_event, value) => {
-                    setGiayChungNhan({
-                      ...giayChungNhan,
-                      loại_gcn:
-                        typeof value === "string" ? value : value?.value ?? "",
-                    });
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Loại giấy chứng nhận"
-                      name="loại_giấy_chứng_nhận"
-                      onChange={(e) => {
-                        setGiayChungNhan({
-                          ...giayChungNhan,
-                          loại_gcn: e.target.value,
-                        });
-                      }}
-                    />
-                  )}
-                />
-                <TextField
-                  label="Số giấy chứng nhận"
-                  value={giayChungNhan.số_gcn}
-                  onChange={(e) =>
-                    setGiayChungNhan({
-                      ...giayChungNhan,
-                      số_gcn: e.target.value,
-                    })
-                  }
-                />
-                <TextField
-                  label="Số vào sổ"
-                  value={giayChungNhan.số_vào_sổ_cấp_gcn}
-                  onChange={(e) =>
-                    setGiayChungNhan({
-                      ...giayChungNhan,
-                      số_vào_sổ_cấp_gcn: e.target.value,
-                    })
-                  }
-                />
-                <TextField
-                  label="Nơi cấp"
-                  value={giayChungNhan.nơi_cấp_gcn}
-                  onChange={(e) =>
-                    setGiayChungNhan({
-                      ...giayChungNhan,
-                      nơi_cấp_gcn: e.target.value,
-                    })
-                  }
-                />
-                <TextField
-                  label="Ngày cấp"
-                  value={giayChungNhan.ngày_cấp_gcn}
-                  onChange={(e) =>
-                    setGiayChungNhan({
-                      ...giayChungNhan,
-                      ngày_cấp_gcn: e.target.value,
-                    })
-                  }
-                />
+            <Box flex={4}>
+              <Box>
+                <Typography variant="h6">
+                  Thông tin đối tượng đặt cọc (
+                  {typeOptions.find((option) => option.value === type)?.label})
+                </Typography>
+                <Box py="1rem">{renderForm()}</Box>
+              </Box>
+              <Box mt="1rem">
+                <Typography variant="h6">Thông tin giấy chứng nhận</Typography>
+                <Box
+                  py="1rem"
+                  display="grid"
+                  gridTemplateColumns="repeat(3, 1fr)"
+                  gap="1rem"
+                >
+                  <Autocomplete
+                    sx={{ gridColumn: "span 2" }}
+                    freeSolo
+                    options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
+                    value={
+                      CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
+                        (item) => item.value === giayChungNhan.loại_gcn
+                      ) ?? null
+                    }
+                    getOptionLabel={(option) =>
+                      typeof option === "string" ? option : option?.label ?? ""
+                    }
+                    onChange={(_event, value) => {
+                      setGiayChungNhan({
+                        ...giayChungNhan,
+                        loại_gcn:
+                          typeof value === "string" ? value : value?.value ?? "",
+                      });
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Loại giấy chứng nhận"
+                        name="loại_giấy_chứng_nhận"
+                        onChange={(e) => {
+                          setGiayChungNhan({
+                            ...giayChungNhan,
+                            loại_gcn: e.target.value,
+                          });
+                        }}
+                      />
+                    )}
+                  />
+                  <TextField
+                    label="Số giấy chứng nhận"
+                    value={giayChungNhan.số_gcn}
+                    onChange={(e) =>
+                      setGiayChungNhan({
+                        ...giayChungNhan,
+                        số_gcn: e.target.value,
+                      })
+                    }
+                  />
+                  <TextField
+                    label="Số vào sổ"
+                    value={giayChungNhan.số_vào_sổ_cấp_gcn}
+                    onChange={(e) =>
+                      setGiayChungNhan({
+                        ...giayChungNhan,
+                        số_vào_sổ_cấp_gcn: e.target.value,
+                      })
+                    }
+                  />
+                  <TextField
+                    label="Nơi cấp"
+                    value={giayChungNhan.nơi_cấp_gcn}
+                    onChange={(e) =>
+                      setGiayChungNhan({
+                        ...giayChungNhan,
+                        nơi_cấp_gcn: e.target.value,
+                      })
+                    }
+                  />
+                  <TextField
+                    label="Ngày cấp"
+                    value={giayChungNhan.ngày_cấp_gcn}
+                    onChange={(e) =>
+                      setGiayChungNhan({
+                        ...giayChungNhan,
+                        ngày_cấp_gcn: e.target.value,
+                      })
+                    }
+                  />
+                </Box>
+              </Box>
+              <Box className="pricing-container" mt="1rem">
+                <Typography variant="h6">Thông tin khác</Typography>
+                <Box
+                  py="1rem"
+                  display="grid"
+                  gridTemplateColumns="repeat(3, 1fr)"
+                  gap="1rem"
+                >
+                  <TextField
+                    label="Số tiền cọc (VNĐ)"
+                    value={additionalInfo.số_tiền_cọc}
+                    helperText={`Bằng chữ: ${additionalInfo.số_tiền_cọc_bằng_chữ}`}
+                    onChange={(e) =>
+                      setAdditionalInfo({
+                        ...additionalInfo,
+                        số_tiền_cọc: e.target.value,
+                        số_tiền_cọc_bằng_chữ: numberToVietnamese(
+                          e.target.value?.replace(/\./g, "").replace(/\,/g, ".")
+                        )?.toLocaleLowerCase(),
+                      })
+                    }
+                  />
+                  <TextField
+                    label="Thời hạn cọc (năm)"
+                    value={additionalInfo.thời_hạn_cọc}
+                    onChange={(e) =>
+                      setAdditionalInfo({
+                        ...additionalInfo,
+                        thời_hạn_cọc: e.target.value,
+                        thời_hạn_cọc_bằng_chữ: numberToVietnamese(
+                          e.target.value?.replace(/\./g, "").replace(/\,/g, ".")
+                        )?.toLocaleLowerCase(),
+                      })
+                    }
+                    helperText={`Bằng chữ: ${additionalInfo.thời_hạn_cọc_bằng_chữ}`}
+                  />
+                  <TextField
+                    label="Tiền phạt cọc (VNĐ)"
+                    value={additionalInfo.tiền_phạt_cọc}
+                    onChange={(e) =>
+                      setAdditionalInfo({
+                        ...additionalInfo,
+                        tiền_phạt_cọc: e.target.value,
+                        tiền_phạt_cọc_bằng_chữ: numberToVietnamese(
+                          e.target.value?.replace(/\./g, "").replace(/\,/g, ".")
+                        )?.toLocaleLowerCase(),
+                      })
+                    }
+                    helperText={`Bằng chữ: ${additionalInfo.tiền_phạt_cọc_bằng_chữ}`}
+                  />
+                </Box>
               </Box>
             </Box>
-            <Box className="pricing-container" mt="1rem">
-              <Typography variant="h6">Thông tin khác</Typography>
-              <Box
-                py="1rem"
-                display="grid"
-                gridTemplateColumns="repeat(3, 1fr)"
-                gap="1rem"
-              >
-                <TextField
-                  label="Số tiền cọc (VNĐ)"
-                  value={additionalInfo.số_tiền_cọc}
-                  helperText={`Bằng chữ: ${additionalInfo.số_tiền_cọc_bằng_chữ}`}
-                  onChange={(e) =>
-                    setAdditionalInfo({
-                      ...additionalInfo,
-                      số_tiền_cọc: e.target.value,
-                      số_tiền_cọc_bằng_chữ: numberToVietnamese(
-                        e.target.value?.replace(/\./g, "").replace(/\,/g, ".")
-                      )?.toLocaleLowerCase(),
-                    })
-                  }
-                />
-                <TextField
-                  label="Thời hạn cọc (năm)"
-                  value={additionalInfo.thời_hạn_cọc}
-                  onChange={(e) =>
-                    setAdditionalInfo({
-                      ...additionalInfo,
-                      thời_hạn_cọc: e.target.value,
-                      thời_hạn_cọc_bằng_chữ: numberToVietnamese(
-                        e.target.value?.replace(/\./g, "").replace(/\,/g, ".")
-                      )?.toLocaleLowerCase(),
-                    })
-                  }
-                  helperText={`Bằng chữ: ${additionalInfo.thời_hạn_cọc_bằng_chữ}`}
-                />
-                <TextField
-                  label="Tiền phạt cọc (VNĐ)"
-                  value={additionalInfo.tiền_phạt_cọc}
-                  onChange={(e) =>
-                    setAdditionalInfo({
-                      ...additionalInfo,
-                      tiền_phạt_cọc: e.target.value,
-                      tiền_phạt_cọc_bằng_chữ: numberToVietnamese(
-                        e.target.value?.replace(/\./g, "").replace(/\,/g, ".")
-                      )?.toLocaleLowerCase(),
-                    })
-                  }
-                  helperText={`Bằng chữ: ${additionalInfo.tiền_phạt_cọc_bằng_chữ}`}
-                />
-              </Box>
-            </Box>
           </Box>
-        </Box>
-        <Box display="flex" gap="1rem">
+        </FormSection>
+        <StickyActionBar
+          status={
+            isFormValid
+              ? "Đủ thông tin — sẵn sàng tạo văn bản"
+              : `Còn thiếu: ${missingParts.join(", ")}`
+          }
+        >
           <Button
             variant="contained"
-            sx={{
-              backgroundColor: palette.softTeal,
-              height: "50px",
-              fontSize: "1.2rem",
-              fontWeight: "600",
-              textTransform: "uppercase",
-              width: "200px",
-            }}
-            disabled={!validatePayload()}
+            disabled={!isFormValid || isGenerating}
             onClick={() => setOpenDialog(true)}
+            startIcon={
+              isGenerating ? (
+                <CircularProgress size={16} color="inherit" />
+              ) : undefined
+            }
           >
-            {isGenerating ? <CircularProgress size={20} /> : "Tạo hợp đồng"}
+            Tạo hợp đồng
           </Button>
-        </Box>
+        </StickyActionBar>
       </Box>
       <ThemLoiChungDialog
         open={openDialog}
