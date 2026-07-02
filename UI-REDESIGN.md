@@ -61,6 +61,53 @@ https://claude.ai/code/artifact/e567a60f-e0d8-4103-9ba9-bbcc254d3019
   home search + "recently edited" shortcuts, mobile bottom-nav refresh, loading
   states naming the file being generated, empty states.
 
+## Code-review findings (PR #27) — TO FIX
+
+Adversarially verified review of the full branch diff, 2026-07-02. Ranked by
+severity; none fixed yet.
+
+1. **[BUG — introduced by this PR] Sticky action bar unusable on mobile.**
+   `src/components/common/sticky-action-bar/index.tsx:22` — the bar's
+   `bottom: { xs: -16 }` cancels 1rem padding, but Layout's xs bottom padding
+   is actually 72px (reserved for the fixed `SidebarMenuMobile`, zIndex 1000
+   vs the bar's 10). Mid-scroll on a phone the ~56px bar sits entirely under
+   the bottom nav — "Tạo hợp đồng" is invisible/untappable until the user
+   scrolls to the very end. Affects all 10 editors. Fix: let the scroll
+   container own the bar, or derive the offset from a shared constant and
+   raise it above the nav / account for the 72px on xs.
+2. **[BUG — pre-existing, re-skinned by this PR] Wrong-password shows
+   "session expired".** `src/api/index.ts:63` — the 401 interceptor doesn't
+   exempt `POST /auth/login`; a bad password clears storage and reloads to
+   `/login?expired=1`, wiping the typed username and showing the misleading
+   expired banner instead of "Tài khoản/Mật khẩu không đúng". Fix: skip the
+   redirect when `error.config?.url` is `/auth/login`.
+3. **[BUG — pre-existing pattern, new surface] Blank dead rows in "Soạn gần
+   đây".** `src/pages/choose-document/index.tsx:68` — every giấy-uỷ-quyền
+   render creates a `guq/cm|vac` Contract row (no id, no bên_A) that
+   `GET /contracts` returns (khai-thue/phieu-thu-ly are filtered server-side,
+   guq is not); `getTemplateName()` → "" and `resumeWorkHistory()` finds no
+   templates-db match, so the row shows only a timestamp and clicking it
+   does nothing. Fix: filter recents to items whose template resolves in
+   `src/database/index.ts` (or extend the backend exclusion list).
+4. **[CLEANUP] Completeness logic copy-pasted ×10.**
+   `src/pages/document-editor/*/index.tsx` (anchor: hdmb-xe:255) — the
+   `hasPartyA/hasPartyB` party-shape expression, `missingParts` array,
+   double-derived `isFormValid`, and the "Đủ thông tin —…/Còn thiếu: …"
+   ternary appear verbatim in all 10 editors. Fix: `StickyActionBar` takes a
+   `missingParts: string[]` prop and renders the message itself; extract
+   `hasPartyMembers(party)` into `src/utils/common.ts`; derive
+   `isFormValid = missingParts.length === 0`.
+5. **[CLEANUP] ~810KB dead assets.** `src/assets/images/login-bg-image.jpg`
+   (425KB) + `not-found.jpg` (384KB) — no references remain; delete both.
+6. **[CLEANUP] Eyebrow style duplicated ×6.** The uppercase-label sx block
+   (0.7rem/700/letterSpacing .1em/uppercase/text.secondary) is copied in
+   choose-document (×2), page-header, section-nav, document-editor header,
+   documents. Fix: make it the theme's `overline` variant (or export a
+   constant from page-header) and reuse.
+7. **[CLEANUP] Duplicate import.** `src/pages/login/index.tsx:12` — second
+   `import { Alert } from "@mui/material"`; merge into the existing
+   multi-name import.
+
 ## Work log (newest first)
 
 ### 2026-07-02 — Session 5 — Phase 4 done (dialogs + home polish)
