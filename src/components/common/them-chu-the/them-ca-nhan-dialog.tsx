@@ -14,6 +14,7 @@ import {
   FormControl,
   FormLabel,
   CircularProgress,
+  Paper,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -176,23 +177,20 @@ export const ThemCaNhanDialog = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
-      <DialogTitle>
-        <Typography variant="body1" fontSize="2rem" fontWeight="600">
-          Thêm thông tin cá nhân
-        </Typography>
-      </DialogTitle>
+      <DialogTitle>Thêm thông tin cá nhân</DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
-        <Box
-          display="flex"
-          alignItems="center"
-          gap="10px"
-          border="1px solid #e0e0e0"
-          p="1rem"
-          borderRadius="5px"
-          bgcolor="#f5f5f5"
-          mb="1rem"
+        <Paper
+          variant="outlined"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            p: 2,
+            mb: "1rem",
+            backgroundColor: "background.default",
+          }}
         >
-          <Typography fontSize="1.2rem" fontWeight="500">
+          <Typography variant="body1">
             Tìm theo số giấy tờ hoặc tải/kéo thả ảnh CCCD để quét QR
           </Typography>
           <TextField
@@ -204,23 +202,13 @@ export const ThemCaNhanDialog = ({
             }}
             placeholder="nhập số giấy tờ"
           />
-          <Button
-            onClick={handleSearch}
-            disabled={loading}
-            variant="contained"
-            color="success"
-          >
+          <Button onClick={handleSearch} disabled={loading} variant="contained">
             {loading ? <CircularProgress size={20} /> : <SearchIcon />}
           </Button>
-        </Box>
+        </Paper>
         <CopyMapper onMapped={handleScanSuccess} rows={7} />
         {notExisted ? (
-          <Typography
-            variant="body1"
-            fontSize="1.2rem"
-            fontWeight="600"
-            color="warning.main"
-          >
+          <Typography variant="body2" fontWeight={600} color="warning.main">
             Số này không tồn tại trong hệ thống và sẽ được lưu lại
           </Typography>
         ) : null}

@@ -63,6 +63,33 @@ https://claude.ai/code/artifact/e567a60f-e0d8-4103-9ba9-bbcc254d3019
 
 ## Work log (newest first)
 
+### 2026-07-02 — Session 5 — Phase 4 done (dialogs + home polish)
+- All ~27 dialog files restyled (3 parallel agents, purely presentational):
+  plain DialogTitles (theme serif applies), grey info/search boxes →
+  outlined Paper on `background.default`, confirm buttons → contained
+  primary (was success/info/secondary), cancels → outlined, giant blue
+  add-icons → primary small buttons/icons, inner tables → `size="small"`
+  with IconButton actions. `color="error"` kept only on truly destructive
+  confirms (delete phiếu thu, employee deactivate). copy-mapper's action
+  demoted to outlined so dialogs keep one contained primary.
+- Home page (ChooseDocument) upgraded: Autocomplete quick-search over the
+  `templates` database (navigates straight to /editor), "Soạn gần đây" list
+  (top 5 from `listWorkHistory`, resume logic mirrored from work-history
+  page), category cards under an uppercase "Danh mục văn bản" label.
+  choose-sub-document switched to PageHeader.
+- Build passes; lint errors 93 → 90 (all remaining pre-existing).
+- Pre-existing oddities found by agents, NOT fixed: `setSaveLoading(true)`
+  called twice in hdcn-dat-va-tai-san them-thong-tin-dat submit; the 4
+  nhom-* add-single/add-couple dialogs are near-copies of the shared
+  them-chu-the dialogs (nhom-huy-sua-doi's even use `useHDMBXeContext`);
+  loading-dialog has an unused `message` prop — could show the generated
+  file name (deferred).
+
+**Redesign status: Phases 1–4 complete.** The whole app is on the new
+design system. Remaining nice-to-haves (unscheduled): dedupe the copied
+nhom-* party dialogs into the shared ones, loading dialog naming the file
+being generated, dark-mode variant, empty states for reports.
+
 ### 2026-07-02 — Session 4 — Phase 3 done (non-editor pages + cleanup)
 - 401 handling in `src/api/index.ts`: `window.alert` removed → redirect to
   `/login?expired=1`; LoginPage shows an info `Alert` when `expired=1`.

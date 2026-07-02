@@ -148,7 +148,9 @@ export const ThongTinTaiSanDialog = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
+          <Button variant="outlined" onClick={handleClose}>
+            Hủy
+          </Button>
           <Button variant="contained" type="submit">
             Thêm
           </Button>

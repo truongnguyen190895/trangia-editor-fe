@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { RoundedBox } from "../../components/rounded-box";
+import { PageHeader } from "@/components/common/page-header";
 
 const mockData = [
   {
@@ -55,10 +56,8 @@ const ChooseSubDocument = () => {
 
   return (
     <Box>
-      <Typography fontWeight={600} variant="h3">
-        Chọn loại văn bản
-      </Typography>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }} mt="20px">
+      <PageHeader title="Chọn loại văn bản" />
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {mockData
           .filter((item) => item.category === category)
           .map((item) => (
@@ -71,7 +70,7 @@ const ChooseSubDocument = () => {
             />
           ))}
         {mockData.filter((item) => item.category === category).length === 0 && (
-          <Typography variant="h4">Không có dữ liệu</Typography>
+          <Typography color="text.secondary">Không có dữ liệu</Typography>
         )}
       </Box>
     </Box>
