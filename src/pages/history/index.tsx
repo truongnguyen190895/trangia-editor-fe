@@ -8,6 +8,7 @@ import {
     TableBody,
     TableCell,
     Button,
+    IconButton,
     CircularProgress,
     Pagination,
     MenuItem,
@@ -18,6 +19,7 @@ import {
     TextField,
     Autocomplete,
     TableContainer,
+    Paper,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { listContracts, exportExcel, deleteContract } from "@/api/contract";
@@ -38,6 +40,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
+import { PageHeader } from "@/components/common/page-header";
 import { toast } from "react-toastify";
 import { REVIEWERS } from "@/constants/reviewer";
 
@@ -277,27 +280,23 @@ const History = () => {
                 <TableCell>{contract.ký_ngoài}</TableCell>
                 <TableCell>
                     <Box display="flex" gap="0.2rem" alignItems="center">
-                        <Button
-                            variant="contained"
-                            color="info"
+                        <IconButton
+                            color="primary"
                             size="small"
                             onClick={() => handleRenderPhieuThu(contract.số_hợp_đồng)}
                         >
-                            <PrintIcon />
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="info"
+                            <PrintIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
                             size="small"
                             onClick={() => {
                                 navigate(`/edit-contract?id=${contract.số_hợp_đồng}`);
                             }}
                         >
-                            <EditIcon />
-                        </Button>
+                            <EditIcon fontSize="small" />
+                        </IconButton>
                         {isAdmin ? (
-                            <Button
-                                variant="outlined"
+                            <IconButton
                                 color="error"
                                 size="small"
                                 onClick={() => {
@@ -305,8 +304,8 @@ const History = () => {
                                     setOpenConfirmationDialog(true);
                                 }}
                             >
-                                <DeleteIcon />
-                            </Button>
+                                <DeleteIcon fontSize="small" />
+                            </IconButton>
                         ) : null}
                     </Box>
                 </TableCell>
@@ -436,22 +435,30 @@ const History = () => {
 
     return (
         <Box sx={{ width: { xs: "100%", md: "auto" } }}>
-            <Typography
-                sx={{ fontSize: { xs: "1.2rem", md: "2rem" } }}
-                fontWeight={600}
-            >
-                Danh sách phiếu thu
-            </Typography>
-            <Box
-                mt="2rem"
-                border="1px solid #e0e0e0"
-                borderRadius="5px"
-                px="1rem"
-                py="1rem"
-            >
+            <PageHeader
+                eyebrow="Tổng hợp"
+                title="Danh sách phiếu thu"
+                action={
+                    isAdmin ? (
+                        <Button
+                            variant="contained"
+                            endIcon={<FileDownloadIcon />}
+                            onClick={handleExportExcel}
+                            disabled={loadingExcel}
+                        >
+                            {loadingExcel ? (
+                                <CircularProgress size={20} color="inherit" />
+                            ) : (
+                                "Tải file excel"
+                            )}
+                        </Button>
+                    ) : undefined
+                }
+            />
+            <Paper variant="outlined" sx={{ p: 2 }}>
                 <Box display="flex" gap="0.5rem" alignItems="center">
                     <Typography variant="h6">Lọc dữ liệu</Typography>
-                    <FilterAltIcon />
+                    <FilterAltIcon fontSize="small" color="action" />
                 </Box>
                 <Box
                     display="flex"
@@ -593,17 +600,11 @@ const History = () => {
                         </Select>
                     </FormControl>
                 </Box>
-            </Box>
-            <Box
-                mt="2rem"
-                border="1px solid #e0e0e0"
-                borderRadius="5px"
-                px="1rem"
-                py="1rem"
-            >
+            </Paper>
+            <Paper variant="outlined" sx={{ mt: 2, p: 2 }}>
                 <Box display="flex" gap="0.5rem" alignItems="center">
                     <Typography variant="h6">Tìm kiếm</Typography>
-                    <SearchIcon />
+                    <SearchIcon fontSize="small" color="action" />
                 </Box>
                 <Box
                     display="flex"
@@ -667,67 +668,29 @@ const History = () => {
                         }}
                     />
                 </Box>
-            </Box>
-            <Box
-                mt="2rem"
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-            >
-                <Typography
-                    sx={{ fontSize: { xs: "1rem", md: "1.2rem" } }}
-                    fontWeight="bold"
-                    fontStyle="italic"
-                    color="#08CB00"
-                >
+            </Paper>
+            <Box mt={2} display="flex" alignItems="center" gap={3} flexWrap="wrap">
+                <Typography fontWeight={600}>
                     Tổng số: {totalElements}
                 </Typography>
                 {isAdmin ? (
-                    <Typography
-                        sx={{ fontSize: { xs: "1rem", md: "1.2rem" } }}
-                        fontWeight="bold"
-                        fontStyle="italic"
-                        color="#08CB00"
-                    >
+                    <Typography fontWeight={600}>
                         Tổng tiền:{" "}
                         {((totalValue + totalCopiesValue) * 1000).toLocaleString()}
                     </Typography>
                 ) : null}
-                {isAdmin ? (
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                            backgroundColor: "green",
-                            width: "200px",
-                            height: "40px",
-                        }}
-                        endIcon={<FileDownloadIcon sx={{ fontSize: "large" }} />}
-                        onClick={handleExportExcel}
-                        disabled={loadingExcel}
-                    >
-                        {loadingExcel ? (
-                            <CircularProgress size={20} />
-                        ) : (
-                            <Typography sx={{ fontSize: { xs: "0.8rem", md: "1rem" } }}>
-                                Tải file excel
-                            </Typography>
-                        )}
-                    </Button>
-                ) : null}
             </Box>
             <TableContainer
+                component={Paper}
+                variant="outlined"
                 sx={{
-                    mt: "1rem",
+                    mt: 2,
                     maxWidth: { xs: "90vw", md: "auto" },
                     overflowX: "auto",
-                    border: "1px solid #e0e0e0",
-                    borderRadius: "5px",
-                    px: "1rem",
-                    py: "1rem",
+                    p: 2,
                 }}
             >
-                <Table>
+                <Table size="small">
                     <TableHead>
                         <TableRow>
                             <TableCell>Ngày viết phiếu</TableCell>

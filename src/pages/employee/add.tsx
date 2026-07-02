@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
-  Typography,
   Button,
+  IconButton,
+  Paper,
   FormControl,
-  FormLabel,
+  InputLabel,
   TextField,
   Select,
   MenuItem,
@@ -17,6 +18,7 @@ import { listBranches, type Branch } from "@/api/branchs";
 import { createUser, getUser, type User, updateEmployee } from "@/api/users";
 import { toast } from "react-toastify";
 import { LoadingDialog } from "@/components/common/loading-dialog";
+import { PageHeader } from "@/components/common/page-header";
 
 interface AddEmployeeFormValues {
   name: string;
@@ -130,117 +132,115 @@ const AddEmployee = () => {
 
   return (
     <Box>
-      <Box display="flex" alignItems="center" gap="10px">
-        <Button
-          variant="outlined"
-          color="secondary"
+      <Box display="flex" alignItems="flex-start" gap={1.5}>
+        <IconButton
           onClick={() => navigate("/staff")}
+          aria-label="Quay lại"
+          sx={{
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 2,
+            backgroundColor: "background.paper",
+          }}
         >
           <ArrowBackIcon />
-        </Button>
-        {user && user?.name ? (
-          <Typography variant="h4">
-            {user.name} - ({user?.branches[0]?.friendly_name})
-          </Typography>
-        ) : (
-          <Typography variant="h4">Thêm nhân viên mới</Typography>
-        )}
+        </IconButton>
+        <Box flex={1} minWidth={0}>
+          <PageHeader
+            eyebrow="Nhân sự"
+            title={
+              user && user?.name
+                ? `${user.name} - (${user?.branches[0]?.friendly_name})`
+                : "Thêm nhân viên mới"
+            }
+          />
+        </Box>
       </Box>
-      <Box mt="3rem">
-        <form onSubmit={handleSubmit}>
-          <Box
-            display="grid"
-            gridTemplateColumns="repeat(3, 1fr)"
-            gap="10px"
-            border="1px solid #ccc"
-            borderRadius="10px"
-            padding="20px"
-          >
-            <FormControl sx={{ marginBottom: "10px" }}>
-              <FormLabel>Tên nhân viên</FormLabel>
-              <TextField
-                name="name"
-                fullWidth
-                error={!!errors.name}
-                helperText={errors.name}
-                value={values.name}
-                onChange={handleChange}
-              />
-            </FormControl>
-            <FormControl sx={{ marginBottom: "10px" }}>
-              <FormLabel>Tài khoản</FormLabel>
-              <TextField
-                name="username"
-                fullWidth
-                error={!!errors.username}
-                helperText={errors.username}
-                value={values.username}
-                onChange={handleChange}
-              />
-            </FormControl>
-            {!user ? (
-              <FormControl sx={{ marginBottom: "10px" }}>
-                <FormLabel>Mật khẩu</FormLabel>
-                <TextField
-                  name="password"
-                  fullWidth
-                  error={!!errors.password}
-                  helperText={errors.password}
-                  value={values.password}
-                  onChange={handleChange}
-                />
-              </FormControl>
-            ) : null}
+      <form onSubmit={handleSubmit}>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
+            gap: 2,
+          }}
+        >
+          <TextField
+            name="name"
+            label="Tên nhân viên"
+            fullWidth
+            error={!!errors.name}
+            helperText={errors.name}
+            value={values.name}
+            onChange={handleChange}
+          />
+          <TextField
+            name="username"
+            label="Tài khoản"
+            fullWidth
+            error={!!errors.username}
+            helperText={errors.username}
+            value={values.username}
+            onChange={handleChange}
+          />
+          {!user ? (
+            <TextField
+              name="password"
+              label="Mật khẩu"
+              fullWidth
+              error={!!errors.password}
+              helperText={errors.password}
+              value={values.password}
+              onChange={handleChange}
+            />
+          ) : null}
 
-            <FormControl sx={{ marginBottom: "10px" }}>
-              <FormLabel>Chi nhánh</FormLabel>
-              <Select
-                name="branches"
-                fullWidth
-                value={values.branches}
-                onChange={handleChange}
-              >
-                {branches.map((branch) => (
-                  <MenuItem key={branch.id} value={branch.id}>
-                    {branch.friendly_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ marginBottom: "10px" }}>
-              <FormLabel>Chức vụ</FormLabel>
-              <Select
-                name="role"
-                fullWidth
-                value={values.role}
-                onChange={handleChange}
-              >
-                <MenuItem value="User">Nhân viên</MenuItem>
-                <MenuItem value="BranchManager">Phó/Trưởng bộ phận</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box className="form-action" display="flex" gap="10px" mt="2rem">
-            <Button
-              type="submit"
-              variant="contained"
-              color="success"
-              sx={{ width: "100px" }}
+          <FormControl fullWidth>
+            <InputLabel id="branches-label">Chi nhánh</InputLabel>
+            <Select
+              name="branches"
+              labelId="branches-label"
+              label="Chi nhánh"
+              fullWidth
+              value={values.branches}
+              onChange={handleChange}
             >
-              {user ? "Cập nhật" : "Tạo mới"}
-            </Button>
-            <Button
-              type="button"
-              variant="outlined"
-              color="secondary"
-              onClick={() => navigate("/staff")}
-              sx={{ width: "100px" }}
+              {branches.map((branch) => (
+                <MenuItem key={branch.id} value={branch.id}>
+                  {branch.friendly_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="role-label">Chức vụ</InputLabel>
+            <Select
+              name="role"
+              labelId="role-label"
+              label="Chức vụ"
+              fullWidth
+              value={values.role}
+              onChange={handleChange}
             >
-              Hủy
-            </Button>
-          </Box>
-        </form>
-      </Box>
+              <MenuItem value="User">Nhân viên</MenuItem>
+              <MenuItem value="BranchManager">Phó/Trưởng bộ phận</MenuItem>
+            </Select>
+          </FormControl>
+        </Paper>
+        <Box className="form-action" display="flex" gap={1.5} mt={3}>
+          <Button type="submit" variant="contained">
+            {user ? "Cập nhật" : "Tạo mới"}
+          </Button>
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={() => navigate("/staff")}
+          >
+            Hủy
+          </Button>
+        </Box>
+      </form>
       <LoadingDialog open={loading} />
     </Box>
   );

@@ -123,7 +123,7 @@ export const ThemThongTinDat = ({
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle variant="h4">Thêm thông tin đất</DialogTitle>
+        <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
           <SearchEntity
             placeholder="Nhập số giấy tờ (số sổ)"
@@ -401,7 +401,7 @@ export const ThemThongTinDat = ({
               />
             </Box>
             <Box py="1rem">
-              <Typography variant="body1">
+              <Typography variant="h6">
                 Thông tin đăng ký biến động đất (nếu có)
               </Typography>
               <Box
@@ -431,13 +431,10 @@ export const ThemThongTinDat = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button
-            variant="contained"
-            type="submit"
-            disabled={saveLoading}
-            color={saveLoading ? "info" : "success"}
-          >
+          <Button variant="outlined" onClick={handleClose}>
+            Hủy
+          </Button>
+          <Button variant="contained" type="submit" disabled={saveLoading}>
             {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>

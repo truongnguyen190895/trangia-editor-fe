@@ -75,8 +75,7 @@ export const CopyMapper = ({ onMapped, rows = 5 }: CopyMapperProps) => {
       />
 
       <Button
-        variant="contained"
-        color="primary"
+        variant="outlined"
         sx={{ width: "200px" }}
         disabled={!input.trim()}
         onClick={handleProcess}

@@ -14,9 +14,9 @@ import {
   TableCell,
   TextField,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
@@ -169,16 +169,7 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
 
   return (
     <Box>
-      <Button
-        sx={{
-          height: "50px",
-          fontSize: "1.2rem",
-          fontWeight: "600",
-          textTransform: "uppercase",
-        }}
-        variant="contained"
-        onClick={handleOpen}
-      >
+      <Button variant="outlined" onClick={handleOpen}>
         Giấy UQ
       </Button>
       <Dialog open={chooserOpen} onClose={() => setChooserOpen(false)}>
@@ -187,8 +178,13 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
           <Typography>Bạn muốn tạo GUQ loại nào?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setChooserOpen(false)}>Hủy</Button>
-          <Button onClick={() => pickTemplate(GUQ_TEMPLATE.CM)}>
+          <Button variant="outlined" onClick={() => setChooserOpen(false)}>
+            Hủy
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => pickTemplate(GUQ_TEMPLATE.CM)}
+          >
             GUQ - (CM)
           </Button>
           <Button
@@ -217,91 +213,66 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
             </Box>
           )}
           <Box mt="1rem">
-            <Typography variant="h6">Bên nhận uỷ quyền</Typography>
-            {nguoiDuocUQList.length > 0 ? (
-              <Box>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Giới tính</TableCell>
-                      <TableCell>Tên</TableCell>
-                      <TableCell>Ngày sinh</TableCell>
-                      <TableCell>Loại giấy tờ</TableCell>
-                      <TableCell>Số giấy tờ</TableCell>
-                      <TableCell>Ngày cấp</TableCell>
-                      <TableCell>Nơi cấp</TableCell>
-                      <TableCell>Sửa</TableCell>
-                      <TableCell>Xoá</TableCell>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="h6">Bên nhận uỷ quyền</Typography>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<AddIcon />}
+                onClick={handleOpenAdd}
+              >
+                Thêm người được uỷ quyền
+              </Button>
+            </Box>
+            {nguoiDuocUQList.length > 0 && (
+              <Table size="small" sx={{ mt: 1 }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Giới tính</TableCell>
+                    <TableCell>Tên</TableCell>
+                    <TableCell>Ngày sinh</TableCell>
+                    <TableCell>Loại giấy tờ</TableCell>
+                    <TableCell>Số giấy tờ</TableCell>
+                    <TableCell>Ngày cấp</TableCell>
+                    <TableCell>Nơi cấp</TableCell>
+                    <TableCell align="right">Thao tác</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {nguoiDuocUQList.map((entity, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{entity["giới_tính"]}</TableCell>
+                      <TableCell>{entity.tên}</TableCell>
+                      <TableCell>{entity["ngày_sinh"]}</TableCell>
+                      <TableCell>{entity["loại_giấy_tờ"]}</TableCell>
+                      <TableCell>{entity["số_giấy_tờ"]}</TableCell>
+                      <TableCell>{entity["ngày_cấp"]}</TableCell>
+                      <TableCell>{entity["nơi_cấp"]}</TableCell>
+                      <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleOpenEdit(index)}
+                          aria-label="Sửa"
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleDelete(index)}
+                          aria-label="Xóa"
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {nguoiDuocUQList.map((entity, index) => (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          "& .icon-action": {
-                            cursor: "pointer",
-                            "&:active": {
-                              scale: 0.9,
-                              transition: "scale 0.1s ease",
-                            },
-                          },
-                        }}
-                      >
-                        <TableCell>{entity["giới_tính"]}</TableCell>
-                        <TableCell>{entity.tên}</TableCell>
-                        <TableCell>{entity["ngày_sinh"]}</TableCell>
-                        <TableCell>{entity["loại_giấy_tờ"]}</TableCell>
-                        <TableCell>{entity["số_giấy_tờ"]}</TableCell>
-                        <TableCell>{entity["ngày_cấp"]}</TableCell>
-                        <TableCell>{entity["nơi_cấp"]}</TableCell>
-                        <TableCell>
-                          <EditIcon
-                            className="icon-action"
-                            color="info"
-                            onClick={() => handleOpenEdit(index)}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <DeleteIcon
-                            className="icon-action"
-                            color="error"
-                            onClick={() => handleDelete(index)}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <Box display="flex" alignItems="center" marginTop="10px">
-                  <AddCircleRoundedIcon
-                    sx={{
-                      fontSize: "3rem",
-                      color: "#3D90D7",
-                      cursor: "pointer",
-                      "&:active": {
-                        scale: 0.9,
-                        transition: "scale 0.1s ease",
-                      },
-                    }}
-                    onClick={handleOpenAdd}
-                  />
-                </Box>
-              </Box>
-            ) : (
-              <Box display="flex" marginTop="10px" height="50px">
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  startIcon={<AddIcon />}
-                  sx={{ flex: 1 }}
-                  onClick={handleOpenAdd}
-                >
-                  <Typography variant="body1">
-                    Thêm người được uỷ quyền
-                  </Typography>
-                </Button>
-              </Box>
+                  ))}
+                </TableBody>
+              </Table>
             )}
           </Box>
         </DialogContent>
@@ -311,7 +282,6 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
           </Button>
           <Button
             variant="contained"
-            color="success"
             disabled={isGenerating}
             onClick={handleGenerate}
             startIcon={

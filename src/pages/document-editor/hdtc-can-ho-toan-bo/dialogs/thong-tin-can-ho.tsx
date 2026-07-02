@@ -314,15 +314,10 @@ export const ThongTinCanHoDialog = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button color="secondary" variant="outlined" onClick={handleClose}>
+          <Button variant="outlined" onClick={handleClose}>
             Hủy
           </Button>
-          <Button
-            color="success"
-            variant="contained"
-            type="submit"
-            disabled={saveLoading}
-          >
+          <Button variant="contained" type="submit" disabled={saveLoading}>
             {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>

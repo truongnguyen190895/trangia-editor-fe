@@ -35,7 +35,7 @@ export const WarningDialog: React.FC<WarningDialogProps> = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onConfirm} color="error" variant="contained">
+        <Button onClick={onConfirm} variant="contained">
           OK
         </Button>
       </DialogActions>

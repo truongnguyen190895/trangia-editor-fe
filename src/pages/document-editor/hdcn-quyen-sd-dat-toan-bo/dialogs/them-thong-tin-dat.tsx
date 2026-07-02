@@ -16,6 +16,8 @@ import {
   TableContainer,
   TableBody,
   CircularProgress,
+  IconButton,
+  Paper,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -224,11 +226,7 @@ export const ThemThongTinDat = ({
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle>
-          <Typography variant="body1" fontSize="2rem" fontWeight="600">
-            Thêm thông tin đất
-          </Typography>
-        </DialogTitle>
+        <DialogTitle>Thêm thông tin đất</DialogTitle>
         <DialogContent>
           <Box
             className="search"
@@ -247,18 +245,12 @@ export const ThemThongTinDat = ({
               onClick={handleSearch}
               disabled={searchLoading}
               variant="contained"
-              color="success"
             >
               {searchLoading ? <CircularProgress size={20} /> : <SearchIcon />}
             </Button>
           </Box>
           {isNotExisted ? (
-            <Typography
-              variant="body1"
-              fontSize="1.2rem"
-              fontWeight="600"
-              color="warning.main"
-            >
+            <Typography variant="body2" color="warning.main">
               Số thửa đất này không tồn tại trong hệ thống và sẽ được lưu lại
             </Typography>
           ) : null}
@@ -533,18 +525,11 @@ export const ThemThongTinDat = ({
                   errors["hình_thức_sử_dụng"]
                 }
               />
-              <Box
-                sx={{ gridColumn: "span 3" }}
-                border="1px solid #ccc"
-                borderRadius="10px"
-                padding="20px"
+              <Paper
+                variant="outlined"
+                sx={{ gridColumn: "span 3", p: 2 }}
               >
-                <Typography
-                  variant="body1"
-                  fontSize="1.2rem"
-                  fontWeight="600"
-                  sx={{ marginBottom: "20px" }}
-                >
+                <Typography variant="h6" sx={{ marginBottom: "20px" }}>
                   Mục đích và thời hạn sử dụng (nhập các giá trị sau đó bấm nút
                   để thêm vào)
                 </Typography>
@@ -616,8 +601,8 @@ export const ThemThongTinDat = ({
                   />
                 </Box>
                 <Button
-                  variant="contained"
-                  color="success"
+                  variant="outlined"
+                  size="small"
                   sx={{ marginTop: "20px" }}
                   startIcon={<AddIcon />}
                   onClick={() => handleAddMụcĐíchVàThờiHạnSửDụng(indexEdit)}
@@ -625,37 +610,13 @@ export const ThemThongTinDat = ({
                   Thêm mục đích và thời hạn sử dụng
                 </Button>
                 <TableContainer>
-                  <Table>
+                  <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            fontSize="1rem"
-                            fontWeight="600"
-                          >
-                            Phân loại
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            fontSize="1rem"
-                            fontWeight="600"
-                          >
-                            Diện tích (m2)
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            fontSize="1rem"
-                            fontWeight="600"
-                          >
-                            Thời hạn sử dụng
-                          </Typography>
-                        </TableCell>
-                        <TableCell>Thao tác</TableCell>
+                        <TableCell>Phân loại</TableCell>
+                        <TableCell>Diện tích (m2)</TableCell>
+                        <TableCell>Thời hạn sử dụng</TableCell>
+                        <TableCell align="right">Thao tác</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -664,22 +625,21 @@ export const ThemThongTinDat = ({
                           <TableCell>{item["phân_loại"]}</TableCell>
                           <TableCell>{item["diện_tích"]}</TableCell>
                           <TableCell>{item["thời_hạn_sử_dụng"]}</TableCell>
-                          <TableCell>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              startIcon={<EditIcon />}
+                          <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
+                            <IconButton
+                              size="small"
+                              aria-label="Sửa"
                               onClick={() => {
                                 setMụcĐíchVàThờiHạnSửDụngEdit(item);
                                 setIndexEdit(index);
                               }}
                             >
-                              Sửa
-                            </Button>
-                            <Button
-                              variant="contained"
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
                               color="error"
-                              startIcon={<DeleteIcon />}
+                              aria-label="Xóa"
                               onClick={() => {
                                 setMụcĐíchVàThờiHạnSửDụng(
                                   mụcđíchVàThờiHạnSửDụng.filter(
@@ -688,28 +648,21 @@ export const ThemThongTinDat = ({
                                 );
                               }}
                             >
-                              Xóa
-                            </Button>
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
                           </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
-              </Box>
+              </Paper>
               {isMotPhan ? (
-                <Box
-                  sx={{ gridColumn: "span 3" }}
-                  border="1px solid #ccc"
-                  borderRadius="10px"
-                  padding="20px"
+                <Paper
+                  variant="outlined"
+                  sx={{ gridColumn: "span 3", p: 2 }}
                 >
-                  <Typography
-                    variant="body1"
-                    fontSize="1.2rem"
-                    fontWeight="600"
-                    sx={{ marginBottom: "20px" }}
-                  >
+                  <Typography variant="h6" sx={{ marginBottom: "20px" }}>
                     Mục đích và thời hạn sử dụng của một phần thửa đất (nhập các
                     giá trị sau đó bấm nút để thêm vào)
                   </Typography>
@@ -783,8 +736,8 @@ export const ThemThongTinDat = ({
                     />
                   </Box>
                   <Button
-                    variant="contained"
-                    color="success"
+                    variant="outlined"
+                    size="small"
                     sx={{ marginTop: "20px" }}
                     startIcon={<AddIcon />}
                     onClick={() => {
@@ -821,37 +774,13 @@ export const ThemThongTinDat = ({
                     Thêm mục đích và thời hạn sử dụng
                   </Button>
                   <TableContainer>
-                    <Table>
+                    <Table size="small">
                       <TableHead>
                         <TableRow>
-                          <TableCell>
-                            <Typography
-                              variant="body1"
-                              fontSize="1rem"
-                              fontWeight="600"
-                            >
-                              Phân loại
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography
-                              variant="body1"
-                              fontSize="1rem"
-                              fontWeight="600"
-                            >
-                              Diện tích (m2)
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography
-                              variant="body1"
-                              fontSize="1rem"
-                              fontWeight="600"
-                            >
-                              Thời hạn sử dụng
-                            </Typography>
-                          </TableCell>
-                          <TableCell>Thao tác</TableCell>
+                          <TableCell>Phân loại</TableCell>
+                          <TableCell>Diện tích (m2)</TableCell>
+                          <TableCell>Thời hạn sử dụng</TableCell>
+                          <TableCell align="right">Thao tác</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -860,22 +789,24 @@ export const ThemThongTinDat = ({
                             <TableCell>{item["phân_loại"]}</TableCell>
                             <TableCell>{item["diện_tích"]}</TableCell>
                             <TableCell>{item["thời_hạn_sử_dụng"]}</TableCell>
-                            <TableCell>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                startIcon={<EditIcon />}
+                            <TableCell
+                              align="right"
+                              sx={{ whiteSpace: "nowrap" }}
+                            >
+                              <IconButton
+                                size="small"
+                                aria-label="Sửa"
                                 onClick={() => {
                                   setMụcĐíchVàThờiHạnSửDụngMotPhanEdit(item);
                                   setIndexEdit(index);
                                 }}
                               >
-                                Sửa
-                              </Button>
-                              <Button
-                                variant="contained"
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                              <IconButton
+                                size="small"
                                 color="error"
-                                startIcon={<DeleteIcon />}
+                                aria-label="Xóa"
                                 onClick={() => {
                                   setMụcĐíchVàThờiHạnSửDụngMotPhan((prev) =>
                                     prev.filter((_item, i) => i !== index),
@@ -891,15 +822,15 @@ export const ThemThongTinDat = ({
                                   }
                                 }}
                               >
-                                Xóa
-                              </Button>
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
                             </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
                     </Table>
                   </TableContainer>
-                </Box>
+                </Paper>
               ) : null}
               <Autocomplete
                 sx={{ gridColumn: "span 3" }}
@@ -970,18 +901,11 @@ export const ThemThongTinDat = ({
                 </>
               )}
               {isCoCongVan ? (
-                <Box
-                  sx={{ gridColumn: "span 3" }}
-                  border="1px solid #ccc"
-                  borderRadius="10px"
-                  padding="20px"
+                <Paper
+                  variant="outlined"
+                  sx={{ gridColumn: "span 3", p: 2 }}
                 >
-                  <Typography
-                    variant="body1"
-                    fontSize="1.2rem"
-                    fontWeight="600"
-                    sx={{ marginBottom: "20px" }}
-                  >
+                  <Typography variant="h6" sx={{ marginBottom: "20px" }}>
                     Chi tiết công văn (ĐIỀU 1, mục 1 — mẫu có công văn)
                   </Typography>
                   <Box
@@ -1079,7 +1003,7 @@ export const ThemThongTinDat = ({
                       onChange={handleChange}
                     />
                   </Box>
-                </Box>
+                </Paper>
               ) : null}
               <Box sx={{ gridColumn: "span 3" }}>
                 <TextField
@@ -1101,7 +1025,9 @@ export const ThemThongTinDat = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
+          <Button variant="outlined" onClick={handleClose}>
+            Hủy
+          </Button>
           <Button
             variant="contained"
             type="submit"
