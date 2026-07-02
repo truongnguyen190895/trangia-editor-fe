@@ -86,10 +86,7 @@ export const ThemLoiChungDialog = ({
               alignItems="center"
               mb="1rem"
             >
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
+              <InputLabel htmlFor="sốBảnGốc">
                 Số bản gốc
               </InputLabel>
               <TextField
@@ -111,10 +108,7 @@ export const ThemLoiChungDialog = ({
               alignItems="center"
               mb="1rem"
             >
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
+              <InputLabel htmlFor="sốBảnGốc">
                 Công chứng viên
               </InputLabel>
               <Select
@@ -137,10 +131,7 @@ export const ThemLoiChungDialog = ({
               alignItems="center"
               mb="1rem"
             >
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
+              <InputLabel htmlFor="sốBảnGốc">
                 Số hợp đồng
               </InputLabel>
               <TextField
@@ -157,10 +148,7 @@ export const ThemLoiChungDialog = ({
               gap="0.5rem"
               alignItems="center"
             >
-              <InputLabel
-                htmlFor="sốBảnGốc"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
+              <InputLabel htmlFor="sốBảnGốc">
                 Ngày tạo hợp đồng
               </InputLabel>
               <TextField
@@ -171,32 +159,22 @@ export const ThemLoiChungDialog = ({
               />
             </Box>
             <Box display="flex" alignItems="center" gap="0.5rem">
-              <InputLabel
-                htmlFor="isOutSide"
-                sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-              >
+              <InputLabel htmlFor="isOutSide">
                 Hợp đồng được ký bên ngoài văn phòng?
               </InputLabel>
               <Checkbox
                 id="isOutSide"
-                size="large"
-                color="info"
                 checked={isOutSide}
                 onChange={() => setIsOutSide(!isOutSide)}
               />
             </Box>
             {templateId && Number(templateId) > 0 ? (
               <Box display="flex" alignItems="center" gap="0.5rem">
-                <InputLabel
-                  htmlFor="isUchi"
-                  sx={{ fontSize: "1.2rem", fontWeight: "600" }}
-                >
+                <InputLabel htmlFor="isUchi">
                   Gửi thông tin lên Uchi (Hợp đồng lưu tạm)?
                 </InputLabel>
                 <Checkbox
                   id="isUchi"
-                  size="large"
-                  color="info"
                   checked={isUchi}
                   onChange={(_e, checked) => {
                     setIsUchi(checked);
@@ -210,12 +188,7 @@ export const ThemLoiChungDialog = ({
           </Box>
           {templateId && Number(templateId) > 0 ? (
             <Box mt="0.5rem">
-              <Typography
-                variant="subtitle1"
-                fontSize="1.2rem"
-                fontWeight="600"
-                color="error"
-              >
+              <Typography variant="body2" color="error.main">
                 <i>(Số hợp đồng là bắt buộc nếu gửi lên Uchi)</i>
               </Typography>
             </Box>
@@ -225,12 +198,7 @@ export const ThemLoiChungDialog = ({
           <Button variant="outlined" onClick={onClose}>
             Hủy
           </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={sốBảnGốc <= 0}
-            type="submit"
-          >
+          <Button variant="contained" disabled={sốBảnGốc <= 0} type="submit">
             Tạo hợp đồng
           </Button>
         </DialogActions>

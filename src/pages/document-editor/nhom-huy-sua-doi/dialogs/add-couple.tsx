@@ -131,24 +131,20 @@ export const AddCoupleDialog = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
-      <DialogTitle>
-        <Typography variant="body1" fontSize="2rem" fontWeight="600">
-          Thêm thông tin vợ chồng
-        </Typography>
-      </DialogTitle>
+      <DialogTitle>Thêm thông tin vợ chồng</DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
         <form>
           <Box display="grid" gridTemplateColumns="1fr 1fr" gap="4rem">
             <Box>
-              <Typography
-                variant="body1"
-                fontSize="1.4rem"
-                fontWeight="600"
-                sx={{ marginBottom: "20px" }}
-              >
+              <Typography variant="h6" sx={{ marginBottom: "20px" }}>
                 Thông tin chồng
               </Typography>
-              <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
+              <Box
+                border="1px solid"
+                borderColor="divider"
+                borderRadius="10px"
+                padding="20px"
+              >
                 <Box
                   display="grid"
                   gridTemplateColumns="1fr 1fr 1fr"
@@ -268,15 +264,15 @@ export const AddCoupleDialog = ({
               </Box>
             </Box>
             <Box>
-              <Typography
-                variant="body1"
-                fontSize="1.4rem"
-                fontWeight="600"
-                sx={{ marginBottom: "20px" }}
-              >
+              <Typography variant="h6" sx={{ marginBottom: "20px" }}>
                 Thông tin vợ
               </Typography>
-              <Box border="1px solid #ccc" borderRadius="10px" padding="20px">
+              <Box
+                border="1px solid"
+                borderColor="divider"
+                borderRadius="10px"
+                padding="20px"
+              >
                 <Box
                   display="grid"
                   gridTemplateColumns="1fr 1fr 1fr"
@@ -397,12 +393,7 @@ export const AddCoupleDialog = ({
             </Box>
           </Box>
           <Box py="1rem">
-            <Typography
-              variant="body1"
-              fontSize="1.4rem"
-              fontWeight="600"
-              sx={{ marginBottom: "20px" }}
-            >
+            <Typography variant="h6" sx={{ marginBottom: "20px" }}>
               Thông tin kết hôn của vợ chồng
             </Typography>
             <TextField

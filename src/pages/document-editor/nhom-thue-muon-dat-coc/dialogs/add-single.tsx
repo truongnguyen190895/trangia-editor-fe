@@ -6,7 +6,6 @@ import {
   Button,
   TextField,
   Box,
-  Typography,
   Select,
   MenuItem,
   FormControl,
@@ -109,11 +108,7 @@ export const AddSingleDialog = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
-      <DialogTitle>
-        <Typography variant="body1" fontSize="2rem" fontWeight="600">
-          Thêm thông tin cá nhân
-        </Typography>
-      </DialogTitle>
+      <DialogTitle>Thêm thông tin cá nhân</DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
         <form onSubmit={handleSubmit}>
           <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" gap="10px">
