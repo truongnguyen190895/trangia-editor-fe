@@ -63,6 +63,44 @@ https://claude.ai/code/artifact/e567a60f-e0d8-4103-9ba9-bbcc254d3019
 
 ## Work log (newest first)
 
+### 2026-07-02 — Session 2 — Phase 2 core done (land editor)
+- New shared components in `src/components/common/`:
+  - `form-section/` — `FormSection`: outlined card with serif header, optional
+    roman `numeral` (mirrors contract I/II/III structure), optional `complete`
+    status chip (success "Đủ thông tin" / warning), optional `action` slot,
+    `id` + `scrollMarginTop` for anchor scrolling.
+  - `section-nav/` — `SectionNav`: sticky left rail (hidden < lg) listing
+    sections with check/unchecked icons; scrolls to `FormSection` by id.
+  - `sticky-action-bar/` — `StickyActionBar`: sticky bottom bar with a status
+    line ("Còn thiếu: …") and right-aligned actions. Negative `bottom` offset
+    cancels the Layout content padding — if Layout padding changes, update it.
+- `ThemChuThe` now renders inside `FormSection` (new optional props `id`,
+  `numeral`; `complete` derived from having ≥1 member). Old blue `#3D90D7`
+  header gone; giant add-icons replaced with small "Thêm cá nhân / vợ chồng"
+  outlined buttons in subsection headers; action icons are `IconButton`s in a
+  single "Thao tác" column; `uuidv4()` render keys replaced with stable
+  indexes. **All 10 editors get this automatically.**
+- Land editor `hdcn-quyen-sd-dat-toan-bo/index.tsx`: sections numbered I/II/III
+  with `SectionNav` (Bên A / Bên B / Thửa đất, live completion), actions moved
+  into `StickyActionBar` — primary contained "Tạo hợp đồng", others outlined.
+  Hidden legacy search box removed. Payload/render logic untouched.
+- Its `ThongTinDat` rewritten as data-driven rows inside `FormSection` (edit/
+  delete moved to header action slot, empty state text added). Note: other
+  editors have their OWN object components (similar names) — not yet migrated.
+- `PhieuThuLyButton` / `ThemGiayUQButton`: dropped 50px/uppercase hardcoded
+  styling → plain `variant="outlined"` so they compose in the action bar.
+  These are used by other editors too — their pages still have the old
+  softTeal button rows next to these now-outlined buttons until migrated.
+- Build (tsc+vite) passes; remaining lint errors are pre-existing in dialog
+  files. Still no in-browser visual check — do one before rolling the pattern
+  to the other 9 editors.
+
+**Next:** visual check, then apply SectionNav/StickyActionBar/FormSection to
+the remaining editors (hdmb-can-ho, hdmb-nha-dat, hdmb-tai-san, hdmb-xe,
+hdcn-dat-va-tai-san, hdtc-can-ho, uy-quyen, nhom-huy-sua-doi,
+nhom-thue-muon-dat-coc), migrating their softTeal buttons and per-page object
+components as you go (Phase 2 rollout + start of Phase 3).
+
 ### 2026-07-02 — Session 1 — Phase 1 DONE
 - Created branch `ui-redesign`, wrote this doc.
 - Fonts: added `@fontsource/be-vietnam-pro` (400–700) + `@fontsource/lora`
