@@ -22,7 +22,7 @@ import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
-import { extractCoupleFromParty } from "@/utils/common";
+import { extractCoupleFromParty, hasPartyMembers } from "@/utils/common";
 
 const typeOptions = [
   {
@@ -101,13 +101,6 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
     tên_tài_sản: "",
     địa_chỉ_hiển_thị: "",
   });
-
-  const validatePayload = (): boolean => {
-    return (
-      (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-      (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0)
-    );
-  };
 
   const getPayload = (
     sốBảnGốc: number,
@@ -353,14 +346,12 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
     }
   };
 
-  const hasPartyA =
-    partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
-  const hasPartyB =
-    partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0;
-  const isFormValid = validatePayload();
+  const hasPartyA = hasPartyMembers(partyA);
+  const hasPartyB = hasPartyMembers(partyB);
   const missingParts = [!hasPartyA && "Bên A", !hasPartyB && "Bên B"].filter(
     Boolean
   );
+  const isFormValid = missingParts.length === 0;
 
   return (
     <Box display="flex" gap="1.5rem" alignItems="flex-start">
@@ -545,13 +536,7 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
             </Box>
           </Box>
         </FormSection>
-        <StickyActionBar
-          status={
-            isFormValid
-              ? "Đủ thông tin — sẵn sàng tạo văn bản"
-              : `Còn thiếu: ${missingParts.join(", ")}`
-          }
-        >
+        <StickyActionBar missingParts={missingParts}>
           <Button
             variant="contained"
             disabled={!isFormValid || isGenerating}

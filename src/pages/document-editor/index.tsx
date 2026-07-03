@@ -228,17 +228,7 @@ export const DocumentEditor = () => {
           <BackIcon />
         </IconButton>
         <Box>
-          <Typography
-            sx={{
-              fontSize: "0.7rem",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-            }}
-          >
-            Soạn văn bản
-          </Typography>
+          <Typography variant="overline">Soạn văn bản</Typography>
           <Typography variant="h4">{getTemplateName(name ?? "")}</Typography>
         </Box>
       </Box>

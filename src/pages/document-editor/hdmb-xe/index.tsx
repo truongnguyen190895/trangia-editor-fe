@@ -14,7 +14,7 @@ import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { useThemChuTheContext } from "@/context/them-chu-the";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
-import { extractCoupleFromParty } from "@/utils/common";
+import { extractCoupleFromParty, hasPartyMembers } from "@/utils/common";
 import { getWorkHistoryById } from "@/api/contract";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -55,11 +55,6 @@ export const HDMBXe = ({
   const userInfo = localStorage.getItem("user_info");
   const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
   const uchiId = userInfoObject?.uchi_id;
-
-  const isFormValid =
-    (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-    (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
-    agreementObject !== null;
 
   const getBenABenB = () => {
     const couplesA = extractCoupleFromParty(partyA);
@@ -252,15 +247,14 @@ export const HDMBXe = ({
     }
   };
 
-  const hasPartyA =
-    partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
-  const hasPartyB =
-    partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0;
+  const hasPartyA = hasPartyMembers(partyA);
+  const hasPartyB = hasPartyMembers(partyB);
   const missingParts = [
     !hasPartyA && "Bên A",
     !hasPartyB && "Bên B",
     !agreementObject && "thông tin xe",
   ].filter(Boolean);
+  const isFormValid = missingParts.length === 0;
 
   return (
     <Box display="flex" gap="1.5rem" alignItems="flex-start">
@@ -294,11 +288,7 @@ export const HDMBXe = ({
           isUyQuyen={isUyQuyen}
         />
         <StickyActionBar
-          status={
-            isFormValid
-              ? "Đủ thông tin — sẵn sàng tạo văn bản"
-              : `Còn thiếu: ${missingParts.join(", ")}`
-          }
+          missingParts={missingParts}
         >
           <PhieuThuLyButton
             commonPayload={

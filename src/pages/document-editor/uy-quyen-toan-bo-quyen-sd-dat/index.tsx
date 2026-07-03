@@ -13,7 +13,7 @@ import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
-import { extractCoupleFromParty } from "@/utils/common";
+import { extractCoupleFromParty, hasPartyMembers } from "@/utils/common";
 import { getWorkHistoryById } from "@/api/contract";
 import { useSearchParams } from "react-router-dom";
 import type { ThongTinThuaDat } from "@/models/agreement-object";
@@ -102,11 +102,6 @@ export const UyQuyenToanBoQuyenSdDat = ({ templateName }: Props) => {
             : agreementObject?.["địa_chỉ_mới"],
         };
       };
-
-    const isFormValid =
-        (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-        (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
-        agreementObject !== null;
 
     const getPayload = (
         sốBảnGốc: number,
@@ -251,15 +246,14 @@ export const UyQuyenToanBoQuyenSdDat = ({ templateName }: Props) => {
             });
     };
 
-    const hasPartyA =
-        partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
-    const hasPartyB =
-        partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0;
+    const hasPartyA = hasPartyMembers(partyA);
+    const hasPartyB = hasPartyMembers(partyB);
     const missingParts = [
         !hasPartyA && "Bên A",
         !hasPartyB && "Bên B",
         !agreementObject && "đối tượng uỷ quyền",
     ].filter(Boolean);
+    const isFormValid = missingParts.length === 0;
 
     return (
         <Box display="flex" gap="1.5rem" alignItems="flex-start">
@@ -289,13 +283,7 @@ export const UyQuyenToanBoQuyenSdDat = ({ templateName }: Props) => {
                     numeral="III"
                     title="Đối tượng uỷ quyền"
                 />
-                <StickyActionBar
-                    status={
-                        isFormValid
-                            ? "Đủ thông tin — sẵn sàng tạo văn bản"
-                            : `Còn thiếu: ${missingParts.join(", ")}`
-                    }
-                >
+                <StickyActionBar missingParts={missingParts}>
                     <PhieuThuLyButton
                         commonPayload={
                             agreementObject && agreementObject

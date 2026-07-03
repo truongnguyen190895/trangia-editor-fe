@@ -49,8 +49,18 @@ const ChooseDocument = () => {
   const [recent, setRecent] = useState<WorkHistoryItem[]>([]);
 
   useEffect(() => {
-    listWorkHistory({ size: RECENT_COUNT, page: 0 })
-      .then((resp) => setRecent(resp?.content ?? []))
+    // Over-fetch and keep only rows whose template resolves in the local
+    // database. Some renders (e.g. giấy uỷ quyền) create id-less Contract rows
+    // with a template that doesn't map to any editor; those would otherwise
+    // show as blank, unclickable rows here. See resolveTemplate below.
+    listWorkHistory({ size: RECENT_COUNT * 4, page: 0 })
+      .then((resp) =>
+        setRecent(
+          (resp?.content ?? [])
+            .filter((item) => resolveTemplate(item) && item.id)
+            .slice(0, RECENT_COUNT),
+        ),
+      )
       .catch(() => setRecent([]));
   }, []);
 
@@ -64,13 +74,19 @@ const ChooseDocument = () => {
     );
   };
 
-  // Same resume logic as the work-history page.
-  const resumeWorkHistory = (item: WorkHistoryItem) => {
+  // Resolve a work-history row to its editor template, or undefined if none
+  // matches (mirrors the work-history page's lookup).
+  const resolveTemplate = (item: WorkHistoryItem) => {
     const [group, subGroup] = item.template?.split("/") ?? ["", ""];
-    const document = templates.find(
+    return templates.find(
       (template) =>
         template.subCategory === group && template.path === subGroup,
     );
+  };
+
+  // Same resume logic as the work-history page.
+  const resumeWorkHistory = (item: WorkHistoryItem) => {
+    const document = resolveTemplate(item);
     if (document && item.id) {
       navigate(
         `/editor?type=${document.type}&name=${document.path}&templateId=${document.templateId}&id=${item.id}`,
@@ -112,16 +128,7 @@ const ChooseDocument = () => {
       />
       {recent.length > 0 && (
         <Box mb={3}>
-          <Typography
-            sx={{
-              fontSize: "0.7rem",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-              mb: 1,
-            }}
-          >
+          <Typography variant="overline" sx={{ mb: 1 }}>
             Soạn gần đây
           </Typography>
           <Paper variant="outlined">
@@ -159,16 +166,7 @@ const ChooseDocument = () => {
           </Paper>
         </Box>
       )}
-      <Typography
-        sx={{
-          fontSize: "0.7rem",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: "text.secondary",
-          mb: 1,
-        }}
-      >
+      <Typography variant="overline" sx={{ mb: 1 }}>
         Danh mục văn bản
       </Typography>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>

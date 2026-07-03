@@ -4,14 +4,6 @@ import { DocumentThumbnail } from "../../components/document-thumbnail";
 import { PageHeader } from "@/components/common/page-header";
 import { templates } from "@/database";
 
-const columnLabelSx = {
-  fontSize: "0.7rem",
-  fontWeight: 700,
-  letterSpacing: "0.1em",
-  textTransform: "uppercase",
-  color: "text.secondary",
-} as const;
-
 export const Documents = () => {
   const navigate = useNavigate();
   const params = useParams();
@@ -25,9 +17,12 @@ export const Documents = () => {
       <PageHeader title="Chọn văn bản cần chỉnh sửa" />
       <Paper variant="outlined" sx={{ p: 2 }}>
         <Box display="flex" alignItems="center" gap={1} pb={1}>
-          <Typography sx={{ ...columnLabelSx, flex: 1 }}>Tên mẫu</Typography>
+          <Typography variant="overline" sx={{ flex: 1 }}>
+            Tên mẫu
+          </Typography>
           <Typography
-            sx={{ ...columnLabelSx, minWidth: "100px", textAlign: "center" }}
+            variant="overline"
+            sx={{ minWidth: "100px", textAlign: "center" }}
           >
             Hỗ trợ lên uchi
           </Typography>

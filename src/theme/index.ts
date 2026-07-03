@@ -52,6 +52,17 @@ export const theme = createTheme({
     subtitle1: { fontWeight: 500 },
     body1: { fontSize: "0.95rem" },
     body2: { fontSize: "0.85rem" },
+    // Small uppercase "eyebrow" label used above page/section titles and as
+    // table column headers. Rendered block-level so it sits on its own line.
+    overline: {
+      display: "block",
+      fontSize: "0.7rem",
+      fontWeight: 700,
+      lineHeight: 1.6,
+      letterSpacing: "0.1em",
+      textTransform: "uppercase",
+      color: INK_SOFT,
+    },
     button: {
       fontSize: "0.875rem",
       fontWeight: 600,

@@ -36,6 +36,7 @@ import {
   extractCoupleFromParty,
   generateThoiHanSuDung,
   createDownloadLink,
+  hasPartyMembers,
 } from "@/utils/common";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
@@ -92,11 +93,6 @@ export const ChuyenNhuongDatToanBo = ({
   const userInfo = localStorage.getItem("user_info");
   const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
   const uchiId = userInfoObject?.uchi_id;
-
-  const isFormValid =
-    (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-    (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
-    agreementObject !== null;
 
   const getBenABenB = () => {
     const couplesA = extractCoupleFromParty(partyA);
@@ -598,15 +594,14 @@ export const ChuyenNhuongDatToanBo = ({
     return `nhom-chuyen-nhuong-mua-ban/hdcn-quyen-su-dung-dat${nn}-toan-bo`;
   };
 
-  const hasPartyA =
-    partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
-  const hasPartyB =
-    partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0;
+  const hasPartyA = hasPartyMembers(partyA);
+  const hasPartyB = hasPartyMembers(partyB);
   const missingParts = [
     !hasPartyA && "Bên A",
     !hasPartyB && "Bên B",
     !agreementObject && "thông tin thửa đất",
   ].filter(Boolean);
+  const isFormValid = missingParts.length === 0;
 
   return (
     <Box display="flex" gap="1.5rem" alignItems="flex-start">
@@ -639,13 +634,7 @@ export const ChuyenNhuongDatToanBo = ({
           isMotPhan={isMotPhan}
           isCoCongVan={isCoCongVan}
         />
-        <StickyActionBar
-          status={
-            isFormValid
-              ? "Đủ thông tin — sẵn sàng tạo văn bản"
-              : `Còn thiếu: ${missingParts.join(", ")}`
-          }
-        >
+        <StickyActionBar missingParts={missingParts}>
           <PhieuThuLyButton
             commonPayload={
               agreementObject

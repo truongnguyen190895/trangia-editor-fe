@@ -15,6 +15,7 @@ import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
+import { hasPartyMembers } from "@/utils/common";
 
 interface NhomHuySuaDoiProps {
   isHuy?: boolean;
@@ -30,16 +31,6 @@ export const NhomHuySuaDoi = ({
   const { partyA, partyB } = useThemChuTheContext();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
-  const validatePayload = (): boolean => {
-    if (isHuy) {
-      return partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
-    }
-    return (
-      (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-      (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0)
-    );
-  };
 
   const getPayload = (
     sốBảnGốc: number,
@@ -212,15 +203,13 @@ export const NhomHuySuaDoi = ({
     }
   };
 
-  const hasPartyA =
-    partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
-  const hasPartyB =
-    partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0;
-  const isFormValid = validatePayload();
+  const hasPartyA = hasPartyMembers(partyA);
+  const hasPartyB = hasPartyMembers(partyB);
   const missingParts = [
     !hasPartyA && "Bên A",
     !isHuy && !hasPartyB && "Bên B",
   ].filter(Boolean);
+  const isFormValid = missingParts.length === 0;
 
   return (
     <Box display="flex" gap="1.5rem" alignItems="flex-start">
@@ -244,13 +233,7 @@ export const NhomHuySuaDoi = ({
         {!isHuy && (
           <ThemChuThe id="section-ben-b" numeral="II" title="Bên B" side="partyB" />
         )}
-        <StickyActionBar
-          status={
-            isFormValid
-              ? "Đủ thông tin — sẵn sàng tạo văn bản"
-              : `Còn thiếu: ${missingParts.join(", ")}`
-          }
-        >
+        <StickyActionBar missingParts={missingParts}>
           <Button
             variant="contained"
             disabled={!isFormValid || isGenerating}

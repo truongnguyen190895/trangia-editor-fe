@@ -36,17 +36,7 @@ export const SectionNav = ({ sections }: SectionNavProps) => {
         flexShrink: 0,
       }}
     >
-      <Typography
-        sx={{
-          fontSize: "0.7rem",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: "text.secondary",
-          mb: 1,
-          px: 1.5,
-        }}
-      >
+      <Typography variant="overline" sx={{ mb: 1, px: 1.5 }}>
         Các phần của hợp đồng
       </Typography>
       {sections.map((section, index) => (

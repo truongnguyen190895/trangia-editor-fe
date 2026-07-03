@@ -7,6 +7,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Avatar from "@mui/material/Avatar";
 import { getUser } from "@/api/users";
 import { SERIF_FAMILY } from "@/theme";
+import { MOBILE_NAV_HEIGHT } from "@/constants";
 
 const HEADER_HEIGHT = { xs: "56px", md: "64px" };
 
@@ -118,7 +119,7 @@ const Layout = () => {
             p: { xs: "1rem", md: "2rem" },
             overflowY: "auto",
             // leave room for the fixed bottom nav on mobile
-            pb: { xs: "72px", md: "2rem" },
+            pb: { xs: `${MOBILE_NAV_HEIGHT}px`, md: "2rem" },
           }}
         >
           <Outlet />

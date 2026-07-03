@@ -28,6 +28,10 @@ export const getFirstLetter = (name: string) => {
   return name.charAt(0).toUpperCase();
 };
 
+/** A party counts as filled in once it has at least one individual or couple. */
+export const hasPartyMembers = (party: AgreementParty) =>
+  party["cá_nhân"].length > 0 || party["vợ_chồng"].length > 0;
+
 /**
  * Converts all empty string properties in an object to null.
  * Recursively handles nested objects and arrays.

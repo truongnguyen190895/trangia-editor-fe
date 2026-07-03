@@ -14,19 +14,7 @@ export const PageHeader = ({ eyebrow, title, action }: PageHeaderProps) => {
   return (
     <Box display="flex" alignItems="center" gap={2} mb={3}>
       <Box flex={1} minWidth={0}>
-        {eyebrow && (
-          <Typography
-            sx={{
-              fontSize: "0.7rem",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "text.secondary",
-            }}
-          >
-            {eyebrow}
-          </Typography>
-        )}
+        {eyebrow && <Typography variant="overline">{eyebrow}</Typography>}
         <Typography variant="h4" sx={{ textWrap: "balance" }}>
           {title}
         </Typography>

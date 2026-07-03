@@ -1,3 +1,11 @@
+/**
+ * Height (px) of the fixed mobile bottom nav (`SidebarMenuMobile`, zIndex 1000).
+ * The Layout content column reserves this much bottom padding so content isn't
+ * hidden under it, and `StickyActionBar` uses it to stay above the nav on mobile.
+ * Keep Layout's xs bottom padding in sync with this value.
+ */
+export const MOBILE_NAV_HEIGHT = 72;
+
 interface Option {
   value: string;
   label: string;

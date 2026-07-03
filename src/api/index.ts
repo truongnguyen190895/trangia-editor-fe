@@ -57,7 +57,11 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 401) {
+    // A 401 from the login call itself means "wrong username/password", not an
+    // expired session — let LoginPage surface its own error instead of clearing
+    // storage and reloading (which would wipe the typed username).
+    const isLoginRequest = error.config?.url === "/auth/login";
+    if (error.response?.status === 401 && !isLoginRequest) {
       localStorage.clear();
       // The expired=1 flag makes LoginPage explain why the user landed there.
       window.location.href = "/login?expired=1";

@@ -21,7 +21,7 @@ import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
-import { extractCoupleFromParty } from "@/utils/common";
+import { extractCoupleFromParty, hasPartyMembers } from "@/utils/common";
 import { useSearchParams } from "react-router-dom";
 import { getWorkHistoryById } from "@/api/contract";
 import { toast } from "react-toastify";
@@ -54,12 +54,6 @@ export const HDMBTaiSan = ({ templateName }: Props) => {
       });
     }
   }, [id]);
-
-  const isFormValid =
-    (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-    (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
-    agreementObject !== null &&
-    taiSan !== null;
 
   const userInfo = localStorage.getItem("user_info");
   const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
@@ -314,16 +308,15 @@ export const HDMBTaiSan = ({ templateName }: Props) => {
       });
   };
 
-  const hasPartyA =
-    partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0;
-  const hasPartyB =
-    partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0;
+  const hasPartyA = hasPartyMembers(partyA);
+  const hasPartyB = hasPartyMembers(partyB);
   const missingParts = [
     !hasPartyA && "Bên A",
     !hasPartyB && "Bên B",
     !taiSan && "thông tin tài sản",
     !agreementObject && "thông tin mảnh đất",
   ].filter(Boolean);
+  const isFormValid = missingParts.length === 0;
 
   return (
     <Box display="flex" gap="1.5rem" alignItems="flex-start">
@@ -354,11 +347,7 @@ export const HDMBTaiSan = ({ templateName }: Props) => {
           title="Đối tượng chuyển nhượng của hợp đồng"
         />
         <StickyActionBar
-          status={
-            isFormValid
-              ? "Đủ thông tin — sẵn sàng tạo văn bản"
-              : `Còn thiếu: ${missingParts.join(", ")}`
-          }
+          missingParts={missingParts}
         >
           <PhieuThuLyButton
             commonPayload={
