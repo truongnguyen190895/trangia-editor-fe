@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 // The version baked into this bundle at build time (see vite.config.ts).
-const CURRENT_VERSION = __BUILD_TIME__;
+const CURRENT_VERSION = __BUILD_VERSION__;
 
 // How often to check for a newer deployment while the tab is open.
 const POLL_INTERVAL_MS = 60_000;

@@ -3,10 +3,13 @@ import type { Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
-// A unique id for this build. Prefer the git commit SHA (stable & meaningful on
-// Vercel); fall back to build time for local builds.
-const BUILD_VERSION =
-  process.env.VERCEL_GIT_COMMIT_SHA || new Date().toISOString()
+// Human-readable timestamp of this build, shown in the sidebar.
+const BUILD_TIME = new Date().toISOString()
+
+// A unique id for this build, used only to detect new deployments. Prefer the
+// git commit SHA (stable & meaningful on Vercel); fall back to build time
+// locally. NOTE: this is not a date — don't format it as one.
+const BUILD_VERSION = process.env.VERCEL_GIT_COMMIT_SHA || BUILD_TIME
 
 // Emits a static `version.json` next to the built assets. The running app polls
 // this file to detect when a newer front-end has been deployed.
@@ -27,7 +30,8 @@ function emitVersionFile(): Plugin {
 export default defineConfig({
   plugins: [react(), emitVersionFile()],
   define: {
-    __BUILD_TIME__: JSON.stringify(BUILD_VERSION),
+    __BUILD_TIME__: JSON.stringify(BUILD_TIME),
+    __BUILD_VERSION__: JSON.stringify(BUILD_VERSION),
   },
   resolve: {
     alias: {
