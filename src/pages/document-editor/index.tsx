@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ChuyenNhuongDatToanBo } from "@/pages/document-editor/hdcn-quyen-sd-dat-toan-bo";
 import { HDMBCanHoToanBo } from "@/pages/document-editor/hdmb-can-ho-toan-bo";
@@ -210,22 +210,29 @@ export const DocumentEditor = () => {
     <Box className="editor-container">
       <Box
         className="header"
-        height="8rem"
-        bgcolor="#E0E0E0"
-        paddingX="1.5rem"
         display="flex"
         alignItems="center"
+        gap={1.5}
+        mb={3}
       >
-        <Typography variant="h4">
-          Tên văn bản: {getTemplateName(name ?? "")}
-        </Typography>
-      </Box>
-      <Box className="content" py="1rem">
-        <Button variant="contained" onClick={() => navigate(-1)} sx={{ mb: 2 }}>
+        <IconButton
+          onClick={() => navigate(-1)}
+          aria-label="Quay lại"
+          sx={{
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 2,
+            backgroundColor: "background.paper",
+          }}
+        >
           <BackIcon />
-        </Button>
-        {renderContent()}
+        </IconButton>
+        <Box>
+          <Typography variant="overline">Soạn văn bản</Typography>
+          <Typography variant="h4">{getTemplateName(name ?? "")}</Typography>
+        </Box>
       </Box>
+      <Box className="content">{renderContent()}</Box>
       <LoadingDialog open={loading} />
     </Box>
   );

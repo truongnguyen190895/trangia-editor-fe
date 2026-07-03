@@ -6,7 +6,6 @@ import {
   Button,
   TextField,
   Box,
-  Typography,
   Autocomplete,
   Select,
   MenuItem,
@@ -71,9 +70,7 @@ export const ThemNguoiDuocUQDialog = ({
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle>
-        <Typography variant="body1" fontSize="1.5rem" fontWeight="600">
-          {isEdit ? "Sửa người được uỷ quyền" : "Thêm người được uỷ quyền"}
-        </Typography>
+        {isEdit ? "Sửa người được uỷ quyền" : "Thêm người được uỷ quyền"}
       </DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
         <form onSubmit={handleSubmit}>

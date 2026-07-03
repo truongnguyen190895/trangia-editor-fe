@@ -13,6 +13,7 @@ import {
   Button,
   DialogActions,
   CircularProgress,
+  Paper,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
@@ -247,11 +248,7 @@ export const ThemVoChongDialog = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
-      <DialogTitle>
-        <Typography variant="body1" fontSize="2rem" fontWeight="600">
-          Thêm thông tin vợ chồng
-        </Typography>
-      </DialogTitle>
+      <DialogTitle>Thêm thông tin vợ chồng</DialogTitle>
       <DialogContent sx={{ padding: "20px" }}>
         <form
           onSubmit={(e) => {
@@ -261,23 +258,19 @@ export const ThemVoChongDialog = ({
         >
           <Box display="grid" gridTemplateColumns="1fr 1fr" gap="2rem">
             <Box>
-              <Typography
-                variant="body1"
-                fontSize="1.4rem"
-                fontWeight="600"
-                sx={{ marginBottom: "20px" }}
-              >
+              <Typography variant="h6" sx={{ marginBottom: "20px" }}>
                 Thông tin chồng
               </Typography>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="10px"
-                border="1px solid #e0e0e0"
-                p="1rem"
-                borderRadius="5px"
-                bgcolor="#f5f5f5"
-                mb="1rem"
+              <Paper
+                variant="outlined"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  p: 2,
+                  mb: "1rem",
+                  backgroundColor: "background.default",
+                }}
               >
                 <TextField
                   sx={{ width: "400px" }}
@@ -290,7 +283,6 @@ export const ThemVoChongDialog = ({
                 />
                 <Button
                   variant="contained"
-                  color="success"
                   onClick={handleSearchHusband}
                   disabled={loadingHusband}
                 >
@@ -300,12 +292,11 @@ export const ThemVoChongDialog = ({
                     <SearchIcon />
                   )}
                 </Button>
-              </Box>
+              </Paper>
               {isNotExistedHusband ? (
                 <Typography
-                  variant="body1"
-                  fontSize="1.2rem"
-                  fontWeight="600"
+                  variant="body2"
+                  fontWeight={600}
                   color="warning.main"
                 >
                   Số này không tồn tại trong hệ thống và sẽ được lưu lại
@@ -313,7 +304,8 @@ export const ThemVoChongDialog = ({
               ) : null}
               <CopyMapper onMapped={handleScanSuccessHusband} />
               <Box
-                border="1px solid #ccc"
+                border="1px solid"
+                borderColor="divider"
                 borderRadius="10px"
                 padding="20px"
                 mt="1rem"
@@ -445,23 +437,19 @@ export const ThemVoChongDialog = ({
               </Box>
             </Box>
             <Box>
-              <Typography
-                variant="body1"
-                fontSize="1.4rem"
-                fontWeight="600"
-                sx={{ marginBottom: "20px" }}
-              >
+              <Typography variant="h6" sx={{ marginBottom: "20px" }}>
                 Thông tin vợ
               </Typography>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="10px"
-                border="1px solid #e0e0e0"
-                p="1rem"
-                borderRadius="5px"
-                bgcolor="#f5f5f5"
-                mb="1rem"
+              <Paper
+                variant="outlined"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  p: 2,
+                  mb: "1rem",
+                  backgroundColor: "background.default",
+                }}
               >
                 <TextField
                   sx={{ width: "400px" }}
@@ -474,7 +462,6 @@ export const ThemVoChongDialog = ({
                 />
                 <Button
                   variant="contained"
-                  color="success"
                   onClick={handleSearchWife}
                   disabled={loadingWife}
                 >
@@ -484,12 +471,11 @@ export const ThemVoChongDialog = ({
                     <SearchIcon />
                   )}
                 </Button>
-              </Box>
+              </Paper>
               {isNotExistedWife ? (
                 <Typography
-                  variant="body1"
-                  fontSize="1.2rem"
-                  fontWeight="600"
+                  variant="body2"
+                  fontWeight={600}
                   color="warning.main"
                 >
                   Số này không tồn tại trong hệ thống và sẽ được lưu lại
@@ -497,7 +483,8 @@ export const ThemVoChongDialog = ({
               ) : null}
               <CopyMapper onMapped={handleScanSuccessWife} />
               <Box
-                border="1px solid #ccc"
+                border="1px solid"
+                borderColor="divider"
                 borderRadius="10px"
                 padding="20px"
                 mt="1rem"
@@ -627,12 +614,7 @@ export const ThemVoChongDialog = ({
             </Box>
           </Box>
           <Box py="1rem">
-            <Typography
-              variant="body1"
-              fontSize="1.4rem"
-              fontWeight="600"
-              sx={{ marginBottom: "20px" }}
-            >
+            <Typography variant="h6" sx={{ marginBottom: "20px" }}>
               Thông tin kết hôn của vợ chồng
             </Typography>
             <TextField

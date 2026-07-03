@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
-import {
-    Box,
-    Typography,
-    Button,
-    TextField,
-    InputAdornment,
-    useTheme,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { ObjectEntity } from "./components/object";
-import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
+import { SectionNav } from "@/components/common/section-nav";
+import { StickyActionBar } from "@/components/common/sticky-action-bar";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 import type { UyQuyenToanBoQuyenSdDatPayload } from "@/models/uy-quyen";
 import { render_uy_quyen_toan_bo_quyen_su_dung_dat } from "@/api";
@@ -19,7 +13,7 @@ import { useThemChuTheContext } from "@/context/them-chu-the";
 import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
-import { extractCoupleFromParty } from "@/utils/common";
+import { extractCoupleFromParty, hasPartyMembers } from "@/utils/common";
 import { getWorkHistoryById } from "@/api/contract";
 import { useSearchParams } from "react-router-dom";
 import type { ThongTinThuaDat } from "@/models/agreement-object";
@@ -35,7 +29,6 @@ interface Props {
 export const UyQuyenToanBoQuyenSdDat = ({ templateName }: Props) => {
     const { agreementObject, addAgreementObject } = useHdcnQuyenSdDatContext();
     const { partyA, partyB } = useThemChuTheContext();
-    const { palette } = useTheme();
     const [isGenerating, setIsGenerating] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -109,11 +102,6 @@ export const UyQuyenToanBoQuyenSdDat = ({ templateName }: Props) => {
             : agreementObject?.["địa_chỉ_mới"],
         };
       };
-
-    const isFormValid =
-        (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-        (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
-        agreementObject !== null;
 
     const getPayload = (
         sốBảnGốc: number,
@@ -258,64 +246,44 @@ export const UyQuyenToanBoQuyenSdDat = ({ templateName }: Props) => {
             });
     };
 
+    const hasPartyA = hasPartyMembers(partyA);
+    const hasPartyB = hasPartyMembers(partyB);
+    const missingParts = [
+        !hasPartyA && "Bên A",
+        !hasPartyB && "Bên B",
+        !agreementObject && "đối tượng uỷ quyền",
+    ].filter(Boolean);
+    const isFormValid = missingParts.length === 0;
+
     return (
-        <Box display="flex" gap="2rem">
-            <Box
-                border="1px solid #BCCCDC"
-                borderRadius="5px"
-                padding="1rem"
-                display="none" // TODO: temporary hide search
-                flex={1}
-            >
-                <Typography variant="h6">Tìm kiếm</Typography>
-                <TextField
-                    slotProps={{
-                        input: {
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        },
-                    }}
-                    fullWidth
-                    placeholder="Tên hoặc CCCD/CMND/Hộ chiếu"
-                    sx={{ mt: 2 }}
-                />
-            </Box>
+        <Box display="flex" gap="1.5rem" alignItems="flex-start">
+            <SectionNav
+                sections={[
+                    { id: "section-ben-a", label: "Bên A", complete: hasPartyA },
+                    { id: "section-ben-b", label: "Bên B", complete: hasPartyB },
+                    {
+                        id: "section-doi-tuong",
+                        label: "Đối tượng uỷ quyền",
+                        complete: Boolean(agreementObject),
+                    },
+                ]}
+            />
             <Box
                 className="full-land-transfer"
                 display="flex"
-                gap="4rem"
+                gap="1.5rem"
                 flexDirection="column"
-                border="1px solid #BCCCDC"
-                borderRadius="5px"
-                padding="1rem"
-                flex={4}
+                flex={1}
+                minWidth={0}
             >
-                <ThemChuThe title="Bên A" side="partyA" />
-                <ThemChuThe title="Bên B" side="partyB" />
-                <ObjectEntity title="Đối tượng uỷ quyền" />
-                <Box display="flex" gap="1rem">
-                    <Button
-                        variant="contained"
-                        sx={{
-                            backgroundColor: palette.softTeal,
-                            height: "50px",
-                            fontSize: "1.2rem",
-                            fontWeight: "600",
-                            textTransform: "uppercase",
-                            width: "350px",
-                        }}
-                        disabled={!isFormValid}
-                        onClick={() => setOpenDialog(true)}
-                    >
-                        {isGenerating ? (
-                            <CircularProgress size={20} />
-                        ) : (
-                            "Tạo hợp đồng uỷ quyền"
-                        )}
-                    </Button>
+                <ThemChuThe id="section-ben-a" numeral="I" title="Bên A" side="partyA" />
+                <ThemChuThe id="section-ben-b" numeral="II" title="Bên B" side="partyB" />
+                <ObjectEntity
+                    id="section-doi-tuong"
+                    numeral="III"
+                    title="Đối tượng uỷ quyền"
+                />
+                <StickyActionBar missingParts={missingParts}>
                     <PhieuThuLyButton
                         commonPayload={
                             agreementObject && agreementObject
@@ -324,7 +292,19 @@ export const UyQuyenToanBoQuyenSdDat = ({ templateName }: Props) => {
                         }
                         type="uy-quyen-toan-bo-quyen-su-dung-dat"
                     />
-                </Box>
+                    <Button
+                        variant="contained"
+                        disabled={!isFormValid || isGenerating}
+                        onClick={() => setOpenDialog(true)}
+                        startIcon={
+                            isGenerating ? (
+                                <CircularProgress size={16} color="inherit" />
+                            ) : undefined
+                        }
+                    >
+                        Tạo hợp đồng uỷ quyền
+                    </Button>
+                </StickyActionBar>
             </Box>
             <ThemLoiChungDialog
                 open={openDialog}

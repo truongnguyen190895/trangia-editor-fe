@@ -69,21 +69,14 @@ export const ThongTinTaiSanDialog = ({
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
       <Box component="form" onSubmit={handleSubmit}>
-        <DialogTitle variant="h4">
-          Thêm thông tin tài sản gắn liền với đất
-        </DialogTitle>
+        <DialogTitle>Thêm thông tin tài sản gắn liền với đất</DialogTitle>
         <DialogContent>
             <SearchEntity
               placeholder="Nhập số sổ"
               onSearch={handleSearch}
             />
           <Box>
-            <Typography
-              variant="body1"
-              fontSize="1.5rem"
-              fontWeight="600"
-              mt="20px"
-            >
+            <Typography variant="h6" mt="20px">
               Thông tin tài sản
             </Typography>
             <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" gap="20px">
@@ -120,12 +113,7 @@ export const ThongTinTaiSanDialog = ({
                 />
               )}
             </Box>
-            <Typography
-              variant="body1"
-              fontSize="1.5rem"
-              fontWeight="600"
-              mt="20px"
-            >
+            <Typography variant="h6" mt="20px">
               Giá trị hợp đồng
             </Typography>
             <Box
@@ -164,7 +152,9 @@ export const ThongTinTaiSanDialog = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
+          <Button variant="outlined" onClick={handleClose}>
+            Hủy
+          </Button>
           <Button variant="contained" type="submit">
             Thêm
           </Button>

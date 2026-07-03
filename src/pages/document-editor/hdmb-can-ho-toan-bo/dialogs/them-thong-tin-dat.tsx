@@ -256,15 +256,10 @@ export const ThemThongTinDat = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" color="secondary" onClick={handleClose}>
+          <Button variant="outlined" onClick={handleClose}>
             Hủy
           </Button>
-          <Button
-            variant="contained"
-            type="submit"
-            color="success"
-            disabled={saveLoading}
-          >
+          <Button variant="contained" type="submit" disabled={saveLoading}>
             {saveLoading ? <CircularProgress size={20} /> : "Thêm"}
           </Button>
         </DialogActions>

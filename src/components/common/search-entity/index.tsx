@@ -50,7 +50,6 @@ export const SearchEntity = ({ placeholder, onSearch }: SearchEntityProps) => {
         />
         <Button
           variant="contained"
-          color="success"
           disabled={searchLoading || !searchNumber}
           onClick={handleSearch}
         >
@@ -58,12 +57,7 @@ export const SearchEntity = ({ placeholder, onSearch }: SearchEntityProps) => {
         </Button>
       </Box>
       {isNotExisted ? (
-        <Typography
-          variant="body1"
-          fontSize="1.2rem"
-          fontWeight="600"
-          color="warning.main"
-        >
+        <Typography variant="body2" fontWeight={600} color="warning.main">
           Số này không tồn tại trong hệ thống và sẽ được lưu lại
         </Typography>
       ) : null}

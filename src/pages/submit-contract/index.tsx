@@ -11,6 +11,7 @@ import {
   Checkbox,
   FormControlLabel,
   Autocomplete,
+  Paper,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -19,6 +20,7 @@ import { REVIEWERS } from "@/constants/reviewer";
 import { listBranches, type Branch } from "@/api/branchs";
 import { useFormik } from "formik";
 import { WarningDialog } from "@/components/common/warning-dialog";
+import { PageHeader } from "@/components/common/page-header";
 import {
   submitContract,
   getTheNextAvailableId,
@@ -374,16 +376,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
 
   return (
     <Box pb="3rem">
-      {isEdit ? (
-        <Typography fontWeight={600} variant="h3">
-          Chỉnh sửa phiếu thu số {idFromUrl}
-        </Typography>
-      ) : (
-        <Typography fontWeight={600} variant="h3">
-          Nhập phiếu thu
-        </Typography>
-      )}
-      <Box mt="2rem">
+      <PageHeader
+        eyebrow="Phiếu thu"
+        title={isEdit ? `Chỉnh sửa phiếu thu số ${idFromUrl}` : "Nhập phiếu thu"}
+      />
+      <Paper variant="outlined" sx={{ p: 2 }}>
         {isEdit ? null : (
           <Box>
             <Typography>Chọn loại hình công chứng</Typography>
@@ -403,9 +400,14 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             {isEdit || type === "Invoice" ? null : (
               <Typography variant="h5">
                 Số hợp đồng sẵn sàng để lấy:{" "}
-                <strong style={{ color: "green" }}>
+                <Typography
+                  component="strong"
+                  variant="inherit"
+                  color="success.main"
+                  fontWeight={700}
+                >
                   {checkingLoading ? "Đang kiểm tra..." : nextAvailableId}
-                </strong>
+                </Typography>
               </Typography>
             )}
             <Box sx={{ display: { xs: "none", md: "block" } }}>
@@ -648,28 +650,13 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             </Box>
             <Box display="flex" gap="10px" mt="1rem">
               {isEdit ? (
-                <Button
-                  variant="outlined"
-                  sx={{
-                    width: "100px",
-                    height: "40px",
-                  }}
-                  onClick={() => navigate("/history")}
-                >
+                <Button variant="outlined" onClick={() => navigate("/history")}>
                   Huỷ
                 </Button>
               ) : null}
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  backgroundColor: "green",
-                  width: "300px",
-                  height: "40px",
-                }}
-              >
+              <Button type="submit" variant="contained">
                 {isLoading ? (
-                  <CircularProgress size={20} />
+                  <CircularProgress size={20} color="inherit" />
                 ) : (
                   getSubmitButtonLabel()
                 )}
@@ -677,7 +664,7 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             </Box>
           </form>
         </Box>
-      </Box>
+      </Paper>
       <WarningDialog
         open={warningDialogOpen}
         title="Cảnh báo"

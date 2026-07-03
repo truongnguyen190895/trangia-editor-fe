@@ -39,14 +39,7 @@ export const PhieuThuLyButton = ({
   };
   return (
     <Button
-      variant="contained"
-      sx={{
-        height: "50px",
-        fontSize: "1.2rem",
-        fontWeight: "600",
-        textTransform: "uppercase",
-        width: "250px",
-      }}
+      variant="outlined"
       onClick={handleGenerateDocument}
       disabled={isGenerating || !commonPayload}
     >

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Box, Button, useTheme } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { ThongTinCanHo } from "./components/thong-tin-can-ho";
 import { CircularProgress } from "@mui/material";
+import { SectionNav } from "@/components/common/section-nav";
+import { StickyActionBar } from "@/components/common/sticky-action-bar";
 import type {
   HDMBCanHoPayload,
   KhaiThueHDMBCanHoToanBoPayload,
@@ -23,7 +25,7 @@ import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
-import { extractCoupleFromParty } from "@/utils/common";
+import { extractCoupleFromParty, hasPartyMembers } from "@/utils/common";
 import { useSearchParams } from "react-router-dom";
 import { getWorkHistoryById } from "@/api/contract";
 import { uchiTemporarySave } from "@/api/uchi";
@@ -46,7 +48,6 @@ export const HDMBCanHoToanBo = ({
   const { agreementObject, canHo, addAgreementObject, addCanHo } =
     useHDMBCanHoContext();
   const { partyA, partyB } = useThemChuTheContext();
-  const { palette } = useTheme();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [searchParams] = useSearchParams();
@@ -70,13 +71,6 @@ export const HDMBCanHoToanBo = ({
   const userInfo = localStorage.getItem("user_info");
   const userInfoObject = userInfo ? JSON.parse(userInfo) : null;
   const uchiId = userInfoObject?.uchi_id;
-
-  const isFormValid = isUyQuyen
-    ? Boolean(canHo)
-    : (partyA["cá_nhân"].length > 0 || partyA["vợ_chồng"].length > 0) &&
-      (partyB["cá_nhân"].length > 0 || partyB["vợ_chồng"].length > 0) &&
-      agreementObject !== null &&
-      canHo !== null;
 
   const getBenABenB = () => {
     const couplesA = extractCoupleFromParty(partyA);
@@ -389,74 +383,51 @@ export const HDMBCanHoToanBo = ({
       : "hdmb-can-ho-toan-bo";
   };
 
+  const hasPartyA = hasPartyMembers(partyA);
+  const hasPartyB = hasPartyMembers(partyB);
+  const hasCanHo = canHo !== null;
+  const hasDat = agreementObject !== null;
+  const missingParts = isUyQuyen
+    ? [!hasCanHo && "thông tin căn hộ"].filter(Boolean)
+    : [
+        !hasPartyA && "Bên A",
+        !hasPartyB && "Bên B",
+        !hasCanHo && "thông tin căn hộ",
+        !hasDat && "thông tin mảnh đất",
+      ].filter(Boolean);
+  const isFormValid = missingParts.length === 0;
+
   return (
-    <Box display="flex" gap="2rem">
+    <Box display="flex" gap="1.5rem" alignItems="flex-start">
+      <SectionNav
+        sections={[
+          { id: "section-ben-a", label: "Bên A", complete: hasPartyA },
+          { id: "section-ben-b", label: "Bên B", complete: hasPartyB },
+          {
+            id: "section-can-ho",
+            label: "Căn hộ",
+            complete: isUyQuyen ? hasCanHo : hasCanHo && hasDat,
+          },
+        ]}
+      />
       <Box
         className="full-land-transfer"
         display="flex"
-        gap="4rem"
+        gap="1.5rem"
         flexDirection="column"
-        border="1px solid #BCCCDC"
-        borderRadius="5px"
-        padding="1rem"
-        flex={4}
+        flex={1}
+        minWidth={0}
       >
-        <ThemChuThe title="Bên A" side="partyA" />
-        <ThemChuThe title="Bên B" side="partyB" />
+        <ThemChuThe id="section-ben-a" numeral="I" title="Bên A" side="partyA" />
+        <ThemChuThe id="section-ben-b" numeral="II" title="Bên B" side="partyB" />
         <ThongTinCanHo
+          id="section-can-ho"
+          numeral="III"
           title="Đối tượng của hợp đồng"
           isUyQuyen={isUyQuyen}
           isMotPhan={isMotPhan}
         />
-        <Box display="flex" gap="1rem">
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: palette.softTeal,
-              height: "50px",
-              fontSize: "1.2rem",
-              fontWeight: "600",
-              textTransform: "uppercase",
-              width: "350px",
-            }}
-            disabled={!isFormValid}
-            onClick={() => setOpenDialog(true)}
-          >
-            {isUyQuyen ? "Tạo hợp đồng uỷ quyền" : "Tạo hợp đồng"}
-          </Button>
-          {!isUyQuyen ? (
-            <>
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: palette.softTeal,
-                  height: "50px",
-                  fontSize: "1.2rem",
-                  fontWeight: "600",
-                  textTransform: "uppercase",
-                  width: "200px",
-                }}
-                disabled={!isFormValid}
-                onClick={() => handleGenerateKhaiThue(false)}
-              >
-                {isGenerating ? <CircularProgress size={20} /> : "Khai thuế"}
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: palette.softTeal,
-                  height: "50px",
-                  fontSize: "1.2rem",
-                  fontWeight: "600",
-                  textTransform: "uppercase",
-                }}
-                disabled={!isFormValid}
-                onClick={() => handleGenerateKhaiThue(true)}
-              >
-                {isGenerating ? <CircularProgress size={20} /> : "Khai thuế theo NĐ 373"}
-              </Button>
-            </>
-          ) : null}
+        <StickyActionBar missingParts={missingParts}>
           <PhieuThuLyButton
             commonPayload={
               agreementObject
@@ -465,7 +436,37 @@ export const HDMBCanHoToanBo = ({
             }
             type={getPhieuThuLyType()}
           />
-        </Box>
+          {!isUyQuyen ? (
+            <>
+              <Button
+                variant="outlined"
+                disabled={!isFormValid || isGenerating}
+                onClick={() => handleGenerateKhaiThue(false)}
+              >
+                Khai thuế
+              </Button>
+              <Button
+                variant="outlined"
+                disabled={!isFormValid || isGenerating}
+                onClick={() => handleGenerateKhaiThue(true)}
+              >
+                Khai thuế theo NĐ 373
+              </Button>
+            </>
+          ) : null}
+          <Button
+            variant="contained"
+            disabled={!isFormValid || isGenerating}
+            onClick={() => setOpenDialog(true)}
+            startIcon={
+              isGenerating ? (
+                <CircularProgress size={16} color="inherit" />
+              ) : undefined
+            }
+          >
+            {isUyQuyen ? "Tạo hợp đồng uỷ quyền" : "Tạo hợp đồng"}
+          </Button>
+        </StickyActionBar>
       </Box>
       <ThemLoiChungDialog
         open={openDialog}

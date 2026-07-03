@@ -1,14 +1,14 @@
 import { useState } from "react";
 import {
   Box,
-  Typography,
   Button,
+  Divider,
+  IconButton,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableRow,
-  Paper,
+  Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,15 +16,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ThemThongTinDat } from "../../dialogs/them-thong-tin-dat";
 import { ThongTinTaiSanDialog } from "../../dialogs/thong-tin-tai-san";
 import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat-va-tai-san-glvd";
+import { FormSection } from "@/components/common/form-section";
 
 interface ObjectEntityProps {
   title: string;
   isMotPhan?: boolean;
+  /** Anchor id for SectionNav */
+  id?: string;
+  /** Roman numeral shown before the title */
+  numeral?: string;
 }
 
 export const ObjectEntity = ({
   title,
   isMotPhan = false,
+  id,
+  numeral,
 }: ObjectEntityProps) => {
   const { agreementObject, taiSan, deleteAgreementObject, deleteTaiSan } =
     useHDCNDatVaTaiSanGanLienVoiDatToanBoContext();
@@ -35,10 +42,6 @@ export const ObjectEntity = ({
     setOpen(true);
   };
 
-  const handleEditObject = () => {
-    handleOpenThongTinDat();
-  };
-
   const handleOpenThongTinTaiSan = () => {
     setOpenThongTinTaiSan(true);
   };
@@ -47,221 +50,152 @@ export const ObjectEntity = ({
     deleteTaiSan();
   };
 
-  return (
-    <Box border="1px solid #BCCCDC" borderRadius="5px">
-      <Box
-        height="80px"
-        bgcolor="#3D90D7"
-        paddingX="10px"
-        display="flex"
-        alignItems="center"
-      >
-        <Typography variant="h6">{title}</Typography>
-      </Box>
-      <Box padding="10px">
-        <Box
-          display="grid"
-          gridTemplateColumns="1fr 1fr"
-          gap="10px"
-          marginBottom="10px"
-        >
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<AddIcon />}
-            disabled={Boolean(taiSan)}
-            onClick={handleOpenThongTinTaiSan}
-          >
-            Thêm thông tin tài sản gắn liền với đất
-          </Button>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            disabled={Boolean(agreementObject)}
-            onClick={handleOpenThongTinDat}
-          >
-            Thêm thông tin mảnh đất
-          </Button>
-        </Box>
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap="10px">
-          <Box>
-            <Typography variant="h4" color="#B12C00" my="1rem">
-              Thông tin tài sản
-            </Typography>
-            <Box
-              mb="20px"
-              border="1px solid #BCCCDC"
-              borderRadius="5px"
-              padding="10px"
+  const taiSanRows: Array<[string, React.ReactNode]> = taiSan
+    ? [
+        [
+          "Tên tài sản",
+          <ul style={{ margin: 0, paddingLeft: "1.1rem" }}>
+            {taiSan["thông_tin_tài_sản"].split(";").map((item, index) => (
+              <li key={index}>{item.trim()}</li>
+            ))}
+          </ul>,
+        ],
+        ["Diện tích xây dựng", `${taiSan["diện_tích_xây_dựng"]} m2`],
+        ["Giá trị hợp đồng", taiSan["số_tiền"]],
+      ]
+    : [];
+
+  const datRows: Array<[string, React.ReactNode]> = agreementObject
+    ? [
+        ["Số thửa đất", agreementObject["số_thửa_đất"]],
+        ["Tờ bản đồ số", agreementObject["số_tờ_bản_đồ"]],
+        ["Diện tích (m2)", agreementObject["diện_tích_đất_bằng_số"]],
+        [
+          "Diện tích bằng chữ (mét vuông)",
+          agreementObject["diện_tích_đất_bằng_chữ"],
+        ],
+        ["Hình thức sử dụng", agreementObject["hình_thức_sở_hữu_đất"]],
+        ["Mục đích sử dụng", agreementObject["mục_đích_sở_hữu_đất"]],
+        ["Thời hạn sử dụng", agreementObject["thời_hạn_sử_dụng_đất"]],
+        ["Nguồn gốc sử dụng", agreementObject["nguồn_gốc_sử_dụng_đất"]],
+        ["Địa chỉ nhà đất", agreementObject["địa_chỉ_nhà_đất"]],
+        ["Loại giấy chứng nhận", agreementObject["loại_gcn"]],
+        ["Số giấy chứng nhân", agreementObject["số_gcn"]],
+        ["Số vào sổ cấp giấy chứng nhận", agreementObject["số_vào_sổ_cấp_gcn"]],
+        ["Nơi cấp giấy chứng nhận", agreementObject["nơi_cấp_gcn"]],
+        ["Ngày cấp giấy chứng nhận", agreementObject["ngày_cấp_gcn"]],
+      ]
+    : [];
+
+  const rowTable = (rows: Array<[string, React.ReactNode]>) => (
+    <Table size="small" sx={{ mt: 1 }}>
+      <TableBody>
+        {rows.map(([label, value]) => (
+          <TableRow key={label}>
+            <TableCell
+              component="th"
+              sx={{ width: "260px", color: "text.secondary" }}
             >
-              {taiSan?.["thông_tin_tài_sản"].split(";").map((item, index) => (
-                <Typography key={index}>Tên tài sản: {item}</Typography>
-              ))}
-              <Typography>
-                Diện tích xây dựng: {taiSan?.["diện_tích_xây_dựng"]} m2
-              </Typography>
-              <Typography
-                variant="body1"
-                fontSize="1.3rem"
-                fontWeight="600"
-                mt="20px"
-              >
-                Giá trị hợp đồng: {taiSan?.["số_tiền"]}
-              </Typography>
-            </Box>
+              {label}
+            </TableCell>
+            <TableCell>{value}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+
+  return (
+    <FormSection
+      id={id}
+      numeral={numeral}
+      title={title}
+      complete={Boolean(taiSan) && Boolean(agreementObject)}
+    >
+      <Box display="flex" flexDirection="column" gap={2}>
+        <Box>
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Typography variant="h6">
+              Thông tin tài sản gắn liền với đất
+            </Typography>
             {taiSan ? (
-              <Box display="flex" gap="10px">
-                <Button
-                  variant="outlined"
-                  color="secondary"
+              <Box display="flex" gap={0.5}>
+                <IconButton
+                  size="small"
                   onClick={handleOpenThongTinTaiSan}
+                  aria-label="Sửa thông tin tài sản"
                 >
-                  Sửa
-                </Button>
-                <Button
-                  variant="contained"
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  size="small"
                   color="error"
                   onClick={handleDeleteTaiSan}
+                  aria-label="Xóa thông tin tài sản"
                 >
-                  Xoá
-                </Button>
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
               </Box>
-            ) : null}
+            ) : (
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<AddIcon />}
+                onClick={handleOpenThongTinTaiSan}
+              >
+                Thêm thông tin tài sản
+              </Button>
+            )}
           </Box>
-          <TableContainer component={Paper}>
-            <Typography variant="h4" color="#B12C00" my="1rem">
-              Thông tin mảnh đất
+          {taiSan ? (
+            rowTable(taiSanRows)
+          ) : (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Chưa có thông tin tài sản. Bấm "Thêm thông tin tài sản" để nhập.
             </Typography>
-            <Table sx={{ border: "1px solid #BCCCDC" }}>
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Số thửa đất</Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["số_thửa_đất"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Tờ bản đồ số</Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["số_tờ_bản_đồ"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Diện tích (m2)</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["diện_tích_đất_bằng_số"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Diện tích bằng chữ (mét vuông)
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["diện_tích_đất_bằng_chữ"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Hình thức sử dụng</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["hình_thức_sở_hữu_đất"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Mục đích sử dụng</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["mục_đích_sở_hữu_đất"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Thời hạn sử dụng</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["thời_hạn_sử_dụng_đất"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Nguồn gốc sử dụng</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["nguồn_gốc_sử_dụng_đất"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Địa chỉ nhà đất</Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["địa_chỉ_nhà_đất"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Loại giấy chứng nhận
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["loại_gcn"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Số giấy chứng nhân</Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["số_gcn"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Số vào sổ cấp giấy chứng nhận
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    {agreementObject?.["số_vào_sổ_cấp_gcn"]}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Nơi cấp giấy chứng nhận
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["nơi_cấp_gcn"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">
-                      Ngày cấp giấy chứng nhận
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{agreementObject?.["ngày_cấp_gcn"]}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th">
-                    <Typography variant="body1">Thao tác</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box display="flex" gap={1}>
-                      <EditIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => handleEditObject()}
-                      />
-                      <DeleteIcon
-                        sx={{ cursor: "pointer" }}
-                        onClick={() => deleteAgreementObject()}
-                      />
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+          )}
+        </Box>
+        <Divider />
+        <Box>
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Typography variant="h6">Thông tin mảnh đất</Typography>
+            {agreementObject ? (
+              <Box display="flex" gap={0.5}>
+                <IconButton
+                  size="small"
+                  onClick={handleOpenThongTinDat}
+                  aria-label="Sửa thông tin mảnh đất"
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  color="error"
+                  onClick={() => deleteAgreementObject()}
+                  aria-label="Xóa thông tin mảnh đất"
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            ) : (
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<AddIcon />}
+                onClick={handleOpenThongTinDat}
+              >
+                Thêm thông tin mảnh đất
+              </Button>
+            )}
+          </Box>
+          {agreementObject ? (
+            rowTable(datRows)
+          ) : (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Chưa có thông tin mảnh đất. Bấm "Thêm thông tin mảnh đất" để
+              nhập.
+            </Typography>
+          )}
         </Box>
       </Box>
       {open ? (
@@ -278,6 +212,6 @@ export const ObjectEntity = ({
           isMotPhan={isMotPhan}
         />
       ) : null}
-    </Box>
+    </FormSection>
   );
 };
