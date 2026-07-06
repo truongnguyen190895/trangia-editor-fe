@@ -22,7 +22,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useThemChuTheContext } from "@/context/them-chu-the";
-import { GUQ_TEMPLATE, type GiayUyQuyen, type GuqTemplate } from "@/models/guq";
+import {
+  GUQ_TEMPLATE,
+  isVacLikeTemplate,
+  type GiayUyQuyen,
+  type GuqTemplate,
+} from "@/models/guq";
+import type { User } from "@/api/users";
 import { generateGiayUyQuyen, getContractName } from "@/api/giay_uy_quyen";
 import { createDownloadLink, extractCoupleFromParty } from "@/utils/common";
 import { extractAddress } from "@/utils/extract-address";
@@ -31,6 +37,30 @@ import { ThemNguoiDuocUQDialog } from "./them-nguoi-duoc-uq-dialog";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 
 type NguoiDuocUQ = GiayUyQuyen["nguoi_duoc_uq"][number];
+
+// Chi nhánh Vân Đình dùng mẫu GUQ riêng (guq-van-dinh). Nhận diện theo id ("VĐ") hoặc
+// tên hiển thị của chi nhánh trong user_info.
+const isVanDinhBranchName = (name?: string | null): boolean => {
+  if (!name) return false;
+  const normalized = name.toLowerCase();
+  return (
+    normalized === "vđ" ||
+    normalized === "vd" ||
+    normalized.includes("vân đình") ||
+    normalized.includes("van dinh")
+  );
+};
+
+const isVanDinhUser = (): boolean => {
+  const user = JSON.parse(
+    localStorage.getItem("user_info") ?? "null",
+  ) as User | null;
+  return (user?.branches ?? []).some(
+    (branch) =>
+      isVanDinhBranchName(branch.id) ||
+      isVanDinhBranchName(branch.friendly_name),
+  );
+};
 
 interface Props {
   // Path of the source contract template (e.g. "nhom-tang-cho/hd-tang-cho-dat-toan-bo").
@@ -49,6 +79,11 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [ngàyVAC, setNgàyVAC] = useState<string>(dayjs().format("DD/MM/YYYY"));
+
+  const vacTemplate = isVanDinhUser()
+    ? GUQ_TEMPLATE.VAN_DINH
+    : GUQ_TEMPLATE.VAC;
+  const vacLabel = vacTemplate === GUQ_TEMPLATE.VAN_DINH ? "VĐ" : "VAC";
 
   const handleClose = () => {
     setIsOpen(false);
@@ -125,7 +160,7 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
       nguoi_duoc_uq: nguoiDuocUQList,
     };
 
-    if (template === GUQ_TEMPLATE.VAC) {
+    if (isVacLikeTemplate(template)) {
       const [d, m, y] = ngàyVAC.split("/");
       const parts = translateDatePartsToVietnamese(ngàyVAC);
       const now = dayjs();
@@ -143,7 +178,7 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
 
     setIsGenerating(true);
     try {
-      if (template === GUQ_TEMPLATE.VAC) {
+      if (isVacLikeTemplate(template)) {
         // Pull the exact contract name from the source contract's lời chứng so the
         // GUQ matches it 100% (chuyển nhượng vs tặng cho, toàn bộ vs một phần).
         const tênHợpĐồng = await getContractName(contractTemplatePath);
@@ -189,18 +224,18 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
           </Button>
           <Button
             variant="contained"
-            onClick={() => pickTemplate(GUQ_TEMPLATE.VAC)}
+            onClick={() => pickTemplate(vacTemplate)}
           >
-            GUQ - VAC
+            GUQ - {vacLabel}
           </Button>
         </DialogActions>
       </Dialog>
       <Dialog fullWidth maxWidth="lg" open={isOpen} onClose={handleClose}>
         <DialogTitle>
-          GUQ{template === GUQ_TEMPLATE.VAC ? " - VAC" : ""}
+          GUQ{template && isVacLikeTemplate(template) ? ` - ${vacLabel}` : ""}
         </DialogTitle>
         <DialogContent>
-          {template === GUQ_TEMPLATE.VAC && (
+          {template && isVacLikeTemplate(template) && (
             <Box mt="1rem">
               <Typography variant="h6">Ngày lập</Typography>
               <TextField

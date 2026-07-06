@@ -12,7 +12,9 @@ export const generateGiayUyQuyen = (
   const effectiveTemplate =
     template === GUQ_TEMPLATE.VAC && multiFrom
       ? GUQ_TEMPLATE.VAC_MULTIPLE
-      : template;
+      : template === GUQ_TEMPLATE.VAN_DINH && multiFrom
+        ? GUQ_TEMPLATE.VAN_DINH_MULTIPLE
+        : template;
   const url = `/templates/guq/${effectiveTemplate}`;
 
   const extras =

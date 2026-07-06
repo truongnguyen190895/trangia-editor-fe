@@ -9,8 +9,15 @@ export const GUQ_TEMPLATE = {
   CM: "guq-cm",
   VAC: "guq-vac",
   VAC_MULTIPLE: "guq-vac-multiple",
+  VAN_DINH: "guq-van-dinh",
+  VAN_DINH_MULTIPLE: "guq-van-dinh-multiple",
 } as const;
 export type GuqTemplate = (typeof GUQ_TEMPLATE)[keyof typeof GUQ_TEMPLATE];
+
+// guq-van-dinh là biến thể của guq-vac dành cho chi nhánh Vân Đình (VĐ): cùng payload,
+// khác công chứng viên và địa chỉ trong lời chứng.
+export const isVacLikeTemplate = (template: GuqTemplate): boolean =>
+  template === GUQ_TEMPLATE.VAC || template === GUQ_TEMPLATE.VAN_DINH;
 
 export interface GiayUyQuyen {
   bên_B: {
