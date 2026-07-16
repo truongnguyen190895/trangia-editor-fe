@@ -154,6 +154,11 @@ export const CONTRACT_TYPES = [
     value: "Đơn Miễn Thuế",
     label: "Đơn Miễn Thuế",
   },
+  {
+    id: 32,
+    value: "Thuê xe",
+    label: "Thuê xe",
+  },
 ];
 
 export const INVOICE_TYPES = [
