@@ -241,7 +241,15 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
     }),
   });
 
-  const { values, errors, resetForm, handleChange, handleSubmit, setValues } =
+  const {
+    values,
+    errors,
+    resetForm,
+    handleChange,
+    handleSubmit,
+    submitForm,
+    setValues,
+  } =
     useFormik<InitialValues>({
       validationSchema,
       initialValues: {
@@ -262,15 +270,18 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         notarizedBy: "",
       },
       onSubmit: async (formValues) => {
+        // The amount fields are disabled when a non-admin edits an existing
+        // record, so a zero/zero confirmation there would be unresolvable.
+        const amountFieldsEditable = !(isEdit && !isAdmin);
         if (
           !bypassZeroCheck.current &&
+          amountFieldsEditable &&
           Number(formValues.value) === 0 &&
           Number(formValues.copiesValue) === 0
         ) {
           setZeroValueDialogOpen(true);
           return;
         }
-        bypassZeroCheck.current = false;
         try {
           setIsLoading(true);
           let idToSubmit = "";
@@ -691,7 +702,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         onConfirm={() => {
           setZeroValueDialogOpen(false);
           bypassZeroCheck.current = true;
-          handleSubmit();
+          // Reset once the submit cycle settles (even if validation fails and
+          // onSubmit never runs) so the bypass can't leak into a later submit.
+          submitForm().finally(() => {
+            bypassZeroCheck.current = false;
+          });
         }}
         onCancel={() => setZeroValueDialogOpen(false)}
       />
