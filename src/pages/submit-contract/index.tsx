@@ -20,6 +20,7 @@ import { REVIEWERS } from "@/constants/reviewer";
 import { listBranches, type Branch } from "@/api/branchs";
 import { useFormik } from "formik";
 import { WarningDialog } from "@/components/common/warning-dialog";
+import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { PageHeader } from "@/components/common/page-header";
 import {
   submitContract,
@@ -30,7 +31,7 @@ import {
 import { listUsers } from "@/api/users";
 import { render_phieu_thu, type PhieuThuPayload } from "@/api";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as yup from "yup";
 import { CCCD_12_DIGITS } from "@/utils/validate-id-number";
 import dayjs, { Dayjs } from "dayjs";
@@ -70,6 +71,8 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
   const [nextAvailableId, setNextAvailableId] = useState<string>("");
   const [shouldRenderPhieuThu, setShouldRenderPhieuThu] = useState(false);
   const [warningDialogOpen, setWarningDialogOpen] = useState(false);
+  const [zeroValueDialogOpen, setZeroValueDialogOpen] = useState(false);
+  const bypassZeroCheck = useRef(false);
   const [users, setUsers] =
     useState<{ id: number; value: string; label: string }[]>(REVIEWERS);
   const [branchs, setBranchs] = useState<Branch[]>([]);
@@ -259,6 +262,15 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         notarizedBy: "",
       },
       onSubmit: async (formValues) => {
+        if (
+          !bypassZeroCheck.current &&
+          Number(formValues.value) === 0 &&
+          Number(formValues.copiesValue) === 0
+        ) {
+          setZeroValueDialogOpen(true);
+          return;
+        }
+        bypassZeroCheck.current = false;
         try {
           setIsLoading(true);
           let idToSubmit = "";
@@ -670,6 +682,18 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
         title="Cảnh báo"
         message="Vui lòng kiểm tra lại số Hợp đồng vừa nhập."
         onConfirm={() => setWarningDialogOpen(false)}
+      />
+      <ConfirmationDialog
+        open={zeroValueDialogOpen}
+        title="Xác nhận"
+        message="Số tiền công chứng và số tiền làm bản sao đều bằng 0. Bạn có chắc chắn muốn tiếp tục không?"
+        confirmText="Tiếp tục"
+        onConfirm={() => {
+          setZeroValueDialogOpen(false);
+          bypassZeroCheck.current = true;
+          handleSubmit();
+        }}
+        onCancel={() => setZeroValueDialogOpen(false)}
       />
     </Box>
   );
