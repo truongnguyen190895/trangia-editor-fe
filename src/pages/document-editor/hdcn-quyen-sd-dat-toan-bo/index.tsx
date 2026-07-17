@@ -28,6 +28,7 @@ import {
   render_hdcn_quyen_sd_dat_mot_phan,
   render_hdtc_dat_mot_phan,
   render_hdtc_mot_phan_dat_co_cong_van,
+  type KhaiThueBranch,
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
@@ -429,23 +430,34 @@ export const ChuyenNhuongDatToanBo = ({
       ...couplesB,
     ];
 
+    const tỉ_lệ_bên_A = (100 / các_cá_thể_bên_A.length).toFixed(0) + "%";
+    const tỉ_lệ_bên_B = (100 / các_cá_thể_bên_B.length).toFixed(0) + "%";
+
     const payload: SampleToKhaiChungPayload = {
       bên_A: {
-        cá_thể: các_cá_thể_bên_A,
+        cá_thể: các_cá_thể_bên_A.map((person) => ({
+          ...person,
+          tỉ_lệ: tỉ_lệ_bên_A,
+        })),
       },
       bên_B: {
-        cá_thể: các_cá_thể_bên_B,
+        cá_thể: các_cá_thể_bên_B.map((person) => ({
+          ...person,
+          tỉ_lệ: tỉ_lệ_bên_B,
+        })),
       },
       bảng_tncn_bên_A: các_cá_thể_bên_A.map((person, index) => ({
         stt: index + 1,
         tên: person["tên"],
         số_giấy_tờ: person["số_giấy_tờ"],
-        tỉ_lệ: (100 / các_cá_thể_bên_A.length).toFixed(0) + "%",
+        tỉ_lệ: tỉ_lệ_bên_A,
       })),
       bảng_trước_bạ_bên_B: các_cá_thể_bên_B.map((person, index) => ({
         stt: index + 1,
         tên: person["tên"],
         số_giấy_tờ: person["số_giấy_tờ"],
+        ngày_sinh: person["ngày_sinh"],
+        tỉ_lệ: tỉ_lệ_bên_B,
       })),
       bảng_bên_A: các_cá_thể_bên_A.map((person, index) => ({
         stt: index + 1,
@@ -485,6 +497,10 @@ export const ChuyenNhuongDatToanBo = ({
       số_tiền: agreementObject["giá_tiền"],
       ngày_lập_hợp_đồng: dayjs().format("DD/MM/YYYY").toString(),
       ngày_chứng_thực: dayjs().format("DD/MM/YYYY").toString(),
+      // Mẫu Ứng Hoà in ngày ký dạng "ngày … tháng … năm …" nên cần từng phần riêng
+      ngày_tạo_hđ: dayjs().format("DD").toString(),
+      tháng_tạo_hđ: dayjs().format("MM").toString(),
+      năm_tạo_hđ: dayjs().format("YYYY").toString(),
       địa_chỉ_hiển_thị: agreementObject["địa_chỉ_cũ"]
         ? `${agreementObject["địa_chỉ_cũ"]} (nay là ${agreementObject["địa_chỉ_mới"]})`
         : agreementObject["địa_chỉ_mới"],
@@ -496,7 +512,7 @@ export const ChuyenNhuongDatToanBo = ({
 
   const handleGenerateToKhaiChung = (
     isND373: boolean | undefined,
-    isCM: boolean,
+    branch: KhaiThueBranch,
   ) => {
     const payload = getPayloadToKhaiChung();
     setOpenDialog(false);
@@ -504,7 +520,7 @@ export const ChuyenNhuongDatToanBo = ({
     if (isTangCho) {
       render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(
         payload,
-        isCM,
+        branch,
         isND373,
       )
         .then((res) => {
@@ -520,7 +536,7 @@ export const ChuyenNhuongDatToanBo = ({
     } else {
       render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(
         payload,
-        isCM,
+        branch,
         isND373,
       )
         .then((res) => {
@@ -693,7 +709,7 @@ export const ChuyenNhuongDatToanBo = ({
           <DialogTitle>Chọn loại tờ khai</DialogTitle>
           <DialogContent>
             <Typography>
-              Bạn muốn tạo tờ khai cho chi nhánh CM hay loại thông thường?
+              Bạn muốn tạo tờ khai loại thông thường, chi nhánh CM hay Ứng Hoà?
             </Typography>
           </DialogContent>
           <DialogActions>
@@ -709,7 +725,7 @@ export const ChuyenNhuongDatToanBo = ({
               onClick={() => {
                 if (pendingIsND373 === undefined) return;
                 setOpenTaxTypeDialog(false);
-                handleGenerateToKhaiChung(pendingIsND373, false);
+                handleGenerateToKhaiChung(pendingIsND373, "normal");
               }}
             >
               Thông thường
@@ -719,10 +735,20 @@ export const ChuyenNhuongDatToanBo = ({
               onClick={() => {
                 if (pendingIsND373 === undefined) return;
                 setOpenTaxTypeDialog(false);
-                handleGenerateToKhaiChung(pendingIsND373, true);
+                handleGenerateToKhaiChung(pendingIsND373, "cm");
               }}
             >
               Chi nhánh CM
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                if (pendingIsND373 === undefined) return;
+                setOpenTaxTypeDialog(false);
+                handleGenerateToKhaiChung(pendingIsND373, "uh");
+              }}
+            >
+              Ứng Hoà
             </Button>
           </DialogActions>
         </Dialog>

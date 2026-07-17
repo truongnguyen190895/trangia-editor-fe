@@ -163,6 +163,7 @@ export type SampleToKhaiChungPayload = {
       thành_phố: string | null;
       phường: string | null;
       thôn: string | null;
+      tỉ_lệ?: string;
     }>;
   };
   bên_B: {
@@ -180,6 +181,7 @@ export type SampleToKhaiChungPayload = {
       thành_phố: string | null;
       phường: string | null;
       thôn: string | null;
+      tỉ_lệ?: string;
     }>;
   };
   bảng_tncn_bên_A: Array<{
@@ -191,6 +193,9 @@ export type SampleToKhaiChungPayload = {
     stt: number;
     tên: string;
     số_giấy_tờ: string;
+    // dùng cho mẫu Ứng Hoà (bảng mục II tờ khai TNCN)
+    ngày_sinh?: string;
+    tỉ_lệ?: string;
   }>;
   bảng_bên_A: Array<{
     stt: number;
@@ -203,6 +208,10 @@ export type SampleToKhaiChungPayload = {
   ngày_cấp_giấy_chứng_nhận: string;
   ngày_lập_hợp_đồng: string;
   ngày_chứng_thực: string;
+  // ngày ký tách phần cho mẫu Ứng Hoà ("ngày … tháng … năm …")
+  ngày_tạo_hđ?: string;
+  tháng_tạo_hđ?: string;
+  năm_tạo_hđ?: string;
   số_thửa_đất: string;
   số_tờ_bản_đồ: string;
   thôn: string | null;

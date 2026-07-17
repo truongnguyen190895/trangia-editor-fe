@@ -314,19 +314,26 @@ export const render_hdtc_mot_phan_dat_co_cong_van = async (
   );
 };
 
+// Chi nhánh cho tờ khai chung: thông thường, Chương Mỹ (-cm) hoặc Ứng Hoà (-uh).
+// Ứng Hoà dùng mẫu riêng (không có bản NĐ 373 nên bỏ qua hậu tố -v2).
+export type KhaiThueBranch = "normal" | "cm" | "uh";
+
 export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
   payload: SampleToKhaiChungPayload,
-  isCM: boolean = false,
+  branch: KhaiThueBranch = "normal",
   isND373?: boolean,
 ) => {
   let url =
     "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep";
-  if (isCM) {
+  if (branch === "cm") {
     url =
       "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep-cm";
   }
-  if (isND373) {
+  if (isND373 && branch !== "uh") {
     url = url + "-v2";
+  }
+  if (branch === "uh") {
+    url = "/templates/khai-thue/khai-thue-chuyen-nhuong-uh";
   }
   const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
     payload["phường"] || null,
@@ -343,15 +350,18 @@ export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
 
 export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
   payload: SampleToKhaiChungPayload,
-  isCM: boolean = false,
+  branch: KhaiThueBranch = "normal",
   isND373?: boolean,
 ) => {
   let url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep";
-  if (isCM) {
+  if (branch === "cm") {
     url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep-cm";
   }
-  if (isND373) {
+  if (isND373 && branch !== "uh") {
     url = url + "-v2";
+  }
+  if (branch === "uh") {
+    url = "/templates/khai-thue/khai-thue-tang-cho-uh";
   }
   const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
     payload["phường"] || null,
