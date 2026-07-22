@@ -79,8 +79,8 @@ export const ThemThongTinDat = ({
           diện_tích_đất_bằng_chữ: "",
           một_phần_diện_tích_đất_bằng_số: "",
           một_phần_diện_tích_đất_bằng_chữ: "",
-          hình_thức_sở_hữu_đất: "",
-          mục_đích_sở_hữu_đất: "",
+          hình_thức_sử_dụng_đất: "",
+          mục_đích_sử_dụng_đất: "",
           thời_hạn_sử_dụng_đất: "",
           nguồn_gốc_sử_dụng_đất: "",
           địa_chỉ_nhà_đất: "",
@@ -326,19 +326,19 @@ export const ThemThongTinDat = ({
               />
               <TextField
                 fullWidth
-                id="hình_thức_sở_hữu_đất"
-                name="hình_thức_sở_hữu_đất"
+                id="hình_thức_sử_dụng_đất"
+                name="hình_thức_sử_dụng_đất"
                 label="Hình thức sử dụng"
-                value={values["hình_thức_sở_hữu_đất"]}
+                value={values["hình_thức_sử_dụng_đất"]}
                 onChange={handleChange}
                 error={
-                  !!errors["hình_thức_sở_hữu_đất"] &&
-                  touched["hình_thức_sở_hữu_đất"]
+                  !!errors["hình_thức_sử_dụng_đất"] &&
+                  touched["hình_thức_sử_dụng_đất"]
                 }
                 helperText={
-                  errors["hình_thức_sở_hữu_đất"] &&
-                  touched["hình_thức_sở_hữu_đất"] &&
-                  errors["hình_thức_sở_hữu_đất"]
+                  errors["hình_thức_sử_dụng_đất"] &&
+                  touched["hình_thức_sử_dụng_đất"] &&
+                  errors["hình_thức_sử_dụng_đất"]
                 }
               />
 
@@ -349,11 +349,11 @@ export const ThemThongTinDat = ({
                 getOptionLabel={(option) => option.label}
                 value={
                   MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT.find(
-                    (item) => item.value === values["mục_đích_sở_hữu_đất"]
+                    (item) => item.value === values["mục_đích_sử_dụng_đất"]
                   ) ?? null
                 }
                 onChange={(_event, value) => {
-                  setFieldValue("mục_đích_sở_hữu_đất", value?.value ?? "");
+                  setFieldValue("mục_đích_sử_dụng_đất", value?.value ?? "");
                 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Mục đích sử dụng" />

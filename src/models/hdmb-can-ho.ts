@@ -27,8 +27,8 @@ export interface HDMBCanHoPayload {
   số_tờ_bản_đồ: string | null;
   diện_tích_đất_bằng_số: string;
   diện_tích_đất_bằng_chữ: string;
-  hình_thức_sở_hữu_đất: string;
-  mục_đích_sở_hữu_đất: string;
+  hình_thức_sử_dụng_đất: string;
+  mục_đích_sử_dụng_đất: string;
   thời_hạn_sử_dụng_đất: string;
   nguồn_gốc_sử_dụng_đất: string;
   số_tiền: string;
@@ -63,8 +63,8 @@ export interface ThongTinThuaDat {
   số_tờ_bản_đồ: string | null;
   diện_tích_đất_bằng_số: string;
   diện_tích_đất_bằng_chữ: string;
-  hình_thức_sở_hữu_đất: string;
-  mục_đích_sở_hữu_đất: string;
+  hình_thức_sử_dụng_đất: string;
+  mục_đích_sử_dụng_đất: string;
   thời_hạn_sử_dụng_đất: string;
   nguồn_gốc_sử_dụng_đất: string;
 }

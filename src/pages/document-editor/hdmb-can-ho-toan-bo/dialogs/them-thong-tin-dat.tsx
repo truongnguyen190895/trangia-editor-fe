@@ -60,8 +60,8 @@ export const ThemThongTinDat = ({
           số_tờ_bản_đồ: "",
           diện_tích_đất_bằng_số: "",
           diện_tích_đất_bằng_chữ: "",
-          hình_thức_sở_hữu_đất: "",
-          mục_đích_sở_hữu_đất: "",
+          hình_thức_sử_dụng_đất: "",
+          mục_đích_sử_dụng_đất: "",
           thời_hạn_sử_dụng_đất: "",
           nguồn_gốc_sử_dụng_đất: "",
         };
@@ -85,8 +85,8 @@ export const ThemThongTinDat = ({
       setValues({
         ...values,
         ...response,
-        mục_đích_sở_hữu_đất:
-          response?.mục_đích_sở_hữu_đất?.value ?? response?.mục_đích_sở_hữu_đất,
+        mục_đích_sử_dụng_đất:
+          response?.mục_đích_sử_dụng_đất?.value ?? response?.mục_đích_sử_dụng_đất,
       });
     }
   };
@@ -161,19 +161,19 @@ export const ThemThongTinDat = ({
               />
               <TextField
                 fullWidth
-                id="hình_thức_sở_hữu_đất"
-                name="hình_thức_sở_hữu_đất"
+                id="hình_thức_sử_dụng_đất"
+                name="hình_thức_sử_dụng_đất"
                 label="Hình thức sử dụng"
-                value={values["hình_thức_sở_hữu_đất"]}
+                value={values["hình_thức_sử_dụng_đất"]}
                 onChange={handleChange}
                 error={
-                  !!errors["hình_thức_sở_hữu_đất"] &&
-                  touched["hình_thức_sở_hữu_đất"]
+                  !!errors["hình_thức_sử_dụng_đất"] &&
+                  touched["hình_thức_sử_dụng_đất"]
                 }
                 helperText={
-                  errors["hình_thức_sở_hữu_đất"] &&
-                  touched["hình_thức_sở_hữu_đất"] &&
-                  errors["hình_thức_sở_hữu_đất"]
+                  errors["hình_thức_sử_dụng_đất"] &&
+                  touched["hình_thức_sử_dụng_đất"] &&
+                  errors["hình_thức_sử_dụng_đất"]
                 }
               />
               <Autocomplete
@@ -181,10 +181,10 @@ export const ThemThongTinDat = ({
                 freeSolo
                 id="mục đích sử dụng"
                 options={MỤC_ĐÍCH_SỬ_DỤNG_ĐẤT}
-                value={values["mục_đích_sở_hữu_đất"]}
+                value={values["mục_đích_sử_dụng_đất"]}
                 onChange={(_event, value) => {
                   setFieldValue(
-                    "mục_đích_sở_hữu_đất",
+                    "mục_đích_sử_dụng_đất",
                     typeof value === "string"
                       ? value
                       : (value as { value: string })?.value ?? ""
@@ -196,18 +196,18 @@ export const ThemThongTinDat = ({
                     label="Mục đích sử dụng"
                     onChange={(event) => {
                       setFieldValue(
-                        "mục_đích_sở_hữu_đất",
+                        "mục_đích_sử_dụng_đất",
                         event.target.value ?? ""
                       );
                     }}
                     error={
-                      !!errors["mục_đích_sở_hữu_đất"] &&
-                      touched["mục_đích_sở_hữu_đất"]
+                      !!errors["mục_đích_sử_dụng_đất"] &&
+                      touched["mục_đích_sử_dụng_đất"]
                     }
                     helperText={
-                      errors["mục_đích_sở_hữu_đất"] &&
-                      touched["mục_đích_sở_hữu_đất"] &&
-                      errors["mục_đích_sở_hữu_đất"]
+                      errors["mục_đích_sử_dụng_đất"] &&
+                      touched["mục_đích_sử_dụng_đất"] &&
+                      errors["mục_đích_sử_dụng_đất"]
                     }
                   />
                 )}

@@ -321,7 +321,7 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
           },
           mục_đích_và_thời_hạn_sử_dụng: [
             {
-              phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
+              phân_loại: agreementObject["mục_đích_sử_dụng_đất"],
               diện_tích: isMotPhan
                 ? (agreementObject["một_phần_diện_tích_đất_bằng_số"] as string)
                 : agreementObject["diện_tích_đất_bằng_số"],

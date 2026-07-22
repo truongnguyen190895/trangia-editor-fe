@@ -152,11 +152,18 @@ export interface WorkHistoryPageResponse {
   };
 }
 /**
- * Chuẩn hoá key legacy trong original_payload của các contract lưu TRƯỚC đợt
- * rename *_gcn -> *_giấy_chứng_nhận (2026-07): đổi tên key đệ quy để editor
- * (đã dùng key mới) prefill được draft cũ. Key mới nếu đã tồn tại thì giữ nguyên.
+ * Chuẩn hoá key legacy trong original_payload của các contract lưu TRƯỚC các đợt
+ * rename placeholder (docs/placeholder-normalization-plan.md bên BE): đổi tên key
+ * đệ quy để editor (đã dùng key mới) prefill được draft cũ. Key mới nếu đã tồn
+ * tại thì giữ nguyên.
+ * - 2026-07 GĐ2: *_gcn -> *_giấy_chứng_nhận
+ * - 2026-07 GĐ3: {hình_thức,mục_đích}_sở_hữu_đất -> *_sử_dụng_đất
  */
 const LEGACY_KEY_SUFFIX = /_gcn$/;
+const LEGACY_KEY_RENAMES: Record<string, string> = {
+  hình_thức_sở_hữu_đất: "hình_thức_sử_dụng_đất",
+  mục_đích_sở_hữu_đất: "mục_đích_sử_dụng_đất",
+};
 const normalizeLegacyKeys = (value: unknown): unknown => {
   if (Array.isArray(value)) {
     return value.map(normalizeLegacyKeys);
@@ -164,9 +171,10 @@ const normalizeLegacyKeys = (value: unknown): unknown => {
   if (value !== null && typeof value === "object") {
     const out: Record<string, unknown> = {};
     for (const [key, v] of Object.entries(value as Record<string, unknown>)) {
-      const newKey = LEGACY_KEY_SUFFIX.test(key)
-        ? key.replace(LEGACY_KEY_SUFFIX, "_giấy_chứng_nhận")
-        : key;
+      const renamed = LEGACY_KEY_RENAMES[key] ?? key;
+      const newKey = LEGACY_KEY_SUFFIX.test(renamed)
+        ? renamed.replace(LEGACY_KEY_SUFFIX, "_giấy_chứng_nhận")
+        : renamed;
       if (!(newKey in out)) {
         out[newKey] = normalizeLegacyKeys(v);
       }

@@ -363,7 +363,7 @@ export const HDMBNhaDatToanBo = ({
             đặc_điểm_thửa_đất: {
                 mục_đích_và_thời_hạn_sử_dụng: [
                     {
-                        phân_loại: agreementObject["mục_đích_sở_hữu_đất"],
+                        phân_loại: agreementObject["mục_đích_sử_dụng_đất"],
                         diện_tích: agreementObject["diện_tích_đất_bằng_số"],
                     },
                 ],
