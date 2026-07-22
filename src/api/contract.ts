@@ -151,8 +151,41 @@ export interface WorkHistoryPageResponse {
     total_pages: number;
   };
 }
+/**
+ * Chuẩn hoá key legacy trong original_payload của các contract lưu TRƯỚC đợt
+ * rename *_gcn -> *_giấy_chứng_nhận (2026-07): đổi tên key đệ quy để editor
+ * (đã dùng key mới) prefill được draft cũ. Key mới nếu đã tồn tại thì giữ nguyên.
+ */
+const LEGACY_KEY_SUFFIX = /_gcn$/;
+const normalizeLegacyKeys = (value: unknown): unknown => {
+  if (Array.isArray(value)) {
+    return value.map(normalizeLegacyKeys);
+  }
+  if (value !== null && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [key, v] of Object.entries(value as Record<string, unknown>)) {
+      const newKey = LEGACY_KEY_SUFFIX.test(key)
+        ? key.replace(LEGACY_KEY_SUFFIX, "_giấy_chứng_nhận")
+        : key;
+      if (!(newKey in out)) {
+        out[newKey] = normalizeLegacyKeys(v);
+      }
+    }
+    return out;
+  }
+  return value;
+};
+
 export const getWorkHistoryById = (
   id: string
 ): Promise<WorkHistoryItem> => {
-  return api.get("/contracts/" + id).then((resp) => resp.data);
+  return api.get("/contracts/" + id).then((resp) => {
+    const data = resp.data as WorkHistoryItem;
+    if (data?.content?.original_payload) {
+      data.content.original_payload = normalizeLegacyKeys(
+        data.content.original_payload
+      );
+    }
+    return data;
+  });
 };
