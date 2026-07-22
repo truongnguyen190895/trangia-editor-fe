@@ -375,11 +375,11 @@ const History = () => {
             }
             const payload: PhieuThuPayload = {
                 ...contract,
-                d: dayjs(contract.filed_date).format("DD"),
-                m: dayjs(contract.filed_date).format("MM"),
-                y: dayjs(contract.filed_date).format("YYYY"),
+                ngày: dayjs(contract.filed_date).format("DD"),
+                tháng: dayjs(contract.filed_date).format("MM"),
+                năm: dayjs(contract.filed_date).format("YYYY"),
                 người_nộp_tiền: contract?.customer || "",
-                số_cc: contractType === "Invoice" ? null : idPhieuThu,
+                số_công_chứng: contractType === "Invoice" ? null : idPhieuThu,
                 số_tiền: (
                     (contract?.value * 1000 || 0) + (contract?.copies_value * 1000 || 0)
                 ).toLocaleString(),

@@ -7,7 +7,7 @@ export const generateGiayUyQuyen = (
   template: GuqTemplate = GUQ_TEMPLATE.CM,
 ) => {
   const multiFrom = payload.bên_B.cá_thể?.length > 1;
-  const isMultipleTo = payload.nguoi_duoc_uq.length > 1;
+  const multiTo = payload.người_được_uỷ_quyền.length > 1;
 
   const effectiveTemplate =
     template === GUQ_TEMPLATE.VAC && multiFrom
@@ -20,13 +20,11 @@ export const generateGiayUyQuyen = (
   const extras =
     template === GUQ_TEMPLATE.CM
       ? {
-          isMultipleFrom: multiFrom ? "Chúng tôi là:" : "Tôi là:",
-          isMultipleTo,
+          lời_xưng_hô: multiFrom ? "Chúng tôi là:" : "Tôi là:",
+          nhiều_người_được_uỷ_quyền: multiTo,
         }
       : {
-          isMultipleFrom: multiFrom,
-          isSingleFrom: !multiFrom,
-          isMultipleTo,
+          nhiều_người_được_uỷ_quyền: multiTo,
         };
 
   return api.post(

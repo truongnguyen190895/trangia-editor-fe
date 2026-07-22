@@ -21,7 +21,7 @@ import {
   NƠI_CẤP_GIẤY_TỜ_ĐỊNH_DANH,
 } from "@/constants";
 
-type NguoiDuocUQ = GiayUyQuyen["nguoi_duoc_uq"][number];
+type NguoiDuocUQ = GiayUyQuyen["người_được_uỷ_quyền"][number];
 
 interface ThemNguoiDuocUQDialogProps {
   open: boolean;

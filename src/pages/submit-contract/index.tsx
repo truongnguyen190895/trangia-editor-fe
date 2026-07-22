@@ -315,11 +315,11 @@ const SubmitContract = ({ isEdit = false }: SubmitContractProps) => {
             filedDate: formValues?.filedDate?.format("YYYY-MM-DD"),
           };
           const phieuThuPayload: PhieuThuPayload = {
-            d: dayjs(formValues?.filedDate).format("DD"),
-            m: dayjs(formValues?.filedDate).format("MM"),
-            y: dayjs(formValues?.filedDate).format("YYYY"),
+            ngày: dayjs(formValues?.filedDate).format("DD"),
+            tháng: dayjs(formValues?.filedDate).format("MM"),
+            năm: dayjs(formValues?.filedDate).format("YYYY"),
             người_nộp_tiền: formValues.customer,
-            số_cc: type === "Invoice" ? null : idPhieuThu,
+            số_công_chứng: type === "Invoice" ? null : idPhieuThu,
             số_tiền: (
               Number(formValues.value * 1000) +
               Number(formValues.copiesValue * 1000)

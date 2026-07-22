@@ -27,11 +27,11 @@ import { convertEmptyStringsToNull } from "@/utils/common";
 import { getChiNhanhVanPhongDangKyDat } from "@/utils/extract-address";
 
 export interface PhieuThuPayload {
-  d: string;
-  m: string;
-  y: string;
+  ngày: string;
+  tháng: string;
+  năm: string;
   người_nộp_tiền: string;
-  số_cc: string | null;
+  số_công_chứng: string | null;
   số_tiền: string;
   số_tiền_bằng_chữ: string;
   tên_chuyên_viên: string;

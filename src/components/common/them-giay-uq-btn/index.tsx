@@ -36,7 +36,7 @@ import { translateDatePartsToVietnamese } from "@/utils/date-to-words";
 import { ThemNguoiDuocUQDialog } from "./them-nguoi-duoc-uq-dialog";
 import { useHdcnQuyenSdDatContext } from "@/context/hdcn-quyen-sd-dat-context";
 
-type NguoiDuocUQ = GiayUyQuyen["nguoi_duoc_uq"][number];
+type NguoiDuocUQ = GiayUyQuyen["người_được_uỷ_quyền"][number];
 
 // Chi nhánh Vân Đình dùng mẫu GUQ riêng (guq-van-dinh). Nhận diện theo id ("VĐ") hoặc
 // tên hiển thị của chi nhánh trong user_info.
@@ -157,7 +157,7 @@ export const ThemGiayUQButton = ({ contractTemplatePath }: Props) => {
         agreementObject?.["nơi_cấp_giấy_chứng_nhận"] ?? "",
       ngày_cấp_giấy_chứng_nhận:
         agreementObject?.["ngày_cấp_giấy_chứng_nhận"] ?? "",
-      nguoi_duoc_uq: nguoiDuocUQList,
+      người_được_uỷ_quyền: nguoiDuocUQList,
     };
 
     if (isVacLikeTemplate(template)) {

@@ -41,7 +41,7 @@ export interface GiayUyQuyen {
   số_vào_sổ_cấp_giấy_chứng_nhận: string;
   nơi_cấp_giấy_chứng_nhận: string;
   ngày_cấp_giấy_chứng_nhận: string;
-  nguoi_duoc_uq: Array<{
+  người_được_uỷ_quyền: Array<{
     giới_tính: Gender;
     tên: string;
     ngày_sinh: string;
@@ -62,5 +62,4 @@ export interface GiayUyQuyen {
   ngày_bằng_chữ?: string;
   tháng_bằng_chữ?: string;
   năm_bằng_chữ?: string;
-  isSingleFrom?: boolean;
 }
