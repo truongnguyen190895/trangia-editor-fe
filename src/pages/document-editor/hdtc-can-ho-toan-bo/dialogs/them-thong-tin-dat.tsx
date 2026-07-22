@@ -40,9 +40,9 @@ export const ThemThongTinDat = ({
     }
     addAgreementObject(values);
     setSaveLoading(true);
-    if (canHo && canHo?.số_gcn) {
+    if (canHo && canHo?.số_giấy_chứng_nhận) {
       const payload = { ...values, ...canHo };
-      saveContractEntity(canHo?.số_gcn, payload).finally(() => {
+      saveContractEntity(canHo?.số_giấy_chứng_nhận, payload).finally(() => {
         setSaveLoading(false);
         handleClose();
       });

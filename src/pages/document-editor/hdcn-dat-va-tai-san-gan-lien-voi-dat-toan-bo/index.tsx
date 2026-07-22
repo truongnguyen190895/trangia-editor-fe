@@ -310,9 +310,9 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
         tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
         số_thửa_đất: agreementObject["số_thửa_đất"],
         số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"],
-        số_giấy_chứng_nhận: agreementObject["số_gcn"],
-        nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_gcn"],
-        ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
+        số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
+        nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
+        ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_giấy_chứng_nhận"],
         đặc_điểm_thửa_đất: {
           diện_tích: {
             số: isMotPhan

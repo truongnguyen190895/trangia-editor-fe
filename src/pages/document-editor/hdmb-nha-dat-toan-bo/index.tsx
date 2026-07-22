@@ -127,11 +127,11 @@ export const HDMBNhaDatToanBo = ({
                 : agreementObject["địa_chỉ_nhà_đất"],
             // GCN fields — needed by the uỷ-quyền Phiếu thụ lý asset line; harmless for the
             // tặng cho / mua bán variants (unused keys are ignored when rendering).
-            loại_gcn: agreementObject?.["loại_gcn"],
-            số_gcn: agreementObject?.["số_gcn"],
-            số_vào_sổ_cấp_gcn: agreementObject?.["số_vào_sổ_cấp_gcn"],
-            nơi_cấp_gcn: agreementObject?.["nơi_cấp_gcn"],
-            ngày_cấp_gcn: agreementObject?.["ngày_cấp_gcn"],
+            loại_giấy_chứng_nhận: agreementObject?.["loại_giấy_chứng_nhận"],
+            số_giấy_chứng_nhận: agreementObject?.["số_giấy_chứng_nhận"],
+            số_vào_sổ_cấp_giấy_chứng_nhận: agreementObject?.["số_vào_sổ_cấp_giấy_chứng_nhận"],
+            nơi_cấp_giấy_chứng_nhận: agreementObject?.["nơi_cấp_giấy_chứng_nhận"],
+            ngày_cấp_giấy_chứng_nhận: agreementObject?.["ngày_cấp_giấy_chứng_nhận"],
         };
     };
 
@@ -353,9 +353,9 @@ export const HDMBNhaDatToanBo = ({
                 tên: person["tên"],
             })),
             tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
-            số_giấy_chứng_nhận: agreementObject["số_gcn"],
-            nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_gcn"],
-            ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_gcn"],
+            số_giấy_chứng_nhận: agreementObject["số_giấy_chứng_nhận"],
+            nơi_cấp_giấy_chứng_nhận: agreementObject["nơi_cấp_giấy_chứng_nhận"],
+            ngày_cấp_giấy_chứng_nhận: agreementObject["ngày_cấp_giấy_chứng_nhận"],
             ngày_chứng_thực: null,
             ...extractAddress(agreementObject["địa_chỉ_nhà_đất"]),
             số_thửa_đất: agreementObject["số_thửa_đất"],

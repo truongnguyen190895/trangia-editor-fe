@@ -67,9 +67,9 @@ export interface UyQuyenToanBoQuyenSdDatPayload {
 export interface ThongTinThuaDat {
   số_thửa_đất: string;
   số_tờ_bản_đồ: string | null;
-  loại_gcn: string;
-  số_gcn: string;
-  số_vào_sổ_cấp_gcn: string;
-  nơi_cấp_gcn: string;
-  ngày_cấp_gcn: string;
+  loại_giấy_chứng_nhận: string;
+  số_giấy_chứng_nhận: string;
+  số_vào_sổ_cấp_giấy_chứng_nhận: string;
+  nơi_cấp_giấy_chứng_nhận: string;
+  ngày_cấp_giấy_chứng_nhận: string;
 }

@@ -24,11 +24,11 @@ export interface HdDatCocPayload {
 }
 
 export interface GiayChungNhan {
-  loại_gcn: string;
-  số_gcn: string;
-  số_vào_sổ_cấp_gcn: string;
-  nơi_cấp_gcn: string;
-  ngày_cấp_gcn: string;
+  loại_giấy_chứng_nhận: string;
+  số_giấy_chứng_nhận: string;
+  số_vào_sổ_cấp_giấy_chứng_nhận: string;
+  nơi_cấp_giấy_chứng_nhận: string;
+  ngày_cấp_giấy_chứng_nhận: string;
 }
 
 export interface DatCocDatHoacNhaDat extends GiayChungNhan {

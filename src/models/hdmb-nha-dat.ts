@@ -42,11 +42,11 @@ export interface ThongTinThuaDat {
   mục_đích_sở_hữu_đất: string;
   thời_hạn_sử_dụng_đất: string;
   nguồn_gốc_sử_dụng_đất: string;
-  loại_gcn: string;
-  số_gcn: string;
-  số_vào_sổ_cấp_gcn: string;
-  nơi_cấp_gcn: string;
-  ngày_cấp_gcn: string;
+  loại_giấy_chứng_nhận: string;
+  số_giấy_chứng_nhận: string;
+  số_vào_sổ_cấp_giấy_chứng_nhận: string;
+  nơi_cấp_giấy_chứng_nhận: string;
+  ngày_cấp_giấy_chứng_nhận: string;
   // liên quan đến uỷ quyền
   thời_hạn: string | null;
   thời_hạn_bằng_chữ: string | null;

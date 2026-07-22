@@ -82,11 +82,11 @@ export const ThongTinCanHo = ({
           "Giá căn hộ",
           `${canHo["số_tiền"]} (${canHo["số_tiền_bằng_chữ"]})`,
         ],
-        ["Loại giấy chứng nhận", canHo["loại_gcn"]],
-        ["Số giấy chứng nhận", canHo["số_gcn"]],
-        ["Số vào sổ cấp GCN", canHo["số_vào_sổ_cấp_gcn"]],
-        ["Nơi cấp giấy chứng nhận", canHo["nơi_cấp_gcn"]],
-        ["Ngày cấp giấy chứng nhận", canHo["ngày_cấp_gcn"]],
+        ["Loại giấy chứng nhận", canHo["loại_giấy_chứng_nhận"]],
+        ["Số giấy chứng nhận", canHo["số_giấy_chứng_nhận"]],
+        ["Số vào sổ cấp GCN", canHo["số_vào_sổ_cấp_giấy_chứng_nhận"]],
+        ["Nơi cấp giấy chứng nhận", canHo["nơi_cấp_giấy_chứng_nhận"]],
+        ["Ngày cấp giấy chứng nhận", canHo["ngày_cấp_giấy_chứng_nhận"]],
       ]
     : [];
 

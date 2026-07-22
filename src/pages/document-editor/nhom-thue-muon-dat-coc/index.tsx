@@ -62,11 +62,11 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [type, setType] = useState<string>("đặt_cọc_đất");
   const [giayChungNhan, setGiayChungNhan] = useState<GiayChungNhan>({
-    loại_gcn: "",
-    số_gcn: "",
-    số_vào_sổ_cấp_gcn: "",
-    nơi_cấp_gcn: "",
-    ngày_cấp_gcn: "",
+    loại_giấy_chứng_nhận: "",
+    số_giấy_chứng_nhận: "",
+    số_vào_sổ_cấp_giấy_chứng_nhận: "",
+    nơi_cấp_giấy_chứng_nhận: "",
+    ngày_cấp_giấy_chứng_nhận: "",
   });
   const [additionalInfo, setAdditionalInfo] = useState<AdditionalInfo>({
     số_tiền_cọc: "",
@@ -412,7 +412,7 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
                     options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT}
                     value={
                       CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.find(
-                        (item) => item.value === giayChungNhan.loại_gcn
+                        (item) => item.value === giayChungNhan.loại_giấy_chứng_nhận
                       ) ?? null
                     }
                     getOptionLabel={(option) =>
@@ -421,7 +421,7 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
                     onChange={(_event, value) => {
                       setGiayChungNhan({
                         ...giayChungNhan,
-                        loại_gcn:
+                        loại_giấy_chứng_nhận:
                           typeof value === "string" ? value : value?.value ?? "",
                       });
                     }}
@@ -433,7 +433,7 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
                         onChange={(e) => {
                           setGiayChungNhan({
                             ...giayChungNhan,
-                            loại_gcn: e.target.value,
+                            loại_giấy_chứng_nhận: e.target.value,
                           });
                         }}
                       />
@@ -441,41 +441,41 @@ export const NhomThueMuonDatCoc = ({ isChuaXoaChap }: Props) => {
                   />
                   <TextField
                     label="Số giấy chứng nhận"
-                    value={giayChungNhan.số_gcn}
+                    value={giayChungNhan.số_giấy_chứng_nhận}
                     onChange={(e) =>
                       setGiayChungNhan({
                         ...giayChungNhan,
-                        số_gcn: e.target.value,
+                        số_giấy_chứng_nhận: e.target.value,
                       })
                     }
                   />
                   <TextField
                     label="Số vào sổ"
-                    value={giayChungNhan.số_vào_sổ_cấp_gcn}
+                    value={giayChungNhan.số_vào_sổ_cấp_giấy_chứng_nhận}
                     onChange={(e) =>
                       setGiayChungNhan({
                         ...giayChungNhan,
-                        số_vào_sổ_cấp_gcn: e.target.value,
+                        số_vào_sổ_cấp_giấy_chứng_nhận: e.target.value,
                       })
                     }
                   />
                   <TextField
                     label="Nơi cấp"
-                    value={giayChungNhan.nơi_cấp_gcn}
+                    value={giayChungNhan.nơi_cấp_giấy_chứng_nhận}
                     onChange={(e) =>
                       setGiayChungNhan({
                         ...giayChungNhan,
-                        nơi_cấp_gcn: e.target.value,
+                        nơi_cấp_giấy_chứng_nhận: e.target.value,
                       })
                     }
                   />
                   <TextField
                     label="Ngày cấp"
-                    value={giayChungNhan.ngày_cấp_gcn}
+                    value={giayChungNhan.ngày_cấp_giấy_chứng_nhận}
                     onChange={(e) =>
                       setGiayChungNhan({
                         ...giayChungNhan,
-                        ngày_cấp_gcn: e.target.value,
+                        ngày_cấp_giấy_chứng_nhận: e.target.value,
                       })
                     }
                   />

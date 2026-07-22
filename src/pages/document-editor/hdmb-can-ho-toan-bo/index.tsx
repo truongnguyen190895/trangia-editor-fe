@@ -147,11 +147,11 @@ export const HDMBCanHoToanBo = ({
       địa_chỉ_hiển_thị: canHo["địa_chỉ_cũ"]
         ? `${canHo["địa_chỉ_cũ"]} (nay là ${canHo["địa_chỉ_toà_nhà"]})`
         : canHo["địa_chỉ_toà_nhà"],
-      loại_gcn: canHo["loại_gcn"],
-      số_gcn: canHo["số_gcn"],
-      số_vào_sổ_cấp_gcn: canHo["số_vào_sổ_cấp_gcn"],
-      nơi_cấp_gcn: canHo["nơi_cấp_gcn"],
-      ngày_cấp_gcn: canHo["ngày_cấp_gcn"],
+      loại_giấy_chứng_nhận: canHo["loại_giấy_chứng_nhận"],
+      số_giấy_chứng_nhận: canHo["số_giấy_chứng_nhận"],
+      số_vào_sổ_cấp_giấy_chứng_nhận: canHo["số_vào_sổ_cấp_giấy_chứng_nhận"],
+      nơi_cấp_giấy_chứng_nhận: canHo["nơi_cấp_giấy_chứng_nhận"],
+      ngày_cấp_giấy_chứng_nhận: canHo["ngày_cấp_giấy_chứng_nhận"],
       diện_tích_sàn_bằng_số: canHo["diện_tích_sàn_bằng_số"],
       diện_tích_sàn_bằng_chữ: canHo["diện_tích_sàn_bằng_chữ"],
       diện_tích_sàn_một_phần_bằng_số: canHo["diện_tích_sàn_một_phần_bằng_số"],
@@ -329,10 +329,10 @@ export const HDMBCanHoToanBo = ({
       tables: ["bảng_bên_A", "bảng_tncn_bên_A", "bảng_trước_bạ_bên_B"],
       số_thửa_đất: agreementObject["số_thửa_đất"],
       số_tờ_bản_đồ: agreementObject["số_tờ_bản_đồ"] || "",
-      loại_giấy_tờ: canHo["loại_gcn"],
-      số_giấy_chứng_nhận: canHo["số_gcn"],
-      ngày_cấp_giấy_chứng_nhận: canHo["ngày_cấp_gcn"],
-      nơi_cấp_giấy_chứng_nhận: canHo["nơi_cấp_gcn"],
+      loại_giấy_tờ: canHo["loại_giấy_chứng_nhận"],
+      số_giấy_chứng_nhận: canHo["số_giấy_chứng_nhận"],
+      ngày_cấp_giấy_chứng_nhận: canHo["ngày_cấp_giấy_chứng_nhận"],
+      nơi_cấp_giấy_chứng_nhận: canHo["nơi_cấp_giấy_chứng_nhận"],
       đặc_điểm_thửa_đất: {
         diện_tích: {
           số: agreementObject["diện_tích_đất_bằng_số"],

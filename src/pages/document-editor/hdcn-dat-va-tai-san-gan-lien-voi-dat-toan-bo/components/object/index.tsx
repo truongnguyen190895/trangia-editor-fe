@@ -79,11 +79,11 @@ export const ObjectEntity = ({
         ["Thời hạn sử dụng", agreementObject["thời_hạn_sử_dụng_đất"]],
         ["Nguồn gốc sử dụng", agreementObject["nguồn_gốc_sử_dụng_đất"]],
         ["Địa chỉ nhà đất", agreementObject["địa_chỉ_nhà_đất"]],
-        ["Loại giấy chứng nhận", agreementObject["loại_gcn"]],
-        ["Số giấy chứng nhân", agreementObject["số_gcn"]],
-        ["Số vào sổ cấp giấy chứng nhận", agreementObject["số_vào_sổ_cấp_gcn"]],
-        ["Nơi cấp giấy chứng nhận", agreementObject["nơi_cấp_gcn"]],
-        ["Ngày cấp giấy chứng nhận", agreementObject["ngày_cấp_gcn"]],
+        ["Loại giấy chứng nhận", agreementObject["loại_giấy_chứng_nhận"]],
+        ["Số giấy chứng nhân", agreementObject["số_giấy_chứng_nhận"]],
+        ["Số vào sổ cấp giấy chứng nhận", agreementObject["số_vào_sổ_cấp_giấy_chứng_nhận"]],
+        ["Nơi cấp giấy chứng nhận", agreementObject["nơi_cấp_giấy_chứng_nhận"]],
+        ["Ngày cấp giấy chứng nhận", agreementObject["ngày_cấp_giấy_chứng_nhận"]],
       ]
     : [];
 

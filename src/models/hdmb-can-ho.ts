@@ -8,11 +8,11 @@ export interface HDMBCanHoPayload {
   số_căn_hộ: string;
   tên_toà_nhà: string;
   địa_chỉ_hiển_thị: string;
-  loại_gcn: string;
-  số_gcn: string;
-  số_vào_sổ_cấp_gcn: string;
-  nơi_cấp_gcn: string;
-  ngày_cấp_gcn: string;
+  loại_giấy_chứng_nhận: string;
+  số_giấy_chứng_nhận: string;
+  số_vào_sổ_cấp_giấy_chứng_nhận: string;
+  nơi_cấp_giấy_chứng_nhận: string;
+  ngày_cấp_giấy_chứng_nhận: string;
   diện_tích_sàn_bằng_số: string;
   diện_tích_sàn_bằng_chữ: string;
   diện_tích_sàn_một_phần_bằng_số?: string;
@@ -74,11 +74,11 @@ export interface ThongTinCanHo {
   tên_toà_nhà: string; //
   địa_chỉ_toà_nhà: string; //
   địa_chỉ_cũ: string;
-  loại_gcn: string; //
-  số_gcn: string; //
-  số_vào_sổ_cấp_gcn: string; //
-  nơi_cấp_gcn: string; //
-  ngày_cấp_gcn: string; //
+  loại_giấy_chứng_nhận: string; //
+  số_giấy_chứng_nhận: string; //
+  số_vào_sổ_cấp_giấy_chứng_nhận: string; //
+  nơi_cấp_giấy_chứng_nhận: string; //
+  ngày_cấp_giấy_chứng_nhận: string; //
   diện_tích_sàn_bằng_số: string; //
   diện_tích_sàn_một_phần_bằng_số?: string; //
   diện_tích_sàn_một_phần_bằng_chữ?: string; //

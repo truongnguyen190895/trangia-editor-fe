@@ -39,14 +39,14 @@ export const ThemThongTinDat = ({
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   const validationSchema = Yup.object({
-    số_gcn: Yup.string().required("Số giấy chứng nhận là bắt buộc"),
+    số_giấy_chứng_nhận: Yup.string().required("Số giấy chứng nhận là bắt buộc"),
   });
 
   const submitForm = (values: ThongTinThuaDat) => {
     addAgreementObject(values);
     setSaveLoading(true);
     const payload = { ...values, ...nhaDat };
-    saveContractEntity(values.số_gcn, payload).finally(() => {
+    saveContractEntity(values.số_giấy_chứng_nhận, payload).finally(() => {
       setSaveLoading(false);
       handleClose();
     });
@@ -68,11 +68,11 @@ export const ThemThongTinDat = ({
           nguồn_gốc_sử_dụng_đất: "",
           địa_chỉ_nhà_đất: "",
           địa_chỉ_cũ: "",
-          loại_gcn: "",
-          số_gcn: "",
-          số_vào_sổ_cấp_gcn: "",
-          nơi_cấp_gcn: "",
-          ngày_cấp_gcn: "",
+          loại_giấy_chứng_nhận: "",
+          số_giấy_chứng_nhận: "",
+          số_vào_sổ_cấp_giấy_chứng_nhận: "",
+          nơi_cấp_giấy_chứng_nhận: "",
+          ngày_cấp_giấy_chứng_nhận: "",
           thời_hạn: "",
           thời_hạn_bằng_chữ: "",
         };
@@ -150,15 +150,15 @@ export const ThemThongTinDat = ({
                 options={CÁC_LOẠI_GIẤY_CHỨNG_NHẬN_QUYỀN_SỬ_DỤNG_ĐẤT.map(
                   (item) => item.value
                 )}
-                value={values["loại_gcn"]}
+                value={values["loại_giấy_chứng_nhận"]}
                 onChange={(_event, value) => {
-                  setFieldValue("loại_gcn", value ?? "");
+                  setFieldValue("loại_giấy_chứng_nhận", value ?? "");
                 }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     onChange={(event) => {
-                      setFieldValue("loại_gcn", event.target.value ?? "");
+                      setFieldValue("loại_giấy_chứng_nhận", event.target.value ?? "");
                     }}
                     label="Loại giấy chứng nhận"
                   />
@@ -167,41 +167,41 @@ export const ThemThongTinDat = ({
               <TextField
                 fullWidth
                 type="text"
-                id="số_gcn"
-                name="số_gcn"
+                id="số_giấy_chứng_nhận"
+                name="số_giấy_chứng_nhận"
                 label="Số giấy chứng nhận *"
-                value={values["số_gcn"]}
+                value={values["số_giấy_chứng_nhận"]}
                 onChange={handleChange}
-                error={!!errors["số_gcn"] && touched["số_gcn"]}
+                error={!!errors["số_giấy_chứng_nhận"] && touched["số_giấy_chứng_nhận"]}
                 helperText={
-                  errors["số_gcn"] && touched["số_gcn"] && errors["số_gcn"]
+                  errors["số_giấy_chứng_nhận"] && touched["số_giấy_chứng_nhận"] && errors["số_giấy_chứng_nhận"]
                 }
               />
               <TextField
                 fullWidth
                 type="text"
-                id="số_vào_sổ_cấp_gcn"
-                name="số_vào_sổ_cấp_gcn"
+                id="số_vào_sổ_cấp_giấy_chứng_nhận"
+                name="số_vào_sổ_cấp_giấy_chứng_nhận"
                 label="Số vào sổ cấp giấy chứng nhận"
-                value={values["số_vào_sổ_cấp_gcn"]}
+                value={values["số_vào_sổ_cấp_giấy_chứng_nhận"]}
                 onChange={handleChange}
               />
               <TextField
                 fullWidth
                 type="text"
-                id="nơi_cấp_gcn"
-                name="nơi_cấp_gcn"
+                id="nơi_cấp_giấy_chứng_nhận"
+                name="nơi_cấp_giấy_chứng_nhận"
                 label="Nơi cấp giấy chứng nhận"
-                value={values["nơi_cấp_gcn"]}
+                value={values["nơi_cấp_giấy_chứng_nhận"]}
                 onChange={handleChange}
               />
               <TextField
                 fullWidth
                 type="text"
                 label="Ngày cấp giấy chứng nhận (DD/MM/YYYY)"
-                id="ngày_cấp_gcn"
-                name="ngày_cấp_gcn"
-                value={values["ngày_cấp_gcn"]}
+                id="ngày_cấp_giấy_chứng_nhận"
+                name="ngày_cấp_giấy_chứng_nhận"
+                value={values["ngày_cấp_giấy_chứng_nhận"]}
                 onChange={handleChange}
               />
               {!isUyQuyen ? (
