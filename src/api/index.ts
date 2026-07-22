@@ -24,7 +24,10 @@ import type {
 } from "@/models/hdmb-tai-san";
 import type { HdDatCocPayload } from "@/models/hd-dat-coc";
 import { convertEmptyStringsToNull } from "@/utils/common";
-import { getChiNhanhVanPhongDangKyDat } from "@/utils/extract-address";
+import {
+  getChiNhanhVanPhongDangKyDat,
+  type VanPhongDangKyGroup,
+} from "@/utils/extract-address";
 
 export interface PhieuThuPayload {
   ngày: string;
@@ -314,160 +317,28 @@ export const render_hdtc_mot_phan_dat_co_cong_van = async (
   );
 };
 
-// Chi nhánh cho tờ khai chung: thông thường, Chương Mỹ (-cm) hoặc Ứng Hoà (-uh).
-// Ứng Hoà dùng mẫu riêng (không có bản NĐ 373 nên bỏ qua hậu tố -v2).
-export type KhaiThueBranch = "normal" | "cm" | "uh";
+// Khai thuế hợp nhất: mẫu chọn theo (loại giao dịch × nhóm văn phòng đăng ký
+// đất đai) — templates/khai-thue/<nhóm>/khai-thue-<loại>.docx phía BE.
+// Payload là union theo loại tài sản; key thiếu poi-tl render rỗng (ô bỏ trống).
+export type KhaiThueLoai = "chuyen-nhuong" | "tang-cho";
 
-export const render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep = async (
-  payload: SampleToKhaiChungPayload,
-  branch: KhaiThueBranch = "normal",
-  isND373?: boolean,
+export type KhaiThuePayload =
+  | SampleToKhaiChungPayload
+  | KhaiThueHDMBNhaDatToanBoPayload
+  | KhaiThueHDMBCanHoToanBoPayload
+  | KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload
+  | KhaiThueHDMBTaiSanPayload;
+
+export const render_khai_thue = async (
+  loại: KhaiThueLoai,
+  vanPhong: VanPhongDangKyGroup,
+  payload: KhaiThuePayload,
 ) => {
-  let url =
-    "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep";
-  if (branch === "cm") {
-    url =
-      "/templates/khai-thue/khai-thue-chuyen-nhuong-dat-va-dat-nong-nghiep-cm";
-  }
-  if (isND373 && branch !== "uh") {
-    url = url + "-v2";
-  }
-  if (branch === "uh") {
-    url = "/templates/khai-thue/khai-thue-chuyen-nhuong-uh";
-  }
-  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
-    payload["phường"] || null,
-  );
-
-  return api.post(
-    url,
-    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
-    {
-      responseType: "blob",
-    },
-  );
-};
-
-export const render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo = async (
-  payload: SampleToKhaiChungPayload,
-  branch: KhaiThueBranch = "normal",
-  isND373?: boolean,
-) => {
-  let url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep";
-  if (branch === "cm") {
-    url = "/templates/khai-thue/khai-thue-tang-cho-dat-va-dat-nong-nghiep-cm";
-  }
-  if (isND373 && branch !== "uh") {
-    url = url + "-v2";
-  }
-  if (branch === "uh") {
-    url = "/templates/khai-thue/khai-thue-tang-cho-uh";
-  }
   const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
     payload["phường"] || null,
   );
   return api.post(
-    url,
-    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
-    {
-      responseType: "blob",
-    },
-  );
-};
-
-export const render_khai_thue_tang_cho_nha_dat_toan_bo = async (
-  payload: KhaiThueHDMBNhaDatToanBoPayload,
-  isND373?: boolean,
-) => {
-  let url = "/templates/khai-thue/khai-thue-tang-cho-nha-dat-va-tsglvd";
-  if (isND373) {
-    url = url + "-v2";
-  }
-  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
-    payload.phường,
-  );
-  return api.post(
-    url,
-    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
-    {
-      responseType: "blob",
-    },
-  );
-};
-
-export const render_khai_thue_hdmb_can_ho_toan_bo = async (
-  payload: KhaiThueHDMBCanHoToanBoPayload,
-  isND373?: boolean,
-) => {
-  let url = "/templates/khai-thue/khai-thue-mua-ban-can-ho";
-  if (isND373) {
-    url = url + "-v2";
-  }
-  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
-    payload.phường,
-  );
-  return api.post(
-    url,
-    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
-    {
-      responseType: "blob",
-    },
-  );
-};
-
-export const render_khai_thue_hdmb_nha_dat_toan_bo = async (
-  payload: KhaiThueHDMBNhaDatToanBoPayload,
-  isND373?: boolean,
-) => {
-  let url = "/templates/khai-thue/khai-thue-mua-ban-nha-dat";
-  if (isND373) {
-    url = url + "-v2";
-  }
-  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
-    payload.phường,
-  );
-  return api.post(
-    url,
-    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
-    {
-      responseType: "blob",
-    },
-  );
-};
-
-export const render_khai_thue_hdcn_dat_va_tsglvd_toan_bo = async (
-  payload: KhaiThueHDCNDatVaTaiSanGanLienVoiDatToanBoPayload,
-  isND373?: boolean,
-) => {
-  let url = "/templates/khai-thue/khai-thue-mua-ban-nha-dat-va-tsglvd";
-  if (isND373) {
-    url = url + "-v2";
-  }
-  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
-    payload.phường,
-  );
-  return api.post(
-    url,
-    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
-    {
-      responseType: "blob",
-    },
-  );
-};
-
-export const render_khai_thue_hdtc_can_ho_toan_bo = async (
-  payload: KhaiThueHDMBCanHoToanBoPayload,
-  isND373?: boolean,
-) => {
-  let url = "/templates/khai-thue/khai-thue-tang-cho-can-ho";
-  if (isND373) {
-    url = url + "-v2";
-  }
-  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
-    payload.phường,
-  );
-  return api.post(
-    url,
+    `/templates/khai-thue/${vanPhong}/khai-thue-${loại}`,
     { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
     {
       responseType: "blob",
@@ -515,26 +386,6 @@ export const render_hdmb_tai_san = async (payload: HDMBTaiSanPayload) => {
   return api.post(
     "/templates/nhom-chuyen-nhuong-mua-ban/hdmb-tai-san",
     convertEmptyStringsToNull(payload),
-    {
-      responseType: "blob",
-    },
-  );
-};
-
-export const render_khai_thue_hdmb_tai_san = async (
-  payload: KhaiThueHDMBTaiSanPayload,
-  isND373?: boolean,
-) => {
-  let url = "/templates/khai-thue/khai-thue-mua-ban-tai-san";
-  if (isND373) {
-    url = url + "-v2";
-  }
-  const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
-    payload.phường,
-  );
-  return api.post(
-    url,
-    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
     {
       responseType: "blob",
     },

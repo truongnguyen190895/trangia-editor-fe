@@ -11,7 +11,8 @@ import type {
   ThongTinThuaDat,
 } from "@/models/hdmb-tai-san";
 import dayjs from "dayjs";
-import { render_hdmb_tai_san, render_khai_thue_hdmb_tai_san } from "@/api";
+import { render_hdmb_tai_san } from "@/api";
+import { KhaiThueButton } from "@/components/common/khai-thue-button";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBTaiSanContext } from "@/context/hdmb-tai-san";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -281,33 +282,6 @@ export const HDMBTaiSan = ({ templateName }: Props) => {
     return payload;
   };
 
-  const handleGenerateToKhaiThue = (isND373?: boolean) => {
-    const payload = getPayloadToKhaiChung();
-    setOpenDialog(false);
-    setIsGenerating(true);
-    render_khai_thue_hdmb_tai_san(payload, isND373)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "Khai thuế mua bán tài sản.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
-  };
-
   const hasPartyA = hasPartyMembers(partyA);
   const hasPartyB = hasPartyMembers(partyB);
   const missingParts = [
@@ -357,20 +331,12 @@ export const HDMBTaiSan = ({ templateName }: Props) => {
             }
             type="hdmb-tai-san"
           />
-          <Button
-            variant="outlined"
+          <KhaiThueButton
+            loại="chuyen-nhuong"
+            getPayload={getPayloadToKhaiChung}
+            fileName="Khai thuế mua bán tài sản.docx"
             disabled={!isFormValid || isGenerating}
-            onClick={() => handleGenerateToKhaiThue(false)}
-          >
-            Khai thuế
-          </Button>
-          <Button
-            variant="outlined"
-            disabled={!isFormValid || isGenerating}
-            onClick={() => handleGenerateToKhaiThue(true)}
-          >
-            Khai thuế theo NĐ 373
-          </Button>
+          />
           <Button
             variant="contained"
             disabled={!isFormValid || isGenerating}

@@ -14,8 +14,8 @@ import dayjs from "dayjs";
 import {
   render_hdcn_dat_va_tai_san_gan_lien_voi_dat_toan_bo,
   render_hdcn_mot_phan_dat_va_tsglvd,
-  render_khai_thue_hdcn_dat_va_tsglvd_toan_bo,
 } from "@/api";
+import { KhaiThueButton } from "@/components/common/khai-thue-button";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDCNDatVaTaiSanGanLienVoiDatToanBoContext } from "@/context/hdcn-dat-va-tai-san-glvd";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -343,34 +343,6 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
       return payload;
     };
 
-  const handleGenerateToKhaiThue = (isND373?: boolean) => {
-    const payload = getPayloadToKhaiChung();
-    setOpenDialog(false);
-    setIsGenerating(true);
-    render_khai_thue_hdcn_dat_va_tsglvd_toan_bo(payload, isND373)
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        });
-
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "to-khai-chung.docx";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
-  };
-
   const getPhieuThuLyType = () => {
     return isMotPhan
       ? "hdcn-mot-phan-dat-va-tsglvd-de-dong-su-dung"
@@ -425,20 +397,11 @@ export const HDCNDatVaTaiSanGanLienVoiDatToanBo = ({
             }
             type={getPhieuThuLyType()}
           />
-          <Button
-            variant="outlined"
+          <KhaiThueButton
+            loại="chuyen-nhuong"
+            getPayload={getPayloadToKhaiChung}
             disabled={!isFormValid || isGenerating}
-            onClick={() => handleGenerateToKhaiThue(false)}
-          >
-            Khai thuế
-          </Button>
-          <Button
-            variant="outlined"
-            disabled={!isFormValid || isGenerating}
-            onClick={() => handleGenerateToKhaiThue(true)}
-          >
-            Khai thuế theo NĐ 373
-          </Button>
+          />
           <Button
             variant="contained"
             disabled={!isFormValid || isGenerating}

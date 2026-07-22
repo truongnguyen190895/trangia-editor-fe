@@ -156,3 +156,16 @@ export const getChiNhanhVanPhongDangKyDat = (phường: string | null) => {
 
   return chiNhanhVanPhongDangKyDat || "";
 };
+
+// Nhóm mẫu khai thuế theo văn phòng đăng ký đất đai — khớp tên thư mục
+// templates/khai-thue/<nhóm>/ phía BE (kebab-case, ràng buộc decode sub__).
+export type VanPhongDangKyGroup = "mac-dinh" | "chuong-my" | "ung-hoa";
+
+export const getVanPhongDangKyGroup = (
+  phường: string | null,
+): VanPhongDangKyGroup => {
+  const chiNhanh = getChiNhanhVanPhongDangKyDat(phường);
+  if (chiNhanh === "Chương Mỹ") return "chuong-my";
+  if (chiNhanh === "Ứng Hòa") return "ung-hoa";
+  return "mac-dinh";
+};

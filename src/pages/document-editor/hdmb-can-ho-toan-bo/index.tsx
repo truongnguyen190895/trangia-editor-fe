@@ -13,9 +13,9 @@ import type {
 import dayjs from "dayjs";
 import {
   render_hdmb_can_ho,
-  render_khai_thue_hdmb_can_ho_toan_bo,
   render_uy_quyen_toan_bo_can_ho,
 } from "@/api";
+import { KhaiThueButton } from "@/components/common/khai-thue-button";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBCanHoContext } from "@/context/hdmb-can-ho";
 import { useThemChuTheContext } from "@/context/them-chu-the";
@@ -356,25 +356,9 @@ export const HDMBCanHoToanBo = ({
     return payload;
   };
 
-  const handleGenerateKhaiThue = (isND373?: boolean) => {
+  const getKhaiThueFileName = () => {
     const payload = getPayloadKhaiThue();
-
-    setOpenDialog(false);
-    setIsGenerating(true);
-    render_khai_thue_hdmb_can_ho_toan_bo(payload, isND373)
-      .then((res) => {
-        createDownloadLink(
-          res.data,
-          `Khai thuế hợp đồng tặng cho căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`,
-        );
-      })
-      .catch((error) => {
-        console.error("Error generating document:", error);
-        window.alert("Lỗi khi tạo hợp đồng");
-      })
-      .finally(() => {
-        setIsGenerating(false);
-      });
+    return `Khai thuế hợp đồng mua bán căn hộ - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`;
   };
 
   const getPhieuThuLyType = () => {
@@ -437,22 +421,12 @@ export const HDMBCanHoToanBo = ({
             type={getPhieuThuLyType()}
           />
           {!isUyQuyen ? (
-            <>
-              <Button
-                variant="outlined"
-                disabled={!isFormValid || isGenerating}
-                onClick={() => handleGenerateKhaiThue(false)}
-              >
-                Khai thuế
-              </Button>
-              <Button
-                variant="outlined"
-                disabled={!isFormValid || isGenerating}
-                onClick={() => handleGenerateKhaiThue(true)}
-              >
-                Khai thuế theo NĐ 373
-              </Button>
-            </>
+            <KhaiThueButton
+              loại="chuyen-nhuong"
+              getPayload={getPayloadKhaiThue}
+              fileName={getKhaiThueFileName}
+              disabled={!isFormValid || isGenerating}
+            />
           ) : null}
           <Button
             variant="contained"

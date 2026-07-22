@@ -12,12 +12,11 @@ import type {
 } from "@/models/hdmb-nha-dat";
 import {
     render_hdmb_nha_dat,
-    render_khai_thue_hdmb_nha_dat_toan_bo,
-    render_khai_thue_tang_cho_nha_dat_toan_bo,
     render_hdtc_nha_dat_toan_bo,
     render_hdtc_dat_va_tsglvd,
     render_uy_quyen_toan_bo_nha_dat,
 } from "@/api";
+import { KhaiThueButton } from "@/components/common/khai-thue-button";
 import { extractAddress } from "@/utils/extract-address";
 import { useHDMBNhaDatContext } from "@/context/hdmb-nha-dat";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
@@ -388,49 +387,12 @@ export const HDMBNhaDatToanBo = ({
         return payload;
     };
 
-    const handleKhaiThue = (isND373?: boolean) => {
-        const payload = getPayloadToKhaiChung();
-        setOpenDialog(false);
-        setIsGenerating(true);
-        if (isTangCho) {
-            render_khai_thue_tang_cho_nha_dat_toan_bo(payload, isND373)
-                .then((res) => {
-                    createDownloadLink(
-                        res.data,
-                        `Khai thuế hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`
-                    );
-                })
-                .catch((error) => {
-                    console.error("Error generating document:", error);
-                    window.alert("Lỗi khi tạo hợp đồng");
-                })
-                .finally(() => {
-                    setIsGenerating(false);
-                });
-        } else {
-            render_khai_thue_hdmb_nha_dat_toan_bo(payload, isND373)
-                .then((res) => {
-                    const blob = new Blob([res.data], {
-                        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    });
-
-                    const url = window.URL.createObjectURL(blob);
-                    const link = document.createElement("a");
-                    link.href = url;
-                    link.download = "khai-thue-hdmb-nha-dat-toan-bo.docx";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    window.URL.revokeObjectURL(url);
-                })
-                .catch((error) => {
-                    console.error("Error generating document:", error);
-                    window.alert("Lỗi khi tạo hợp đồng");
-                })
-                .finally(() => {
-                    setIsGenerating(false);
-                });
+    const getKhaiThueFileName = () => {
+        if (!isTangCho) {
+            return "khai-thue-hdmb-nha-dat-toan-bo.docx";
         }
+        const payload = getPayloadToKhaiChung();
+        return `Khai thuế hợp đồng tặng cho nhà đất - ${payload["bên_A"]["cá_thể"][0]["tên"]} - ${payload["bên_B"]["cá_thể"][0]["tên"]}`;
     };
 
     const generateThuLyType = () => {
@@ -501,22 +463,12 @@ export const HDMBNhaDatToanBo = ({
                         type={generateThuLyType()}
                     />
                     {!isUyQuyen ? (
-                        <>
-                            <Button
-                                variant="outlined"
-                                disabled={!isFormValid || isGenerating}
-                                onClick={() => handleKhaiThue(false)}
-                            >
-                                Khai thuế
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                disabled={!isFormValid || isGenerating}
-                                onClick={() => handleKhaiThue(true)}
-                            >
-                                Khai thuế theo NĐ 373
-                            </Button>
-                        </>
+                        <KhaiThueButton
+                            loại={isTangCho ? "tang-cho" : "chuyen-nhuong"}
+                            getPayload={getPayloadToKhaiChung}
+                            fileName={getKhaiThueFileName}
+                            disabled={!isFormValid || isGenerating}
+                        />
                     ) : (
                         <></>
                     )}

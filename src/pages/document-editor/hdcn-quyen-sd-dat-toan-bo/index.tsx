@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { ThongTinDat } from "./components/thong-tin-dat";
 import { CircularProgress } from "@mui/material";
 import { SectionNav } from "@/components/common/section-nav";
@@ -22,13 +14,10 @@ import type {
 import dayjs from "dayjs";
 import {
   render_hdcn_quyen_sd_dat_toan_bo,
-  render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep,
-  render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo,
   render_hdtc_dat_toan_bo,
   render_hdcn_quyen_sd_dat_mot_phan,
   render_hdtc_dat_mot_phan,
   render_hdtc_mot_phan_dat_co_cong_van,
-  type KhaiThueBranch,
 } from "@/api";
 import { translateDateToVietnamese } from "@/utils/date-to-words";
 import { numberToVietnamese } from "@/utils/number-to-words";
@@ -43,6 +32,7 @@ import { ThemChuThe } from "@/components/common/them-chu-the";
 import { ThemLoiChungDialog } from "@/components/common/them-loi-chung-dialog";
 import type { MetaData } from "@/components/common/them-loi-chung-dialog";
 import { PhieuThuLyButton } from "@/components/common/phieu-thu-ly-button";
+import { KhaiThueButton } from "@/components/common/khai-thue-button";
 import { uchiTemporarySave } from "@/api/uchi";
 import { toast } from "react-toastify";
 import { getWorkHistoryById } from "@/api/contract";
@@ -70,10 +60,6 @@ export const ChuyenNhuongDatToanBo = ({
   const { partyA, partyB } = useThemChuTheContext();
   const [isGenerating, setIsGenerating] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [openTaxTypeDialog, setOpenTaxTypeDialog] = useState(false);
-  const [pendingIsND373, setPendingIsND373] = useState<boolean | undefined>(
-    undefined,
-  );
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get("templateId");
   const id = searchParams.get("id");
@@ -510,48 +496,6 @@ export const ChuyenNhuongDatToanBo = ({
     return payload;
   };
 
-  const handleGenerateToKhaiChung = (
-    isND373: boolean | undefined,
-    branch: KhaiThueBranch,
-  ) => {
-    const payload = getPayloadToKhaiChung();
-    setOpenDialog(false);
-    setIsGenerating(true);
-    if (isTangCho) {
-      render_khai_thue_tang_cho_dat_va_dat_nong_nghiep_toan_bo(
-        payload,
-        branch,
-        isND373,
-      )
-        .then((res) => {
-          createDownloadLink(res?.data, "to-khai-chung.docx");
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
-    } else {
-      render_khai_thue_chuyen_nhuong_dat_va_dat_nong_nghiep(
-        payload,
-        branch,
-        isND373,
-      )
-        .then((res) => {
-          createDownloadLink(res?.data, "to-khai-chung.docx");
-        })
-        .catch((error) => {
-          console.error("Error generating document:", error);
-          window.alert("Lỗi khi tạo hợp đồng");
-        })
-        .finally(() => {
-          setIsGenerating(false);
-        });
-    }
-  };
-
   const generateThuLyType = () => {
     if (isCoCongVan) {
       return "hd-tang-cho-mot-phan-dat-co-cong-van";
@@ -660,26 +604,11 @@ export const ChuyenNhuongDatToanBo = ({
             type={generateThuLyType()}
           />
           <ThemGiayUQButton contractTemplatePath={getContractTemplatePath()} />
-          <Button
-            variant="outlined"
+          <KhaiThueButton
+            loại={isTangCho ? "tang-cho" : "chuyen-nhuong"}
+            getPayload={getPayloadToKhaiChung}
             disabled={!isFormValid || isGenerating}
-            onClick={() => {
-              setPendingIsND373(false);
-              setOpenTaxTypeDialog(true);
-            }}
-          >
-            Khai thuế
-          </Button>
-          <Button
-            variant="outlined"
-            disabled={!isFormValid || isGenerating}
-            onClick={() => {
-              setPendingIsND373(true);
-              setOpenTaxTypeDialog(true);
-            }}
-          >
-            Khai thuế theo NĐ 373
-          </Button>
+          />
           <Button
             variant="contained"
             disabled={!isFormValid || isGenerating}
@@ -701,58 +630,6 @@ export const ChuyenNhuongDatToanBo = ({
           handleGenerateDocument={handleGenerateDocument}
         />
       ) : null}
-      {openTaxTypeDialog && (
-        <Dialog
-          open={openTaxTypeDialog}
-          onClose={() => setOpenTaxTypeDialog(false)}
-        >
-          <DialogTitle>Chọn loại tờ khai</DialogTitle>
-          <DialogContent>
-            <Typography>
-              Bạn muốn tạo tờ khai loại thông thường, chi nhánh CM hay Ứng Hoà?
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => {
-                setOpenTaxTypeDialog(false);
-                setPendingIsND373(undefined);
-              }}
-            >
-              Hủy
-            </Button>
-            <Button
-              onClick={() => {
-                if (pendingIsND373 === undefined) return;
-                setOpenTaxTypeDialog(false);
-                handleGenerateToKhaiChung(pendingIsND373, "normal");
-              }}
-            >
-              Thông thường
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => {
-                if (pendingIsND373 === undefined) return;
-                setOpenTaxTypeDialog(false);
-                handleGenerateToKhaiChung(pendingIsND373, "cm");
-              }}
-            >
-              Chi nhánh CM
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => {
-                if (pendingIsND373 === undefined) return;
-                setOpenTaxTypeDialog(false);
-                handleGenerateToKhaiChung(pendingIsND373, "uh");
-              }}
-            >
-              Ứng Hoà
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
     </Box>
   );
 };
