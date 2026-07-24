@@ -333,13 +333,25 @@ export const render_khai_thue = async (
   loại: KhaiThueLoai,
   vanPhong: VanPhongDangKyGroup,
   payload: KhaiThuePayload,
+  // false = không in ngày/tháng ký: bỏ ngày_tạo_hđ, tháng_tạo_hđ, ngày_lập_hợp_đồng
+  // (giữ năm_tạo_hđ vì còn dùng cho số CCGD + năm kỳ tính thuế).
+  inNgayThang: boolean = true,
 ) => {
   const chiNhanhVanPhongDangKyDat = getChiNhanhVanPhongDangKyDat(
     payload["phường"] || null,
   );
+  const body: Record<string, unknown> = {
+    ...payload,
+    vpdkdd: chiNhanhVanPhongDangKyDat,
+  };
+  if (!inNgayThang) {
+    delete body["ngày_tạo_hđ"];
+    delete body["tháng_tạo_hđ"];
+    delete body["ngày_lập_hợp_đồng"];
+  }
   return api.post(
     `/templates/khai-thue/${vanPhong}/khai-thue-${loại}`,
-    { ...payload, vpdkdd: chiNhanhVanPhongDangKyDat },
+    body,
     {
       responseType: "blob",
     },

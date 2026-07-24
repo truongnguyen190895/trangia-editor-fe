@@ -1,15 +1,19 @@
 import { useState } from "react";
 import {
   Button,
+  Checkbox,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
+  Typography,
 } from "@mui/material";
 import {
   render_khai_thue,
@@ -47,12 +51,14 @@ export const KhaiThueButton = ({
 }: KhaiThueButtonProps) => {
   const [open, setOpen] = useState(false);
   const [vanPhong, setVanPhong] = useState<VanPhongDangKyGroup>("mac-dinh");
+  const [inNgayThang, setInNgayThang] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleOpen = () => {
     // Mặc định theo địa chỉ thửa đất; user vẫn đổi được trong dropdown.
     const payload = getPayload();
     setVanPhong(getVanPhongDangKyGroup(payload?.["phường"] ?? null));
+    setInNgayThang(true);
     setOpen(true);
   };
 
@@ -61,7 +67,7 @@ export const KhaiThueButton = ({
     if (!payload) return;
     setOpen(false);
     setIsGenerating(true);
-    render_khai_thue(loại, vanPhong, payload)
+    render_khai_thue(loại, vanPhong, payload, inNgayThang)
       .then((res) => {
         const name = typeof fileName === "function" ? fileName() : fileName;
         createDownloadLink(res.data, name || "to-khai-chung.docx");
@@ -111,6 +117,19 @@ export const KhaiThueButton = ({
               ))}
             </Select>
           </FormControl>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="subtitle2" color="text.secondary">
+            Tuỳ chỉnh
+          </Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={inNgayThang}
+                onChange={(e) => setInNgayThang(e.target.checked)}
+              />
+            }
+            label="In ngày/tháng trên mẫu khai thuế"
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Hủy</Button>
